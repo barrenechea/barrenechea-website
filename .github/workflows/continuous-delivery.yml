@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - update-dockerfile
 
 jobs:
   push_to_registry:
@@ -40,4 +41,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/arm,linux/arm64,linux/amd64,linux/ppc64le
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/riscv64,linux/s390x
