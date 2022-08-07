@@ -1,0 +1,25 @@
+---
+import Section from '@/partials/astro-components/Section.astro';
+import Base from '@/templates/Base.astro'
+const title = 'Page not found - Barrenechea'
+const description = 'Are you lost?'
+---
+
+<Base head={{ title, description }}>
+<Section>
+  <div class="mx-auto max-w-screen-xl py-8 px-4 lg:py-16 lg:px-6">
+    <div class="mx-auto max-w-screen-sm text-center">
+      <h1 class="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">404
+      </h1>
+      <p class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Something's missing.
+      </p>
+      <p class="mb-4 text-lg font-light text-gray-500">Sorry, the page you're requesting is no longer available. You'll find
+        lots to explore on the home page tho! </p>
+      <a href="/"
+        target="_self"
+        class="my-4 inline-flex rounded-lg px-5 py-2.5 text-center text-sm font-medium text-amber-400 hover:underline">Back
+        to Homepage</a>
+    </div>
+  </div>
+</Section>
+</Base>

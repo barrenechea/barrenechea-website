@@ -1,0 +1,78 @@
+---
+import './base.css';
+
+import { SocialImage } from 'astro-social-images';
+
+import faviconSvg from '@/assets/favicon.svg';
+import Footer from '@/partials/Footer.astro';
+import Navbar from '@/partials/Navbar.astro';
+import { AppConfig } from '@/utils/AppConfig';
+
+export interface Props {
+  head: {
+    title: string;
+    description: string;
+  };
+}
+
+const {
+  head: { title, description },
+} = Astro.props as Props;
+
+// remove " - Barrenechea" from the title
+const filteredTitle = title.replace(' - Barrenechea', '');
+const splittedTitle = filteredTitle.split(' - ').reverse();
+
+const texts = splittedTitle.map((text, index) => {
+  return {
+    content: text, attributes: {
+      x: '55', y: `${105 * (index + 1)}`
+      , 'font-size': `${60 - (index * 12)}px`, 'font-family': 'JetBrains Mono', fill: '#f3f4f6'
+    },
+  }
+});
+texts.push({
+  content: 'barrenechea.cl', attributes: {
+    x: '55', y: '570'
+    , 'font-size': '36px', 'font-family': 'JetBrains Mono', fill: '#71717a'
+  },
+});
+---
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <base target="_blank">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content={AppConfig.author} />
+  <SocialImage backgroundColor="#18181b" texts={texts} images={[{ url: 'public/assets/images/og-image.png' , attributes:
+    { top: 300 , left: 900 }, }]} globalOptions={{ urlPath: 'https://www.barrenechea.cl/' }} />
+
+  <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+  <link rel="icon" href={faviconSvg} type="image/svg+xml" />
+  <!-- <link rel="icon" href={faviconPng} type="image/png" /> -->
+  <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE">
+
+  </script>
+  <script type="text/partytown">
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-L5QEGL7QZE');
+  </script>
+</head>
+
+<body class="bg-zinc-900 font-mono text-gray-100">
+  <Navbar />
+
+  <slot />
+
+  <Footer />
+</body>
+
+</html>

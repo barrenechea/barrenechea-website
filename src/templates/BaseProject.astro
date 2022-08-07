@@ -1,0 +1,39 @@
+---
+import type { ImageMetadata } from '@astrojs/image';
+
+import ProjectPost from '@/partials/ProjectPost.astro';
+import Base from '@/templates/Base.astro';
+import { AppConfig } from '@/utils/AppConfig';
+
+export interface Props {
+  title: string;
+  description: string;
+  imgSrc: ImageMetadata;
+  imgAlt: string;
+  pubDate?: Date;
+  link?: string;
+}
+
+const {
+  title: baseTitle,
+  description,
+  imgSrc,
+  imgAlt,
+  pubDate,
+  link,
+} = Astro.props as Props;
+const title = `${baseTitle} - ${AppConfig.siteName}`;
+---
+
+<Base head={{ title, description }}>
+  <ProjectPost
+    title={baseTitle}
+    description={description}
+    imgSrc={imgSrc}
+    imgAlt={imgAlt}
+    pubDate={pubDate}
+    link={link}
+  >
+    <slot />
+  </ProjectPost>
+</Base>
