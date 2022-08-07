@@ -1,5 +1,16 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import LogiKeys from "@/assets/images/fl3xbl0w/logi-keys.png";
+import ConsoleUSB from "@/assets/images/fl3xbl0w/console-usb.png";
+import Console01 from "@/assets/images/fl3xbl0w/console-01.gif?url";
+import Console02 from "@/assets/images/fl3xbl0w/console-02.gif?url";
+import Console03 from "@/assets/images/fl3xbl0w/console-03.gif?url";
+import Console04 from "@/assets/images/fl3xbl0w/console-04.gif?url";
+import Console05 from "@/assets/images/fl3xbl0w/console-05.gif?url";
+import Console06 from "@/assets/images/fl3xbl0w/console-06.gif?url";
+import Console07 from "@/assets/images/fl3xbl0w/console-07.gif?url";
+import Console08 from "@/assets/images/fl3xbl0w/console-08.gif?url";
+import { Image } from '@astrojs/image/components';
 
 export const title = "Android Jailbreak - fl3xbl0w";
 export const description =
@@ -28,7 +39,7 @@ You can restart the machine at any point in the process, and everything will be 
 - A computer with [adb](https://developer.android.com/studio/command-line/adb) ([download link](https://developer.android.com/studio/releases/platform-tools))
 
 I'm using a Logitech K600, but any keyboard with such keys should work:
-![logitech k600 keyboard](/assets/images/fl3xbl0w/logi-keys.png) 
+<Image src={LogiKeys} alt="Kogitech K600 Keyboard" format="webp" />
 
 *Bluetooth keyboards seem not to be able to be paired through JRNY.*
 
@@ -41,26 +52,26 @@ I'm using a Logitech K600, but any keyboard with such keys should work:
 ## Instructions
 
 First, let's have the machine turned on and plug the USB keyboard into the Bowflex Console. You can find it on the right side:
-![console usb location](/assets/images/fl3xbl0w/console-usb.png) 
+<Image src={ConsoleUSB} alt="Indicates where the console's USB port location is" format="webp" />
 
 
 Let's make sure the keyboard works by clicking the "Home" button on the keyboard. It should cause the JRNY app to restart.
-<img src="/assets/images/fl3xbl0w/console-01.gif" alt="console animation" />
+<img src={Console01} alt="console animation" />
 
 Android has a shortcut for closing the current app through the "Back" button if you hold it for a second or so.
 Let's play with the "Back" button for a bit - we're going to continuously close the JRNY App as soon as the app reopens itself until a new dialog starts to pop up:
-<img src="/assets/images/fl3xbl0w/console-02.gif" alt="console animation" />
+<img src={Console02} alt="console animation" />
 
 Ok, now for the fun part: That dialog belongs to stock Android's "crash checking system". We've just "forced Android to think" that NautilusLauncher is messed up (good!). We'll exploit through that dialog.
 
 As soon as it appears, touch on "App info". By clicking "App info" we're going to open the Settings app (which is on `AppMonitorService`'s denylist). It will close it in around a second, so we gotta go fast! Touch on the "FORCE STOP" button, and then touch on "OK".
-<img src="/assets/images/fl3xbl0w/console-03.gif" alt="console animation" />
+<img src={Console03} alt="console animation" />
 
 As soon as you're able to click on "OK", you can take a rest (good exercise, huh?). Now let's proceed with the findings on Reddit. Let's enable adb by clicking on the "magnifying glass" icon on the top right corner and searching for "Developer options":
-<img src="/assets/images/fl3xbl0w/console-04.gif" alt="console animation" />
+<img src={Console04} alt="console animation" />
 
 Find the Console's IP address. The easiest way is through Wi-Fi Settings:
-<img src="/assets/images/fl3xbl0w/console-05.gif" alt="console animation" />
+<img src={Console05} alt="console animation" />
 
 Now that adb is enabled and we have the IP address, let's jump into a computer and connect with adb. Open a terminal and run `adb connect <IP Address>` (in my case 10.0.0.205):
 ```sh
@@ -85,18 +96,18 @@ Now let's restore some functionality. Send the following commands through your t
 ```
 
 You'll see the UI appear:
-<img src="/assets/images/fl3xbl0w/console-06.gif" alt="console animation" />
+<img src={Console06} alt="console animation" />
 
 
 There's one final step - to change the default launcher. Search for "Default apps" and set Quickstep as the Home app:
-<img src="/assets/images/fl3xbl0w/console-07.gif" alt="console animation" />
+<img src={Console07} alt="console animation" />
 
 **You are now free!**
 
 This state will remain as long as NautilusLauncher is force-stopped. It persists across restarts.
 
 If you want to go back to "stock" just open the `NautilusLauncher` App (I strongly suggest you have created the `/sdcard/Pictures/nautilus` file beforehand):
-<img src="/assets/images/fl3xbl0w/console-08.gif" alt="console animation" />
+<img src={Console08} alt="console animation" />
 
 
 ## Notes on "Locking system"

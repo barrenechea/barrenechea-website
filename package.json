@@ -26,7 +26,7 @@
     "@astrojs/tailwind": "^0.2.5",
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
-    "@fontsource/jetbrains-mono": "^4.5.9",
+    "@fontsource/jetbrains-mono": "^4.5.10",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.4",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
