@@ -1,5 +1,7 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import HomeAssistantSensor from "@/assets/images/fl3xbl0w/homeassistant-hr-sensor.png";
+import { Image } from '@astrojs/image/components';
 
 export const title = "Bowflex Quirks - fl3xbl0w";
 export const description =
@@ -109,4 +111,4 @@ UUID: 0x2A37
 
 It seemed pretty standard, and a Home Assistant Community [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) already figured this one out (not the same model, but it seems the Heart Rate Monitor is using a standard protocol). I've made an ESPHome [config file](https://github.com/SebastianBar/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) as a proof of concept:
 
-![homeassistant screenshot](/assets/images/fl3xbl0w/homeassistant-hr-sensor.png) 
+<Image src={HomeAssistantSensor} alt="HomeAssistant screenshot displaying a heart rate sensor" format="webp" />

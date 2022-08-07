@@ -1,5 +1,10 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import B017D from "@/assets/images/fl3xbl0w/b017d.jpg";
+import TreadmillElectrical from "@/assets/images/fl3xbl0w/treadmill-electrical.png";
+import TreadmillComm from "@/assets/images/fl3xbl0w/treadmill-comm.png";
+import Molex from "@/assets/images/fl3xbl0w/molex.jpg";
+import { Image } from '@astrojs/image/components';
 
 export const title = "Treadmill Motor Controller - fl3xbl0w";
 export const description =
@@ -18,15 +23,15 @@ export default function Layout({ children }) {
 
 The motor control board is manufactured by [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
 
-![Motor Control Board Controller B017D](/assets/images/fl3xbl0w/b017d.jpg)
+<Image src={B017D} alt="Motor Control Board Controller B017D" format="webp" />
 
 Given the [service manual](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) provided by Nautilus Inc. ([backup on archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-![Treadmill electrical diagram](/assets/images/fl3xbl0w/treadmill-electrical.png)
+<Image src={TreadmillElectrical} alt="Treadmill electrical diagram" format="webp" />
 
 And focusing specifically on this part:
 
-![Treadmill communication path](/assets/images/fl3xbl0w/treadmill-comm.png)
+<Image src={TreadmillComm} alt="Treadmill communication path" format="webp" />
 
 We can identify the "communication cable" connecting the motor controller as being of 5 pins. There's only one 5-pin connector.
 I've labeled the wires with their corresponding colors (data & switch are optoisolated):
@@ -44,7 +49,7 @@ The board is not directly connected to the Android console.
 
 The only 5-pin connector is of Molex brand. A Google search for "small Molex connectors" led me to a picture of a so-called `Molex Micro-Fit 3.0 Single Row (5-Pin)`, which is used to connect the motor controller board:
 
-![Molex Micro-Fit 3.0 Connector](/assets/images/fl3xbl0w/molex.jpg)
+<Image src={Molex} alt="Molex Micro-Fit 3.0 Connector" format="webp" />
 
 [AliExpress Link](https://es.aliexpress.com/item/32902205579.html)
 

@@ -1,5 +1,7 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import DialogBackupConfirm from "@/assets/images/fl3xbl0w/dialog-backup-confirm.png";
+import { Image } from '@astrojs/image/components';
 
 export const title = "Backup your Console contents - fl3xbl0w";
 export const description =
@@ -114,7 +116,7 @@ Alternatively, you can have the same output from an alternative command:
 ```
 
 Both commands will request an "in-screen confirmation" that you want to do a backup. Touch on "**BACK UP MY DATA**":
-![backup confirmation screen](/assets/images/fl3xbl0w/dialog-backup-confirm.png) 
+<Image src={DialogBackupConfirm} alt="backup confirmation screen" format="webp" />
 
 If you want to extract the contents (on Linux, macOS), you'll need `zlib-flate` from [qpdf](https://command-not-found.com/qpdf) and run:
 ```sh

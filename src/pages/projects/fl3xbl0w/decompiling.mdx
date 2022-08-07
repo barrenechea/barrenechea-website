@@ -1,5 +1,11 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import JadxGUIScreen from "@/assets/images/fl3xbl0w/screen-jadx-init.png";
+import JadxGUISelect from "@/assets/images/fl3xbl0w/screen-jadx-open.png";
+import JadxGUIOpened from "@/assets/images/fl3xbl0w/screen-jadx-opened.png";
+import JadxGUISave from "@/assets/images/fl3xbl0w/screen-jadx-save.png";
+import JadxGUIPrefs from "@/assets/images/fl3xbl0w/screen-jadx-preferences.png";
+import { Image } from '@astrojs/image/components';
 
 export const title = "Decompiling - fl3xbl0w";
 export const description =
@@ -28,19 +34,19 @@ The following instructions are intended to get some "readable code", but it's im
 ### Let's open some sh*t
 
 After installing `jadx` you should be able to open `jadx-gui`. Go to File -> Open files ...
-![jadx-gui screen](/assets/images/fl3xbl0w/screen-jadx-init.png) 
+<Image src={JadxGUIScreen} alt="jadx-gui screen" format="webp" />
 
 Search for your desired APK and click on "Open file":
-![jadx-gui selecting apk](/assets/images/fl3xbl0w/screen-jadx-open.png) 
+<Image src={JadxGUISelect} alt="jadx-gui selecting apk" format="webp" />
 
 And from there, you can start poking around:
-![jadx-gui decompiling NautilusLauncher](/assets/images/fl3xbl0w/screen-jadx-opened.png "onStartCommand blah blah?") 
+<Image src={JadxGUIOpened} alt="jadx-gui decompiling NautilusLauncher" format="webp" />
 
 If you want to save the project as Java files, go into File -> Save as gradle project:
-![jadx-gui saving project](/assets/images/fl3xbl0w/screen-jadx-save.png) 
+<Image src={JadxGUISave} alt="jadx-gui saving project" format="webp" />
 
 If useful, here are my `jadx-gui` preferences:
-![jadx-gui preferences](/assets/images/fl3xbl0w/screen-jadx-preferences.png) 
+<Image src={JadxGUIPrefs} alt="jadx-gui preferences" format="webp" />
 
 
 ## Turning apps into Smali code

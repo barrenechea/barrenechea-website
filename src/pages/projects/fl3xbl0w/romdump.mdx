@@ -1,5 +1,8 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/project-fl3xbl0w.svg";
+import ConsoleMounted from "@/assets/images/fl3xbl0w/console-mounted.jpg";
+import VantronPCB from "@/assets/images/fl3xbl0w/vantron-pcb.jpg";
+import { Image } from '@astrojs/image/components';
 
 export const title = "ROM Dump - fl3xbl0w";
 export const description =
@@ -28,10 +31,10 @@ The toolset that I've used is:
 In order to play with this, you'll have to unmount the Bowflex Console, unscrew the plastic back cover, and mount it back in a "naked form".
 **Do not attempt this, as playing with the Android hardware in Loader Mode can lead to a permanently bricked device.**
 
-![console mounted with back cover removed](/assets/images/fl3xbl0w/console-mounted.jpg)
+<Image src={ConsoleMounted} alt="Console mounted with back cover removed" format="webp" />
 
 Here are the relevant parts of the Android logic board for Rockchip stuff:
-![vantron pcb](/assets/images/fl3xbl0w/vantron-pcb.jpg)
+<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
 You can have the Android Tool Release app opened at all times as a reference to check on which mode the tablet is at.
 
