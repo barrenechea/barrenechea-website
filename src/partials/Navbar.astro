@@ -1,0 +1,70 @@
+---
+import socials from '@/constants/social';
+import Logo from '@/partials/astro-components/Logo.astro';
+import NavbarTwoColumns from '@/partials/astro-components/NavbarTwoColumns.astro';
+import NavMenu from '@/partials/astro-components/NavMenu.astro';
+import NavMenuItem from '@/partials/astro-components/NavMenuItem.astro';
+import Section from '@/partials/astro-components/Section.astro';
+---
+
+<style>
+  .top-anim {
+    stroke-dasharray: 70;
+    stroke-dashoffset: 70;
+    animation: dash 1200ms ease-out forwards;
+    animation-delay: 300ms;
+  }
+  .botton-anim {
+    stroke-dasharray: 90;
+    stroke-dashoffset: 90;
+    animation: dash 1700ms ease forwards;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+<Section>
+  <NavbarTwoColumns>
+    <a href="/" target="_self">
+      <Logo name="Barrenechea">
+        <svg
+          class="mr-1 h-10 w-10 stroke-amber-400"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 48 48"
+        >
+          <g id="top">
+            <path
+              class="top-anim"
+              fill="none"
+              stroke-miterlimit="10"
+              stroke-width="2"
+              d="M9.2,22.67V4.26h10.41c3.12,3.12,4.88,4.88,8,8v10.41H9.2z"
+            ></path>
+          </g>
+          <g id="bottom">
+            <path
+              class="botton-anim"
+              fill="none"
+              stroke-miterlimit="10"
+              stroke-width="2"
+              d="M9.2,44.27V27.13h29.38v9.14c-3.12,3.12-4.88,4.88-8,8H9.2z"
+            ></path>
+          </g>
+        </svg>
+      </Logo>
+    </a>
+
+    <NavMenu>
+      <NavMenuItem href="/projects" target="_self">Projects</NavMenuItem>
+      <NavMenuItem href="/posts" target="_self">Posts</NavMenuItem>
+      {socials.map(({ name, url }) => (
+        <NavMenuItem href={url}>
+          {name}
+        </NavMenuItem>
+      ))}
+    </NavMenu>
+  </NavbarTwoColumns>
+</Section>

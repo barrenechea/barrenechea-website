@@ -1,0 +1,17 @@
+@import '@fontsource/jetbrains-mono';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  div[class*="prose"] > * > a,
+  div[class*="prose"] > * > * > a,
+  div[class*="prose"] > * > * > * > a {
+    @apply text-amber-400 no-underline hover:underline
+  }
+}
+
+.language-id {
+  display: none;
+}
