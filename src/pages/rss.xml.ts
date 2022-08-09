@@ -1,13 +1,9 @@
 import rss from '@astrojs/rss';
 
+import { IMDX } from '@/types/imdx';
 import { AppConfig } from '@/utils/AppConfig';
 
-const mdxResults = import.meta.glob<{
-  title: string;
-  description: string;
-  pubDate: Date;
-  url: string;
-}>('./**/*.mdx', { eager: true });
+const mdxResults = import.meta.glob('./**/*.mdx', { eager: true }) as unknown as IMDX[];
 
 const mdx = Object.values(mdxResults);
 
