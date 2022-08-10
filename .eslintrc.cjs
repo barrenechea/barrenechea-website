@@ -14,8 +14,8 @@ module.exports = {
     {
       files: ["*.astro"],
       parser: "astro-eslint-parser",
-      plugins: ["jsx-a11y", "unused-imports", "tailwindcss", "simple-import-sort"],
-      extends: ["plugin:jsx-a11y/recommended", "plugin:tailwindcss/recommended", "plugin:@typescript-eslint/recommended"],
+      plugins: ["unused-imports", "tailwindcss", "simple-import-sort"],
+      extends: ["plugin:astro/jsx-a11y-recommended", "plugin:tailwindcss/recommended", "plugin:@typescript-eslint/recommended"],
       parserOptions: {
         parser: "@typescript-eslint/parser",
         extraFileExtensions: [".astro"],
