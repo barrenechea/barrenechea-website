@@ -42,6 +42,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-tailwindcss": "^3.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "github-fork-ribbon-css": "^0.2.3",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "rimraf": "^3.0.2",

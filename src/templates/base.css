@@ -1,4 +1,5 @@
-@import '@fontsource/jetbrains-mono';
+@import "@fontsource/jetbrains-mono";
+@import "github-fork-ribbon-css/gh-fork-ribbon.css";
 
 @tailwind base;
 @tailwind components;
@@ -8,10 +9,14 @@
   div[class*="prose"] > * > a,
   div[class*="prose"] > * > * > a,
   div[class*="prose"] > * > * > * > a {
-    @apply text-amber-400 no-underline hover:underline
+    @apply text-amber-400 no-underline hover:underline;
   }
 }
 
 .language-id {
   display: none;
+}
+
+.github-fork-ribbon:before {
+  @apply bg-zinc-700;
 }
