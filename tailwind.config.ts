@@ -1,6 +1,9 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+import aspectRatio from '@tailwindcss/aspect-ratio';
+import typography from '@tailwindcss/typography';
+import type { Config } from 'tailwindcss';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
-module.exports = {
+const config: Config = {
   content: ['./src/**/*.{astro,ts,tsx}'],
   theme: {
     extend: {
@@ -21,7 +24,9 @@ module.exports = {
     aspectRatio: false,
   },
   plugins: [
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography'),
+    aspectRatio,
+    typography
   ],
 };
+
+export default config;
