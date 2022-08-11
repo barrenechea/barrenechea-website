@@ -1,7 +1,8 @@
 import BaseProject from "@/templates/BaseProject.astro";
 import ProjectImage from "@/assets/images/inapi-logo.png";
 import FooterImage from "@/assets/images/wipo-prosur-logos.png";
-import { Image } from '@astrojs/image/components';
+import { Image } from "@astrojs/image/components";
+import { formatDate } from "@/utils/dates";
 
 export const title = "Registered Trademark";
 export const description =
@@ -34,3 +35,7 @@ INAPI is in constant collaboration with [WIPO](https://www.wipo.int) and [Prosur
 [On July 4, 2022, INAPI announced](https://www.inapi.cl/sala-de-prensa/detalle-noticia/comienza-a-regir-en-chile-el-sistema-de-madrid-para-el-registro-internacional-de-marcas) that the "Sistema de Madrid" is opened for business.
 
 <Image src={FooterImage} alt="WIPO and Prosur logos" format="webp" />
+
+## Ripple effect
+
+- **{formatDate(new Date('2022-08-11T13:56:00-0400'))}**: GitHub Trust & Safety Team releases the `barrenechea` username for my use.
