@@ -13,11 +13,14 @@
 - Image optimizations through [@astrojs/image](https://docs.astro.build/en/guides/integrations-guide/image/)
 - Sitemap, RSS feed & OpenGraph images for SEO by default
 
-## Usage
+## Development
 
-For local environments:
+In local environments:
 
 ```bash
 npm install
 npm start
 ```
+
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/SebastianBar/barrenechea-website)
