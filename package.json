@@ -35,7 +35,7 @@
     "astro-eslint-parser": "^0.5.0",
     "astro-robots-txt": "^0.3.7",
     "astro-social-images": "^0.4.1",
-    "eslint": "^8.21.0",
+    "eslint": "^8.22.0",
     "eslint-plugin-astro": "^0.17.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
