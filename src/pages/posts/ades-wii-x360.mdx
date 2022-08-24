@@ -1,0 +1,151 @@
+import BasePost from "@/templates/BasePost.astro";
+import ProjectImage from "@/assets/images/project-ades-wii-x360.png";
+import Puzzle from "@/assets/images/puzzle.png";
+import PuzzleNumbered from "@/assets/images/puzzle-numbered.png";
+import X360PowerSupply from "@/assets/images/x360-dvd-power-supply.jpg";
+import X360Linux from "@/assets/images/x360-linux.jpg";
+import KamikazeLocation from "@/assets/images/kamikaze-location.jpg";
+import WinbondExploitLines from "@/assets/images/winbond-exploit-lines.jpg";
+import XboxRRoD from "@/assets/images/xbox-rrod.jpg";
+import { Image } from "@astrojs/image/components";
+import { YouTube } from "@astro-community/astro-embed-youtube";
+
+export const title = "I hacked hundreds of game consoles thanks to a juice";
+export const description ="What I did instead of partying while young 🥴";
+export const pubDate = new Date("2022-08-23T23:13:00Z");
+export const link = "#";
+export const imgSrc = ProjectImage;
+export const imgAlt = "Image of Bill Gates playing Guitar Hero on Mordor after being pwned by AdeS juice";
+export const tags = [];
+
+export default function Layout({ children }) {
+  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
+}
+
+In 2010, AdeS (an Argentinian brand of juice later purchased by Coca-Cola Company in 2016) made a contest over Facebook.
+It was a 4x4 puzzle game where you could win a Nintendo Wii. The conditions to win the prize were:
+- Do it in the least amount of time, and
+- Do it in the least amount of moves
+
+I wouldn't say I'm particularly good at 4x4 puzzles, but it sounded like a good challenge to work around it.
+
+The game's first seconds displayed the solution (the fully formed picture), and then it was scrambled.
+
+I don't have the original image, but here's a stock photo for you to have a reference:
+
+<Image src={Puzzle} alt="two pictures of puzzles side by side, the solution on the left and a scrambled version on the right" format="webp" />
+
+There was something particular about the game tho: The timer started to count AFTER you made your first move, leaving you the chance to
+"think" about it before you start playing.
+
+After staring at the picture, I made a "side image" to play with, replacing the scrambled pictures with numbers.
+That way, it was easier to figure out "how to sort it from 1 to 15":
+
+<Image src={PuzzleNumbered} alt="two pictures of puzzles side by side, the solution on the left and a scrambled version on the right, with numbers overlay" format="webp" />
+
+My brain liked it more that way... Buuut, I didn't want to spend too much time on this, so I searched for a puzzle solver. After a few hours, I
+found one that worked through brute force, taking quite some time to give you better and better solutions. It gave you several number sequences
+to follow after some time, and then you could solve the puzzle.
+
+I spent a lot of time searching for a "good scrambled puzzle" because I wanted it to be solved in less than 20 moves if possible.
+After a few days and several restarts of the Facebook game, **I had a solution within 16 moves**.
+
+I overcomplicated after this because of the two constraints of the puzzle - moves count **AND** time. I used an auto-clicker app, where I screenshotted the
+scrambled puzzle and then "solved" the puzzle by following the best number sequence.
+
+Everything was ready to go.
+
+I click on "Start" within the auto-clicker app.
+
+Autoclicker fails at the middle of the puzzle 💀
+
+I messed up by making the auto-clicker go too fast, and a click did not register within the game. I quickly jumped in, fixed a few misclicked tiles, and finished
+the sequence manually. My final mark was **21 moves in 15 seconds**.
+
+A few days before the due date, I checked the leaderboards, and the second-place player solved it in around 300 moves and 20 minutes.
+It wasn't even a competition at that point.
+
+After a few days, I got notified through Facebook that I had won. Yay! 🎉
+
+The official AdeS post was [this](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/).
+Here's a video taken at the place when I picked up the console:
+
+<YouTube id="Uf5JHxDxNRw" />
+
+## From Wii to Xbox 360
+
+I wanted to play [Alan Wake](https://en.wikipedia.org/wiki/Alan_Wake) so bad! So I never thought about keeping the Wii, so I quickly published it
+on an online forum (rest in peace, CHW 🪦), I could sell it, purchase an Xbox 360, or trade it right away.
+
+And some guy writes me wanting to trade his newly received 360 for a Wii! Isn't this world a beauty sometimes?
+
+It turns out he won his Xbox 360 playing online poker! It was a PAL console (we're NTSC here in Chile), so that was a bummer, but
+I trade it anyways. I wanted to unlock it after all, so I could play backups. PAL games were a torrent away.
+
+_Sorry, pirated games were the way for me to play new games then. Thank you, Microsoft!_
+
+## Unlocking it and to the moon 🚀
+
+I found a thread within the same forum where someone unlocked Xbox 360's (darcito was his username). I went to his house (that's where he worked)
+and saw the unlocking process from a few meters away.
+
+"You're kidding? He's just connecting the DVD drive to his computer through SATA and clicking some buttons? I can do that 💩 by myself!"
+
+### Optical Drives
+
+And so, for the next few months, I learned on the internet about how the unlocking process works. Xbox 360's have several optical drives
+vendors, different firmware revisions, and for each one, you had a unique unlocking method, but everything around dumping the console's unique
+DVD Key and flashing the drive with a custom firmware developed by c4eva.
+
+By the end of the year, I copied darcito's strategy and opened my thread within the forum, unlocking consoles in my own home.
+Several Xbox modders powered the DVD drive with the same console, but the community thought that Microsoft could detect if the console was powered on
+without the DVD drive plugged in, your console was "flagged" (not sure if that was right or not).
+
+Anyways, I wanted to protect my client's consoles from being flagged, so I developed a custom power supply with switches for specific voltage
+lines (required to unlock some optical drives):
+
+<Image src={X360PowerSupply} alt="picture of a custom power supply for Xbox 360 DVD drives" format="webp" />
+
+Of course, after some time, they were better retail options for modders, so eventually, I got an X360 USB Pro v2 from Team Xecuter.
+
+#### Drilling chips (Kamikaze method)
+
+This unlocking method for optical drives was wild; I'm not going to lie! For Xbox 360 Slims coming with locked LiteOn DG-16D4S drives AND Winbond chips
+(they were LiteOn drives with MXIC chips that didn't require this) you had to make a hole on a chip inside the DVD drive with a drill.
+
+<Image src={KamikazeLocation} alt="picture of a chip" format="webp" />
+
+What we tried to achieve with Kamikaze was to reach a teeny tiny wire and pull it to ground, allowing you to flash a custom firmware into the drive:
+
+<Image src={WinbondExploitLines} alt="picture of a decapped chip" format="webp" />
+
+I guess Microsoft wasn't expecting this kind of craziness to play backups. Never underestimate the power of hackers.
+A funny message that I found on Twitter related to this:
+
+> MS: Okay, if we connect the write protect from *inside* the package with bond wire, they can't just cut a pin or trace
+
+> Modders: Hold my chip drilling alignment jig
+
+### Reset Glitch hack
+
+On August 28, 2011, GliGli and Tiros (with help from cOz) released the Reset Glitch Hack (or RGH) for the Xbox 360. It is an unpatchable hardware
+exploit to run unsigned code. After a few days, the Xbox 360 scene was slowly making tools for modders to patch the console. You needed
+to be handy with the soldering iron tho.
+
+Finding compatible chips for you in the early days was tough, but I found a few that worked.
+Nowadays, you don't even require a chip with RGH 3.0.
+
+Here's a picture of me booting Linux (the couch you see there was where my customers used to wait):
+
+<Image src={X360Linux} alt="picture of an Xbox 360 running Linux" format="webp" />
+
+I genuinely believe I was one of the first to offer the RGH service here in Chile. I attended customers across the country for both
+optical drive unlocks and RGH. Walking to the mailing office with Xbox 360s was a weekly routine for a long time. Crazy, funny times.
+
+A backup of my services' feedback is still alive [here](https://www.capa9.net/temas/feedback-de-sbarrenechea.899146/).
+I met many very nice people and still keep in touch with them. All of that is because of the AdeS juice.
+
+<p align="center">
+  <Image src={XboxRRoD} alt="me staring at a broken xbox 360" format="webp" />
+  <h4 align="center">Me staring at a RRoD (dead) Xbox 360</h4>
+</p>
