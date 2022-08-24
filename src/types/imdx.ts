@@ -10,6 +10,7 @@ export interface IMDX {
   link?: string;
   url: string;
   tags?: string[];
+  ogOverride?: string;
 }
 
 export type IMDXPage = Page<IMDX>;

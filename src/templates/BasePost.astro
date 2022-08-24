@@ -8,7 +8,7 @@ const content = Astro.props as IMDX;
 const title = `${content.title} - ${AppConfig.siteName}`;
 ---
 
-<Base head={{ title, description: content.description }}>
+<Base head={{ title, description: content.description, ogOverride: content.ogOverride }}>
   <BlogPost content={content}>
     <slot />
   </BlogPost>
