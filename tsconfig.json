@@ -32,7 +32,7 @@
     // Enable stricter transpilation for better output.
     "isolatedModules": true,
     // Add type definitions for our Astro runtime.
-    "types": ["vite/client"],
+    "types": ["@astrojs/image/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

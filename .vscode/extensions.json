@@ -5,8 +5,7 @@
     "esbenp.prettier-vscode",
     "mikestead.dotenv",
     "bradlc.vscode-tailwindcss",
-    "moalamri.inline-fold",
-    "silvenon.mdx"
+    "unifiedjs.vscode-mdx"
   ],
   "unwantedRecommendations": []
 }
