@@ -23,4 +23,4 @@ npm start
 ```
 
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/SebastianBar/barrenechea-website)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/barrenechea/barrenechea-website)

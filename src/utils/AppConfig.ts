@@ -4,7 +4,7 @@ export const AppConfig = {
   description:
     "Sebastian Barrenechea's personal website for portfolio and blog posting.",
   author: 'Sebastian Barrenechea',
-  repo: 'https://github.com/SebastianBar/barrenechea-website',
+  repo: 'https://github.com/barrenechea/barrenechea-website',
   localeRegion: 'en-us',
   locale: 'en',
 };

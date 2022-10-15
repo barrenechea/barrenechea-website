@@ -10,7 +10,7 @@ const socialNetworks = [
   },
   {
     name: 'GitHub',
-    url: 'https://github.com/SebastianBar',
+    url: 'https://github.com/barrenechea',
     icon: IconGithub,
   },
   {
