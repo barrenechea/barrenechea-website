@@ -13,18 +13,16 @@ export default function Layout({ children }) {
   return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
 }
 
-As of December 11, 2022, Linux Kernel [6.1](https://lkml.org/lkml/2022/12/11/206) has introduced the basic foundations of [Rust](https://www.rust-lang.org), a popular programming language known for its speed and reliability. This move is seen as a major milestone for the Rust community, as it marks the first time the language has been integrated into the Linux kernel.
+The [Rust](https://www.rust-lang.org) programming language has made a big splash in the tech world with its recent inclusion in Linux Kernel [6.1](https://lkml.org/lkml/2022/12/11/206), as of December 11, 2022. Known for its speed and reliability, Rust is a statically typed, compiled language that emphasizes safety, concurrency, and performance. If you're familiar with C++, you'll find Rust's syntax easy to learn.
 
-For those unfamiliar with Rust, it is a statically typed, compiled language that focuses on safety, concurrency, and performance. Its syntax is similar to C++, making it easy for developers with experience in that language to pick up.
+So why did the Linux kernel team choose Rust, and what does this mean for the future of the language?
 
-But why was Rust chosen to be included in the Linux kernel, and what does this mean for the future of the language?
+One of the main reasons Rust was selected was its strong focus on safety. The Linux kernel handles a lot of sensitive tasks and information, so it's important to have a language that prioritizes safety. Rust's strict type checking and borrow checker help prevent common programming mistakes that could lead to security vulnerabilities.
 
-One of the main reasons Rust was chosen was due to its strong emphasis on safety. The Linux kernel handles a vast amount of sensitive information and tasks, so having a language that prioritizes safety is crucial. Rust's strict type checking and borrow checker help prevent common programming mistakes that can lead to security vulnerabilities.
+In addition to safety, Rust also offers excellent concurrency support. Its concept of "ownership" manages memory and prevents race conditions, allowing for efficient and reliable multitasking.
 
-In addition to its focus on safety, Rust also offers excellent concurrency support. It uses a concept called "ownership" to manage memory and prevent race conditions, allowing for efficient and reliable multitasking.
+But the inclusion of Rust in the Linux kernel isn't just good news for the kernel - it's also a major milestone for Rust as a language. Being used in a high-profile project like the Linux kernel is sure to attract more attention and adoption from the developer community.
 
-But it's not just about the benefits for the Linux kernel - this integration is also a major milestone for Rust as a language. It is now being used in a high-profile project, which is sure to attract more attention and adoption from the developer community.
+It's important to note that this is just the beginning of Rust's integration into the Linux kernel. The team behind the kernel has stated that they plan to gradually introduce more of Rust's features over time, while also ensuring that existing functionality isn't disrupted.
 
-However, it's important to note that the inclusion of Rust in the Linux kernel is just the beginning. The team behind the Linux kernel has stated that they plan to gradually introduce more of Rust's features over time, while also ensuring that existing functionality is not disrupted.
-
-In conclusion, the addition of Rust basic foundations to Linux Kernel 6.1 is a significant step forward for both the Linux kernel and the Rust programming language. It's a win-win situation, as Rust brings its focus on safety and concurrency to the kernel, while also gaining more visibility and adoption as a language. As always, it's important to remember the phrase "if it ain't broke, don't fix it" - but in this case, introducing Rust looks to be a promising move for the future of the Linux kernel.
+In summary, the addition of Rust to Linux Kernel 6.1 is a major step forward for both the kernel and the Rust programming language. Rust brings its focus on safety and concurrency to the kernel, while also gaining more visibility and adoption as a language. As the saying goes, "if it ain't broke, don't fix it" - but in this case, introducing Rust looks like a promising move for the future of the Linux kernel.
