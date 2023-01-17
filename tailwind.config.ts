@@ -8,7 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['JetBrains Mono', ...defaultTheme.fontFamily.mono],
+        mono: ['Inconsolata', ...defaultTheme.fontFamily.mono],
       },
       typography: {
         DEFAULT: {
