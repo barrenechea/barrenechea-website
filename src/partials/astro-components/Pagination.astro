@@ -8,9 +8,9 @@ export interface Props {
 
 <div class="flex justify-center gap-8">
   {Astro.props.imdxPage.url.prev && (
-    <a href={Astro.props.imdxPage.url.prev}>← Newer Posts</a>
+    <a href={Astro.props.imdxPage.url.prev} target="_self">← Newer Posts</a>
   )}
   {Astro.props.imdxPage.url.next && (
-    <a href={Astro.props.imdxPage.url.next}>Older Posts →</a>
+    <a href={Astro.props.imdxPage.url.next} target="_self">Older Posts →</a>
   )}
 </div>
