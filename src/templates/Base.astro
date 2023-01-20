@@ -28,14 +28,14 @@ const texts = splittedTitle.map((text, index) => {
   return {
     content: text, attributes: {
       x: '55', y: `${105 * (index + 1)}`
-      , 'font-size': `${60 - (index * 12)}px`, 'font-family': 'Inconsolata', fill: '#f3f4f6'
+      , 'font-size': `${60 - (index * 12)}px`, 'font-family': 'Work Sans', fill: '#f3f4f6'
     },
   }
 });
 texts.push({
   content: 'barrenechea.cl', attributes: {
     x: '55', y: '570'
-    , 'font-size': '36px', 'font-family': 'Inconsolata', fill: '#71717a'
+    , 'font-size': '36px', 'font-family': 'Work Sans', fill: '#71717a'
   },
 });
 ---
@@ -68,7 +68,7 @@ texts.push({
   </script>
 </head>
 
-<body class="bg-zinc-900 font-mono text-gray-100">
+<body class="bg-zinc-900 font-sans text-gray-100">
   <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon="Fork me on GitHub"
     title="Fork me on GitHub">Fork me on GitHub</a>
 

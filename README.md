@@ -9,7 +9,7 @@
 
 - Powered by [Astro](https://astro.build/)
 - Styled handled by [Tailwind CSS](https://tailwindcss.com/)
-- [Inconsolata](https://fonts.google.com/specimen/Inconsolata) both on-site & OG Images
+- [Work Sans](https://fonts.google.com/specimen/Work+Sans) both on-site & OG Images
 - Image optimizations through [@astrojs/image](https://docs.astro.build/en/guides/integrations-guide/image/)
 - Sitemap, RSS feed & OpenGraph images for SEO by default
 
