@@ -9,7 +9,7 @@ import HeroSocial from '@/partials/astro-components/HeroSocial.astro';
 import Section from '@/partials/astro-components/Section.astro';
 
 // const avatar = avatars[Math.floor(Math.random() * avatars.length)]!;
-const avatar = avatars[1]!;
+const avatar = avatars[0]!;
 ---
 
 <Section>
@@ -39,7 +39,7 @@ const avatar = avatars[1]!;
     <Fragment slot="socialButtons">
       {socials.map(({ url, icon, name }) => (
       <a href={url}>
-        <HeroSocial src={icon} alt={`${name} icon`} />
+        <HeroSocial src={icon.src} alt={`${name} icon`} />
       </a>
       ))}
     </Fragment>
