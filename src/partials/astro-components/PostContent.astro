@@ -7,7 +7,7 @@ const { content } = Astro.props as { content: IMDX };
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
-  <div class="aspect-w-3 aspect-h-2 rounded-lg object-cover object-center">
+  <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
     {typeof content.imgSrc === 'string' && (content.imgSrc as string).includes('svg') ? (
       <img src={content.imgSrc} alt={content.imgAlt} />
     ) : (
@@ -22,7 +22,7 @@ const { content } = Astro.props as { content: IMDX };
     )}
   </div>
 
-  <div class="prose prose-invert prose-img:rounded-lg mt-8">
+  <div class="prose prose-invert mt-8 prose-img:rounded-lg">
     <slot />
   </div>
 </div>

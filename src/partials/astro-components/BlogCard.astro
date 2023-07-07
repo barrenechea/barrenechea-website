@@ -20,7 +20,7 @@ const formattedDate = instance.pubDate ? formatDate(instance.pubDate) : null;
   target="_self"
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">
-    <div class="aspect-w-3 aspect-h-2 bg-zinc-200">
+    <div class="aspect-h-2 aspect-w-3 bg-zinc-200">
       {typeof instance.imgSrc === 'string' && (instance.imgSrc as string).includes('svg') ? (
         <img
           src={instance.imgSrc}
@@ -39,7 +39,7 @@ const formattedDate = instance.pubDate ? formatDate(instance.pubDate) : null;
       )}
     </div>
 
-    <div class="px-3 pt-4 pb-6 text-center">
+    <div class="px-3 pb-6 pt-4 text-center">
       <h2 class="text-xl font-semibold">
         {instance.title}
       </h2>

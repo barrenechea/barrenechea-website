@@ -42,7 +42,7 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
           {title}
         </h3>
         {formattedDate && (
-        <div class="mt-0 mb-2 text-xs font-bold uppercase text-zinc-400">
+        <div class="mb-2 mt-0 text-xs font-bold uppercase text-zinc-400">
           {formattedDate}
         </div>
         )}
@@ -66,7 +66,7 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
   </div>
 
   <div class="mx-auto mt-5 max-w-prose">
-    <div class="prose prose-invert prose-img:rounded-lg mt-8">
+    <div class="prose prose-invert mt-8 prose-img:rounded-lg">
       <slot />
     </div>
   </div>

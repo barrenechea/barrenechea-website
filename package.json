@@ -51,7 +51,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,astro}": [
-      "eslint --fix .",
+      "eslint .",
       "astro check",
       "astro lint"
     ]
