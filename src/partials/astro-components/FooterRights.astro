@@ -2,12 +2,12 @@
 import { AppConfig } from '@/utils/AppConfig';
 
 const year = new Date().getFullYear();
-const yearRange = `2022-${year}`;
 const { author } = AppConfig;
+const copyrightText = `2022-${year} ${author}`;
 ---
 
 <div class="border-t border-gray-600 pt-5">
   <div class="text-right text-xs text-zinc-500">
-    <p>©{yearRange} {author}. All rights reserved.</p>
+    <p>©{copyrightText}. All rights reserved.</p>
   </div>
 </div>
