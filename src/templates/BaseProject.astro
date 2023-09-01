@@ -1,6 +1,4 @@
 ---
-import type { ImageMetadata } from '@astrojs/image/dist/vite-plugin-astro-image';
-
 import ProjectPost from '@/partials/ProjectPost.astro';
 import Base from '@/templates/Base.astro';
 import { AppConfig } from '@/utils/AppConfig';
@@ -8,7 +6,7 @@ import { AppConfig } from '@/utils/AppConfig';
 export interface Props {
   title: string;
   description: string;
-  imgSrc: ImageMetadata;
+  imgSrc: string;
   imgAlt: string;
   pubDate?: Date;
   link?: string;

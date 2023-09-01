@@ -1,13 +1,12 @@
 ---
-import { Image } from '@astrojs/image/components';
-import type { ImageMetadata } from '@astrojs/image/dist/vite-plugin-astro-image';
+import { Image } from 'astro:assets';
 
 export interface Props {
   name: string;
   description: string;
   link: string;
   img: {
-    src: ImageMetadata;
+    src: string;
     alt: string;
   };
 }

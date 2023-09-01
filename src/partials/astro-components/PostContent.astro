@@ -1,5 +1,5 @@
 ---
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
 
 import type { IMDX } from '@/types/imdx';
 
@@ -16,8 +16,8 @@ const { content } = Astro.props as { content: IMDX };
         src={content.imgSrc}
         alt={content.imgAlt}
         format="webp"
-        aspectRatio={3 / 2}
         width={800}
+        height={533}
       />
     )}
   </div>

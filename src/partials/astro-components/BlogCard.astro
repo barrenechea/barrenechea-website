@@ -1,5 +1,5 @@
 ---
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
 
 import type { IMDX } from '@/types/imdx';
 import { formatDate } from '@/utils/dates';
@@ -33,8 +33,8 @@ const formattedDate = instance.pubDate ? formatDate(instance.pubDate) : null;
           src={instance.imgSrc}
           alt={instance.imgAlt}
           format="webp"
-          aspectRatio={3 / 2}
           width={400}
+          height={267}
         />
       )}
     </div>

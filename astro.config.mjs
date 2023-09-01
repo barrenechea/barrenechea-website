@@ -1,4 +1,3 @@
-import image from '@astrojs/image';
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
@@ -17,9 +16,6 @@ export default defineConfig({
     },
   },
   integrations: [
-    image({
-      serviceEntryPoint: '@astrojs/image/sharp'
-    }),
     mdx(),
     partytown({
       config: {
@@ -28,7 +24,7 @@ export default defineConfig({
     }),
     sitemap(),
     tailwind({ config: { applyBaseStyles: false } }),
-    compress({ img: false }),
+    compress({ Image: false }),
     robotsTxt(),
   ],
 });

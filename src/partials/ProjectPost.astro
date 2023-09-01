@@ -1,6 +1,5 @@
 ---
-import { Image } from '@astrojs/image/components';
-import type { ImageMetadata } from '@astrojs/image/dist/vite-plugin-astro-image';
+import { Image } from 'astro:assets';
 
 import Section from '@/partials/astro-components/Section.astro';
 import { formatDate } from '@/utils/dates';
@@ -8,7 +7,7 @@ import { formatDate } from '@/utils/dates';
 export interface Props {
   title: string;
   description: string;
-  imgSrc: ImageMetadata;
+  imgSrc: string;
   imgAlt: string;
   pubDate?: Date;
   link?: string;
