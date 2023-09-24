@@ -4,10 +4,8 @@ import ProjectImage from "@/assets/images/arm-x86.svg";
 export const title = "Multi-arch All the Things";
 export const description = "The path of switching from a x86/64 world into an universe of architectures.";
 export const pubDate = new Date("2021-09-06T00:00:00Z");
-export const link = "#";
 export const imgSrc = ProjectImage;
 export const imgAlt = 'Two chips, one with the "x86" label, and one with the "ARM" label.';
-export const tags = [];
 
 export default function Layout({ children }) {
   return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;

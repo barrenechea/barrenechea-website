@@ -4,10 +4,8 @@ import ProjectImage from "@/assets/images/post-linux-rust.png";
 export const title = "Rust and Linux: Safety and Concurrency at the Core";
 export const description = "The Linux kernel now includes Rust, a language that emphasizes reliability and performance. This marks a significant milestone for Rust and the kernel.";
 export const pubDate = new Date("2022-12-26T00:00:00Z");
-export const link = "#";
 export const imgSrc = ProjectImage;
 export const imgAlt = 'Image generated through Midjourney with prompt: Linux penguin playing with a crab from the Rust programming language, antarctica, layered paper art, diorama, shadowbox, volumetric lighting --v 4';
-export const tags = [];
 
 export default function Layout({ children }) {
   return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;

@@ -6,10 +6,8 @@ import { Image } from "astro:assets";
 export const title = "Hello world!";
 export const description ="Rebooted the website, now powered by Astro and distributed over the Edge!";
 export const pubDate = new Date("2022-07-28T12:00:00Z");
-export const link = "#";
 export const imgSrc = ProjectImage;
 export const imgAlt = 'Astro logo';
-export const tags = [];
 
 export default function Layout({ children }) {
   return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
