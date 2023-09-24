@@ -19,3 +19,5 @@ node_modules/
 *.pem
 Thumbs.db
 public/socials/*
+
+.astro
