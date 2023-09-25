@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseProject from "@/templates/BaseProject.astro";
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('project');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<BaseProject title={entry.data.title} description={entry.data.description} imgSrc={entry.data.img} imgAlt={entry.data.imgAlt}>
+  <Content />
+</BaseProject>

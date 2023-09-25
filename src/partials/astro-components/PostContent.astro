@@ -6,12 +6,12 @@ const { content } = Astro.props;
 
 <div class="mx-auto mt-5 max-w-prose">
   <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
-    {typeof content.img.src === 'string' && (content.img.src as string).includes('svg') ? (
-      <img src={content.img.src} alt={content.imgAlt} />
+    {typeof content.img === 'string' && (content.img as string).includes('svg') ? (
+      <img src={content.img} alt={content.imgAlt} />
     ) : (
       <Image
         class="h-full w-full object-cover object-center"
-        src={content.img.src}
+        src={content.img}
         alt={content.imgAlt}
         format="webp"
         width={800}
