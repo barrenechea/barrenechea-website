@@ -1,17 +1,14 @@
-import BaseProject from "@/templates/BaseProject.astro";
-import ProjectImage from "@/assets/images/project-openhaystack.png";
-
-export const title = "OpenHaystack on ESPHome";
-export const description = "OpenHaystack port as an ESPHome Component. Compatible with all BLE-enabled devices from Espressif.";
-export const pubDate = new Date("2022-06-23T10:42:00Z");
-export const link = "https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack";
-export const imgSrc = ProjectImage;
-export const imgAlt = "OpenHaystack and ESPHome logos";
-export const tags = ["Hardware", "Embedded"];
-
-export default function Layout({ children }) {
-  return <BaseProject title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate} link={link}>{children}</BaseProject>;
-}
+---
+title: OpenHaystack on ESPHome
+description: OpenHaystack port as an ESPHome Component. Compatible with all BLE-enabled devices from Espressif.
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ../../assets/images/project-openhaystack.png
+imgAlt: OpenHaystack and ESPHome logos
+tags:
+  - Hardware
+  - Embedded
+---
 
 [OpenHaystack](https://github.com/seemoo-lab/openhaystack) is an application that allows you to create your own accessories that are tracked by Apple's [Find My network](https://developer.apple.com/find-my/). They reverse-engineered the Apple protocol and documented it, a pretty awesome project.
 

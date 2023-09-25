@@ -1,17 +1,16 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 
 export interface Props {
   name: string;
   description: string;
   link: string;
-  img: {
-    src: string;
-    alt: string;
-  };
+  img: ImageMetadata;
+  imgAlt: string;
 }
 
-const { name, description, link, img } = Astro.props as Props;
+const { name, description, link, img, imgAlt } = Astro.props as Props;
 ---
 
 <a class="transform-gpu transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
@@ -22,11 +21,11 @@ const { name, description, link, img } = Astro.props as Props;
       <div class="h-36 w-36">
         <div class="flex w-full justify-center">
           <div class="relative">
-            {typeof img.src === 'string' && (img.src as string).includes('svg') ? (
-            <img src={img.src} alt={img.alt}
+            {img.format === 'svg' ? (
+            <img src={img.src} alt={imgAlt}
               class="h-[144px] w-[144px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />
             ) : (
-            <Image src={img.src} alt={img.alt} format="webp" width={300} height={300}
+            <Image src={img} alt={imgAlt} format="webp" width={300} height={300}
               class="h-[144px] w-[144px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />)}
           </div>
         </div>

@@ -1,36 +1,37 @@
 ---
-import type { PaginateFunction } from 'astro';
+import type { Page, PaginateFunction } from "astro";
+import { type CollectionEntry, getCollection } from "astro:content";
 
-import BlogGallery from '@/partials/astro-components/BlogGallery.astro';
-import Pagination from '@/partials/astro-components/Pagination.astro';
-import PaginationHeader from '@/partials/astro-components/PaginationHeader.astro';
-import Section from '@/partials/astro-components/Section.astro';
-import Base from '@/templates/Base.astro';
-import type { IMDX, IMDXPage } from '@/types/imdx';
-import { AppConfig } from '@/utils/AppConfig';
-import { sortByDate } from '@/utils/Posts';
+import BlogGallery from "@/partials/astro-components/BlogGallery.astro";
+import Pagination from "@/partials/astro-components/Pagination.astro";
+import PaginationHeader from "@/partials/astro-components/PaginationHeader.astro";
+import Section from "@/partials/astro-components/Section.astro";
+import Base from "@/templates/Base.astro";
+import { AppConfig } from "@/utils/AppConfig";
 
 type GetStaticPaths = {
   paginate: PaginateFunction;
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allPosts = await Astro.glob('./*.mdx') as unknown as IMDX[];
-  const sortedPosts = sortByDate(allPosts);
+  const allPosts = await getCollection("posts", (item) => item.slug.split('/').length === 1);
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+  );
 
   // Return a paginated collection of paths for all posts
   return paginate(sortedPosts, { pageSize: 6 });
 }
 
 interface Props {
-  page: IMDXPage;
+  page: Page<CollectionEntry<"posts">>;
 }
 
 const { page } = Astro.props as Props;
 const titleBase = `Page ${page.currentPage} - Posts`;
 const title = `${titleBase} - ${AppConfig.siteName}`;
 const description =
-  'Paginated result of some brain-dumping processes that I go through from time to time';
+  "Paginated result of some brain-dumping processes that I go through from time to time";
 ---
 
 <Base head={{ title, description }}>
@@ -39,10 +40,10 @@ const description =
   </Section>
 
   <Section>
-    <BlogGallery postList={page.data} />
+    <BlogGallery postsList={page.data} />
   </Section>
 
   <Section>
-    <Pagination imdxPage={page} />
+    <Pagination page={page} />
   </Section>
 </Base>

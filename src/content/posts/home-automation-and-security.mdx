@@ -1,17 +1,10 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/post-home-automation-and-security.png";
-
-export const title = "The Benefits and Drawbacks of Home Automation Systems for Home Security";
-export const description = "A quick glance at the benefits and drawbacks of home automation systems for home security, including Zigbee, Matter, and Home Assistant.";
-export const pubDate = new Date("2022-12-30T00:00:00Z");
-export const link = "#";
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Image generated through Midjourney with prompt: digital representation of a house using lines of light, home security protection aura, single lines, impactful, colorful, reallistic, octane rendering --v 4 --ar 3:2';
-export const tags = [];
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+---
+title: The Benefits and Drawbacks of Home Automation Systems for Home Security
+description: A quick glance at the benefits and drawbacks of home automation systems for home security, including Zigbee, Matter, and Home Assistant.
+pubDate: 2022-12-30T00:00:00Z
+img: ../../assets/images/post-home-automation-and-security.png
+imgAlt: 'Image generated through Midjourney with prompt: digital representation of a house using lines of light, home security protection aura, single lines, impactful, colorful, reallistic, octane rendering --v 4 --ar 3:2'
+---
 
 Home automation systems can be a useful tool for improving home security. These systems allow you to remotely control and monitor various devices in your home, such as lights, locks, and cameras, using a smartphone app or other type of control panel.
 

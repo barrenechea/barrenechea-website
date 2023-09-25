@@ -1,17 +1,14 @@
-import BaseProject from "@/templates/BaseProject.astro";
-import ProjectImage from "@/assets/images/project-textual.svg";
-
-export const title = "Textual Pipeline";
-export const description = "A GitHub Actions pipeline which builds the Textual App while also disabling their License Manager.";
-export const pubDate = new Date("2022-03-17T18:41:00Z");
-export const link = "https://github.com/barrenechea/Textual";
-export const imgSrc = ProjectImage;
-export const imgAlt = "Textual App logo";
-export const tags = ["Pipelines", "Xcode"];
-
-export default function Layout({ children }) {
-  return <BaseProject title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate} link={link}>{children}</BaseProject>;
-}
+---
+title: Textual Pipeline
+description: A GitHub Actions pipeline which builds the Textual App while also disabling their License Manager.
+pubDate: 2022-03-17T18:41:00Z
+link: https://github.com/barrenechea/Textual
+img: ../../assets/images/project-textual.svg
+imgAlt: Textual App logo
+tags:
+  - Pipelines
+  - Xcode
+---
 
 [Textual](https://www.codeux.com/textual) is an [IRC](https://en.wikipedia.org/wiki/Internet_Relay_Chat) client for macOS. I got to know IRC back when I was a kid. It certainly blew my mind at that time to be able to communicate with random people all around the world.
 

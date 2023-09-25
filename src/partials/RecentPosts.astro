@@ -1,14 +1,15 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
 import BlogGallery from '@/partials/astro-components/BlogGallery.astro';
 import GradientText from '@/partials/astro-components/GradientText.astro';
 import Section from '@/partials/astro-components/Section.astro';
-import type { IMDX } from '@/types/imdx';
 
 export interface Props {
-  postList: IMDX[];
+  postsList: CollectionEntry<'posts'>[];
 }
 
-const { postList } = Astro.props as Props;
+const { postsList } = Astro.props as Props;
 ---
 
 <Section>
@@ -23,5 +24,5 @@ const { postList } = Astro.props as Props;
       </a>
     </div>
   </div>
-  <BlogGallery postList={postList} />
+  <BlogGallery postsList={postsList} />
 </Section>

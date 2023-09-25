@@ -1,15 +1,20 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
 import BlogPost from '@/partials/BlogPost.astro';
 import Base from '@/templates/Base.astro';
-import type { IMDX } from '@/types/imdx';
 import { AppConfig } from '@/utils/AppConfig';
 
-const content = Astro.props as IMDX;
-const title = `${content.title} - ${AppConfig.siteName}`;
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const title = `${post.data.title} - ${AppConfig.siteName}`;
 ---
 
-<Base head={{ title, description: content.description, ogOverride: content.ogOverride }}>
-  <BlogPost content={content}>
+<Base head={{ title, description: post.data.description, ogOverride: post.data.ogOverride }}>
+  <BlogPost {post}>
     <slot />
   </BlogPost>
 </Base>

@@ -1,18 +1,18 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Hero from '@/partials/Hero.astro';
 import RecentPosts from '@/partials/RecentPosts.astro';
 import RecentProjects from '@/partials/RecentProjects.astro';
 import Base from '@/templates/Base.astro';
-import type { IMDX } from '@/types/imdx';
 import { AppConfig } from '@/utils/AppConfig';
-import { sortByDate } from '@/utils/Posts';
 
-const allPosts = await Astro.glob('./posts/*.mdx') as unknown as IMDX[];
-const sortedPosts = sortByDate(allPosts);
+const allPosts = await getCollection('posts', (item) => item.slug.split('/').length === 1);
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 const lastThreePosts = sortedPosts.slice(0, 3);
 
-const allProjects = await Astro.glob('./projects/*.mdx') as unknown as IMDX[];
-const sortedProjects = sortByDate(allProjects);
+const allProjects = await getCollection('projects', (item) => item.slug.split('/').length === 1);
+const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 const lastThreeProjects = sortedProjects.slice(0, 3);
 
 const { siteName: title, description } = AppConfig;
@@ -20,6 +20,6 @@ const { siteName: title, description } = AppConfig;
 
 <Base head={{ title, description }}>
   <Hero />
-  <RecentProjects projectList={lastThreeProjects} />
-  <RecentPosts postList={lastThreePosts} />
+  <RecentProjects projectsList={lastThreeProjects} />
+  <RecentPosts postsList={lastThreePosts} />
 </Base>

@@ -1,17 +1,10 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/post-isp-speeds.png";
-
-export const title = "Chile: A Leader in Fast Internet Speeds";
-export const description = "Discover how Chile's fast internet speeds, commitment to innovation and accessibility of affordable fiber internet set it as a leader in the tech industry.";
-export const pubDate = new Date("2023-01-17T12:00:00Z");
-export const link = "#";
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Image generated through Midjourney with prompt: A chilean flag made of fiber optics, tech concept art, chile, high definition, detailed, realistic, colorful, hopeful --v 4 --ar 3:2';
-export const tags = [];
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+---
+title: 'Chile: A Leader in Fast Internet Speeds'
+description: Discover how Chile's fast internet speeds, commitment to innovation and accessibility of affordable fiber internet set it as a leader in the tech industry.
+pubDate: 2023-01-17T12:00:00Z
+img: ../../assets/images/post-isp-speeds.png
+imgAlt: 'Image generated through Midjourney with prompt: A chilean flag made of fiber optics, tech concept art, chile, high definition, detailed, realistic, colorful, hopeful --v 4 --ar 3:2'
+---
 
 According to the latest study by [OOKLA](https://www.ookla.com/articles/global-index-internet-speed-growth-2022), Chile has the fastest fixed broadband internet in the world. The country was at the top of the global Speedtest index, ahead of countries like China and Singapore.
 

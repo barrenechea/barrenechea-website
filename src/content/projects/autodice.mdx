@@ -1,20 +1,16 @@
-import BaseProject from "@/templates/BaseProject.astro";
-import ProjectImage from "@/assets/images/project-autodice.png";
-import FooterImage from "@/assets/images/autodice-infographic.png";
+---
+title: AutoDice
+description: 'Desktop App that connects with multiple sites for cryptocurrency betting on the "Dice" game.'
+pubDate: 2015-07-27T01:46:14Z
+link: https://github.com/barrenechea/AutoDice
+img: ../../assets/images/project-autodice.png
+imgAlt: Logo of the AutoDice project
+tags:
+  - CSharp
+  - DotNet6
+---
 import { Image } from "astro:assets";
-
-export const title = "AutoDice";
-export const description =
-  'Desktop App that connects with multiple sites for cryptocurrency betting on the "Dice" game.';
-export const pubDate = new Date("2015-07-27T01:46:14Z");
-export const link = "https://github.com/barrenechea/AutoDice";
-export const imgSrc = ProjectImage;
-export const imgAlt = "Logo of the AutoDice project";
-export const tags = ["CSharp", "DotNet6"];
-
-export default function Layout({ children }) {
-  return <BaseProject title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate} link={link}>{children}</BaseProject>;
-}
+import FooterImage from "@/assets/images/autodice-infographic.png";
 
 This project started when I was studying Computer Science, and it was just my first attempt at making something useful and related to stuff I was involved in at that time.
 

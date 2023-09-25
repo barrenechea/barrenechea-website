@@ -1,12 +1,14 @@
 ---
+
+import type { CollectionEntry } from 'astro:content';
+
 import GradientText from '@/partials/astro-components/GradientText.astro';
 import Project from '@/partials/astro-components/Project.astro';
 import Section from '@/partials/astro-components/Section.astro';
 import Tags from '@/partials/astro-components/Tags.astro';
-import type { IMDX } from '@/types/imdx';
 
 export interface Props {
-  projectList: IMDX[];
+  projectsList: CollectionEntry<'projects'>[];
 }
 
 const tags = {
@@ -32,7 +34,7 @@ const tags = {
 
 const defaultTag = { color: 'GRAY', text: 'UNDEFINED TAG' };
 
-const { projectList } = Astro.props as Props;
+const { projectsList } = Astro.props as Props;
 ---
 
 <Section>
@@ -48,17 +50,15 @@ const { projectList } = Astro.props as Props;
     </div>
   </div>
   <div class="flex flex-col gap-6">
-    {projectList.map((project) => (
+    {projectsList.map((project) => (
       <Project
-        name={project.title}
-        description={project.description}
-        link={project.url}
-        img={{
-          src: project.imgSrc,
-          alt: project.imgAlt,
-        }}
+        name={project.data.title}
+        description={project.data.description}
+        link={`/projects/${project.slug}`}
+        img={project.data.img}
+        imgAlt={project.data.imgAlt}
       >
-        {(project.tags || []).map((tag) => (
+        {(project.data.tags || []).map((tag) => (
           <Tags color={(tags[tag] || defaultTag).color}>
             {(tags[tag] || defaultTag).text}
           </Tags>
