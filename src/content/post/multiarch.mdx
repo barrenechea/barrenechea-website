@@ -1,15 +1,10 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/arm-x86.svg";
-
-export const title = "Multi-arch All the Things";
-export const description = "The path of switching from a x86/64 world into an universe of architectures.";
-export const pubDate = new Date("2021-09-06T00:00:00Z");
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Two chips, one with the "x86" label, and one with the "ARM" label.';
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+---
+title: Multi-arch All the Things
+description: The path of switching from a x86/64 world into an universe of architectures.
+pubDate: 2021-09-06T00:00:00Z
+img: ../../assets/images/arm-x86.svg
+imgAlt: 'Two chips, one with the "x86" label, and one with the "ARM" label.'
+---
 
 Back when we started building our initial foundations at [Finalis](https://www.finalis.com), I remember having the idea of giving AWS's Graviton a try.
 It wasn't feasible back in 2018 without building stuff by yourself. Heck, it's 2022, and we (as a community) still struggle to find ARMv8 support in images on Dockerhub.

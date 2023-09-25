@@ -1,15 +1,10 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/post-nvidia-mellanox.png";
-
-export const title = "Lack of ASPM Support in Mellanox Cards";
-export const description = "Examining the lack of ASPM support in Mellanox cards from Nvidia and its impact on power efficiency in high-performance computing systems.";
-export const pubDate = new Date("2023-01-02T12:00:00Z");
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Image generated through Midjourney with prompt: Green Nvidia datacenter inside a glass biosphere emitting gray gas, impactful, colorful, reallistic, canon lens, high detail picture --v 4 --ar 3:2';
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+---
+title: Lack of ASPM Support in Mellanox Cards
+description: Examining the lack of ASPM support in Mellanox cards from Nvidia and its impact on power efficiency in high-performance computing systems.
+pubDate: 2023-01-02T12:00:00Z
+img: ../../assets/images/post-nvidia-mellanox.png
+imgAlt: 'Image generated through Midjourney with prompt: Green Nvidia datacenter inside a glass biosphere emitting gray gas, impactful, colorful, reallistic, canon lens, high detail picture --v 4 --ar 3:2'
+---
 
 Mellanox cards from Nvidia do not support ASPM (Active State Power Management), a power management feature that helps reduce the power consumption of PCI Express (PCIe) devices. This is a problem because Mellanox cards are used in many high-performance computing (HPC) systems, which often have a large number of PCIe devices that can contribute significantly to the power consumption of the system.
 

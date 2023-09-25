@@ -1,17 +1,12 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/post-astro.png";
-import OldWebsiteImage from "@/assets/images/old-website.png";
+---
+title: Hello world!
+description: Rebooted the website, now powered by Astro and distributed over the Edge!
+pubDate: 2022-07-28T12:00:00Z
+img: ../../assets/images/post-astro.png
+imgAlt: Astro logo
+---
 import { Image } from "astro:assets";
-
-export const title = "Hello world!";
-export const description ="Rebooted the website, now powered by Astro and distributed over the Edge!";
-export const pubDate = new Date("2022-07-28T12:00:00Z");
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Astro logo';
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+import OldWebsiteImage from "@/assets/images/old-website.png";
 
 If you've been here before, this website has been with the "hi there" message for a few years. A lot has changed over the years tho!
 

@@ -1,5 +1,11 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/project-ades-wii-x360.png";
+---
+title: I hacked hundreds of game consoles thanks to a juice
+ogOverride: Of game consoles thanks to a juice - I hacked hundreds
+description: What I did instead of partying while young 🥴
+pubDate: 2022-08-23T23:13:00Z
+img: ../../assets/images/project-ades-wii-x360.png
+imgAlt: Composition of Bill Gates playing Guitar Hero on Mordor after being pwned by AdeS juice
+---
 import Puzzle from "@/assets/images/puzzle.png";
 import PuzzleNumbered from "@/assets/images/puzzle-numbered.png";
 import X360PowerSupply from "@/assets/images/x360-dvd-power-supply.jpg";
@@ -9,17 +15,6 @@ import WinbondExploitLines from "@/assets/images/winbond-exploit-lines.jpg";
 import XboxRRoD from "@/assets/images/xbox-rrod.jpg";
 import { Image } from "astro:assets";
 import { YouTube } from "@astro-community/astro-embed-youtube";
-
-export const title = "I hacked hundreds of game consoles thanks to a juice";
-export const ogOverride = "Of game consoles thanks to a juice - I hacked hundreds"
-export const description ="What I did instead of partying while young 🥴";
-export const pubDate = new Date("2022-08-23T23:13:00Z");
-export const imgSrc = ProjectImage;
-export const imgAlt = "Composition of Bill Gates playing Guitar Hero on Mordor after being pwned by AdeS juice";
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} ogOverride={ogOverride} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
 
 In 2010, AdeS (an Argentinian brand of juice later purchased by Coca-Cola Company in 2016) made a contest over Facebook.
 It was a 4x4 puzzle game where you could win a Nintendo Wii. The conditions to win the prize were:

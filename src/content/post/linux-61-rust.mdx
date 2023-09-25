@@ -1,15 +1,10 @@
-import BasePost from "@/templates/BasePost.astro";
-import ProjectImage from "@/assets/images/post-linux-rust.png";
-
-export const title = "Rust and Linux: Safety and Concurrency at the Core";
-export const description = "The Linux kernel now includes Rust, a language that emphasizes reliability and performance. This marks a significant milestone for Rust and the kernel.";
-export const pubDate = new Date("2022-12-26T00:00:00Z");
-export const imgSrc = ProjectImage;
-export const imgAlt = 'Image generated through Midjourney with prompt: Linux penguin playing with a crab from the Rust programming language, antarctica, layered paper art, diorama, shadowbox, volumetric lighting --v 4';
-
-export default function Layout({ children }) {
-  return <BasePost title={title} description={description} imgSrc={imgSrc} imgAlt={imgAlt} pubDate={pubDate}>{children}</BasePost>;
-}
+---
+title: "Rust and Linux: Safety and Concurrency at the Core"
+description: "The Linux kernel now includes Rust, a language that emphasizes reliability and performance. This marks a significant milestone for Rust and the kernel."
+pubDate: 2022-12-26T00:00:00Z
+img: ../../assets/images/post-linux-rust.png
+imgAlt: 'Image generated through Midjourney with prompt: Linux penguin playing with a crab from the Rust programming language, antarctica, layered paper art, diorama, shadowbox, volumetric lighting --v 4'
+---
 
 The [Rust](https://www.rust-lang.org) programming language has made a big splash in the tech world with its recent inclusion in Linux Kernel [6.1](https://lkml.org/lkml/2022/12/11/206), as of December 11, 2022. Known for its speed and reliability, Rust is a statically typed, compiled language that emphasizes safety, concurrency, and performance. If you're familiar with C++, you'll find Rust's syntax easy to learn.
 
