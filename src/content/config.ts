@@ -1,7 +1,7 @@
 import { defineCollection, z } from "astro:content";
 
 const postsCollection = defineCollection({
-  type: "content", // v2.5.0 and later
+  type: "content",
   schema: ({ image }) => z.object({
     title: z.string(),
     ogOverride: z.string().optional(),
@@ -13,7 +13,7 @@ const postsCollection = defineCollection({
 });
 
 const projectsCollection = defineCollection({
-  type: "content", // v2.5.0 and later
+  type: "content",
   schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
