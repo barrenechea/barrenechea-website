@@ -14,7 +14,7 @@ type GetStaticPaths = {
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allPosts = await getCollection("post", (item) => item.slug.split('/').length === 1);
+  const allPosts = await getCollection("posts", (item) => item.slug.split('/').length === 1);
   const sortedPosts = allPosts.sort(
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
   );
@@ -24,7 +24,7 @@ export async function getStaticPaths({ paginate }: GetStaticPaths) {
 }
 
 interface Props {
-  page: Page<CollectionEntry<"post">>;
+  page: Page<CollectionEntry<"posts">>;
 }
 
 const { page } = Astro.props as Props;
@@ -40,7 +40,7 @@ const description =
   </Section>
 
   <Section>
-    <BlogGallery postList={page.data} />
+    <BlogGallery postsList={page.data} />
   </Section>
 
   <Section>

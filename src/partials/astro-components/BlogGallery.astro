@@ -4,12 +4,12 @@ import type { CollectionEntry } from 'astro:content';
 import BlogCard from './BlogCard.astro';
 
 export interface Props {
-  postList: (CollectionEntry<'post' | 'project'>)[];
+  postsList: (CollectionEntry<'posts' | 'projects'>)[];
 }
 
-const { postList } = Astro.props as Props;
+const { postsList } = Astro.props as Props;
 ---
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-  {postList.map((elt) => <BlogCard key={elt.slug} instance={elt} />)}
+  {postsList.map((elt) => <BlogCard key={elt.slug} instance={elt} />)}
 </div>

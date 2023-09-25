@@ -6,10 +6,10 @@ import GradientText from '@/partials/astro-components/GradientText.astro';
 import Section from '@/partials/astro-components/Section.astro';
 
 export interface Props {
-  postList: CollectionEntry<'post'>[];
+  postsList: CollectionEntry<'posts'>[];
 }
 
-const { postList } = Astro.props as Props;
+const { postsList } = Astro.props as Props;
 ---
 
 <Section>
@@ -24,5 +24,5 @@ const { postList } = Astro.props as Props;
       </a>
     </div>
   </div>
-  <BlogGallery postList={postList} />
+  <BlogGallery postsList={postsList} />
 </Section>

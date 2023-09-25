@@ -7,11 +7,11 @@ import RecentProjects from '@/partials/RecentProjects.astro';
 import Base from '@/templates/Base.astro';
 import { AppConfig } from '@/utils/AppConfig';
 
-const allPosts = await getCollection('post', (item) => item.slug.split('/').length === 1);
+const allPosts = await getCollection('posts', (item) => item.slug.split('/').length === 1);
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 const lastThreePosts = sortedPosts.slice(0, 3);
 
-const allProjects = await getCollection('project', (item) => item.slug.split('/').length === 1);
+const allProjects = await getCollection('projects', (item) => item.slug.split('/').length === 1);
 const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 const lastThreeProjects = sortedProjects.slice(0, 3);
 
@@ -20,6 +20,6 @@ const { siteName: title, description } = AppConfig;
 
 <Base head={{ title, description }}>
   <Hero />
-  <RecentProjects projectList={lastThreeProjects} />
-  <RecentPosts postList={lastThreePosts} />
+  <RecentProjects projectsList={lastThreeProjects} />
+  <RecentPosts postsList={lastThreePosts} />
 </Base>

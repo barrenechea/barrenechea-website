@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/dates';
 
 export interface Props {
   key: string | undefined;
-  instance: CollectionEntry<'post' | 'project'>;
+  instance: CollectionEntry<'posts' | 'projects'>;
 }
 
 const { key, instance } = Astro.props as Props;
@@ -16,7 +16,7 @@ const formattedDate = instance.data.pubDate ? formatDate(instance.data.pubDate) 
 <a
   id={key}
   class="flex transform-gpu flex-col transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
-  href={`/${instance.collection}s/${instance.slug}`}
+  href={`/${instance.collection}/${instance.slug}`}
   target="_self"
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">
