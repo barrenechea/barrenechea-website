@@ -1,20 +1,16 @@
 ---
 import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 
 import Section from '@/partials/astro-components/Section.astro';
 import { formatDate } from '@/utils/dates';
 
-export interface Props {
-  title: string;
-  description: string;
-  img: string;
-  imgAlt: string;
-  pubDate?: Date;
-  link?: string;
+interface Props {
+  project: CollectionEntry<"projects">;
 }
 
-const { title, description, img, imgAlt, pubDate, link } = Astro.props as Props;
-const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
+const { project } = Astro.props;
+const formattedDate = project.data.pubDate ? `Released on ${formatDate(project.data.pubDate)}` : null;
 ---
 
 <Section>
@@ -24,11 +20,11 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
       <div class="flex flex-wrap justify-center">
         <div class="flex w-full justify-center">
           <div class="relative">
-            {typeof img === 'string' && (img as string).includes('svg') ? (
-            <img src={img} alt={imgAlt}
+            {project.data.img.format === 'svg' ? (
+            <img src={project.data.img.src} alt={project.data.imgAlt}
               class="-mt-16 h-[150px] w-[150px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />
             ) : (
-            <Image src={img} alt={imgAlt}
+            <Image src={project.data.img} alt={project.data.imgAlt}
               class="-mt-16 h-[150px] w-[150px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
               format="webp" width={300} height={300} />
             )}
@@ -38,7 +34,7 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
       </div>
       <div class="mt-2 text-center">
         <h3 class="mb-1 text-2xl font-bold leading-normal text-zinc-200">
-          {title}
+          {project.data.title}
         </h3>
         {formattedDate && (
         <div class="mb-2 mt-0 text-xs font-bold uppercase text-zinc-400">
@@ -50,14 +46,14 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
         <div class="flex flex-wrap justify-center">
           <div class="w-full px-4">
             <p class="mb-4 font-light leading-relaxed text-zinc-300">
-              {description}
+              {project.data.description}
             </p>
           </div>
         </div>
       </div>
-      {link && (
+      {project.data.link && (
       <div class="flex translate-y-4 justify-center space-x-2">
-        <a href={link} target={link.startsWith('http') ? '_blank' : '_self' }
+        <a href={project.data.link} target={project.data.link.startsWith('http') ? '_blank' : '_self' }
           class="inline-block rounded bg-amber-400 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-amber-500 hover:shadow-lg focus:bg-amber-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-amber-800 active:shadow-lg">Go</a>
       </div>
       )}

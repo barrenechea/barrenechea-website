@@ -1,18 +1,23 @@
 ---
 import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 
-const { content } = Astro.props;
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
   <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
-    {typeof content.img === 'string' && (content.img as string).includes('svg') ? (
-      <img src={content.img} alt={content.imgAlt} />
+    {post.data.img.format === 'svg' ? (
+      <img src={post.data.img.src} alt={post.data.imgAlt} />
     ) : (
       <Image
         class="h-full w-full object-cover object-center"
-        src={content.img}
-        alt={content.imgAlt}
+        src={post.data.img}
+        alt={post.data.imgAlt}
         format="webp"
         width={800}
         height={533}

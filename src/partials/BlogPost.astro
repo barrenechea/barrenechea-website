@@ -1,17 +1,22 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
 import PostContent from '@/partials/astro-components/PostContent.astro';
 import PostHeader from '@/partials/astro-components/PostHeader.astro';
 import Section from '@/partials/astro-components/Section.astro';
-import type { IMDX } from '@/types/imdx';
 import { AppConfig } from '@/utils/AppConfig';
 
-const { content } = Astro.props as { content: IMDX };
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
 ---
 
 <Section>
-  <PostHeader content={content} author={AppConfig.author} />
+  <PostHeader {post} author={AppConfig.author} />
 
-  <PostContent content={content}>
+  <PostContent {post}>
     <slot />
   </PostContent>
 </Section>

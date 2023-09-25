@@ -1,18 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
 
 import BaseProject from "@/templates/BaseProject.astro";
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection('projects');
-  return projectEntries.map(entry => ({
-    params: { slug: entry.slug }, props: { entry },
+  return projectEntries.map(project => ({
+    params: { slug: project.slug }, props: { project },
   }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
 ---
-<BaseProject title={entry.data.title} description={entry.data.description} imgSrc={entry.data.img} imgAlt={entry.data.imgAlt}>
+<BaseProject {project}>
   <Content />
 </BaseProject>
