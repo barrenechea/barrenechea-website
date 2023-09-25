@@ -7,13 +7,13 @@ import { formatDate } from '@/utils/dates';
 export interface Props {
   title: string;
   description: string;
-  imgSrc: string;
+  img: string;
   imgAlt: string;
   pubDate?: Date;
   link?: string;
 }
 
-const { title, description, imgSrc, imgAlt, pubDate, link } = Astro.props as Props;
+const { title, description, img, imgAlt, pubDate, link } = Astro.props as Props;
 const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
 ---
 
@@ -24,11 +24,11 @@ const formattedDate = pubDate ? `Released on ${formatDate(pubDate)}` : null;
       <div class="flex flex-wrap justify-center">
         <div class="flex w-full justify-center">
           <div class="relative">
-            {typeof imgSrc === 'string' && (imgSrc as string).includes('svg') ? (
-            <img src={imgSrc} alt={imgAlt}
+            {typeof img === 'string' && (img as string).includes('svg') ? (
+            <img src={img} alt={imgAlt}
               class="-mt-16 h-[150px] w-[150px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />
             ) : (
-            <Image src={imgSrc} alt={imgAlt}
+            <Image src={img} alt={imgAlt}
               class="-mt-16 h-[150px] w-[150px] rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
               format="webp" width={300} height={300} />
             )}

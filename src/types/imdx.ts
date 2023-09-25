@@ -1,5 +1,3 @@
-import type { Page } from 'astro';
-
 export interface IMDX {
   title: string;
   description: string;
@@ -12,4 +10,3 @@ export interface IMDX {
   ogOverride?: string;
 }
 
-export type IMDXPage = Page<IMDX>;

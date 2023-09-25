@@ -1,19 +1,17 @@
 ---
 import { Image } from 'astro:assets';
 
-import type { IMDX } from '@/types/imdx';
-
-const { content } = Astro.props as { content: IMDX };
+const { content } = Astro.props;
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
   <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
-    {typeof content.imgSrc === 'string' && (content.imgSrc as string).includes('svg') ? (
-      <img src={content.imgSrc} alt={content.imgAlt} />
+    {typeof content.img.src === 'string' && (content.img.src as string).includes('svg') ? (
+      <img src={content.img.src} alt={content.imgAlt} />
     ) : (
       <Image
         class="h-full w-full object-cover object-center"
-        src={content.imgSrc}
+        src={content.img.src}
         alt={content.imgAlt}
         format="webp"
         width={800}

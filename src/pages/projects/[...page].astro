@@ -1,29 +1,28 @@
 ---
-import type { PaginateFunction } from 'astro';
+import type { Page, PaginateFunction } from 'astro';
+import { type CollectionEntry,getCollection } from 'astro:content';
 
 import BlogGallery from '@/partials/astro-components/BlogGallery.astro';
 import Pagination from '@/partials/astro-components/Pagination.astro';
 import PaginationHeader from '@/partials/astro-components/PaginationHeader.astro';
 import Section from '@/partials/astro-components/Section.astro';
 import Base from '@/templates/Base.astro';
-import type { IMDX, IMDXPage } from '@/types/imdx';
 import { AppConfig } from '@/utils/AppConfig';
-import { sortByDate } from '@/utils/Posts';
 
 type GetStaticPaths = {
   paginate: PaginateFunction;
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allProjects = await Astro.glob('./*.mdx') as unknown as IMDX[];
-  const sortedProjects = sortByDate(allProjects);
+  const allProjects = await getCollection('project', (item) => item.slug.split('/').length === 1);
+  const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   // Return a paginated collection of paths for all projects
   return paginate(sortedProjects, { pageSize: 6 });
 }
 
 interface Props {
-  page: IMDXPage;
+  page: Page<CollectionEntry<'project'>>;
 }
 
 const { page } = Astro.props as Props;
@@ -43,6 +42,6 @@ const description =
   </Section>
 
   <Section>
-    <Pagination imdxPage={page} />
+    <Pagination page={page} />
   </Section>
 </Base>

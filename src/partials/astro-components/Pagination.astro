@@ -1,16 +1,16 @@
 ---
-import type { IMDXPage } from '@/types/imdx';
+import type { Page } from 'astro';
 
 export interface Props {
-  imdxPage: IMDXPage;
+  page: Page;
 }
 ---
 
 <div class="flex justify-center gap-8">
-  {Astro.props.imdxPage.url.prev && (
-    <a href={Astro.props.imdxPage.url.prev} target="_self">← Newer Posts</a>
+  {Astro.props.page.url.prev && (
+    <a href={Astro.props.page.url.prev} target="_self">← Newer Posts</a>
   )}
-  {Astro.props.imdxPage.url.next && (
-    <a href={Astro.props.imdxPage.url.next} target="_self">Older Posts →</a>
+  {Astro.props.page.url.next && (
+    <a href={Astro.props.page.url.next} target="_self">Older Posts →</a>
   )}
 </div>
