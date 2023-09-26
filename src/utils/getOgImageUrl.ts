@@ -14,5 +14,5 @@ const paths = new Set(routes.map(({ params }) => params.path));
  */
 export function getOgImageUrl(path: string): string | undefined {
 	const imagePath = path.replace(/^\//, '').replace(/\/$/, '') + '.png';
-	if (paths.has('/src/content/' + imagePath)) return '/open-graph/' + imagePath;
+	if (paths.has('/src/content/' + imagePath)) return '/open-graph/src/content/' + imagePath;
 }
