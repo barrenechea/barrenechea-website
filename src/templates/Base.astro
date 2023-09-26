@@ -1,12 +1,11 @@
 ---
 import './base.css';
 
-import { SocialImage } from 'astro-social-images';
-
 import faviconSvg from '@/assets/favicon.svg';
 import Footer from '@/partials/Footer.astro';
 import Navbar from '@/partials/Navbar.astro';
 import { AppConfig } from '@/utils/AppConfig';
+import { getOgImageUrl } from '@/utils/getOgImageUrl';
 
 export interface Props {
   head: {
@@ -16,28 +15,17 @@ export interface Props {
   };
 }
 
+// Ensures the canonicalURL always has a trailing slash.
+const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
+
 const {
   head: { title, description, ogOverride },
 } = Astro.props as Props;
 
 // remove " - Barrenechea" from the title
 const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
-const splittedTitle = filteredTitle.split(' - ').reverse();
-
-const texts = splittedTitle.map((text, index) => {
-  return {
-    content: text, attributes: {
-      x: '55', y: `${105 * (index + 1)}`
-      , 'font-size': `${60 - (index * 12)}px`, 'font-family': 'Work Sans', fill: '#f3f4f6'
-    },
-  }
-});
-texts.push({
-  content: 'barrenechea.cl', attributes: {
-    x: '55', y: '570'
-    , 'font-size': '36px', 'font-family': 'Work Sans', fill: '#71717a'
-  },
-});
+const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || '/open-graph/default-og-image.png';
+const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 ---
 
 <html lang="en">
@@ -49,8 +37,8 @@ texts.push({
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="author" content={AppConfig.author} />
-  <SocialImage backgroundColor="#18181b" texts={texts} images={[{ url: 'public/assets/images/og-image.png' , attributes:
-    { top: 300 , left: 900 }, }]} globalOptions={{ urlPath: 'https://www.barrenechea.cl/' }} />
+  <meta property="og:image" content={canonicalImageSrc} />
+  <meta property="og:image:alt" content={filteredTitle} />
 
   <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
   <link rel="icon" href={faviconSvg.src} type="image/svg+xml" />
