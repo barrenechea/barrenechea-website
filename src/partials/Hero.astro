@@ -30,7 +30,7 @@ const avatar = avatars[0]!;
     </Fragment>
     <Fragment slot="avatar">
       <Image class="h-64 w-64" src={avatar.img} alt={`Avatar image in ${avatar.style} style generated from
-        ${avatar.by}`} format="webp" width={400} height={400} />
+        ${avatar.by}`} format="webp" width={400} height={400} loading="eager" />
       <p class="text-xs italic text-zinc-500">
         {avatar.style} style from <a class="text-zinc-400 hover:text-zinc-300" href={avatar.url}>{avatar.by}
         </a>

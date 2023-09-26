@@ -28,7 +28,7 @@ const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || '/open-graph/default-
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 ---
 
-<html lang="en">
+<html lang={AppConfig.locale}>
 
 <head>
   <meta charset="UTF-8" />
