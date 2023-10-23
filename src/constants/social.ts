@@ -1,6 +1,5 @@
 import IconGithub from '@/assets/images/icon-github.svg';
 import IconLinkedIn from '@/assets/images/icon-linkedin.svg';
-import IconTwitter from '@/assets/images/icon-twitter.svg';
 
 const socialNetworks = [
   {
@@ -12,11 +11,6 @@ const socialNetworks = [
     name: 'GitHub',
     url: 'https://github.com/barrenechea',
     icon: IconGithub,
-  },
-  {
-    name: 'Twitter',
-    url: 'https://twitter.com/SBarrenechea',
-    icon: IconTwitter,
   },
 ];
 
