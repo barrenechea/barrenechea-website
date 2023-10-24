@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  HUSKY: "0"
+
 jobs:
   deploy:
     name: Cloudflare Pages
@@ -36,3 +39,5 @@ jobs:
           projectName: barrenechea-website
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Enable Wrangler v3
+          wranglerVersion: "3"
