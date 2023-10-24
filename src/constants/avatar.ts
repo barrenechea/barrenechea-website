@@ -1,17 +1,15 @@
-import AvatarAnime from '@/assets/images/avatar-anime.png';
-import AvatarUkiyoe from '@/assets/images/avatar-ukiyoe.png';
+import AnimateDiff1 from "@/assets/avatar/animatediff-1.gif";
 
 export default [
   {
-    img: AvatarAnime,
-    style: 'Anime',
-    by: 'StyleGAN-NADA',
-    url: 'https://stylegan-nada.github.io',
-  },
-  {
-    img: AvatarUkiyoe,
-    style: 'Ukiyo-e',
-    by: 'StyleGAN-NADA',
-    url: 'https://stylegan-nada.github.io',
+    img: AnimateDiff1,
+    tool: {
+      name: "AnimateDiff",
+      url: "https://animatediff.github.io/",
+    },
+    model: {
+      name: "epiCPhotoGasm X",
+      url: "https://civitai.com/models/132632/epicphotogasm",
+    },
   },
 ];

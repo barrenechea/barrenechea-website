@@ -1,12 +1,12 @@
 ---
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
-import avatars from '@/constants/avatar';
-import socials from '@/constants/social';
-import GradientText from '@/partials/astro-components/GradientText.astro';
-import HeroAvatar from '@/partials/astro-components/HeroAvatar.astro';
-import HeroSocial from '@/partials/astro-components/HeroSocial.astro';
-import Section from '@/partials/astro-components/Section.astro';
+import avatars from "@/constants/avatar";
+import socials from "@/constants/social";
+import GradientText from "@/partials/astro-components/GradientText.astro";
+import HeroAvatar from "@/partials/astro-components/HeroAvatar.astro";
+import HeroSocial from "@/partials/astro-components/HeroSocial.astro";
+import Section from "@/partials/astro-components/Section.astro";
 
 // const avatar = avatars[Math.floor(Math.random() * avatars.length)]!;
 const avatar = avatars[0]!;
@@ -20,28 +20,46 @@ const avatar = avatars[0]!;
     <Fragment slot="description">
       <p class="text-xl">A Software Engineer located in Chile 🇨🇱</p>
       <p class="text-xl">
-        You can find me playing with proofs-of-concept and blazingly fast new
-        technologies ⚡️
+        You can find me playing with proofs-of-concept, blazingly fast new
+        technologies, and exploring the fascinating realm of Machine Learning
+        models.
       </p>
       <p class="text-xl">
-        Currently working at <a class="text-amber-400 hover:underline" href="https://www.finalis.com">Finalis</a>,
-        having fun with the DevOps Team, and always involved with Architecture.
+        Currently working at <a
+          class="text-amber-400 hover:underline"
+          href="https://www.finalis.com">Finalis</a
+        > with the DevOps Team.
       </p>
     </Fragment>
     <Fragment slot="avatar">
-      <Image class="h-64 w-64" src={avatar.img} alt={`Avatar image in ${avatar.style} style generated from
-        ${avatar.by}`} format="webp" width={400} height={400} loading="eager" />
-      <p class="text-xs italic text-zinc-500">
-        {avatar.style} style from <a class="text-zinc-400 hover:text-zinc-300" href={avatar.url}>{avatar.by}
-        </a>
+      <Image
+        class="h-64 w-64 rounded-full"
+        src={avatar.img}
+        alt={`AI-generated avatar image using ${avatar.tool.name} and ${avatar.model.name}`}
+        format="webp"
+        width={400}
+        height={400}
+        loading="eager"
+      />
+      <p class="pt-2 text-center text-xs italic text-zinc-500">
+        Using <a
+          class="text-zinc-400 hover:text-zinc-300"
+          href={avatar.tool.url}
+          >{avatar.tool.name}
+        </a> and <a
+          class="text-zinc-400 hover:text-zinc-300"
+          href={avatar.model.url}>{avatar.model.name}</a
+        >
       </p>
     </Fragment>
     <Fragment slot="socialButtons">
-      {socials.map(({ url, icon, name }) => (
-      <a href={url}>
-        <HeroSocial src={icon.src} alt={`${name} icon`} />
-      </a>
-      ))}
+      {
+        socials.map(({ url, icon, name }) => (
+          <a href={url}>
+            <HeroSocial src={icon.src} alt={`${name} icon`} />
+          </a>
+        ))
+      }
     </Fragment>
   </HeroAvatar>
 </Section>
