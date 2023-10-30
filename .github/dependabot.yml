@@ -5,7 +5,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    reviewers:
+      - "barrenechea"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+    reviewers:
+      - "barrenechea"
