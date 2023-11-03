@@ -1,6 +1,8 @@
 ---
 import './base.css';
 
+import { ViewTransitions } from 'astro:transitions';
+
 import faviconSvg from '@/assets/favicon.svg';
 import Footer from '@/partials/Footer.astro';
 import Navbar from '@/partials/Navbar.astro';
@@ -54,6 +56,7 @@ const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
     gtag('js', new Date());
     gtag('config', 'G-L5QEGL7QZE');
   </script>
+  <ViewTransitions />
 </head>
 
 <body class="bg-zinc-900 font-sans text-gray-100">
