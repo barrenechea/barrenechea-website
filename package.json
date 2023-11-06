@@ -33,7 +33,7 @@
     "astro-eslint-parser": "^0.16.0",
     "astro-og-canvas": "^0.2.1",
     "astro-robots-txt": "^1.0.0",
-    "eslint": "^8.52.0",
+    "eslint": "^8.53.0",
     "eslint-plugin-astro": "^0.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
