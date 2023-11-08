@@ -1,12 +1,12 @@
 ---
 import { AppConfig } from '@/utils/AppConfig';
 
-import packageJson from '../../../package.json';
+import { devDependencies } from '../../../package.json';
 
 const year = new Date().getFullYear();
 const { author } = AppConfig;
 const copyrightText = `2022-${year} ${author}`;
-const astroVersion = packageJson.devDependencies.astro.replace('^', '');
+const astroVersion = devDependencies.astro.replace('^', '');
 ---
 
 <div class="border-t border-gray-600 pt-5">
