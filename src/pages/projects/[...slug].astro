@@ -1,7 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 
-import BaseProject from "@/templates/BaseProject.astro";
+import BaseProject from "~/templates/BaseProject.astro";
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection('projects');

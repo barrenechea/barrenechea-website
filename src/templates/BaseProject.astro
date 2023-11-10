@@ -1,9 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import ProjectPost from '@/partials/ProjectPost.astro';
-import Base from '@/templates/Base.astro';
-import { AppConfig } from '@/utils/AppConfig';
+import ProjectPost from '~/partials/ProjectPost.astro';
+import Base from '~/templates/Base.astro';
+import { AppConfig } from '~/utils/AppConfig';
 
 interface Props {
   project: CollectionEntry<"projects">;

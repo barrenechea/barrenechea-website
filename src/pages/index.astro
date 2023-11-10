@@ -1,11 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 
-import Hero from '@/partials/Hero.astro';
-import RecentPosts from '@/partials/RecentPosts.astro';
-import RecentProjects from '@/partials/RecentProjects.astro';
-import Base from '@/templates/Base.astro';
-import { AppConfig } from '@/utils/AppConfig';
+import Hero from '~/partials/Hero.astro';
+import RecentPosts from '~/partials/RecentPosts.astro';
+import RecentProjects from '~/partials/RecentProjects.astro';
+import Base from '~/templates/Base.astro';
+import { AppConfig } from '~/utils/AppConfig';
 
 const allPosts = await getCollection('posts', (item) => item.slug.split('/').length === 1);
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())

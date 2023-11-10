@@ -1,4 +1,4 @@
-import AnimateDiff1 from "@/assets/avatar/animatediff-1.gif";
+import AnimateDiff1 from "~/assets/avatar/animatediff-1.gif";
 
 export default [
   {

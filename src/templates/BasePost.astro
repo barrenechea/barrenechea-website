@@ -1,9 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import BlogPost from '@/partials/BlogPost.astro';
-import Base from '@/templates/Base.astro';
-import { AppConfig } from '@/utils/AppConfig';
+import BlogPost from '~/partials/BlogPost.astro';
+import Base from '~/templates/Base.astro';
+import { AppConfig } from '~/utils/AppConfig';
 
 interface Props {
   post: CollectionEntry<'posts'>;
