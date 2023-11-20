@@ -25,4 +25,7 @@ export default defineConfig({
     tailwind({ config: { applyBaseStyles: false } }),
     robotsTxt(),
   ],
+  // experimental: {
+  //   contentCollectionCache: true,
+  // },
 });
