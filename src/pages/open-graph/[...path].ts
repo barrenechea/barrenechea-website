@@ -1,22 +1,32 @@
+import { getCollection } from "astro:content";
 import { OGImageRoute } from "astro-og-canvas";
 
 const defaultOgImage = {
-  frontmatter: {
+  data: {
     title: "Barrenechea",
     description:
       "Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.",
   },
 };
 
-const pages = await import.meta.glob("/src/content/**/*.mdx", { eager: true });
-pages["/default-og-image"] = defaultOgImage;
+const posts = await getCollection("posts");
+const projects = await getCollection("projects");
+const allPages = [...posts, ...projects]
+
+const pages = Object.fromEntries(
+  allPages.map(({ collection, id, slug, data }) => [`${collection}/${id}`, { data, slug }])
+);
+
+// @ts-expect-error just to add a default og image
+pages["default-og-image"] = defaultOgImage;
 
 export const { getStaticPaths, GET } = OGImageRoute({
   param: "path",
   pages,
-  getImageOptions: (path, page) => ({
-    title: page.frontmatter.title,
-    description: page.frontmatter.description,
+  getImageOptions: (_, { data }: (typeof pages)[string]) => {
+    return {
+      title: data.title,
+      description: data.description,
       logo: {
         path: "./src/assets/og-image.png",
         size: [200],
@@ -42,5 +52,6 @@ export const { getStaticPaths, GET } = OGImageRoute({
         "./src/pages/open-graph/_fonts/work-sans/latin-400-normal.ttf",
         "./src/pages/open-graph/_fonts/work-sans/latin-800-normal.ttf",
       ],
-  }),
+    };
+  },
 });
