@@ -2,13 +2,13 @@
 import type { Page, PaginateFunction } from "astro";
 import { type CollectionEntry } from "astro:content";
 
+import { AppConfig } from '~/config';
 import { postPages } from "~/content";
 import BlogGallery from "~/partials/astro-components/BlogGallery.astro";
 import Pagination from "~/partials/astro-components/Pagination.astro";
 import PaginationHeader from "~/partials/astro-components/PaginationHeader.astro";
 import Section from "~/partials/astro-components/Section.astro";
 import Base from "~/templates/Base.astro";
-import { AppConfig } from "~/utils/AppConfig";
 
 type GetStaticPaths = {
   paginate: PaginateFunction;

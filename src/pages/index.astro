@@ -1,10 +1,10 @@
 ---
+import { AppConfig } from '~/config';
 import { postPages, projectPages } from "~/content";
 import Hero from '~/partials/Hero.astro';
 import RecentPosts from '~/partials/RecentPosts.astro';
 import RecentProjects from '~/partials/RecentProjects.astro';
 import Base from '~/templates/Base.astro';
-import { AppConfig } from '~/utils/AppConfig';
 
 const allPosts = postPages.filter((item) => item.slug.split('/').length === 1);
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())

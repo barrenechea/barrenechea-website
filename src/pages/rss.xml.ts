@@ -1,8 +1,8 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
 
+import { AppConfig } from '~/config';
 import { allPages } from "~/content";
-import { AppConfig } from "~/utils/AppConfig";
 
 const customData = "<language>en-us</language>";
 
