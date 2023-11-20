@@ -1,7 +1,8 @@
 ---
 import type { Page, PaginateFunction } from 'astro';
-import { type CollectionEntry,getCollection } from 'astro:content';
+import { type CollectionEntry } from 'astro:content';
 
+import { projectPages } from "~/content";
 import BlogGallery from '~/partials/astro-components/BlogGallery.astro';
 import Pagination from '~/partials/astro-components/Pagination.astro';
 import PaginationHeader from '~/partials/astro-components/PaginationHeader.astro';
@@ -14,7 +15,7 @@ type GetStaticPaths = {
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allProjects = await getCollection('projects', (item) => item.slug.split('/').length === 1);
+  const allProjects = projectPages.filter((item) => item.slug.split('/').length === 1);
   const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   // Return a paginated collection of paths for all projects
