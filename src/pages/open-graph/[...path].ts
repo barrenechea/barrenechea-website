@@ -12,7 +12,10 @@ const defaultOgImage = {
 
 /** An object mapping file paths to file metadata. */
 const pages = Object.fromEntries(
-  allPages.map(({ id, slug, data }) => [id, { data, slug }])
+  allPages.map(({ collection, id, slug, data }) => [
+    `${collection}/${id}`,
+    { data, slug },
+  ])
 );
 
 // @ts-expect-error - Add default og image to pages object
