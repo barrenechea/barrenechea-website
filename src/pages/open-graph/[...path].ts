@@ -1,29 +1,29 @@
 import { OGImageRoute } from "astro-og-canvas";
 
+import { allPages } from "~/content";
+
 const defaultOgImage = {
-  frontmatter: {
+  data: {
     title: "Barrenechea",
     description:
       "Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.",
   },
 };
 
-const allPages = await import.meta.glob("/src/content/**/*.mdx", { eager: true });
-
 /** An object mapping file paths to file metadata. */
 const pages = Object.fromEntries(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Object.values(allPages).map(({ url, frontmatter }: any) => [url.split("content/")[1], { frontmatter }])
+  allPages.map(({ id, slug, data }) => [id, { data, slug }])
 );
 
+// @ts-expect-error - Add default og image to pages object
 pages["default-og-image"] = defaultOgImage;
 
 export const { getStaticPaths, GET } = OGImageRoute({
   param: "path",
   pages,
-  getImageOptions: (_, { frontmatter }: (typeof pages)[string]) => ({
-    title: frontmatter.title,
-    description: frontmatter.description,
+  getImageOptions: (_, { data }: (typeof pages)[string]) => ({
+    title: data.title,
+    description: data.description,
     logo: {
       path: "./src/assets/og-image.png",
       size: [200],
