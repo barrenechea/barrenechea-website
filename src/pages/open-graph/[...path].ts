@@ -17,30 +17,30 @@ export const { getStaticPaths, GET } = OGImageRoute({
   getImageOptions: (path, page) => ({
     title: page.frontmatter.title,
     description: page.frontmatter.description,
-    logo: {
-      path: "./src/assets/og-image.png",
-      size: [200],
-    },
-    border: { color: [251, 191, 36], width: 20, side: "inline-start" },
-    bgGradient: [
-      [24, 24, 27],
-      [39, 39, 42],
-    ],
-    font: {
-      title: {
-        size: 50,
-        families: ["Work Sans"],
-        weight: "SemiBold",
+      logo: {
+        path: "./src/assets/og-image.png",
+        size: [200],
       },
-      description: {
-        size: 38,
-        families: ["Work Sans"],
-        weight: "Normal",
+      border: { color: [251, 191, 36], width: 20, side: "inline-start" },
+      bgGradient: [
+        [24, 24, 27],
+        [39, 39, 42],
+      ],
+      font: {
+        title: {
+          size: 50,
+          families: ["Work Sans"],
+          weight: "SemiBold",
+        },
+        description: {
+          size: 38,
+          families: ["Work Sans"],
+          weight: "Normal",
+        },
       },
-    },
-    fonts: [
-      "https://github.com/withastro/docs/raw/temp-fonts-cdn/src/pages/open-graph/_fonts/work-sans/latin-400-normal.ttf",
-      "https://github.com/withastro/docs/raw/temp-fonts-cdn/src/pages/open-graph/_fonts/work-sans/latin-800-normal.ttf",
-    ],
+      fonts: [
+        "./src/pages/open-graph/_fonts/work-sans/latin-400-normal.ttf",
+        "./src/pages/open-graph/_fonts/work-sans/latin-800-normal.ttf",
+      ],
   }),
 });
