@@ -15,7 +15,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@astro-community/astro-embed-youtube": "^0.4.1",
+    "@astro-community/astro-embed-youtube": "^0.4.2",
     "@astrojs/check": "^0.3.1",
     "@astrojs/mdx": "^1.1.5",
     "@astrojs/partytown": "^2.0.2",
