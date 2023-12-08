@@ -1,0 +1,18 @@
+.top-anim {
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
+  animation: dash 1200ms ease-out forwards;
+  animation-delay: 300ms;
+}
+
+.botton-anim {
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  animation: dash 1700ms ease forwards;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
