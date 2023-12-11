@@ -30,3 +30,8 @@ To set up a local development environment, follow these steps:
 You can also open this project in Gitpod, a pre-configured development environment:
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/barrenechea/barrenechea-website)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbarrenechea%2Fbarrenechea-website.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbarrenechea%2Fbarrenechea-website?ref=badge_shield)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbarrenechea%2Fbarrenechea-website.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbarrenechea%2Fbarrenechea-website?ref=badge_large)
