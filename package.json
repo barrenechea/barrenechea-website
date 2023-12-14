@@ -29,7 +29,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
-    "astro": "^4.0.4",
+    "astro": "^4.0.5",
     "astro-eslint-parser": "^0.16.0",
     "astro-og-canvas": "^0.4.1",
     "astro-robots-txt": "^1.0.0",
