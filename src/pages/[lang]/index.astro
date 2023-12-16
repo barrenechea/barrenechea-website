@@ -1,0 +1,27 @@
+---
+import { AppConfig } from '~/config';
+import { postPages, projectPages } from "~/content";
+import Hero from '~/partials/Hero.astro';
+import RecentPosts from '~/partials/RecentPosts.astro';
+import RecentProjects from '~/partials/RecentProjects.astro';
+import Base from '~/templates/Base.astro';
+
+const allPosts = postPages.filter((item) => item.slug.split('/').length === 2);
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+const lastThreePosts = sortedPosts.slice(0, 3);
+console.log(postPages.map(post => post.data.img));
+
+const allProjects = projectPages.filter((item) => item.slug.split('/').length === 2);
+const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+const lastThreeProjects = sortedProjects.slice(0, 3);
+
+export const getStaticPaths = () => ["en", "es"].map((lang) => ({ params: { lang } }));
+
+const { siteName: title, description } = AppConfig;
+---
+
+<Base head={{ title, description }}>
+  <Hero />
+  <RecentProjects projectsList={lastThreeProjects} />
+  <RecentPosts postsList={lastThreePosts} />
+</Base>
