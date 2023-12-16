@@ -7,6 +7,7 @@ import Section from '~/partials/astro-components/Section.astro';
 import Tags from '~/partials/astro-components/Tags.astro';
 
 export interface Props {
+  lang: string;
   projectsList: CollectionEntry<'projects'>[];
 }
 
@@ -33,7 +34,7 @@ const tags = {
 
 const defaultTag = { color: 'GRAY', text: 'UNDEFINED TAG' };
 
-const { projectsList } = Astro.props as Props;
+const { lang, projectsList } = Astro.props as Props;
 ---
 
 <Section>
@@ -43,7 +44,7 @@ const { projectsList } = Astro.props as Props;
     </div>
 
     <div class="text-sm">
-      <a href="/projects/" target="_self" class="text-zinc-200 hover:underline">
+      <a href={`/${lang}/projects/`} target="_self" class="text-zinc-200 hover:underline">
         View all Projects →
       </a>
     </div>
@@ -53,7 +54,7 @@ const { projectsList } = Astro.props as Props;
       <Project
         name={project.data.title}
         description={project.data.description}
-        link={`/projects/${project.slug}/`}
+        link={`/${lang}/projects/${project.slug.split('/').pop()}/`}
         img={project.data.img}
         imgAlt={project.data.imgAlt}
       >

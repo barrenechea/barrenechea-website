@@ -15,13 +15,22 @@ type GetStaticPaths = {
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allPosts = postPages.filter((item) => item.slug.split('/').length === 1);
+  const allPosts = postPages.filter((item) => item.slug.split('/').length === 2);
   const sortedPosts = allPosts.sort(
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
   );
+  const langs = ['en', 'es'];
 
   // Return a paginated collection of paths for all posts
-  return paginate(sortedPosts, { pageSize: 6 });
+  return langs.flatMap((lang) => {
+    const posts = sortedPosts.filter((item) => item.id.split('/')[0] === lang);
+    return paginate(posts, {
+      pageSize: 6,
+      params: {
+        lang,
+      },
+    });
+  });
 }
 
 interface Props {
@@ -29,13 +38,14 @@ interface Props {
 }
 
 const { page } = Astro.props as Props;
+const { lang = "en" } = Astro.params;
 const titleBase = `Page ${page.currentPage} - Posts`;
 const title = `${titleBase} - ${AppConfig.siteName}`;
 const description =
   "Paginated result of some brain-dumping processes that I go through from time to time";
 ---
 
-<Base head={{ title, description }}>
+<Base head={{ title, description, lang }}>
   <Section>
     <PaginationHeader title="Posts" description={description} />
   </Section>

@@ -6,14 +6,15 @@ import ProjectPost from '~/partials/ProjectPost.astro';
 import Base from '~/templates/Base.astro';
 
 interface Props {
+  lang?: string;
   project: CollectionEntry<"projects">;
 }
 
-const { project } = Astro.props;
+const { lang = 'en', project } = Astro.props;
 const title = `${project.data.title} - ${AppConfig.siteName}`;
 ---
 
-<Base head={{ title, description: project.data.description }}>
+<Base head={{ title, description: project.data.description, lang }}>
   <ProjectPost {project}>
     <slot />
   </ProjectPost>

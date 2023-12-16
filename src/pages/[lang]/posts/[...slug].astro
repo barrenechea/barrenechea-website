@@ -5,10 +5,14 @@ import { postPages } from "~/content";
 import BasePost from "~/templates/BasePost.astro";
 
 export async function getStaticPaths() {
-  return postPages.map((post) => ({
-    params: { slug: post.slug + "/jejeje" },
-    props: { post },
-  }));
+  return postPages.map((post) => {
+    const [lang, ...slug] = post.slug.split("/");
+
+    return {
+      params: { lang, slug: slug.join("/") },
+      props: { post },
+    };
+  });
 }
 
 interface Props {

@@ -6,10 +6,11 @@ import GradientText from '~/partials/astro-components/GradientText.astro';
 import Section from '~/partials/astro-components/Section.astro';
 
 export interface Props {
+  lang: string;
   postsList: CollectionEntry<'posts'>[];
 }
 
-const { postsList } = Astro.props as Props;
+const { lang, postsList } = Astro.props as Props;
 ---
 
 <Section>
@@ -19,7 +20,7 @@ const { postsList } = Astro.props as Props;
     </div>
 
     <div class="text-sm">
-      <a href="/posts/" target="_self" class="text-zinc-200 hover:underline">
+      <a href={`/${lang}/posts/`} target="_self" class="text-zinc-200 hover:underline">
         View all Posts →
       </a>
     </div>

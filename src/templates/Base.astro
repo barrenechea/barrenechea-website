@@ -14,6 +14,7 @@ export interface Props {
     title: string;
     description: string;
     ogOverride?: string | undefined;
+    lang?: string | undefined;
   };
 }
 
@@ -21,16 +22,18 @@ export interface Props {
 const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
 
 const {
-  head: { title, description, ogOverride },
+  head: { title, description, ogOverride, lang=AppConfig.locale },
 } = Astro.props as Props;
 
 // remove " - Barrenechea" from the title
 const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
 const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || '/open-graph/default-og-image.png';
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
+
+const forkMeText = lang === 'es' ? 'Hazme fork en GitHub' : 'Fork me on GitHub';
 ---
 
-<html lang={AppConfig.locale}>
+<html lang={lang}>
 
 <head>
   <meta charset="UTF-8" />
@@ -60,10 +63,10 @@ const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 </head>
 
 <body class="bg-zinc-900 font-sans text-gray-100">
-  <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon="Fork me on GitHub"
-    title="Fork me on GitHub">Fork me on GitHub</a>
+  <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon={forkMeText}
+    title={forkMeText}>{forkMeText}</a>
 
-  <Navbar />
+  <Navbar {lang} />
 
   <slot />
 

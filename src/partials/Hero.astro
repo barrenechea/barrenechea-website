@@ -8,14 +8,16 @@ import HeroAvatar from "~/partials/astro-components/HeroAvatar.astro";
 import HeroSocial from "~/partials/astro-components/HeroSocial.astro";
 import Section from "~/partials/astro-components/Section.astro";
 
-// const avatar = avatars[Math.floor(Math.random() * avatars.length)]!;
 const avatar = avatars[0]!;
+const { lang } = Astro.props;
+
+const greeting = lang === "es" ? "Holaa! Soy" : "Heey! I'm";
 ---
 
 <Section>
   <HeroAvatar>
     <Fragment slot="title">
-      Heey! I'm <GradientText>Sebastian Barrenechea</GradientText> 👋
+      {greeting} <GradientText>Sebastian Barrenechea</GradientText> 👋
     </Fragment>
     <Fragment slot="description">
       <p class="text-xl">A Software Engineer located in Chile 🇨🇱</p>

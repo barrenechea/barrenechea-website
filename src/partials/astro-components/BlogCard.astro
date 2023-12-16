@@ -10,13 +10,14 @@ export interface Props {
 }
 
 const { key, instance } = Astro.props as Props;
+const [lang, ...slug] = instance.slug.split('/');
 const formattedDate = instance.data.pubDate ? formatDate(instance.data.pubDate) : null;
 ---
 
 <a
   id={key}
   class="flex transform-gpu flex-col transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
-  href={`/${instance.collection}/${instance.slug}/`}
+  href={`/${lang}/${instance.collection}/${slug.join('/')}/`}
   target="_self"
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">

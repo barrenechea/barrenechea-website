@@ -1,22 +1,26 @@
 ---
-import { type CollectionEntry } from 'astro:content';
+import { type CollectionEntry } from "astro:content";
 
 import { projectPages } from "~/content";
 import BaseProject from "~/templates/BaseProject.astro";
 
 export async function getStaticPaths() {
-  return projectPages.map(project => ({
-    params: { slug: project.slug }, props: { project },
-  }));
+  return projectPages.map((project) => {
+    const [lang, ...slug] = project.slug.split("/");
+
+    return { params: { lang, slug: slug.join("/") }, props: { project } };
+  });
 }
 
 interface Props {
   project: CollectionEntry<"projects">;
 }
 
+const { lang = "en" } = Astro.params;
 const { project } = Astro.props;
 const { Content } = await project.render();
 ---
-<BaseProject {project}>
+
+<BaseProject {project} {lang}>
   <Content />
 </BaseProject>

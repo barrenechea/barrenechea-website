@@ -7,11 +7,17 @@ import NavbarTwoColumns from '~/partials/astro-components/NavbarTwoColumns.astro
 import NavMenu from '~/partials/astro-components/NavMenu.astro';
 import NavMenuItem from '~/partials/astro-components/NavMenuItem.astro';
 import Section from '~/partials/astro-components/Section.astro';
+
+export interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
 ---
 
 <Section>
   <NavbarTwoColumns>
-    <a href="/" target="_self">
+    <a href={`/${lang}`} target="_self">
       <Logo name="Barrenechea">
         <svg
           class="mr-1 h-10 w-10 stroke-amber-400"
@@ -41,8 +47,8 @@ import Section from '~/partials/astro-components/Section.astro';
     </a>
 
     <NavMenu>
-      <NavMenuItem href="/projects/" target="_self">Projects</NavMenuItem>
-      <NavMenuItem href="/posts/" target="_self">Posts</NavMenuItem>
+      <NavMenuItem href={`/${lang}/projects/`} target="_self">Projects</NavMenuItem>
+      <NavMenuItem href={`/${lang}/posts/`} target="_self">Posts</NavMenuItem>
       {socials.map(({ name, url }) => (
         <NavMenuItem href={url}>
           {name}
