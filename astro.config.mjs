@@ -22,7 +22,7 @@ export default defineConfig({
       },
     }),
     sitemap(),
-    tailwind({ config: { applyBaseStyles: false } }),
+    tailwind({ applyBaseStyles: false }),
     robotsTxt(),
   ],
   // experimental: {
