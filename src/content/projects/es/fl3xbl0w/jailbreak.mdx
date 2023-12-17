@@ -22,69 +22,69 @@ import Console06 from "~/assets/images/fl3xbl0w/console-06.gif";
 import Console07 from "~/assets/images/fl3xbl0w/console-07.gif";
 import Console08 from "~/assets/images/fl3xbl0w/console-08.gif";
 
-This method relies on the Bowflex Console specs being too slow for nowadays' software (it only has 2Gb of RAM on the Android board). Because of that, and if we are _faster than the tablet_, we can jailbreak from Nautilus' `AppMonitorService`.
+Este método depende de que las especificaciones del Bowflex Console sean demasiado lentas para el software de hoy en día (solo tiene 2Gb de RAM en la placa Android). Debido a eso, y si somos _más rápidos que la tablet_, podemos hacer jailbreak desde el `AppMonitorService` de Nautilus.
 
-*Could it be called a brute-force attack?*
+*¿Se podría llamar un ataque de fuerza bruta?*
 
-You can restart the machine at any point in the process, and everything will be as it should. There's no risk on the software side of things by doing it. Give it a try!
-
-
-## Requirements
-
-- An USB keyboard (wired or wireless through a USB dongle) with "media buttons" for Home, Back.
-- Fast fingers! (the "intense part" should occur in around a second)
-- A computer with [adb](https://developer.android.com/studio/command-line/adb) ([download link](https://developer.android.com/studio/releases/platform-tools))
-
-I'm using a Logitech K600, but any keyboard with such keys should work:
-<Image src={LogiKeys} alt="Kogitech K600 Keyboard" format="webp" />
-
-*Bluetooth keyboards seem not to be able to be paired through JRNY.*
+Puedes reiniciar la máquina en cualquier momento del proceso, y todo estará como debería. No hay riesgo en el lado del software por hacerlo. ¡Dale una prueba!
 
 
-## Tips
-- Don't try to "do it right" from the start. Take a few attempts to figure out "in which places of the screen do the buttons appear", so you can build some muscle memory for the touching actions.
-- DO NOT HIT THE SCREEN HARD! Being fast doesn't mean breaking it. I'm not responsible for people hitting their screens too hard.
+## Requisitos
+
+- Un teclado USB (con cable o inalámbrico a través de un dongle USB) con "botones de medios" para Home, Back.
+- ¡Dedos rápidos! (la "parte intensa" debe ocurrir en alrededor de un segundo)
+- Un computador con [adb](https://developer.android.com/studio/command-line/adb) ([link de descarga](https://developer.android.com/studio/releases/platform-tools))
+
+Yo usé un Logitech K600, pero cualquier teclado con esas teclas debería funcionar:
+<Image src={LogiKeys} alt="Teclado Logitech K600" format="webp" />
+
+*Los teclados Bluetooth parecen no poder emparejarse a través de JRNY.*
 
 
-## Instructions
+## Consejos
+- No trates de "hacerlo bien" desde el principio. Toma algunos intentos para descubrir "en qué partes de la pantalla aparecen los botones", así puedes construir algo de memoria muscular para las acciones de tocar.
+- ¡NO GOLPEES LA PANTALLA FUERTE! Ser rápido no significa romperla. No soy responsable de personas que golpeen sus pantallas demasiado fuerte.
 
-First, let's have the machine turned on and plug the USB keyboard into the Bowflex Console. You can find it on the right side:
-<Image src={ConsoleUSB} alt="Indicates where the console's USB port location is" format="webp" />
+
+## Instrucciones
+
+Primero, vamos a encender la máquina y conectar el teclado USB a la Consola Bowflex. Lo puedes encontrar en el lado derecho:
+<Image src={ConsoleUSB} alt="Indica dónde está la ubicación del puerto USB de la consola" format="webp" />
 
 
-Let's make sure the keyboard works by clicking the "Home" button on the keyboard. It should cause the JRNY app to restart.
-<Image src={Console01} alt="console animation" format="webp" />
+Asegurémonos de que el teclado funciona presionando el botón "Home" en el teclado. Debería hacer que la app JRNY se reinicie.
+<Image src={Console01} alt="animación de la consola" format="webp" />
 
-Android has a shortcut for closing the current app through the "Back" button if you hold it for a second or so.
-Let's play with the "Back" button for a bit - we're going to continuously close the JRNY App as soon as the app reopens itself until a new dialog starts to pop up:
-<Image src={Console02} alt="console animation" format="webp" />
+Android tiene un atajo para cerrar la app actual a través del botón "Back" si lo mantienes presionado por un segundo o algo así.
+Juguemos un poco con el botón "Back" - vamos a cerrar continuamente la app JRNY tan pronto como la app se reabra hasta que comience a aparecer un nuevo diálogo:
+<Image src={Console02} alt="animación de la consola" format="webp" />
 
-Ok, now for the fun part: That dialog belongs to stock Android's "crash checking system". We've just "forced Android to think" that NautilusLauncher is messed up (good!). We'll exploit through that dialog.
+Ok, ahora la parte divertida: Ese diálogo pertenece al "sistema de verificación de fallos" de Android stock. Acabamos de "forzar a Android a pensar" que NautilusLauncher está mal (¡bien!). Vamos a explotar a través de ese diálogo.
 
-As soon as it appears, touch on "App info". By clicking "App info" we're going to open the Settings app (which is on `AppMonitorService`'s denylist). It will close it in around a second, so we gotta go fast! Touch on the "FORCE STOP" button, and then touch on "OK".
-<Image src={Console03} alt="console animation" format="webp" />
+Tan pronto como aparezca, toca en "App info". Al hacer clic en "App info" vamos a abrir la app de Configuración (que está en la lista de denegados de `AppMonitorService`). Se cerrará en alrededor de un segundo, ¡así que tenemos que ser rápidos! Toca en el botón "FORCE STOP", y luego toca en "OK".
+<Image src={Console03} alt="animación de la consola" format="webp" />
 
-As soon as you're able to click on "OK", you can take a rest (good exercise, huh?). Now let's proceed with the findings on Reddit. Let's enable adb by clicking on the "magnifying glass" icon on the top right corner and searching for "Developer options":
-<Image src={Console04} alt="console animation" format="webp" />
+Tan pronto como puedas hacer clic en "OK", puedes descansar (buen ejercicio, ¿eh?). Ahora procedamos con los hallazgos en Reddit. Vamos a habilitar adb haciendo clic en el icono de "lupa" en la esquina superior derecha y buscando "Developer options":
+<Image src={Console04} alt="animación de la consola" format="webp" />
 
-Find the Console's IP address. The easiest way is through Wi-Fi Settings:
-<Image src={Console05} alt="console animation" format="webp" />
+Encuentra la dirección IP de la Consola. La forma más fácil es a través de la Configuración de Wi-Fi:
+<Image src={Console05} alt="animación de la consola" format="webp" />
 
-Now that adb is enabled and we have the IP address, let's jump into a computer and connect with adb. Open a terminal and run `adb connect <IP Address>` (in my case 10.0.0.205):
+Ahora que adb está habilitado y tenemos la dirección IP, saltemos a un computador y conectemos con adb. Abre un terminal y ejecuta `adb connect <Dirección IP>` (en mi caso 10.0.0.205):
 ```sh
 > adb connect 10.0.0.205
 connected to 10.0.0.205:5555
 ```
 
-*It will ask you for an in-screen confirmation the first time you remotely connect through adb.*
+*Te pedirá una confirmación en pantalla la primera vez que te conectes de forma remota a través de adb.*
 
 
-Let's create an empty file inside `/sdcard/Pictures/` called `nautilus`. You can read more about "why" on [Bowflex Quirks](/en/projects/fl3xbl0w/quirks).
+Creemos un archivo vacío dentro de `/sdcard/Pictures/` llamado `nautilus`. Puedes leer más sobre el "por qué" en [Curiosidades de Bowflex](/es/projects/fl3xbl0w/quirks).
 ```sh
 > adb shell touch /sdcard/Pictures/nautilus
 ```
 
-Now let's restore some functionality. Send the following commands through your terminal:
+Ahora vamos a restaurar algunas funcionalidades. Envía los siguientes comandos a través de tu terminal:
 ```sh
 > adb shell settings put secure ntls_launcher_preference 0
 > adb shell settings put secure navigationbar_switch 1
@@ -92,25 +92,25 @@ Now let's restore some functionality. Send the following commands through your t
 > adb shell settings put secure statusbar_switch 1
 ```
 
-You'll see the UI appear:
-<Image src={Console06} alt="console animation" format="webp" />
+Verás aparecer la UI:
+<Image src={Console06} alt="animación de la consola" format="webp" />
 
 
-There's one final step - to change the default launcher. Search for "Default apps" and set Quickstep as the Home app:
-<Image src={Console07} alt="console animation" format="webp" />
+Hay un paso final - cambiar el lanzador predeterminado. Busca "Default apps" y establece Quickstep como la app de inicio:
+<Image src={Console07} alt="animación de la consola" format="webp" />
 
-**You are now free!**
+**¡Ahora eres libre!**
 
-This state will remain as long as NautilusLauncher is force-stopped. It persists across restarts.
+Este estado se mantendrá mientras NautilusLauncher esté forzado a detenerse. Persiste a través de reinicios.
 
-If you want to go back to "stock" just open the `NautilusLauncher` App (I strongly suggest you have created the `/sdcard/Pictures/nautilus` file beforehand):
-<Image src={Console08} alt="console animation" format="webp" />
+Si quieres volver a "stock" solo abre la app `NautilusLauncher` (te sugiero fuertemente que hayas creado el archivo `/sdcard/Pictures/nautilus` de antemano):
+<Image src={Console08} alt="animación de la consola" format="webp" />
 
 
-## Notes on "Locking system"
-`NautilusLauncher` is the default "Android launcher", which means that if the JRNY App closes, it will immediately "reopen itself".
+## Notas sobre el "Sistema de bloqueo"
+`NautilusLauncher` es el "lanzador de Android" predeterminado, lo que significa que si la app JRNY se cierra, inmediatamente "se reabrirá".
 
-There's also another "safety lock", a foreground service in the `NautilusLauncher` apk, called `AppMonitorService`. When decompiling the apk, you can see three interesting variables:
+También hay otro "bloqueo de seguridad", un servicio en primer plano en el apk de `NautilusLauncher`, llamado `AppMonitorService`. Al descompilar el apk, puedes ver tres variables interesantes:
 ```java
 public static final int MonitorIntervalSeconds = 1;
 // Some more variables
@@ -118,6 +118,6 @@ private static String[] TargtedAppsToKill = {"com.android.vending", "com.android
 private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
 ```
 
-And so that service is "actively protecting" the lockout. On every close of the app (through holding the "Back" button), there will be an attempt to reopen JRNY. By force-closing it, we also disable all foreground services.
+Y así ese servicio está "protegiendo activamente" el bloqueo. En cada cierre de la app (a través de mantener presionado el botón "Back"), habrá un intento de reabrir JRNY. Al forzar su cierre, también desactivamos todos los servicios en primer plano.
 
-*(the typos you may see on the code dumps are coming from the Nautilus' developers themselves, not me)*
+*(los errores tipográficos que puedas ver en los volcados de código provienen de los propios desarrolladores de Nautilus, no míos)*

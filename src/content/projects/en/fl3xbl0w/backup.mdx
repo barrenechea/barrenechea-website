@@ -15,9 +15,9 @@ import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.
 
 After being freed from `AppMonitorService` (or after any OTA update is received), the first thing to do is back up as much data as possible.
 
-Make sure you're already connected to the tablet:
+Make sure you're already connected to the Console:
 ```sh
-> adb connect <Tablet IP Address>
+> adb connect <Console IP Address>
 ```
 
 ## Backup /sdcard contents
@@ -29,7 +29,7 @@ It may contain some required files for the machine to work properly after a fact
 
 ## Backup APKs
 
-First, get the list of all packages installed on the tablet (just for you to have a reference):
+First, get the list of all packages installed on the Console (just for you to have a reference):
 ```sh
 > adb shell pm list packages -f
 ```

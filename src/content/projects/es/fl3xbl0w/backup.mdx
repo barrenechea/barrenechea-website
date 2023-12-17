@@ -13,35 +13,35 @@ tags:
 import { Image } from "astro:assets";
 import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
 
-After being freed from `AppMonitorService` (or after any OTA update is received), the first thing to do is back up as much data as possible.
+Después de ser liberado de `AppMonitorService` (o después de recibir cualquier actualización OTA), lo primero que hay que hacer es respaldar la mayor cantidad de datos posible.
 
-Make sure you're already connected to the tablet:
+Asegúrate de estar ya conectado a la consola:
 ```sh
-> adb connect <Tablet IP Address>
+> adb connect <Dirección IP de la Consola>
 ```
 
-## Backup /sdcard contents
+## Respaldo del contenido de /sdcard
 
-It may contain some required files for the machine to work properly after a factory reset (mainly on the `/sdcard/Android` and `/sdcard/Nautilus` folders). We'll back up everything with:
+Puede contener algunos archivos necesarios para que la máquina funcione correctamente después de un restablecimiento de fábrica (principalmente en las carpetas `/sdcard/Android` y `/sdcard/Nautilus`). Respaldaremos todo con:
 ```sh
 > adb pull /sdcard/ .
 ```
 
-## Backup APKs
+## Respaldo de APKs
 
-First, get the list of all packages installed on the tablet (just for you to have a reference):
+Primero, obtén la lista de todos los paquetes instalados en la Consola (solo para que tengas una referencia):
 ```sh
 > adb shell pm list packages -f
 ```
 
-They will appear in the following format: `package:<APK location>=<package name>`
+Aparecerán en el siguiente formato: `package:<ubicación del APK>=<nombre del paquete>`
 
-You'll have to find the apps you want to backup. NOT ALL APPS ARE REQUIRED, most of them are stock Android apps, and so we'll only search for "non-stock apps" through some filtering:
+Tendrás que encontrar las aplicaciones que quieres respaldar. NO TODAS LAS APLICACIONES SON NECESARIAS, la mayoría son aplicaciones estándar de Android, así que solo buscaremos "aplicaciones no estándar" mediante algunos filtros:
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 ```
 
-You'll be able to see records for apps from `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` and maybe some more in the future. We'll want to back up everything we see on that list (unique ID's hidden, use your own results):
+Podrás ver registros de aplicaciones de `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` y quizás algunas más en el futuro. Querremos respaldar todo lo que veamos en esa lista (ID únicos ocultos, usa tus propios resultados):
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
@@ -60,78 +60,74 @@ package:/data/app/com.nautilus.bowflex.usb-XXXXXXXXXXXXXXXX/base.apk=com.nautilu
 package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
 ```
 
-> NOTE: `com.redbend.dualpart.service.app` comes from `/system/priv-app/`, meaning that it will remain installed even after a factory reset. We can dump it anyways if you are interested in reverse engineering the apps.
+> NOTA: `com.redbend.dualpart.service.app` proviene de `/system/priv-app/`, lo que significa que permanecerá instalado incluso después de un restablecimiento de fábrica. Podemos respaldarla de todas formas si te interesa la ingeniería inversa de las aplicaciones.
 
-
-Let's take Disney Plus as an example (unique ID hidden)
+Tomemos Disney Plus como ejemplo (ID único oculto)
 ```
 package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
 ```
 
-That line, based on the format I've mentioned, would be:
+Esa línea, basada en el formato que he mencionado, sería:
 ```
-Package location: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
-Package name: com.disney.disneyplus
+Ubicación del paquete: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
+Nombre del paquete: com.disney.disneyplus
 ```
 
-We'll search for which version of the app we have with that info. Let's use the Package name that we've just identified and run:
+Buscaremos qué versión de la aplicación tenemos con esa información. Usemos el Nombre del paquete que acabamos de identificar y ejecutemos:
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
 ```
 
-In my case, I've received:
+En mi caso, he recibido:
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
     versionName=2.4.2-rc2
 ```
 
-Now, to create a backup for the Disney Plus package, the procedure would be:
+Ahora, para crear un respaldo para el paquete de Disney Plus, el procedimiento sería:
 ```sh
 > adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
 ```
 
-Immediately after it finishes, go through your File Explorer and rename the just dumped `base.apk` file into `com.disney.disneyplus-2.4.2-rc2.apk`.
+Inmediatamente después de que termine, ve a tu Explorador de Archivos y cambia el nombre del archivo `base.apk` recién respaldado a `com.disney.disneyplus-2.4.2-rc2.apk`.
 
-The format for APKs that I suggest, given that example, is: `<Package name>-<version>.apk`
+El formato que sugiero para los APKs, dado ese ejemplo, es: `<Nombre del paquete>-<versión>.apk`
 
-Now repeat the process for the rest of the apps.
+Ahora repite el proceso para el resto de las aplicaciones.
 
+## Respaldo de AppData
+Parece ser capaz de respaldar *algunos (no estoy seguro si todos)* los datos de las aplicaciones.
 
-## Backup AppData
-This seems to be able to backup *some (not sure if all)* AppData.
+*Ten en cuenta que no todas las aplicaciones instaladas generan datos de aplicaciones, o nosotros, como el usuario `shell`, es posible que no tengamos permisos para respaldar todo.*
 
-*Note that not all installed apps generate AppData, or we, as the `shell` user, may not have permissions to backup everything.*
-
-Create a full backup of all user-installed apps:
+Crea un respaldo completo de todas las aplicaciones instaladas por el usuario:
 ```sh
 > adb backup -f appdata.adb -all -noapk -nosystem
 ```
 
-Alternatively, you can have the same output from an alternative command:
+Alternativamente, puedes obtener el mismo resultado de un comando alternativo:
 ```sh
 > adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
 ```
 
-Both commands will request an "in-screen confirmation" that you want to do a backup. Touch on "**BACK UP MY DATA**":
-<Image src={DialogBackupConfirm} alt="backup confirmation screen" format="webp" />
+Ambos comandos solicitarán una "confirmación en pantalla" de que quieres hacer un respaldo. Toca en "**BACK UP MY DATA**":
+<Image src={DialogBackupConfirm} alt="pantalla de confirmación de respaldo" format="webp" />
 
-If you want to extract the contents (on Linux, macOS), you'll need `zlib-flate` from [qpdf](https://command-not-found.com/qpdf) and run:
+Si quieres extraer los contenidos (en Linux, macOS), necesitarás `zlib-flate` de [qpdf](https://command-not-found.com/qpdf) y ejecutar:
 ```sh
 > dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
 ```
 
-There is some fascinating data for `com.nautilus.bowflex.usb`.
-There is Personally identifiable information (PII) inside, so **make sure to double-check what files you share**.
+Hay algunos datos fascinantes para `com.nautilus.bowflex.usb`.
+Hay información personal identificable (PII) dentro, así que **asegúrate de revisar bien qué archivos compartes**.
 
-
-*These backup and extraction methods are from [this Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). I've only tested the Backup methods listed there, which are safe to play. **If you play with the Gist Restore, you're on your own**. Let us know if it works tho!*
-
+*Estos métodos de respaldo y extracción provienen de [este Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Solo he probado los métodos de respaldo listados allí, que son seguros para jugar. **Si juegas con la Restauración del Gist, estás por tu cuenta**. ¡Avísanos si funciona!*
 
 ## Script
 
-I developed a quick and dirty Python script for dumping some contents (it doesn't include AppData for now).
-**Only tested on macOS with android-platform-tools installed through brew**.
-Read the script, and be sure it makes sense to you before running.
+Desarrollé un script rápido y sucio de Python para respaldar algunos contenidos (por ahora no incluye AppData).
+**Solo probado en macOS con android-platform-tools instalado a través de brew**.
+Lee el script y asegúrate de que tenga sentido para ti antes de ejecutarlo.
 
 ```python
 import sys
@@ -139,20 +135,20 @@ import os
 import subprocess
 from datetime import datetime
 
-# check if argument is given
+# verificar si se dio un argumento
 if len(sys.argv) != 2:
-    print("Usage: python3 dump.py <Console IP Address>")
+    print("Uso: python3 dump.py <Dirección IP de la Consola>")
     sys.exit(1)
 
 ipaddr = sys.argv[1]
 
-# check if adb is available for shell
+# verificar si adb está disponible para shell
 adb_path = subprocess.check_output(["which", "adb"]).decode("utf-8").strip()
 if not os.path.exists(adb_path):
-    print("adb not found")
+    print("adb no encontrado")
     exit()
 
-# setup dump folder with current date and time
+# configurar carpeta de respaldo con fecha y hora actual
 dump_folder = os.path.join(
     os.environ["HOME"],
     "Desktop",
@@ -162,31 +158,31 @@ dump_folder = os.path.join(
 if not os.path.exists(dump_folder):
     os.makedirs(dump_folder)
 
-# connect adb
-print("Connecting to {}...".format(ipaddr))
+# conectar adb
+print("Conectando a {}...".format(ipaddr))
 subprocess.call(["adb connect {}".format(ipaddr)], shell=True)
 
-# pull /sdcard contents
-print("Pulling /sdcard contents...")
+# respaldar contenido de /sdcard
+print("Respaldando contenido de /sdcard...")
 subprocess.call(["adb pull /sdcard/ {}".format(dump_folder)], shell=True)
 
-# get APK info
-print("Pulling APKs...")
+# obtener información de APK
+print("Respaldando APKs...")
 packages = (
     subprocess.check_output(["adb shell pm list packages -f"], shell=True)
     .decode("utf-8")
     .split("\n")
 )
 
-# filter out empty lines
+# filtrar líneas vacías
 packages = [x for x in packages if x.strip()]
 
-# filter out lines containing "com.android", "com.google", "framework-res"
+# filtrar líneas que contienen "com.android", "com.google", "framework-res"
 packages = [package for package in packages if package.find("com.android") == -1]
 packages = [package for package in packages if package.find("com.google") == -1]
 packages = [package for package in packages if package.find("framework-res") == -1]
 
-print("Found {} APKs".format(len(packages)))
+print("Encontrados {} APKs".format(len(packages)))
 
 for package in packages:
     package_name = package.split("=")
@@ -203,7 +199,7 @@ for package in packages:
 
     package_path = package.split(":")[1].split(".apk=")[0].strip()
     package_path = "{}.apk".format(package_path)
-    print("Pulling {} v{}...".format(package_name, package_version))
+    print("Respaldando {} v{}...".format(package_name, package_version))
 
     subprocess.call(["adb pull {} {}".format(package_path, dump_folder)], shell=True)
 
@@ -212,15 +208,15 @@ for package in packages:
         os.path.join(dump_folder, "{}-{}.apk".format(package_name, package_version)),
     )
 
-# backup appdata
-print("Backing up appdata.adb ...")
-print('TOUCH THE "BACK UP MY DATA" BUTTON ON SCREEN NOW !!!')
+# respaldar appdata
+print("Respaldando appdata.adb ...")
+print('¡TOCA EL BOTÓN "RESPALDAR MIS DATOS" EN PANTALLA AHORA !!!')
 subprocess.call(
     ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
     shell=True,
 )
 
-# disconnect adb
-print("Disconnecting...")
+# desconectar adb
+print("Desconectando...")
 subprocess.check_output(["adb disconnect"], shell=True)
 ```
