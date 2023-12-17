@@ -1,0 +1,1509 @@
+---
+title: OpenHaystack on ESPHome
+description: OpenHaystack port as an ESPHome Component. Compatible with all BLE-enabled devices from Espressif.
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ~/assets/images/project-openhaystack.png
+imgAlt: OpenHaystack and ESPHome logos
+tags:
+  - Hardware
+  - Embedded
+---
+
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) is an application that allows you to create your own accessories that are tracked by Apple's [Find My network](https://developer.apple.com/find-my/). They reverse-engineered the Apple protocol and documented it, a pretty awesome project.
+
+I wanted to track an electric scooter of mine in case it gets stolen. While the provided "official" way to build your accessories was "fine", it is pretty buggy and with several compatibility issues across different Espressif boards.
+
+So I ported it as an [ESPHome](https://esphome.io/) component, a piece of software I already use for my embedded devices' requirements.
+
+
+## Why ESPHome? Isn't it "for the home"?
+I'm _a little bit_ obsessed with keeping my IoT/Embedded devices as updated as possible (and, of course, out of any cloud if likely), so ESPHome is an attractive solution to keep
+your devices updated with Arduino and Espressif frameworks. Through ESPHome, I can "update" my scooter anytime I want.
+
+## Why isn't this an official component?
+
+I tried! I opened [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), and it's supporting [docs](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), but understandably they didn't want to merge it.
+
+## ESPHome Example - ESP32
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [ openhaystack ]
+
+esphome:
+  name: openhaystack-demo
+
+esp32:
+  board: wemos_d1_mini32
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # Here goes the Base64-encoded key from OpenHaystack
+  # I highly suggest you to handle it as a secret
+  key: !secret openhaystack_key
+```
+
+
+## ESPHome Example - ESP32-C3
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [ openhaystack ]
+
+esphome:
+  name: openhaystack-demo
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: latest
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+      # Enable WPA3 support just because we can
+      CONFIG_WPA_SUITE_B_192: y
+      # Specific to Bluetooth usage
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      # Payload size fix - Extend Watchdog timeout
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # Here goes the Base64-encoded key from OpenHaystack
+  # I highly suggest you handle it as a secret
+  key: !secret openhaystack_key
+```
+
+<details>
+  <summary>Build log - ESP32-C3 @ v2022.6.3</summary>
+  ```bash
+  INFO Reading configuration /config/esp32-c3-12f.yaml...
+  INFO Generating C++ source...
+  INFO Compiling app...
+  Processing esp32-c3-12f (board: esp32-c3-devkitm-1; framework: espidf; platform: platformio/espressif32 @ 3.5.0)
+  --------------------------------------------------------------------------------
+  HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+  - framework-espidf 3.40302.0 (4.3.2) 
+  - tool-cmake 3.16.4 
+  - tool-ninja 1.7.1 
+  - toolchain-riscv32-esp 8.4.0+2021r2-patch2 
+  - toolchain-xtensa-esp32s2 8.4.0+2021r2-patch2
+  Reading CMake configuration...
+  Generating assembly for certificate bundle...
+  LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+  No dependencies
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/api_connection.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/api_frame_helper.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/api_pb2.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/api_pb2_service.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/api_server.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/list_entities.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/proto.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/subscribe_state.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/api/user_services.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/esp32/core.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/esp32/gpio_arduino.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/esp32/gpio_idf.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/esp32/preferences.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/logger/logger.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/md5/md5.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/mdns/mdns_component.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/mdns/mdns_esp32_arduino.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/mdns/mdns_esp8266.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/mdns/mdns_esp_idf.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/network/util.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/openhaystack/openhaystack.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/ota/ota_backend_arduino_esp32.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/ota/ota_backend_arduino_esp8266.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/ota/ota_backend_esp_idf.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/ota/ota_component.o
+  In file included from src/esphome/components/openhaystack/openhaystack.cpp:9:
+  src/esphome/components/openhaystack/openhaystack.cpp: In static member function 'static void esphome::openhaystack::OpenHaystack::ble_setup()':
+  /config/.esphome/platformio/packages/framework-espidf/components/bt/include/esp32c3/include/esp_bt.h:182:1: warning: missing initializer for member 'esp_bt_controller_config_t::coex_param_en' [-Wmissing-field-initializers]
+  };
+  ^
+  src/esphome/components/openhaystack/openhaystack.cpp:114:40: note: in expansion of macro 'BT_CONTROLLER_INIT_CONFIG_DEFAULT'
+        esp_bt_controller_config_t cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /config/.esphome/platformio/packages/framework-espidf/components/bt/include/esp32c3/include/esp_bt.h:182:1: warning: missing initializer for member 'esp_bt_controller_config_t::coex_use_hooks' [-Wmissing-field-initializers]
+  };
+  ^
+  src/esphome/components/openhaystack/openhaystack.cpp:114:40: note: in expansion of macro 'BT_CONTROLLER_INIT_CONFIG_DEFAULT'
+        esp_bt_controller_config_t cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/socket/bsd_sockets_impl.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/socket/lwip_raw_tcp_impl.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/socket/socket.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/wifi/wifi_component.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/wifi/wifi_component_esp32_arduino.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/wifi/wifi_component_esp8266.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/components/wifi/wifi_component_esp_idf.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/application.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/color.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/component.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/component_iterator.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/controller.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/entity_base.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/helpers.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/log.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/scheduler.o
+  Compiling .pioenvs/esp32-c3-12f/src/esphome/core/util.o
+  Compiling .pioenvs/esp32-c3-12f/src/main.o
+  Generating LD script .pioenvs/esp32-c3-12f/esp32c3_out.ld
+  Generating partitions .pioenvs/esp32-c3-12f/partitions.bin
+  Compiling .pioenvs/esp32-c3-12f/app_trace/app_trace.o
+  Compiling .pioenvs/esp32-c3-12f/app_trace/app_trace_util.o
+  Compiling .pioenvs/esp32-c3-12f/app_trace/host_file_io.o
+  Compiling .pioenvs/esp32-c3-12f/app_trace/gcov/gcov_rtio.o
+  Compiling .pioenvs/esp32-c3-12f/app_update/esp_ota_ops.o
+  Compiling .pioenvs/esp32-c3-12f/app_update/esp_app_desc.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/app_trace/libapp_trace.a
+  Compiling .pioenvs/esp32-c3-12f/asio/asio/asio/src/asio.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/app_update/libapp_update.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_common.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_common_loader.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_clock_init.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_flash.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_mem.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_random.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_random_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_utility.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/esp_image_format.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/flash_encrypt.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/secure_boot.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/flash_partitions.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/flash_qio_mode.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_flash_config_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/bootloader_efuse_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader_support/src/idf/bootloader_sha.o
+  Compiling .pioenvs/esp32-c3-12f/bt/controller/esp32c3/bt.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/core/btc_alarm.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/bootloader_support/libbootloader_support.a
+  Compiling .pioenvs/esp32-c3-12f/bt/common/api/esp_blufi_api.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/asio/libasio.a
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/core/btc_manage.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/core/btc_task.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/profile/esp/blufi/blufi_prf.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/profile/esp/blufi/blufi_protocol.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/alarm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/allocator.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/buffer.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/config.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/fixed_queue.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/future.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/hash_functions.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/hash_map.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/list.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/mutex.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/thread.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/osi.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/osi/semaphore.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_a2dp_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_avrc_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_bt_device.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_bt_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_gap_ble_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_gap_bt_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_gatt_common_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_gattc_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_gatts_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_hf_ag_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_hf_client_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/api/esp_spp_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/ar/bta_ar.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_aact.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_ci.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/av/bta_av_ssm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_ci.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_pm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_sco.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/dm/bta_dm_qos.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatt_common.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_cache.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_ci.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gattc_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatts_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatts_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatts_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatts_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/gatt/bta_gatts_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_le.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hh/bta_hh_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/jv/bta_jv_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/jv/bta_jv_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/jv/bta_jv_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/jv/bta_jv_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_at.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_cmd.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_rfc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_sco.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_ag/bta_ag_sdp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_at.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_cmd.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_rfc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_sco.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/hf_client/bta_hf_client_sdp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sdp/bta_sdp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sdp/bta_sdp_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sdp/bta_sdp_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sdp/bta_sdp_cfg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sys/bta_sys_conn.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sys/bta_sys_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/bta/sys/utl.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_ble_storage.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_config.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_dev.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_dm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_profile_queue.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_sec.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_sm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_storage.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/core/btc_util.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/bta_av_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/btc_a2dp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/btc_a2dp_control.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/btc_a2dp_sink.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/btc_a2dp_source.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/a2dp/btc_av.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/avrc/btc_avrc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/avrc/bta_avrc_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hf_ag/bta_ag_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hf_ag/btc_hf_ag.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hf_client/btc_hf_client.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hf_client/bta_hf_client_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hid/hidh_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/hid/hidh_conn.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gap/btc_gap_ble.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gap/btc_gap_bt.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gap/bta_gap_bt_co.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gatt/btc_gatt_common.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gatt/btc_gatt_util.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gatt/btc_gattc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/gatt/btc_gatts.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/btc/profile/std/spp/btc_spp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/device/bdaddr.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/device/controller.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/device/interop.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/alloc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/bitalloc-sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/bitalloc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/bitstream-decode.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/decoder-oina.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/decoder-private.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/decoder-sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/dequant.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/framing-sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/framing.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/oi_codec_version.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/synthesis-8-generated.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/synthesis-dct8.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/decoder/srce/synthesis-sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_analysis.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_dct.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_dct_coeffs.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_enc_bit_alloc_mono.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_enc_bit_alloc_ste.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_enc_coeffs.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_encoder.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/encoder/srce/sbc_packing.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/external/sbc/plc/sbc_plc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/hci_audio.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/hci_hal_h4.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/hci_layer.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/hci_packet_factory.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/hci_packet_parser.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/hci/packet_fragmenter.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/main/bte_init.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/main/bte_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/a2dp/a2d_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/a2dp/a2d_sbc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avct/avct_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avct/avct_ccb.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avct/avct_l2c.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avct/avct_lcb.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avct/avct_lcb_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_ad.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_ccb.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_ccb_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_l2c.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_msg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_scb.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avdt/avdt_scb_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_bld_ct.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_bld_tg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_opt.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_pars_ct.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_pars_tg.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_sdp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/avrc/avrc_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_acl.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_addr.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_adv_filter.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_batchscan.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_bgconn.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_cont_energy.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_gap.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_5_gap.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_multi_adv.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_ble_privacy.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_dev.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_devctl.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_inq.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_pm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_sco.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btm/btm_sec.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btu/btu_hcif.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btu/btu_init.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/btu/btu_task.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gap/gap_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gap/gap_ble.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gap/gap_conn.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gap/gap_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/att_protocol.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_attr.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_auth.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_cl.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_db.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_sr.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/gatt/gatt_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/hcic/hciblecmds.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/hcic/hcicmds.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_ble.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_csm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_fcr.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_link.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_ucd.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2c_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/l2cap/l2cap_client.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/port_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/port_rfc.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/port_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_l2cap_if.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_mx_fsm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_port_fsm.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_port_if.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_ts_frames.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/rfcomm/rfc_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_db.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_discovery.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_server.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/sdp/sdp_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/aes.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/p_256_curvepara.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/p_256_ecc_pp.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/p_256_multprecision.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_act.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_api.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_br_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_cmac.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_keys.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_l2c.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_main.o
+  Compiling .pioenvs/esp32-c3-12f/bt/host/bluedroid/stack/smp/smp_utils.o
+  Compiling .pioenvs/esp32-c3-12f/bt/common/btc/profile/esp/blufi/bluedroid_host/esp_blufi.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborencoder_close_container_checked.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborencoder.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborerrorstrings.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborparser_dup_string.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborparser.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborpretty_stdio.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborpretty.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cbortojson.o
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/cborvalidation.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/bt/libbt.a
+  Compiling .pioenvs/esp32-c3-12f/cbor/tinycbor/src/open_memstream.o
+  Compiling .pioenvs/esp32-c3-12f/cmock/CMock/src/cmock.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/address.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/async.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/cbor/libcbor.a
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/block.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/cmock/libcmock.a
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/coap_event.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/coap_hashkey.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/coap_session.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/coap_time.o
+  Compiling .pioenvs/esp32-c3-12f/coap/port/coap_debug.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/encode.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/mem.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/net.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/option.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/pdu.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/resource.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/str.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/subscribe.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/uri.o
+  Compiling .pioenvs/esp32-c3-12f/coap/libcoap/src/coap_io.o
+  Compiling .pioenvs/esp32-c3-12f/coap/port/coap_notls.o
+  Compiling .pioenvs/esp32-c3-12f/coap/port/coap_mbedtls.o
+  Compiling .pioenvs/esp32-c3-12f/console/commands.o
+  Compiling .pioenvs/esp32-c3-12f/console/esp_console_repl.o
+  Compiling .pioenvs/esp32-c3-12f/console/split_argv.o
+  Compiling .pioenvs/esp32-c3-12f/console/argtable3/argtable3.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/coap/libcoap.a
+  Compiling .pioenvs/esp32-c3-12f/console/linenoise/linenoise.o
+  Compiling .pioenvs/esp32-c3-12f/cxx/cxx_exception_stubs.o
+  Compiling .pioenvs/esp32-c3-12f/cxx/cxx_guards.o
+  Compiling .pioenvs/esp32-c3-12f/driver/gpio.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/console/libconsole.a
+  Compiling .pioenvs/esp32-c3-12f/driver/i2c.o
+  Compiling .pioenvs/esp32-c3-12f/driver/i2s.o
+  Compiling .pioenvs/esp32-c3-12f/driver/ledc.o
+  Compiling .pioenvs/esp32-c3-12f/driver/pcnt.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/cxx/libcxx.a
+  Compiling .pioenvs/esp32-c3-12f/driver/periph_ctrl.o
+  Compiling .pioenvs/esp32-c3-12f/driver/rmt.o
+  Compiling .pioenvs/esp32-c3-12f/driver/rtc_io.o
+  Compiling .pioenvs/esp32-c3-12f/driver/rtc_module.o
+  Compiling .pioenvs/esp32-c3-12f/driver/sdspi_crc.o
+  Compiling .pioenvs/esp32-c3-12f/driver/sdspi_host.o
+  Compiling .pioenvs/esp32-c3-12f/driver/sdspi_transaction.o
+  Compiling .pioenvs/esp32-c3-12f/driver/sigmadelta.o
+  Compiling .pioenvs/esp32-c3-12f/driver/spi_common.o
+  Compiling .pioenvs/esp32-c3-12f/driver/spi_master.o
+  Compiling .pioenvs/esp32-c3-12f/driver/spi_slave.o
+  Compiling .pioenvs/esp32-c3-12f/driver/spi_bus_lock.o
+  Compiling .pioenvs/esp32-c3-12f/driver/timer.o
+  Compiling .pioenvs/esp32-c3-12f/driver/twai.o
+  Compiling .pioenvs/esp32-c3-12f/driver/uart.o
+  Compiling .pioenvs/esp32-c3-12f/driver/gdma.o
+  Compiling .pioenvs/esp32-c3-12f/driver/spi_slave_hd.o
+  Compiling .pioenvs/esp32-c3-12f/driver/adc_common.o
+  Compiling .pioenvs/esp32-c3-12f/driver/esp32c3/adc.o
+  Compiling .pioenvs/esp32-c3-12f/driver/esp32c3/adc2_init_cal.o
+  Compiling .pioenvs/esp32-c3-12f/driver/esp32c3/rtc_tempsensor.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/esp32c3/esp_efuse_table.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp32c3/esp_efuse_api.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp32c3/esp_efuse_fields.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/driver/libdriver.a
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp32c3/esp_efuse_utility.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp32c3/esp_efuse_rtc_calib.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp_efuse_api.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp_efuse_fields.o
+  Compiling .pioenvs/esp32-c3-12f/efuse/src/esp_efuse_utility.o
+  Compiling .pioenvs/esp32-c3-12f/esp-tls/esp_tls.o
+  Compiling .pioenvs/esp32-c3-12f/esp-tls/esp-tls-crypto/esp_tls_crypto.o
+  Compiling .pioenvs/esp32-c3-12f/esp-tls/esp_tls_error_capture.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/efuse/libefuse.a
+  Compiling .pioenvs/esp32-c3-12f/esp-tls/esp_tls_mbedtls.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/cache_err_int.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/clk.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/crosscore_int.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/dport_access.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/esp_hmac.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp-tls/libesp-tls.a
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/esp_ds.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/esp_crypto_lock.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/hw_random.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/memprot.o
+  Compiling .pioenvs/esp32-c3-12f/esp32c3/system_api_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/esp_adc_cal/esp_adc_cal_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/brownout.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/esp_err.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp32c3/libesp32c3.a
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/esp_err_to_name.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_adc_cal/libesp_adc_cal.a
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/freertos_hooks.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/mac_addr.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/stack_check.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/task_wdt.o
+  Compiling .pioenvs/esp32-c3-12f/esp_common/src/int_wdt.o
+  Compiling .pioenvs/esp32-c3-12f/esp_eth/src/esp_eth.o
+  Compiling .pioenvs/esp32-c3-12f/esp_eth/src/esp_eth_phy.o
+  Compiling .pioenvs/esp32-c3-12f/esp_eth/src/esp_eth_netif_glue.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_common/libesp_common.a
+  Compiling .pioenvs/esp32-c3-12f/esp_event/default_event_loop.o
+  Compiling .pioenvs/esp32-c3-12f/esp_event/esp_event.o
+  Compiling .pioenvs/esp32-c3-12f/esp_event/esp_event_private.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_eth/libesp_eth.a
+  Compiling .pioenvs/esp32-c3-12f/esp_event/event_loop_legacy.o
+  Compiling .pioenvs/esp32-c3-12f/esp_event/event_send.o
+  Compiling .pioenvs/esp32-c3-12f/esp_gdbstub/src/gdbstub.o
+  Compiling .pioenvs/esp32-c3-12f/esp_gdbstub/src/packet.o
+  Compiling .pioenvs/esp32-c3-12f/esp_gdbstub/riscv/gdbstub_riscv.o
+  Compiling .pioenvs/esp32-c3-12f/esp_gdbstub/esp32c3/gdbstub_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/esp_hidd.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/esp_hidh.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_event/libesp_event.a
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/esp_hid_common.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_gdbstub/libesp_gdbstub.a
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/ble_hidd.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/ble_hidh.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hid/src/bt_hidh.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_client/esp_http_client.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_client/lib/http_auth.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_client/lib/http_header.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_hid/libesp_hid.a
+  Compiling .pioenvs/esp32-c3-12f/esp_http_client/lib/http_utils.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_main.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_parse.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_sess.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_http_client/libesp_http_client.a
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_txrx.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_uri.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/httpd_ws.o
+  Compiling .pioenvs/esp32-c3-12f/esp_http_server/src/util/ctrl_sock.o
+  Compiling .pioenvs/esp32-c3-12f/esp_https_ota/src/esp_https_ota.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/compare_set.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_https_ota/libesp_https_ota.a
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/cpu_util.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/clk_ctrl_os.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_http_server/libesp_http_server.a
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/regi2c_ctrl.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/cpu_util_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_clk_init.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_clk.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_init.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_pm.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_sleep.o
+  Compiling .pioenvs/esp32-c3-12f/esp_hw_support/port/esp32c3/rtc_time.o
+  Compiling .pioenvs/esp32-c3-12f/esp_ipc/ipc.o
+  Compiling .pioenvs/esp32-c3-12f/esp_local_ctrl/src/esp_local_ctrl.o
+  Compiling .pioenvs/esp32-c3-12f/esp_local_ctrl/src/esp_local_ctrl_handler.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_hw_support/libesp_hw_support.a
+  Compiling .pioenvs/esp32-c3-12f/esp_local_ctrl/proto-c/esp_local_ctrl.pb-c.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_ipc/libesp_ipc.a
+  Compiling .pioenvs/esp32-c3-12f/esp_local_ctrl/src/esp_local_ctrl_transport_ble.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/esp_netif_handlers.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/esp_netif_objects.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/esp_netif_defaults.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_local_ctrl/libesp_local_ctrl.a
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/lwip/esp_netif_lwip.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/lwip/esp_netif_lwip_defaults.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/lwip/esp_netif_sta_list.o
+  Compiling .pioenvs/esp32-c3-12f/esp_netif/loopback/esp_netif_loopback.o
+  Compiling .pioenvs/esp32-c3-12f/esp_pm/pm_locks.o
+  Compiling .pioenvs/esp32-c3-12f/esp_pm/pm_trace.o
+  Compiling .pioenvs/esp32-c3-12f/esp_pm/pm_impl.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_netif/libesp_netif.a
+  Compiling .pioenvs/esp32-c3-12f/esp_ringbuf/ringbuf.o
+  Compiling .pioenvs/esp32-c3-12f/esp_rom/patches/esp_rom_crc.o
+  Compiling .pioenvs/esp32-c3-12f/esp_rom/patches/esp_rom_sys.o
+  Compiling .pioenvs/esp32-c3-12f/esp_rom/patches/esp_rom_uart.o
+  Compiling .pioenvs/esp32-c3-12f/esp_serial_slave_link/essl.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_pm/libesp_pm.a
+  Compiling .pioenvs/esp32-c3-12f/esp_serial_slave_link/essl_sdio.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_ringbuf/libesp_ringbuf.a
+  Compiling .pioenvs/esp32-c3-12f/esp_serial_slave_link/essl_spi.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_rom/libesp_rom.a
+  Compiling .pioenvs/esp32-c3-12f/esp_system/intr_alloc.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/esp_async_memcpy.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/panic.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_serial_slave_link/libesp_serial_slave_link.a
+  Compiling .pioenvs/esp32-c3-12f/esp_system/system_api.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/startup.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/system_time.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/sleep_modes.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/cpu_start.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/panic_handler.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/soc/esp32c3/clk.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/soc/esp32c3/reset_reason.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/async_memcpy_impl_gdma.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/soc/esp32c3/apb_backup_dma.o
+  Compiling .pioenvs/esp32-c3-12f/esp_system/port/arch/riscv/panic_arch.o
+  Compiling .pioenvs/esp32-c3-12f/esp_timer/src/esp_timer.o
+  Compiling .pioenvs/esp32-c3-12f/esp_timer/src/ets_timer_legacy.o
+  Compiling .pioenvs/esp32-c3-12f/esp_timer/src/system_time.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_system/libesp_system.a
+  Compiling .pioenvs/esp32-c3-12f/esp_timer/src/esp_timer_impl_systimer.o
+  Compiling .pioenvs/esp32-c3-12f/esp_websocket_client/esp_websocket_client.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/coexist.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/lib_printf.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_timer/libesp_timer.a
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/mesh_event.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/phy_init.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/smartconfig.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_websocket_client/libesp_websocket_client.a
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/smartconfig_ack.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/wifi_init.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/wifi_default.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/src/wifi_netif.o
+  Compiling .pioenvs/esp32-c3-12f/esp_wifi/esp32c3/esp_adapter.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_common.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_checksum.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_flash.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_uart.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_elf.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/esp_wifi/libesp_wifi.a
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/core_dump_binary.o
+  Compiling .pioenvs/esp32-c3-12f/espcoredump/src/port/riscv/core_dump_port.o
+  Compiling .pioenvs/esp32-c3-12f/expat/expat/expat/lib/xmlparse.o
+  Compiling .pioenvs/esp32-c3-12f/expat/expat/expat/lib/xmlrole.o
+  Compiling .pioenvs/esp32-c3-12f/expat/expat/expat/lib/xmltok.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/espcoredump/libespcoredump.a
+  Compiling .pioenvs/esp32-c3-12f/expat/expat/expat/lib/xmltok_impl.o
+  Compiling .pioenvs/esp32-c3-12f/expat/expat/expat/lib/xmltok_ns.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/diskio/diskio.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/diskio/diskio_rawflash.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/diskio/diskio_sdmmc.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/expat/libexpat.a
+  Compiling .pioenvs/esp32-c3-12f/fatfs/diskio/diskio_wl.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/src/ff.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/port/freertos/ffsystem.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/src/ffunicode.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/vfs/vfs_fat.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/vfs/vfs_fat_sdmmc.o
+  Compiling .pioenvs/esp32-c3-12f/fatfs/vfs/vfs_fat_spiflash.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_master.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_slave.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/mb.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/fatfs/libfatfs.a
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/mb_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/ascii/mbascii.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/ascii/mbascii_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/rtu/mbrtu_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/rtu/mbrtu.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/rtu/mbcrc.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/tcp/mbtcp.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/tcp/mbtcp_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/port.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portevent.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portevent_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portother.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portother_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portserial.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/portserial_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/porttimer.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/port/porttimer_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfunccoils.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfunccoils_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncdiag.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncdisc.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncdisc_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncholding.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncholding_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncinput.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncinput_m.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbfuncother.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/modbus/functions/mbutils.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/serial_slave/modbus_controller/mbc_serial_slave.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/serial_master/modbus_controller/mbc_serial_master.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/tcp_slave/port/port_tcp_slave.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/tcp_slave/modbus_controller/mbc_tcp_slave.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/tcp_master/modbus_controller/mbc_tcp_master.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/tcp_master/port/port_tcp_master.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_master_tcp.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_slave_tcp.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_master_serial.o
+  Compiling .pioenvs/esp32-c3-12f/freemodbus/common/esp_modbus_slave_serial.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/port/riscv/port.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/port/riscv/portasm.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/port/port_common.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/croutine.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/event_groups.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/freemodbus/libfreemodbus.a
+  Compiling .pioenvs/esp32-c3-12f/freertos/list.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/queue.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/tasks.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/timers.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/stream_buffer.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/FreeRTOS-openocd.o
+  Compiling .pioenvs/esp32-c3-12f/freertos/freertos_v8_compat.o
+  Compiling .pioenvs/esp32-c3-12f/hal/wdt_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/mpu_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/cpu_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/rmt_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/rtc_io_hal.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/freertos/libfreertos.a
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_slave_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_slave_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/i2s_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/sigmadelta_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/timer_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/ledc_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/ledc_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/i2c_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/i2c_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/gpio_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/uart_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/uart_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_flash_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_flash_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/soc_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/interrupt_controller_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/sha_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/aes_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/twai_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/twai_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/hal/adc_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/ds_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/gdma_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/esp32c3/adc_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/esp32c3/brownout_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/esp32c3/systimer_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/esp32c3/hmac_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_flash_hal_gpspi.o
+  Compiling .pioenvs/esp32-c3-12f/hal/spi_slave_hd_hal.o
+  Compiling .pioenvs/esp32-c3-12f/hal/esp32c3/rtc_cntl_hal.o
+  Compiling .pioenvs/esp32-c3-12f/heap/heap_caps.o
+  Compiling .pioenvs/esp32-c3-12f/heap/heap_caps_init.o
+  Compiling .pioenvs/esp32-c3-12f/heap/multi_heap.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/hal/libhal.a
+  Compiling .pioenvs/esp32-c3-12f/heap/heap_tlsf.o
+  Compiling .pioenvs/esp32-c3-12f/jsmn/src/jsmn.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/jsmn/libjsmn.a
+  Compiling .pioenvs/esp32-c3-12f/json/cJSON/cJSON.o
+  Compiling .pioenvs/esp32-c3-12f/json/cJSON/cJSON_Utils.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_aead/chacha20poly1305/sodium/aead_chacha20poly1305.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/heap/libheap.a
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_aead/xchacha20poly1305/sodium/aead_xchacha20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_auth/crypto_auth.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/json/libjson.a
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_auth/hmacsha256/auth_hmacsha256.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_auth/hmacsha512/auth_hmacsha512.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_auth/hmacsha512256/auth_hmacsha512256.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/crypto_box.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/crypto_box_easy.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/crypto_box_seal.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/curve25519xchacha20poly1305/box_curve25519xchacha20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/curve25519xchacha20poly1305/box_seal_curve25519xchacha20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/ed25519/core_ed25519.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/ed25519/core_ristretto255.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/hchacha20/core_hchacha20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/hsalsa20/core_hsalsa20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/hsalsa20/ref2/core_hsalsa20_ref2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_core/salsa/ref/core_salsa_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/generichash_blake2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-avx2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ssse3.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/ref/blake2b-ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/blake2b/ref/generichash_blake2b.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_generichash/crypto_generichash.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_hash/crypto_hash.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_hash/sha256/cp/hash_sha256_cp.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_hash/sha256/hash_sha256.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_hash/sha512/cp/hash_sha512_cp.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_hash/sha512/hash_sha512.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_kdf/blake2b/kdf_blake2b.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_kdf/crypto_kdf.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_kx/crypto_kx.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_onetimeauth/crypto_onetimeauth.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_onetimeauth/poly1305/donna/poly1305_donna.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_onetimeauth/poly1305/onetimeauth_poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-core.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-encoding.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-avx2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-avx512f.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-ssse3.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/argon2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/blake2b-long.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/pwhash_argon2i.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/argon2/pwhash_argon2id.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/crypto_pwhash.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt-common.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/scryptsalsa208sha256/nosse/pwhash_scryptsalsa208sha256_nosse.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/scryptsalsa208sha256/pbkdf2-sha256.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/scryptsalsa208sha256/pwhash_scryptsalsa208sha256.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_pwhash/scryptsalsa208sha256/scrypt_platform.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/crypto_scalarmult.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/ref10/x25519_ref10.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/consts.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/curve25519_sandy2x.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_invert.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_mul.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_nsquare.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_pack.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe_frombytes_sandy2x.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/sandy2x/sandy2x.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/ed25519/ref10/scalarmult_ed25519_ref10.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_scalarmult/ristretto255/ref10/scalarmult_ristretto255_ref10.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_secretbox/crypto_secretbox.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_secretbox/crypto_secretbox_easy.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_secretbox/xchacha20poly1305/secretbox_xchacha20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_secretbox/xsalsa20poly1305/secretbox_xsalsa20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_secretstream/xchacha20poly1305/secretstream_xchacha20poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_shorthash/crypto_shorthash.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphash24_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphashx24_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_shorthash/siphash24/shorthash_siphash24.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_shorthash/siphash24/shorthash_siphashx24.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/crypto_sign.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/ed25519/ref10/keypair.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/ed25519/ref10/obsolete.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/ed25519/ref10/open.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/ed25519/ref10/sign.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_sign/ed25519/sign_ed25519.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-avx2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-ssse3.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/chacha20/ref/chacha20_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/chacha20/stream_chacha20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/crypto_stream.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/ref/salsa20_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/stream_salsa20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6-asm.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-avx2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-sse2.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa2012/ref/stream_salsa2012_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa2012/stream_salsa2012.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa208/ref/stream_salsa208_ref.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/salsa208/stream_salsa208.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/xchacha20/stream_xchacha20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_stream/xsalsa20/stream_xsalsa20.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/crypto_verify/sodium/verify.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/randombytes/randombytes.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/sodium/codecs.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/sodium/core.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/sodium/runtime.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/sodium/utils.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/libsodium/src/libsodium/sodium/version.o
+  Compiling .pioenvs/esp32-c3-12f/libsodium/port/randombytes_esp32.o
+  Compiling .pioenvs/esp32-c3-12f/log/log.o
+  Compiling .pioenvs/esp32-c3-12f/log/log_buffers.o
+  Compiling .pioenvs/esp32-c3-12f/log/log_freertos.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/libsodium/liblibsodium.a
+  Compiling .pioenvs/esp32-c3-12f/lwip/apps/sntp/sntp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/api_lib.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/api_msg.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/log/liblog.a
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/err.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/if_api.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/netbuf.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/netdb.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/netifapi.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/sockets.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/api/tcpip.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/apps/sntp/sntp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/apps/netbiosns/netbiosns.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/def.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/dns.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/inet_chksum.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/init.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ip.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/mem.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/memp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/netif.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/pbuf.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/raw.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/stats.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/sys.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/tcp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/tcp_in.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/tcp_out.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/timeouts.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/udp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/autoip.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/dhcp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/etharp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/icmp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/igmp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/ip4.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/ip4_napt.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/ip4_addr.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv4/ip4_frag.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/dhcp6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/ethip6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/icmp6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/inet6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/ip6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/ip6_addr.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/ip6_frag.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/mld6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/core/ipv6/nd6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ethernet.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/lowpan6.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/slipif.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/auth.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/ccp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/chap-md5.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/chap-new.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/chap_ms.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/demand.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/eap.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/ecp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/eui64.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/fsm.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/ipcp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/ipv6cp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/lcp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/magic.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/mppe.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/multilink.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/ppp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/pppapi.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/pppcrypt.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/pppoe.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/pppol2tp.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/pppos.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/upap.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/utils.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/lwip/src/netif/ppp/vj.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/hooks/tcp_isn_default.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/hooks/lwip_default_hooks.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/debug/lwip_debug.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/freertos/sys_arch.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/netif/dhcp_state.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/netif/wlanif.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/netif/ethernetif.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/port/esp32/vfs_lwip.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/apps/dhcpserver/dhcpserver.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/apps/ping/esp_ping.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/apps/ping/ping.o
+  Compiling .pioenvs/esp32-c3-12f/lwip/apps/ping/ping_sock.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/esp_crt_bundle/esp_crt_bundle.o
+  Compiling .pioenvs/esp32-c3-12f/.pioenvs/esp32-c3-12f/x509_crt_bundle.o
+  Compiling .pioenvs/esp32-c3-12f/mdns/mdns.o
+  Compiling .pioenvs/esp32-c3-12f/mdns/mdns_console.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mbedtls/libmbedtls.a
+  Compiling .pioenvs/esp32-c3-12f/mdns/mdns_networking.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/lwip/liblwip.a
+  Compiling .pioenvs/esp32-c3-12f/mqtt/esp-mqtt/mqtt_client.o
+  Compiling .pioenvs/esp32-c3-12f/mqtt/esp-mqtt/lib/mqtt_msg.o
+  Compiling .pioenvs/esp32-c3-12f/mqtt/esp-mqtt/lib/mqtt_outbox.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mdns/libmdns.a
+  Compiling .pioenvs/esp32-c3-12f/mqtt/esp-mqtt/lib/platform_esp32_idf.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/abort.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/assert.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/heap.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mqtt/libmqtt.a
+  Compiling .pioenvs/esp32-c3-12f/newlib/locks.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/poll.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/pthread.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/random.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/reent_init.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/newlib_init.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/syscalls.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/termios.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/time.o
+  Compiling .pioenvs/esp32-c3-12f/newlib/port/esp_time_impl.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_buf.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_callbacks.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_debug.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/newlib/libnewlib.a
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_frame.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_hd.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_hd_huffman.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_hd_huffman_data.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_helper.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_http.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_map.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_mem.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_npn.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_option.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_outbound_item.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_pq.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_priority_spec.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_queue.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_rcbuf.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_session.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_stream.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_submit.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/nghttp2/lib/nghttp2_version.o
+  Compiling .pioenvs/esp32-c3-12f/nghttp/port/http_parser.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_api.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_cxx_api.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_item_hash_list.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/nghttp/libnghttp.a
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_page.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_pagemanager.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_storage.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_handle_simple.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_handle_locked.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_partition.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_partition_lookup.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_partition_manager.o
+  Compiling .pioenvs/esp32-c3-12f/nvs_flash/src/nvs_types.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_cert.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_lib.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_methods.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_pkey.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_bio.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_err.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/nvs_flash/libnvs_flash.a
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_stack.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/library/ssl_x509.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/platform/ssl_pm.o
+  Compiling .pioenvs/esp32-c3-12f/openssl/platform/ssl_port.o
+  Compiling .pioenvs/esp32-c3-12f/protobuf-c/protobuf-c/protobuf-c/protobuf-c.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/common/protocomm.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/security/security0.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/protobuf-c/libprotobuf-c.a
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/security/security1.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/openssl/libopenssl.a
+  Compiling .pioenvs/esp32-c3-12f/protocomm/proto-c/constants.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/proto-c/sec0.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/proto-c/sec1.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/proto-c/session.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/transports/protocomm_console.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/transports/protocomm_httpd.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/simple_ble/simple_ble.o
+  Compiling .pioenvs/esp32-c3-12f/protocomm/src/transports/protocomm_ble.o
+  Compiling .pioenvs/esp32-c3-12f/pthread/pthread.o
+  Compiling .pioenvs/esp32-c3-12f/pthread/pthread_cond_var.o
+  Compiling .pioenvs/esp32-c3-12f/pthread/pthread_local_storage.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/protocomm/libprotocomm.a
+  Compiling .pioenvs/esp32-c3-12f/riscv/expression_with_stack_riscv.o
+  Compiling .pioenvs/esp32-c3-12f/riscv/expression_with_stack_riscv_asm.o
+  Compiling .pioenvs/esp32-c3-12f/riscv/instruction_decode.o
+  Compiling .pioenvs/esp32-c3-12f/riscv/interrupt.o
+  Compiling .pioenvs/esp32-c3-12f/riscv/stdatomic.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/pthread/libpthread.a
+  Compiling .pioenvs/esp32-c3-12f/riscv/vectors.o
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_cmd.o
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_common.o
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_init.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/riscv/libriscv.a
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_io.o
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_mmc.o
+  Compiling .pioenvs/esp32-c3-12f/sdmmc/sdmmc_sd.o
+  Compiling .pioenvs/esp32-c3-12f/soc/lldesc.o
+  Compiling .pioenvs/esp32-c3-12f/soc/soc_include_legacy_warn.o
+  Compiling .pioenvs/esp32-c3-12f/soc/memory_layout_utils.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/adc_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/gdma_periph.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/sdmmc/libsdmmc.a
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/gpio_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/interrupts.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/spi_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/ledc_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/rmt_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/soc_memory_layout.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/sigmadelta_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/i2s_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/i2c_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/uart_periph.o
+  Compiling .pioenvs/esp32-c3-12f/soc/esp32c3/timer_periph.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/partition.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/esp32c3/spi_flash_rom_patch.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_drivers.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/soc/libsoc.a
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_generic.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_issi.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_mxic.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_gd.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_winbond.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_chip_boya.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/memspi_host_driver.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/cache_utils.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/flash_mmap.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/flash_ops.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/esp32c3/flash_ops_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/esp_flash_api.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/esp_flash_spi_init.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_os_func_app.o
+  Compiling .pioenvs/esp32-c3-12f/spi_flash/spi_flash_os_func_noos.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/esp_spiffs.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs_api.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs/src/spiffs_cache.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/spi_flash/libspi_flash.a
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs/src/spiffs_check.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs/src/spiffs_gc.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs/src/spiffs_hydrogen.o
+  Compiling .pioenvs/esp32-c3-12f/spiffs/spiffs/src/spiffs_nucleus.o
+  Compiling .pioenvs/esp32-c3-12f/tcp_transport/transport.o
+  Compiling .pioenvs/esp32-c3-12f/tcp_transport/transport_ssl.o
+  Compiling .pioenvs/esp32-c3-12f/tcp_transport/transport_tcp.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/spiffs/libspiffs.a
+  Compiling .pioenvs/esp32-c3-12f/tcp_transport/transport_utils.o
+  Compiling .pioenvs/esp32-c3-12f/tcp_transport/transport_ws.o
+  Compiling .pioenvs/esp32-c3-12f/tcpip_adapter/tcpip_adapter_compat.o
+  Compiling .pioenvs/esp32-c3-12f/unity/unity/src/unity.o
+  Compiling .pioenvs/esp32-c3-12f/unity/unity_runner.o
+  Compiling .pioenvs/esp32-c3-12f/unity/unity_port_esp32.o
+  Compiling .pioenvs/esp32-c3-12f/vfs/vfs.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/tcp_transport/libtcp_transport.a
+  Compiling .pioenvs/esp32-c3-12f/vfs/vfs_uart.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/tcpip_adapter/libtcpip_adapter.a
+  Compiling .pioenvs/esp32-c3-12f/vfs/vfs_semihost.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/unity/libunity.a
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/Partition.o
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/SPI_Flash.o
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/WL_Ext_Perf.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/vfs/libvfs.a
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/WL_Ext_Safe.o
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/WL_Flash.o
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/crc32.o
+  Compiling .pioenvs/esp32-c3-12f/wear_levelling/wear_levelling.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/wifi_config.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/wifi_scan.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/manager.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/wear_levelling/libwear_levelling.a
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/handlers.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/scheme_softap.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/scheme_console.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/proto-c/wifi_config.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/proto-c/wifi_scan.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/proto-c/wifi_constants.pb-c.o
+  Compiling .pioenvs/esp32-c3-12f/wifi_provisioning/src/scheme_ble.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/port/os_xtensa.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/ap/ap_config.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/ap/ieee802_1x.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/ap/wpa_auth.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/wifi_provisioning/libwifi_provisioning.a
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/ap/wpa_auth_ie.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/common/sae.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/common/wpa_common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/common/dpp.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/bitfield.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/aes-siv.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha256-kdf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/ccmp.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/crypto_ops.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/dh_group5.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/dh_groups.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/ms_funcs.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha1-tlsprf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha256-tlsprf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha384-tlsprf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha256-prf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/sha1-prf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/md4-internal.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/chap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_mschapv2.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_peap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_peap_common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_tls.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_tls_common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/eap_ttls.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/eap_peer/mschapv2.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_hostap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_wpa2.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_wpa_main.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_wpas_glue.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_wps.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_wpa3.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/esp_supplicant/esp_dpp.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/rsn_supp/pmksa_cache.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/rsn_supp/wpa.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/rsn_supp/wpa_ie.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/base64.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/ext_password.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/uuid.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/wpabuf.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/wpa_debug.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/utils/json.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_attr_build.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_attr_parse.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_attr_process.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_common.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_dev_attr.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_enrollee.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_registrar.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/wps/wps_validate.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/tls_mbedtls.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/crypto_mbedtls.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/crypto_mbedtls-bignum.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/crypto_mbedtls-ec.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/rc4.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/des-internal.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/aes-omac1.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/aes-wrap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/aes-unwrap.o
+  Compiling .pioenvs/esp32-c3-12f/wpa_supplicant/src/crypto/aes-ccm.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/aes.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/aesni.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/arc4.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/wpa_supplicant/libwpa_supplicant.a
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/aria.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/asn1parse.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/asn1write.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/base64.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/bignum.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/blowfish.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/camellia.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ccm.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/chacha20.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/chachapoly.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/cipher.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/cipher_wrap.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/cmac.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ctr_drbg.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/des.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/dhm.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ecdh.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ecdsa.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ecjpake.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ecp.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ecp_curves.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/entropy.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/entropy_poll.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/error.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/gcm.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/havege.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/hkdf.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/hmac_drbg.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/md.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/md2.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/md4.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/md5.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/md_wrap.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/memory_buffer_alloc.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/nist_kw.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/oid.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/padlock.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pem.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pk.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pk_wrap.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pkcs12.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pkcs5.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pkparse.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pkwrite.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/platform.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/platform_util.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/poly1305.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ripemd160.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/rsa.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/rsa_internal.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/sha1.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/sha256.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/sha512.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/threading.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/timing.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/version.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/version_features.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/xtea.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/dma/esp_sha_gdma_impl.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/crypto_shared_gdma/esp_crypto_shared_gdma.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/aes/dma/esp_aes_gdma_impl.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp_hardware.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp_mem.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp_timing.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/esp_sha.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/aes/esp_aes_xts.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/aes/esp_aes_common.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/aes/dma/esp_aes.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/dma/sha.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp_ds/esp_rsa_sign_alt.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp_bignum.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/esp32c3/bignum.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/dma/esp_sha1.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/dma/esp_sha256.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/sha/dma/esp_sha512.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/md/esp_md.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/debug.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_cache.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_ciphersuites.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_cli.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mbedtls/mbedtls/library/libmbedcrypto.a
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_cookie.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_srv.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_ticket.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/ssl_tls.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/mbedtls_debug.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/port/net_sockets.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/certs.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/pkcs11.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509_create.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509_crl.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mbedtls/mbedtls/library/libmbedtls.a
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509_crt.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509_csr.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509write_crt.o
+  Compiling .pioenvs/esp32-c3-12f/mbedtls/mbedtls/library/x509write_csr.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/hal/wdt_hal_iram.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/hal/mpu_hal.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader/subproject/main/bootloader_start.o
+  Archiving .pioenvs/esp32-c3-12f/esp-idf/mbedtls/mbedtls/library/libmbedx509.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_common.o
+  Generating project linker script .pioenvs/esp32-c3-12f/esp32c3.project.ld
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/hal/libhal.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_common_loader.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/main/libmain.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_clock_init.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_flash.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_mem.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_random.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_random_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_utility.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/esp_image_format.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/flash_encrypt.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/secure_boot.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/flash_partitions.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/flash_qio_mode.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_flash_config_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_efuse_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_init.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_clock_loader.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_console.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_console_loader.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/bootloader_panic.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/esp32c3/bootloader_sha.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/esp32c3/flash_encrypt.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/esp32c3/bootloader_soc.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader_support/src/esp32c3/bootloader_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/esp32c3/esp_efuse_table.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp32c3/esp_efuse_api.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp32c3/esp_efuse_fields.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp32c3/esp_efuse_utility.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp32c3/esp_efuse_rtc_calib.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/bootloader_support/libbootloader_support.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp_efuse_api.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp_efuse_fields.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/efuse/src/esp_efuse_utility.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/compare_set.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/cpu_util.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/cpu_util_esp32c3.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_clk_init.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/efuse/libefuse.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_clk.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_init.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_pm.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_sleep.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_hw_support/port/esp32c3/rtc_time.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_rom/patches/esp_rom_crc.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_rom/patches/esp_rom_sys.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/esp_rom/patches/esp_rom_uart.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/log/log.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/log/log_buffers.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/esp_hw_support/libesp_hw_support.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/log/log_noos.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/esp_rom/libesp_rom.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/bootloader/subproject/components/micro-ecc/uECC_verify_antifault.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/lldesc.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/soc_include_legacy_warn.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/memory_layout_utils.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/log/liblog.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/adc_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/gdma_periph.o
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/micro-ecc/libmicro-ecc.a
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/gpio_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/interrupts.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/spi_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/ledc_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/rmt_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/soc_memory_layout.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/sigmadelta_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/i2s_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/i2c_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/uart_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/soc/esp32c3/timer_periph.o
+  Compiling .pioenvs/esp32-c3-12f/bootloader/spi_flash/esp32c3/spi_flash_rom_patch.o
+  Generating an empty partition .pioenvs/esp32-c3-12f/ota_data_initial.bin
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/soc/libsoc.a
+  Archiving .pioenvs/esp32-c3-12f/bootloader/esp-idf/spi_flash/libspi_flash.a
+  Linking .pioenvs/esp32-c3-12f/bootloader.elf
+  Building .pioenvs/esp32-c3-12f/bootloader.bin
+  Linking .pioenvs/esp32-c3-12f/firmware.elf
+  RAM:   [=         ]  14.3% (used 46928 bytes from 327680 bytes)
+  Flash: [======    ]  64.3% (used 1179326 bytes from 1835008 bytes)
+  Building .pioenvs/esp32-c3-12f/firmware.bin
+  esp32_create_combined_bin([".pioenvs/esp32-c3-12f/firmware.bin"], [".pioenvs/esp32-c3-12f/firmware.elf"])
+  Wrote 0x130040 bytes to file /config/.esphome/build/esp32-c3-12f/.pioenvs/esp32-c3-12f/firmware-factory.bin, ready to flash to offset 0x0
+  ======================== [SUCCESS] Took 1038.68 seconds ========================
+
+  ********************************************************************************
+  INFO Successfully compiled program.
+  INFO Resolving IP address of esp32-c3-12f.local
+  INFO  -> 10.0.0.171
+  INFO Uploading /config/.esphome/build/esp32-c3-12f/.pioenvs/esp32-c3-12f/firmware.bin (1179712 bytes)
+  Uploading: [============================================================] 100% Done...
+
+  INFO Waiting for result...
+  INFO OTA successful
+  INFO Successfully uploaded program.
+  INFO Starting log output from esp32-c3-12f.local using esphome API
+  INFO Successfully connected to esp32-c3-12f.local
+  [21:15:17][I][app:102]: ESPHome version 2022.6.3 compiled on Aug  7 2022, 20:59:47
+  [21:15:17][C][wifi:491]: WiFi:
+  [21:15:17][C][wifi:353]:   Local MAC: [redacted]
+  [21:15:17][C][wifi:354]:   SSID: [redacted]
+  [21:15:17][C][wifi:355]:   IP Address: 10.0.0.171
+  [21:15:17][C][wifi:357]:   BSSID: [redacted]
+  [21:15:17][C][wifi:358]:   Hostname: 'esp32-c3-12f'
+  [21:15:17][C][wifi:360]:   Signal strength: -37 dB ▂▄▆█
+  [21:15:17][C][wifi:364]:   Channel: 2
+  [21:15:17][C][wifi:365]:   Subnet: 255.255.255.0
+  [21:15:17][C][wifi:366]:   Gateway: 10.0.0.1
+  [21:15:17][C][wifi:367]:   DNS1: 10.0.0.1
+  [21:15:17][C][wifi:368]:   DNS2: 0.0.0.0
+  [21:15:17][C][logger:275]: Logger:
+  [21:15:17][C][logger:276]:   Level: DEBUG
+  [21:15:17][C][logger:277]:   Log Baud Rate: 115200
+  [21:15:17][C][logger:278]:   Hardware UART: UART0
+  [21:15:17][C][openhaystack:037]: OpenHaystack:
+  [21:15:17][C][openhaystack:046]:   Bluetooth MAC: ED:5F:2C:74:12:75
+  [21:15:17][C][openhaystack:055]:   Advertising Key (first six digits): 6D 5F 2C 74 12 75
+  [21:15:17][C][mdns:084]: mDNS:
+  [21:15:17][C][mdns:085]:   Hostname: esp32-c3-12f
+  [21:15:17][C][ota:085]: Over-The-Air Updates:
+  [21:15:17][C][ota:086]:   Address: esp32-c3-12f.local:3232
+  [21:15:17][C][ota:089]:   Using Password.
+  [21:15:18][C][api:138]: API Server:
+  [21:15:18][C][api:139]:   Address: esp32-c3-12f.local:6053
+  [21:15:18][C][api:143]:   Using noise encryption: NO
+  ```
+</details>

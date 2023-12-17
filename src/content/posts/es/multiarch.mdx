@@ -1,0 +1,37 @@
+---
+title: Multi-arch All the Things
+description: The path of switching from a x86/64 world into an universe of architectures.
+pubDate: 2021-09-06T00:00:00Z
+img: ~/assets/images/arm-x86.svg
+imgAlt: 'Two chips, one with the "x86" label, and one with the "ARM" label.'
+---
+
+Back when we started building our initial foundations at [Finalis](https://www.finalis.com), I remember having the idea of giving AWS's Graviton a try.
+It wasn't feasible back in 2018 without building stuff by yourself. Heck, it's 2022, and we (as a community) still struggle to find ARMv8 support in images on Dockerhub.
+
+But on 2020, something big happened: Apple announced the Mac transition to Apple silicon with a 2-year deadline.
+
+At Finalis, we stick with Apple hardware for software development. You have a Unix-like Operating System and fantastic screen quality and audio for watching movies or whatever 🍿.
+
+Back in 2020, a counter started ticking. If we wanted to keep sourcing new Apple devices in the future, Finalis needed to become multi-arch.
+
+
+## Docker
+
+When Apple came out with the M1, and we sourced one, Docker was starting to “play nice” with it, but Docker on ARM involved some hiccups in earlier versions just because the engine was just being tested (by us early developers).
+
+After it seemed everything was fine: 3rd party tools - most of the required images were already available for ARM64, but not all were. [browserless](https://github.com/browserless/chrome) was the one I started tackling to get them built on ARM64, and so I sent a [pull request](https://github.com/browserless/chrome/pull/1847) with the bare minimum of changes for it to work.
+
+With third-party tools covered, it was a thing to make sure Docker built our own images for ARM64. "Hey, you use TypeScript; it should just work!".... Well, as long as your dependencies do not require binaries getting downloaded while running `npm install`.
+
+The major issue? No binaries are provided for ARM64, forcing a binary build while running `npm install` with `make` (post-install scripts anyone?). From a setup perspective, a little bit of love in some of our `Dockerfile` files was all we needed and sorted everything out.
+
+## Pipelines
+
+Working with GitHub Actions and dealing with multi-arch, you have two choices: you run two parallel runners (one building for x86/64 and one for arm64), or you run one runner for both architectures.
+
+I chose the latter to play with, though [docker buildx](https://docs.docker.com/build/buildx/). Following the setup instructions for [build-push-action](https://github.com/docker/build-push-action#path-context) you can quickly get a working pipeline.
+
+Letting buildx do the multi-arch build allows you to push to Dockerhub without having to deal with different tags for different architectures. All of your tags WILL BE multi-arch compatible.
+
+The downside of it builds time: having two parallel runners on their proper architectures would be much faster, but the pipeline would require handling merging the results into a single tag. _Only if you care about making it easier for consumers to find the right image._
