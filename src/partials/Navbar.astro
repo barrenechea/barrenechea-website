@@ -2,17 +2,15 @@
 import './Navbar.css';
 
 import socials from '~/constants/social';
+import { useTranslations } from '~/i18n/utils';
 import Logo from '~/partials/astro-components/Logo.astro';
 import NavbarTwoColumns from '~/partials/astro-components/NavbarTwoColumns.astro';
 import NavMenu from '~/partials/astro-components/NavMenu.astro';
 import NavMenuItem from '~/partials/astro-components/NavMenuItem.astro';
 import Section from '~/partials/astro-components/Section.astro';
 
-export interface Props {
-  lang: string;
-}
-
-const { lang } = Astro.props;
+const { lang } = Astro.params;
+const t = useTranslations(lang);
 ---
 
 <Section>
@@ -47,8 +45,8 @@ const { lang } = Astro.props;
     </a>
 
     <NavMenu>
-      <NavMenuItem href={`/${lang}/projects/`} target="_self">Projects</NavMenuItem>
-      <NavMenuItem href={`/${lang}/posts/`} target="_self">Posts</NavMenuItem>
+      <NavMenuItem href={`/${lang}/projects/`} target="_self">{t("nav.projects")}</NavMenuItem>
+      <NavMenuItem href={`/${lang}/posts/`} target="_self">{t("nav.posts")}</NavMenuItem>
       {socials.map(({ name, url }) => (
         <NavMenuItem href={url}>
           {name}

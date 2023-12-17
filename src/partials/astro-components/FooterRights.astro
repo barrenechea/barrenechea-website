@@ -1,17 +1,24 @@
 ---
-import { AppConfig } from '~/config';
+import { AppConfig } from "~/config";
+import { useTranslations } from "~/i18n/utils";
 
-import { devDependencies } from '../../../package.json';
+import { devDependencies } from "../../../package.json";
 
 const year = new Date().getFullYear();
 const { author } = AppConfig;
 const copyrightText = `2022-${year} ${author}`;
-const astroVersion = devDependencies.astro.replace('^', '');
+const astroVersion = devDependencies.astro.replace("^", "");
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
 ---
 
 <div class="border-t border-gray-600 pt-5">
   <div class="text-right text-xs text-zinc-500">
-    <p>©{copyrightText}, All rights reserved.</p>
-    <p>Built with <a href="https://astro.build">Astro v{astroVersion}</a>.</p>
+    <p>©{copyrightText}. {t("footer.rights")}.</p>
+    <p>
+      {t("footer.built")}
+      <a href="https://astro.build">Astro v{astroVersion}</a>.
+    </p>
   </div>
 </div>

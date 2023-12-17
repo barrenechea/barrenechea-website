@@ -6,15 +6,14 @@ import BlogPost from '~/partials/BlogPost.astro';
 import Base from '~/templates/Base.astro';
 
 interface Props {
-  lang?: string;
   post: CollectionEntry<'posts'>;
 }
 
-const { lang = 'en', post } = Astro.props;
+const { post } = Astro.props;
 const title = `${post.data.title} - ${AppConfig.siteName}`;
 ---
 
-<Base head={{ title, description: post.data.description, ogOverride: post.data.ogOverride, lang }}>
+<Base head={{ title, description: post.data.description, ogOverride: post.data.ogOverride }}>
   <BlogPost {post}>
     <slot />
   </BlogPost>

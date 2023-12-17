@@ -6,7 +6,7 @@ import RecentPosts from '~/partials/RecentPosts.astro';
 import RecentProjects from '~/partials/RecentProjects.astro';
 import Base from '~/templates/Base.astro';
 
-const { lang = 'en' } = Astro.params;
+const { lang } = Astro.params;
 
 const allPosts = postPages.filter((item) => item.slug.split('/').length === 2 && item.id.startsWith(lang));
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
@@ -21,8 +21,8 @@ export const getStaticPaths = () => ["en", "es"].map((lang) => ({ params: { lang
 const { siteName: title, description } = AppConfig;
 ---
 
-<Base head={{ title, description, lang }}>
-  <Hero lang={lang} />
-  <RecentProjects projectsList={lastThreeProjects} {lang} />
-  <RecentPosts postsList={lastThreePosts} {lang} />
+<Base head={{ title, description }}>
+  <Hero />
+  <RecentProjects projectsList={lastThreeProjects} />
+  <RecentPosts postsList={lastThreePosts} />
 </Base>

@@ -1,28 +1,38 @@
 ---
-import Section from '~/partials/astro-components/Section.astro';
-import Base from '~/templates/Base.astro'
-const title = 'Page not found - Barrenechea'
-const description = 'Are you lost?'
+import { useTranslations } from "~/i18n/utils";
+import Section from "~/partials/astro-components/Section.astro";
+import Base from "~/templates/Base.astro";
 
-export const getStaticPaths = () => ["en", "es"].map((lang) => ({ params: { lang } }));
-const { lang = 'en' } = Astro.params;
+export const getStaticPaths = () =>
+  ["en", "es"].map((lang) => ({ params: { lang } }));
+const { lang } = Astro.params;
+
+const t = useTranslations(lang);
+
+const title = `${t("404.title")} - Barrenechea`;
+const description = t("404.description");
 ---
 
-<Base head={{ title, description, lang }}>
-<Section>
-  <div class="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
-    <div class="mx-auto max-w-screen-sm text-center">
-      <h1 class="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">404
-      </h1>
-      <p class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Something's missing.
-      </p>
-      <p class="mb-4 text-lg font-light text-gray-500">Sorry, the page you're requesting is no longer available. You'll find
-        lots to explore on the home page tho! </p>
-      <a href="/"
-        target="_self"
-        class="my-4 inline-flex rounded-lg px-5 py-2.5 text-center text-sm font-medium text-amber-400 hover:underline">Back
-        to Homepage</a>
+<Base head={{ title, description }}>
+  <Section>
+    <div class="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+      <div class="mx-auto max-w-screen-sm text-center">
+        <h1 class="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">
+          404
+        </h1>
+        <p class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+          {t("404.heading")}
+        </p>
+        <p class="mb-4 text-lg font-light text-gray-500">
+          {t("404.body")}
+        </p>
+        <a
+          href="/"
+          target="_self"
+          class="my-4 inline-flex rounded-lg px-5 py-2.5 text-center text-sm font-medium text-amber-400 hover:underline"
+          >{t("404.back")}</a
+        >
+      </div>
     </div>
-  </div>
-</Section>
+  </Section>
 </Base>

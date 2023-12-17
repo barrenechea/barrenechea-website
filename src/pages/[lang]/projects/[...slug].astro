@@ -16,11 +16,10 @@ interface Props {
   project: CollectionEntry<"projects">;
 }
 
-const { lang = "en" } = Astro.params;
 const { project } = Astro.props;
 const { Content } = await project.render();
 ---
 
-<BaseProject {project} {lang}>
+<BaseProject {project}>
   <Content />
 </BaseProject>

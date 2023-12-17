@@ -5,6 +5,7 @@ import { ViewTransitions } from 'astro:transitions';
 
 import faviconSvg from '~/assets/favicon.svg';
 import { AppConfig } from '~/config';
+import { useTranslations } from '~/i18n/utils';
 import Footer from '~/partials/Footer.astro';
 import Navbar from '~/partials/Navbar.astro';
 import { getOgImageUrl } from '~/utils/getOgImageUrl';
@@ -14,7 +15,6 @@ export interface Props {
     title: string;
     description: string;
     ogOverride?: string | undefined;
-    lang?: string | undefined;
   };
 }
 
@@ -22,7 +22,7 @@ export interface Props {
 const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
 
 const {
-  head: { title, description, ogOverride, lang=AppConfig.locale },
+  head: { title, description, ogOverride },
 } = Astro.props as Props;
 
 // remove " - Barrenechea" from the title
@@ -30,7 +30,8 @@ const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
 const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || '/open-graph/default-og-image.png';
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 
-const forkMeText = lang === 'es' ? 'Hazme fork en GitHub' : 'Fork me on GitHub';
+const { lang } = Astro.params;
+const t = useTranslations(lang);
 ---
 
 <html lang={lang}>
@@ -63,10 +64,10 @@ const forkMeText = lang === 'es' ? 'Hazme fork en GitHub' : 'Fork me on GitHub';
 </head>
 
 <body class="bg-zinc-900 font-sans text-gray-100">
-  <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon={forkMeText}
-    title={forkMeText}>{forkMeText}</a>
+  <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon={t("nav.fork")}
+    title={t("nav.fork")}>{t("nav.fork")}</a>
 
-  <Navbar {lang} />
+  <Navbar />
 
   <slot />
 

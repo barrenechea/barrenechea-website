@@ -1,27 +1,34 @@
 ---
-import type { Page, PaginateFunction } from 'astro';
-import { type CollectionEntry } from 'astro:content';
+import type { Page, PaginateFunction } from "astro";
+import { type CollectionEntry } from "astro:content";
 
-import { AppConfig } from '~/config';
+import { AppConfig } from "~/config";
 import { projectPages } from "~/content";
-import BlogGallery from '~/partials/astro-components/BlogGallery.astro';
-import Pagination from '~/partials/astro-components/Pagination.astro';
-import PaginationHeader from '~/partials/astro-components/PaginationHeader.astro';
-import Section from '~/partials/astro-components/Section.astro';
-import Base from '~/templates/Base.astro';
+import { useTranslations } from "~/i18n/utils";
+import BlogGallery from "~/partials/astro-components/BlogGallery.astro";
+import Pagination from "~/partials/astro-components/Pagination.astro";
+import PaginationHeader from "~/partials/astro-components/PaginationHeader.astro";
+import Section from "~/partials/astro-components/Section.astro";
+import Base from "~/templates/Base.astro";
 
 type GetStaticPaths = {
   paginate: PaginateFunction;
 };
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allProjects = projectPages.filter((item) => item.slug.split('/').length === 2);
-  const sortedProjects = allProjects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-  const langs = ['en', 'es'];
+  const allProjects = projectPages.filter(
+    (item) => item.slug.split("/").length === 2
+  );
+  const sortedProjects = allProjects.sort(
+    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+  );
+  const langs = ["en", "es"];
 
   // Return a paginated collection of paths for all projects
   return langs.flatMap((lang) => {
-    const projects = sortedProjects.filter((item) => item.id.split('/')[0] === lang);
+    const projects = sortedProjects.filter(
+      (item) => item.id.split("/")[0] === lang
+    );
     return paginate(projects, {
       pageSize: 6,
       params: {
@@ -32,20 +39,21 @@ export async function getStaticPaths({ paginate }: GetStaticPaths) {
 }
 
 interface Props {
-  page: Page<CollectionEntry<'projects'>>;
+  page: Page<CollectionEntry<"projects">>;
 }
 
 const { page } = Astro.props as Props;
-const { lang = "en" } = Astro.params;
-const titleBase = `Page ${page.currentPage} - Projects`;
+const { lang } = Astro.params;
+
+const t = useTranslations(lang);
+const titleBase = `${t("nav.page")} ${page.currentPage} - ${t("nav.projects")}`;
 const title = `${titleBase} - ${AppConfig.siteName}`;
-const description =
-  "Pagination of not necessarily everything I've done, but what I'm legally allowed to share 😄";
+const description = t("projects.paginationDescription");
 ---
 
-<Base head={{ title, description, lang }}>
+<Base head={{ title, description }}>
   <Section>
-    <PaginationHeader title="Projects" description={description} />
+    <PaginationHeader title={t("nav.projects")} description={description} />
   </Section>
 
   <Section>

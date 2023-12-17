@@ -3,52 +3,53 @@ import { Image } from "astro:assets";
 
 import avatars from "~/constants/avatar";
 import socials from "~/constants/social";
+import { useTranslations } from "~/i18n/utils";
 import GradientText from "~/partials/astro-components/GradientText.astro";
 import HeroAvatar from "~/partials/astro-components/HeroAvatar.astro";
 import HeroSocial from "~/partials/astro-components/HeroSocial.astro";
 import Section from "~/partials/astro-components/Section.astro";
 
 const avatar = avatars[0]!;
-const { lang } = Astro.props;
+const { lang } = Astro.params;
 
-const greeting = lang === "es" ? "Holaa! Soy" : "Heey! I'm";
+const t = useTranslations(lang);
 ---
 
 <Section>
   <HeroAvatar>
     <Fragment slot="title">
-      {greeting} <GradientText>Sebastian Barrenechea</GradientText> 👋
+      {t("hero.greeting")}
+      <GradientText>Sebastian Barrenechea</GradientText> 👋
     </Fragment>
     <Fragment slot="description">
-      <p class="text-xl">A Software Engineer located in Chile 🇨🇱</p>
+      <p class="text-xl">{t("hero.description")}</p>
       <p class="text-xl">
-        You can find me playing with proofs-of-concept, blazingly fast new
-        technologies, and exploring the fascinating realm of Machine Learning
-        models.
+        {t("hero.doing")}
       </p>
       <p class="text-xl">
-        Currently working at <a
-          class="text-amber-400 hover:underline"
-          href="https://www.finalis.com">Finalis</a
-        > with the DevOps Team.
+        {t("hero.currentEmployment")}
+        <a class="text-amber-400 hover:underline" href="https://www.finalis.com"
+          >Finalis</a
+        >
+        {t("hero.currentTeam")}.
       </p>
     </Fragment>
     <Fragment slot="avatar">
       <Image
         class="h-64 w-64 rounded-full"
         src={avatar.img}
-        alt={`AI-generated avatar using ${avatar.tool.name} and ${avatar.model.name}`}
+        alt={`${t("hero.avatar.alt")} ${avatar.tool.name} ${t("hero.avatar.with")} ${avatar.model.name}`}
         format="webp"
         width={400}
         height={400}
         loading="eager"
       />
       <p class="pt-2 text-center text-xs italic text-zinc-500">
-        Using <a
+        {t("hero.avatar.using")} <a
           class="text-zinc-400 hover:text-zinc-300"
           href={avatar.tool.url}
           >{avatar.tool.name}
-        </a> and <a
+        </a> {t("hero.avatar.with")} <a
           class="text-zinc-400 hover:text-zinc-300"
           href={avatar.model.url}>{avatar.model.name}</a
         >
