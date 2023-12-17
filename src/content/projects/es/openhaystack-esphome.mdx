@@ -1,31 +1,30 @@
 ---
-title: OpenHaystack on ESPHome
-description: OpenHaystack port as an ESPHome Component. Compatible with all BLE-enabled devices from Espressif.
+title: OpenHaystack en ESPHome
+description: Adaptación de OpenHaystack como un componente de ESPHome. Compatible con todos los dispositivos con BLE de Espressif.
 pubDate: 2022-06-23T10:42:00Z
 link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
 img: ~/assets/images/project-openhaystack.png
-imgAlt: OpenHaystack and ESPHome logos
+imgAlt: Logos de OpenHaystack y ESPHome
 tags:
   - Hardware
   - Embedded
 ---
 
-[OpenHaystack](https://github.com/seemoo-lab/openhaystack) is an application that allows you to create your own accessories that are tracked by Apple's [Find My network](https://developer.apple.com/find-my/). They reverse-engineered the Apple protocol and documented it, a pretty awesome project.
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) es una aplicación que te permite crear tus propios accesorios que son rastreados por la red [Find My network](https://developer.apple.com/find-my/) de Apple. Han hecho ingeniería inversa al protocolo de Apple y lo han documentado, un proyecto bastante impresionante.
 
-I wanted to track an electric scooter of mine in case it gets stolen. While the provided "official" way to build your accessories was "fine", it is pretty buggy and with several compatibility issues across different Espressif boards.
+Quería rastrear un scooter eléctrico mío en caso de que me lo robaran. Aunque la manera "oficial" de construir tus accesorios era "aceptable", resulta ser bastante problemática y con varios problemas de compatibilidad en distintas placas de Espressif.
 
-So I ported it as an [ESPHome](https://esphome.io/) component, a piece of software I already use for my embedded devices' requirements.
+Así que lo adapté como un componente de [ESPHome](https://esphome.io/), un software que ya utilizo para las necesidades de mis dispositivos embebidos.
 
 
-## Why ESPHome? Isn't it "for the home"?
-I'm _a little bit_ obsessed with keeping my IoT/Embedded devices as updated as possible (and, of course, out of any cloud if likely), so ESPHome is an attractive solution to keep
-your devices updated with Arduino and Espressif frameworks. Through ESPHome, I can "update" my scooter anytime I want.
+## ¿Por qué ESPHome? ¿No es "para la casa"?
+Estoy _un poco_ obsesionado con mantener mis dispositivos IoT/Embebidos lo más actualizados posible (y, por supuesto, fuera de cualquier nube si es posible), así que ESPHome es una solución atractiva para mantener tus dispositivos actualizados con los frameworks de Arduino y Espressif. A través de ESPHome, puedo "actualizar" mi scooter cuando quiera.
 
-## Why isn't this an official component?
+## ¿Por qué no es este un componente oficial?
 
-I tried! I opened [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), and it's supporting [docs](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), but understandably they didn't want to merge it.
+¡Lo intenté! Abrí [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), y su [documentación de soporte](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), pero comprensiblemente no quisieron mezclarlo.
 
-## ESPHome Example - ESP32
+## Ejemplo de ESPHome - ESP32
 ```yaml
 external_components:
   - source:
@@ -41,26 +40,26 @@ esp32:
   board: wemos_d1_mini32
 
 wifi:
-  ssid: <your-wifi-ssid>
-  password: <your-wifi-password>
+  ssid: <tu-ssid-wifi>
+  password: <tu-contraseña-wifi>
 
-# Enable logging
+# Habilitar logs
 logger:
 
-# Enable Home Assistant API
+# Habilitar API de Home Assistant
 api:
 
 ota:
   password: !secret ota_password
 
 openhaystack:
-  # Here goes the Base64-encoded key from OpenHaystack
-  # I highly suggest you to handle it as a secret
+  # Aquí va la clave codificada en Base64 de OpenHaystack
+  # Te sugiero encarecidamente que la manejes como un secreto
   key: !secret openhaystack_key
 ```
 
 
-## ESPHome Example - ESP32-C3
+## Ejemplo de ESPHome - ESP32-C3
 ```yaml
 external_components:
   - source:
@@ -83,35 +82,35 @@ esp32:
     sdkconfig_options:
       CONFIG_FREERTOS_UNICORE: y
       CONFIG_COMPILER_OPTIMIZATION_SIZE: y
-      # Enable WPA3 support just because we can
+      # Habilitar soporte WPA3 solo porque podemos
       CONFIG_WPA_SUITE_B_192: y
-      # Specific to Bluetooth usage
+      # Específico para el uso de Bluetooth
       CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
       CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
-      # Payload size fix - Extend Watchdog timeout
+      # Corrección de "Payload size error" - Extender tiempo de espera del Watchdog
       CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
 
 wifi:
-  ssid: <your-wifi-ssid>
-  password: <your-wifi-password>
+  ssid: <tu-ssid-wifi>
+  password: <tu-contraseña-wifi>
 
-# Enable logging
+# Habilitar logs
 logger:
 
-# Enable Home Assistant API
+# Habilitar API de Home Assistant
 api:
 
 ota:
   password: !secret ota_password
 
 openhaystack:
-  # Here goes the Base64-encoded key from OpenHaystack
-  # I highly suggest you handle it as a secret
+  # Aquí va la clave codificada en Base64 de OpenHaystack
+  # Te sugiero encarecidamente que la manejes como un secreto
   key: !secret openhaystack_key
 ```
 
 <details>
-  <summary>Build log - ESP32-C3 @ v2022.6.3</summary>
+  <summary>Log de compilación - ESP32-C3 @ v2022.6.3</summary>
   ```bash
   INFO Reading configuration /config/esp32-c3-12f.yaml...
   INFO Generating C++ source...
