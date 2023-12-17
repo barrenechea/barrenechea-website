@@ -25,7 +25,16 @@ export const ui = {
     "home.recentPosts.viewAll": "View all posts",
 
     "posts.paginationDescription": "Paginated result of some brain-dumping processes that I go through from time to time",
+    "posts.by": "By",
+    "posts.on": "on",
+    "posts.pagination.older": "Older posts",
+    "posts.pagination.newer": "Newer posts",
+
     "projects.paginationDescription": "Pagination of not necessarily everything I've done, but what I'm legally allowed to share 😄",
+    "projects.releasedOn": "Released on",
+    "projects.go": "Go",
+    "projects.pagination.older": "Older projects",
+    "projects.pagination.newer": "Newer projects",
 
     "404.title": "Page not found",
     "404.description": "The page you are looking for does not exist.",
@@ -57,7 +66,16 @@ export const ui = {
     "home.recentPosts.viewAll": "Ver todas las publicaciones",
 
     "posts.paginationDescription": "Resultado paginado de algunos procesos de volcado cerebral por los que paso de vez en cuando",
+    "posts.by": "Por",
+    "posts.on": "el",
+    "posts.pagination.older": "Publicaciones anteriores",
+    "posts.pagination.newer": "Publicaciones más recientes",
+
     "projects.paginationDescription": "Paginación de no necesariamente todo lo que he hecho, sino de lo que puedo compartir legalmente 😄",
+    "projects.releasedOn": "Lanzado el",
+    "projects.go": "Ir",
+    "projects.pagination.older": "Proyectos anteriores",
+    "projects.pagination.newer": "Proyectos más recientes",
 
     "404.title": "Página no encontrada",
     "404.description": "La página que estás buscando no existe.",

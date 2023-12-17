@@ -11,7 +11,7 @@ export interface Props {
 
 const { key, instance } = Astro.props as Props;
 const [lang, ...slug] = instance.slug.split('/');
-const formattedDate = instance.data.pubDate ? formatDate(instance.data.pubDate) : null;
+const formattedDate = instance.data.pubDate ? formatDate(instance.data.pubDate, lang) : null;
 ---
 
 <a

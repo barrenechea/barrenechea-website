@@ -1,16 +1,26 @@
 ---
 import type { Page } from 'astro';
 
+import { useTranslations } from '~/i18n/utils';
+
 export interface Props {
   page: Page;
+  type: 'posts' | 'projects';
 }
+
+const { page, type } = Astro.props;
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+const newer = type === 'posts' ? t('posts.pagination.newer') : t('projects.pagination.newer');
+const older = type === 'posts' ? t('posts.pagination.older') : t('projects.pagination.older');
 ---
 
 <div class="flex justify-center gap-8">
-  {Astro.props.page.url.prev && (
-    <a href={Astro.props.page.url.prev} target="_self">← Newer Posts</a>
+  {page.url.prev && (
+    <a href={page.url.prev} target="_self">← {newer}</a>
   )}
-  {Astro.props.page.url.next && (
-    <a href={Astro.props.page.url.next} target="_self">Older Posts →</a>
+  {page.url.next && (
+    <a href={page.url.next} target="_self">{older} →</a>
   )}
 </div>
