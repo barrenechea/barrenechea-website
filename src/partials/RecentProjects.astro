@@ -44,7 +44,7 @@ const { projectsList } = Astro.props as Props;
     </div>
 
     <div class="text-sm">
-      <a href="/projects" target="_self" class="text-zinc-200 hover:underline">
+      <a href="/projects/" target="_self" class="text-zinc-200 hover:underline">
         View all Projects →
       </a>
     </div>
@@ -54,7 +54,7 @@ const { projectsList } = Astro.props as Props;
       <Project
         name={project.data.title}
         description={project.data.description}
-        link={`/projects/${project.slug}`}
+        link={`/projects/${project.slug}/`}
         img={project.data.img}
         imgAlt={project.data.imgAlt}
       >
