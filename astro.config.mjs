@@ -25,6 +25,13 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     robotsTxt(),
   ],
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "es"],
+    routing: {
+        prefixDefaultLocale: true
+    }
+  }
   // experimental: {
   //   contentCollectionCache: true,
   // },

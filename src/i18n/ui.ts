@@ -24,13 +24,13 @@ export const ui = {
     "home.recentPosts": "Recent",
     "home.recentPosts.viewAll": "View all posts",
 
-    "posts.paginationDescription": "Paginated result of some brain-dumping processes that I go through from time to time",
+    "posts.paginationDescription": "Result of some brain-dumping processes that I go through from time to time",
     "posts.by": "By",
     "posts.on": "on",
     "posts.pagination.older": "Older posts",
     "posts.pagination.newer": "Newer posts",
 
-    "projects.paginationDescription": "Pagination of not necessarily everything I've done, but what I'm legally allowed to share 😄",
+    "projects.paginationDescription": "Not necessarily everything I've done, but what I'm legally allowed to share 😄",
     "projects.releasedOn": "Released on",
     "projects.go": "Go",
     "projects.pagination.older": "Older projects",
@@ -53,7 +53,7 @@ export const ui = {
 
     "hero.greeting": "Holaa! Soy",
     "hero.description": "Un Ingeniero de Software ubicado en Chile 🇨🇱",
-    "hero.doing": "Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías increíblemente rápidas y explorando el fascinante mundo de los modelos de Machine Learning.",
+    "hero.doing": "Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías y explorando el fascinante mundo de los modelos de Machine Learning.",
     "hero.currentEmployment": "Actualmente trabajo en",
     "hero.currentTeam": "con el equipo de DevOps",
     "hero.avatar.alt": "Avatar generado por IA usando",
@@ -65,13 +65,13 @@ export const ui = {
     "home.recentPosts": "Últimas",
     "home.recentPosts.viewAll": "Ver todas las publicaciones",
 
-    "posts.paginationDescription": "Resultado paginado de algunos procesos de volcado cerebral por los que paso de vez en cuando",
+    "posts.paginationDescription": "Resultado de algunos procesos de brain-dumping por los que paso de vez en cuando",
     "posts.by": "Por",
     "posts.on": "el",
     "posts.pagination.older": "Publicaciones anteriores",
     "posts.pagination.newer": "Publicaciones más recientes",
 
-    "projects.paginationDescription": "Paginación de no necesariamente todo lo que he hecho, sino de lo que puedo compartir legalmente 😄",
+    "projects.paginationDescription": "No necesariamente todo lo que he hecho, pero lo que puedo compartir legalmente 😄",
     "projects.releasedOn": "Lanzado el",
     "projects.go": "Ir",
     "projects.pagination.older": "Proyectos anteriores",
