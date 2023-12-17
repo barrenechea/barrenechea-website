@@ -1,38 +1,38 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
-import { useTranslations } from '~/i18n/utils';
-import GradientText from '~/partials/astro-components/GradientText.astro';
-import Project from '~/partials/astro-components/Project.astro';
-import Section from '~/partials/astro-components/Section.astro';
-import Tags from '~/partials/astro-components/Tags.astro';
+import { useTranslations } from "~/i18n/utils";
+import GradientText from "~/partials/astro-components/GradientText.astro";
+import Project from "~/partials/astro-components/Project.astro";
+import Section from "~/partials/astro-components/Section.astro";
+import Tags from "~/partials/astro-components/Tags.astro";
 
 export interface Props {
-  projectsList: CollectionEntry<'projects'>[];
+  projectsList: CollectionEntry<"projects">[];
 }
 
 const tags = {
-  CSharp: { color: 'PURPLE', text: 'C#' },
-  DotNet6: { color: 'FUCHSIA', text: '.NET 6.0' },
-  Xcode: { color: 'CYAN', text: 'Xcode' },
-  Containers: { color: 'ROSE', text: 'Containers' },
-  Architecture: { color: 'ORANGE', text: 'Architecture' },
-  Pipelines: { color: 'LIME', text: 'Pipelines' },
-  TailwindCSS: { color: 'SKY', text: 'Tailwind.css' },
-  TypeScript: { color: 'BLUE', text: 'TypeScript' },
-  WebScraping: { color: 'VIOLET', text: 'Web Scraping' },
-  Blog: { color: 'EMERALD', text: 'Blog' },
-  JavaScript: { color: 'YELLOW', text: 'JavaScript' },
-  AstroJS: { color: 'INDIGO', text: 'Astro.js' },
-  ReverseEngineering: { color: 'STONE', text: 'Reverse Engineering' },
-  Hardware: { color: 'AMBER', text: 'Hardware' },
-  Android: { color: 'EMERALD', text: 'Android' },
-  Embedded: { color: 'PINK', text: 'Embedded' },
+  CSharp: { color: "PURPLE", text: "C#" },
+  DotNet6: { color: "FUCHSIA", text: ".NET 6.0" },
+  Xcode: { color: "CYAN", text: "Xcode" },
+  Containers: { color: "ROSE", text: "Containers" },
+  Architecture: { color: "ORANGE", text: "Architecture" },
+  Pipelines: { color: "LIME", text: "Pipelines" },
+  TailwindCSS: { color: "SKY", text: "Tailwind.css" },
+  TypeScript: { color: "BLUE", text: "TypeScript" },
+  WebScraping: { color: "VIOLET", text: "Web Scraping" },
+  Blog: { color: "EMERALD", text: "Blog" },
+  JavaScript: { color: "YELLOW", text: "JavaScript" },
+  AstroJS: { color: "INDIGO", text: "Astro.js" },
+  ReverseEngineering: { color: "STONE", text: "Reverse Engineering" },
+  Hardware: { color: "AMBER", text: "Hardware" },
+  Android: { color: "EMERALD", text: "Android" },
+  Embedded: { color: "PINK", text: "Embedded" },
 } as {
   [key: string]: { color: string; text: string };
 };
 
-const defaultTag = { color: 'GRAY', text: 'UNDEFINED TAG' };
+const defaultTag = { color: "GRAY", text: "UNDEFINED TAG" };
 
 const { projectsList } = Astro.props as Props;
 const { lang } = Astro.params;
@@ -42,30 +42,37 @@ const t = useTranslations(lang);
 <Section>
   <div slot="title" class="flex items-baseline justify-between">
     <div>
-      {t("home.recentProjects")} <GradientText>{t("nav.projects")}</GradientText>
+      {t("home.recentProjects")}
+      <GradientText>{t("nav.projects")}</GradientText>
     </div>
 
     <div class="text-sm">
-      <a href={`/${lang}/projects/`} target="_self" class="text-zinc-200 hover:underline">
+      <a
+        href={`/${lang}/projects/`}
+        target="_self"
+        class="text-zinc-200 hover:underline"
+      >
         {t("home.recentProjects.viewAll")} →
       </a>
     </div>
   </div>
   <div class="flex flex-col gap-6">
-    {projectsList.map((project) => (
-      <Project
-        name={project.data.title}
-        description={project.data.description}
-        link={`/${lang}/projects/${project.slug.split('/').pop()}/`}
-        img={project.data.img}
-        imgAlt={project.data.imgAlt}
-      >
-        {(project.data.tags || []).map((tag) => (
-          <Tags color={(tags[tag] || defaultTag).color}>
-            {(tags[tag] || defaultTag).text}
-          </Tags>
-        ))}
-      </Project>
-    ))}
+    {
+      projectsList.map((project) => (
+        <Project
+          name={project.data.title}
+          description={project.data.description}
+          link={`/${lang}/projects/${project.slug.split("/").pop()}/`}
+          img={project.data.img}
+          imgAlt={project.data.imgAlt}
+        >
+          {(project.data.tags || []).map((tag) => (
+            <Tags color={(tags[tag] || defaultTag).color}>
+              {(tags[tag] || defaultTag).text}
+            </Tags>
+          ))}
+        </Project>
+      ))
+    }
   </div>
 </Section>

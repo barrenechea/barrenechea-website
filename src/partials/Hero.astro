@@ -38,20 +38,22 @@ const t = useTranslations(lang);
       <Image
         class="h-64 w-64 rounded-full"
         src={avatar.img}
-        alt={`${t("hero.avatar.alt")} ${avatar.tool.name} ${t("hero.avatar.with")} ${avatar.model.name}`}
+        alt={`${t("hero.avatar.alt")} ${avatar.tool.name} ${t(
+          "hero.avatar.with"
+        )} ${avatar.model.name}`}
         format="webp"
         width={400}
         height={400}
         loading="eager"
       />
       <p class="pt-2 text-center text-xs italic text-zinc-500">
-        {t("hero.avatar.using")} <a
-          class="text-zinc-400 hover:text-zinc-300"
-          href={avatar.tool.url}
+        {t("hero.avatar.using")}
+        <a class="text-zinc-400 hover:text-zinc-300" href={avatar.tool.url}
           >{avatar.tool.name}
-        </a> {t("hero.avatar.with")} <a
-          class="text-zinc-400 hover:text-zinc-300"
-          href={avatar.model.url}>{avatar.model.name}</a
+        </a>
+        {t("hero.avatar.with")}
+        <a class="text-zinc-400 hover:text-zinc-300" href={avatar.model.url}
+          >{avatar.model.name}</a
         >
       </p>
     </Fragment>

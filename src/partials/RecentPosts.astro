@@ -1,13 +1,13 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
-import { useTranslations } from '~/i18n/utils';
-import BlogGallery from '~/partials/astro-components/BlogGallery.astro';
-import GradientText from '~/partials/astro-components/GradientText.astro';
-import Section from '~/partials/astro-components/Section.astro';
+import { useTranslations } from "~/i18n/utils";
+import BlogGallery from "~/partials/astro-components/BlogGallery.astro";
+import GradientText from "~/partials/astro-components/GradientText.astro";
+import Section from "~/partials/astro-components/Section.astro";
 
 export interface Props {
-  postsList: CollectionEntry<'posts'>[];
+  postsList: CollectionEntry<"posts">[];
 }
 
 const { postsList } = Astro.props as Props;
@@ -18,11 +18,16 @@ const t = useTranslations(lang);
 <Section>
   <div slot="title" class="flex items-baseline justify-between">
     <div>
-      {t("home.recentPosts")} <GradientText>{t("nav.posts")}</GradientText>
+      {t("home.recentPosts")}
+      <GradientText>{t("nav.posts")}</GradientText>
     </div>
 
     <div class="text-sm">
-      <a href={`/${lang}/posts/`} target="_self" class="text-zinc-200 hover:underline">
+      <a
+        href={`/${lang}/posts/`}
+        target="_self"
+        class="text-zinc-200 hover:underline"
+      >
         {t("home.recentPosts.viewAll")} →
       </a>
     </div>

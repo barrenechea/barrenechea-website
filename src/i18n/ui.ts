@@ -1,7 +1,7 @@
 export const languages = {
   en: "English",
   es: "Español",
-};
+} as const;
 
 export const ui = {
   en: {
@@ -44,7 +44,7 @@ export const ui = {
 
     "hero.greeting": "Holaa! Soy",
     "hero.description": "Un Ingeniero de Software ubicado en Chile 🇨🇱",
-    "hero.doing": "Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías increíblemente rápidas y explorando el fascinante reino de los modelos de Machine Learning.",
+    "hero.doing": "Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías increíblemente rápidas y explorando el fascinante mundo de los modelos de Machine Learning.",
     "hero.currentEmployment": "Actualmente trabajo en",
     "hero.currentTeam": "con el equipo de DevOps",
     "hero.avatar.alt": "Avatar generado por IA usando",
