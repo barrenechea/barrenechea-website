@@ -13,11 +13,11 @@ tags:
 import { Image } from "astro:assets";
 import HomeAssistantSensor from "~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png";
 
-### The `/sdcard/Pictures/nautilus` file
+### El archivo `/sdcard/Pictures/nautilus`
 
-When decompiling `NautilusLauncher` you can see references to that specific path:
+Al descompilar `NautilusLauncher` puedes ver referencias a esa ruta específica:
 ```java
-// path: com/nautilus/nautiluslauncher/LauncherService.java
+// ruta: com/nautilus/nautiluslauncher/LauncherService.java
 public void run() {
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     LauncherService.access$000(LauncherService.this).disableAdbDebug();
@@ -29,28 +29,28 @@ public void run() {
 ```
 
 ```java
-// path: com/nautilus/nautiluslauncher/MainActivity.java
+// ruta: com/nautilus/nautiluslauncher/MainActivity.java
 protected void onCreate(Bundle bundle) {
-  // previous code
+  // código anterior
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     this.mPlatformControl.disableAdbDebug();
     this.mPlatformControl.enterKioskMode();
   } else {
     this.mPlatformControl.enableAdbDebug();
   }
-  // more code
+  // más código
 ```
 
-The effect of putting the file in place is that `NautilusLauncher` will actively enable adb after every restart. If the file is NOT in place, `NautilusLauncher` will actively DISABLE adb (if it was previously enabled).
+El efecto de colocar el archivo en su lugar es que `NautilusLauncher` activará adb después de cada reinicio. Si el archivo NO está en su lugar, `NautilusLauncher` DESACTIVARÁ activamente adb (si estaba habilitado anteriormente).
 
 
-### The `/sdcard/Nautilus/redbend/Credentials.txt` file
+### El archivo `/sdcard/Nautilus/redbend/Credentials.txt`
 
-From what it looks like, [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([purchased by Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), now I get **why** so many references to KNOX) is providing OTA services for Nautilus hardware. I've found some references to that file within `com.redbend.client.apk`.
+Por lo que parece, [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([adquirido por Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), ahora entiendo **por qué** tantas referencias a KNOX) está proporcionando servicios OTA para el hardware de Nautilus. He encontrado algunas referencias a ese archivo dentro de `com.redbend.client.apk`.
 
 ```java
 package com.redbend.client;
-// I'll skip some in-between code for clarity purposes
+// Omitiré algo de código intermedio para mayor claridad
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -65,7 +65,7 @@ public class Ipl {
 
 ```
 
-Also on `com.redbend.client.ClientService` we can find:
+También en `com.redbend.client.ClientService` podemos encontrar:
 
 ```java
 // ...
@@ -79,33 +79,33 @@ public class ClientService extends SmmService {
       }
 ```
 
-Given that info, we can label the contents on the `/sdcard/Nautilus/redbend/Credentials.txt` as:
+Dada esa información, podemos etiquetar el contenido en el archivo `/sdcard/Nautilus/redbend/Credentials.txt` como:
 
 ```
-First line: DOMAIN_NAME
-Second line: DOMAIN_PIN
+Primera línea: DOMAIN_NAME
+Segunda línea: DOMAIN_PIN
 ```
 
-*`DOMAIN_PIN` looks like an actual pin code since it is a six-digit number.*
+*`DOMAIN_PIN` parece ser un código pin real ya que es un número de seis dígitos.*
 
-There are some credentials within the "Red Bend Network" to match a machine with a specific brand/product for OTA updates. I expect those credentials to be IDENTICAL within all Nautilus' hardware. The file is bundled within the `com.redbend.client` APK and gets extracted upon installation.
-
-
-I found references for `com.redbend.client` [over here](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), and found it quite funny to see it crashing on a car. I hope it doesn't fail that often on our machines too.
+Hay algunas credenciales dentro de la "Red Bend Network" para asociar una máquina con una marca/producto específicos para actualizaciones OTA. Espero que esas credenciales sean IDÉNTICAS dentro de todo el hardware de Nautilus. El archivo viene incluido dentro del APK `com.redbend.client` y se extrae al instalarlo.
 
 
-### Bluetooth Heart Rate Monitor
+Encontré referencias de `com.redbend.client` [aquí](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), y me pareció bastante gracioso ver que se estrellaba en un auto. Espero que no falle tan a menudo en nuestras máquinas también.
 
-This one was pretty easy to figure out. The Bluetooth name appears as `CL831-xxxxxxx` *(hidden number)* from [CHILEAF](https://www.chileaf.com/PRODUCTS-DETAIL?product_id=183).
 
-Scanning it through [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) exposed the devices' MAC Address and some key data:
+### Monitor de Ritmo Cardíaco Bluetooth
+
+Este fue bastante fácil de descifrar. El nombre Bluetooth aparece como `CL831-xxxxxxx` *(número oculto)* de [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+
+Al escanearlo a través de [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) se expuso la dirección MAC del dispositivo y algunos datos clave:
 ```
-Heart Rate:
+Ritmo Cardíaco:
 UUID: 0x180D
-Heart Rate Measurement
+Medición del Ritmo Cardíaco
 UUID: 0x2A37
 ```
 
-It seemed pretty standard, and a Home Assistant Community [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) already figured this one out (not the same model, but it seems the Heart Rate Monitor is using a standard protocol). I've made an ESPHome [config file](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) as a proof of concept:
+Parecía bastante estándar, y un [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) de la Comunidad de Home Assistant ya había descubierto esto (no el mismo modelo, pero parece que el Monitor de Ritmo Cardíaco usa un protocolo estándar). He creado un archivo de configuración de ESPHome [aquí](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) como prueba de concepto:
 
-<Image src={HomeAssistantSensor} alt="HomeAssistant screenshot displaying a heart rate sensor" format="webp" />
+<Image src={HomeAssistantSensor} alt="Captura de pantalla de HomeAssistant mostrando un sensor de ritmo cardíaco" format="webp" />

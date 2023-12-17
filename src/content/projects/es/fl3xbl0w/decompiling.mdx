@@ -17,37 +17,32 @@ import JadxGUIOpened from "~/assets/images/fl3xbl0w/screen-jadx-opened.png";
 import JadxGUISave from "~/assets/images/fl3xbl0w/screen-jadx-save.png";
 import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
 
-This assumes you already [have your own APKs](/en/projects/fl3xbl0w/backup). Note that even though I'm specifying this on Nautilus' apps, this applies to pretty much any Android application you'd like to "peek under the hood".
+Esto asume que ya [tienes tus propios APKs](/es/projects/fl3xbl0w/backup). Ten en cuenta que, aunque estoy especificando esto para las aplicaciones de Nautilus, esto se aplica a prácticamente cualquier aplicación de Android que quieras "echar un vistazo bajo el capó".
 
+## Convirtiendo aplicaciones en código Java
 
-## Turning apps into Java code
+Las siguientes instrucciones tienen como objetivo obtener "código legible", pero es improbable que puedas compilarlas de nuevo a un APK. Estoy usando esto como referencia para entender a los desarrolladores de Nautilus. Si quieres modificar la base del código y empaquetarlo de nuevo, ve a [Convirtiendo aplicaciones en código Smali](#convirtiendo-aplicaciones-en-código-smali).
 
-The following instructions are intended to get some "readable code", but it's improbable that you'll be able to compile them back to an APK. I'm using this as a reference to understand Nautilus' developers. If you want to alter the codebase and package it back, go to [Turning apps into Smali code](#turning-apps-into-smali-code).
-
-### Requirements
+### Requisitos
 - [jadx](https://github.com/skylot/jadx)
 
+### ¡Abramos algunas weás!
 
-### Let's open some sh*t
+Después de instalar `jadx`, deberías poder abrir `jadx-gui`. Ve a File -> Open files...
+<Image src={JadxGUIScreen} alt="pantalla de jadx-gui" format="webp" />
 
-After installing `jadx` you should be able to open `jadx-gui`. Go to File -> Open files ...
-<Image src={JadxGUIScreen} alt="jadx-gui screen" format="webp" />
+Busca el APK que deseas y haz clic en "Open file":
+<Image src={JadxGUISelect} alt="jadx-gui seleccionando apk" format="webp" />
 
-Search for your desired APK and click on "Open file":
-<Image src={JadxGUISelect} alt="jadx-gui selecting apk" format="webp" />
+Y desde ahí, puedes comenzar a cachurear:
+<Image src={JadxGUIOpened} alt="jadx-gui descompilando NautilusLauncher" format="webp" />
 
-And from there, you can start poking around:
-<Image src={JadxGUIOpened} alt="jadx-gui decompiling NautilusLauncher" format="webp" />
+Si quieres guardar el proyecto como archivos Java, ve a File -> Save as gradle project:
+<Image src={JadxGUISave} alt="jadx-gui guardando proyecto" format="webp" />
 
-If you want to save the project as Java files, go into File -> Save as gradle project:
-<Image src={JadxGUISave} alt="jadx-gui saving project" format="webp" />
+Si es útil, aquí están mis preferencias de `jadx-gui`:
+<Image src={JadxGUIPrefs} alt="preferencias de jadx-gui" format="webp" />
 
-If useful, here are my `jadx-gui` preferences:
-<Image src={JadxGUIPrefs} alt="jadx-gui preferences" format="webp" />
+## Convirtiendo aplicaciones en código Smali
 
-
-## Turning apps into Smali code
-
-The community has tested this to apply some patches to our APKs. It would only work for non-system apps, as without the proper signing key, the app will not have access to system resources (such as the Serial port).
-
-https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/
+La comunidad ha probado [esto](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) para aplicar algunos parches a nuestros APKs. Solo funcionaría para aplicaciones que no son del sistema, ya que sin la clave de firma adecuada, la aplicación no tendrá acceso a los recursos del sistema (como el puerto Serial).

@@ -14,57 +14,57 @@ import { Image } from "astro:assets";
 import ConsoleMounted from "~/assets/images/fl3xbl0w/console-mounted.jpg";
 import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
 
-### Rockchip Loader Mode
+### Modo de Carga Rockchip
 
-An RK3399 processor powers the Android hardware. Rockchip processors come with a "loader mode" as a standard feature.
+Un procesador RK3399 alimenta el hardware de Android. Los procesadores Rockchip vienen con un "loader mode" como característica estándar.
 
-The toolset that I've used is:
-- Rockchip Driver Assistant v4.5 from [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 test from [this XDA post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
-- Android Tool Release v2.69 from [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+El conjunto de herramientas que he utilizado es:
+- Rockchip Driver Assistant v4.5 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 test de [este post de XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-*There is a newer driver version available for download, but it's known to be incompatible with rkDumper.*
+*Hay una versión más nueva del controlador disponible para descargar, pero se sabe que es incompatible con rkDumper.*
 
-In order to play with this, you'll have to unmount the Bowflex Console, unscrew the plastic back cover, and mount it back in a "naked form".
-**Do not attempt this, as playing with the Android hardware in Loader Mode can lead to a permanently bricked device.**
+Para jugar con esto, tendrás que desmontar la Consola Bowflex, desatornillar la tapa trasera de plástico y volver a montarla en una "forma desnuda".
+**No intentes esto, ya que jugar con el hardware de Android en Loader Mode puede llevar a un dispositivo permanentemente roto.**
 
-<Image src={ConsoleMounted} alt="Console mounted with back cover removed" format="webp" />
+<Image src={ConsoleMounted} alt="Consola montada con la tapa trasera quitada" format="webp" />
 
-Here are the relevant parts of the Android logic board for Rockchip stuff:
-<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
+Aquí están las partes relevantes de la placa lógica de Android para cosas de Rockchip:
+<Image src={VantronPCB} alt="PCB de Vantron" format="webp" />
 
-You can have the Android Tool Release app opened at all times as a reference to check on which mode the tablet is at.
+Puedes tener abierta la aplicación Android Tool Release todo el tiempo como referencia para verificar en qué modo está la consola.
 
-With the machine turned on in "normal mode" and plugging it into a computer, it identifies itself as `NFTM-LAR`:
+Con la máquina encendida en "modo normal" y conectada a un computador, se identifica como `NFTM-LAR`:
 ```
 NFTM-LAR:
   Product ID: 0x0001
   Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 3.10
-  Speed: Up to 480 Mb/s
-  Manufacturer: Vanzo
-  Location ID: 0x14120000 / 9
-  Current Available (mA): 500
-  Current Required (mA): 500
-  Extra Operating Current (mA): 0
+  Velocidad: Hasta 480 Mb/s
+  Fabricante: Vanzo
+  Ubicación ID: 0x14120000 / 9
+  Corriente Disponible (mA): 500
+  Corriente Requerida (mA): 500
+  Corriente Extra de Operación (mA): 0
 ```
 
-Having the machine turned off, plugged in through USB to a computer, keeping the "Recovery button" pressed and turning it on, it should boot in "Loader mode". The machine will "chime", but the screen will remain static. *You can turn off, wait a minute, turn it on, and the machine will boot normally.*
+Con la máquina apagada, conectada a través de USB a un computador, manteniendo presionado el "Recovery button" y encendiéndola, debería arrancar en "Loader mode". La máquina "sonará", pero la pantalla permanecerá estática. *Puedes apagar, esperar un minuto, encender y la máquina arrancará normalmente.*
 
-*The Android hardware does not handle the "chime" after turning the machine on, but through Nautilus' other PCB's.*
+*El hardware de Android no maneja el "sonido" después de encender la máquina, sino a través de las otras PCB de Nautilus.*
 
-It will now report itself in the computer as `USB download gadget` (hidden Serial Number):
+Ahora se reportará en el computador como `USB download gadget` (Número de Serie oculto):
 ```
 USB download gadget:
   Product ID: 0x330c
   Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
-  Version: 99.99
-  Serial Number: XXXXXXXXXXXXXXX
-  Manufacturer: Rockchip
-  Location ID: 0x14120000
+  Versión: 99.99
+  Número de Serie: XXXXXXXXXXXXXXX
+  Fabricante: Rockchip
+  Ubicación ID: 0x14120000
 ```
 
-After running rkDumper against the console, we get some information regarding partitions:
+Después de ejecutar rkDumper contra la consola, obtenemos información sobre las particiones:
 ```
 "EFI PART" sign found (RKFP FW dump)
 
@@ -99,14 +99,14 @@ Partition "video" (0x0047e000) saved (format: unknown)
 Partition "userdata" (0x0169bbdf) saved (format: unknown)
 ```
 
-`uboot_a` and `uboot_b` were successfully extracted, but all other partitions marked as `(format: unknown)` are improperly dumped, only extracting hex `CC` values from it.
+`uboot_a` y `uboot_b` fueron extraídos con éxito, pero todas las demás particiones marcadas como `(formato: desconocido)` están mal respaldadas, solo extrayendo valores hexadecimales `CC` de ellas.
 
-A similar case to mine was documented over [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), and after [asking](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) the developer of rkDumper, [he says](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) a new RockChip loader must be in place. Going through this method seems to be a no-go for now.
+Un caso similar al mío fue documentado en [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), y después de [preguntar](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) al desarrollador de rkDumper, [él dice](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) que debe haber un nuevo loader de RockChip en su lugar. Seguir este método parece ser inviable por ahora.
 
 
 ### ADB
 
-Some similar data can be found through adb, but no dump seems to be possible as we lack root permissions:
+Algunos datos similares se pueden encontrar a través de adb, pero no parece ser posible hacer un respaldo ya que carecemos de permisos de root:
 
 ```sh
 > ls -al /dev/block/platform/
@@ -152,6 +152,6 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 ```
 
 
-### Other ideas
+### Otras ideas
 
-Something that we can do is to unsolder the eMMC chip and read it externally so that we can dump all contents. It would be good to bake a CFW, but I'll not unsolder it from my ONLY Console (a spare one would be niiice).
+Algo que podemos hacer es desoldar el chip eMMC y leerlo externamente para poder respaldar todo su contenido. Sería bueno para crear un ROM personalizado (Custom ROM), pero no desoldaré el de mi ÚNICA Consola (sería bacán tener una de repuesto).

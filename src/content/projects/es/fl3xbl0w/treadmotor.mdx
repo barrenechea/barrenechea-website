@@ -16,44 +16,44 @@ import TreadmillElectrical from "~/assets/images/fl3xbl0w/treadmill-electrical.p
 import TreadmillComm from "~/assets/images/fl3xbl0w/treadmill-comm.png";
 import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
 
-*This mostly applies to Treadmill 22 & Treadmill 56.*
+*Esto aplica principalmente a la Treadmill 22 & Treadmill 56.*
 
-The motor control board is manufactured by [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
+La tarjeta de control del motor es fabricada por [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="Motor Control Board Controller B017D" format="webp" />
+<Image src={B017D} alt="Controlador de Tarjeta de Control del Motor B017D" format="webp" />
 
-Given the [service manual](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) provided by Nautilus Inc. ([backup on archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+Dado el [manual de servicio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) proporcionado por Nautilus Inc. ([respaldo en archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={TreadmillElectrical} alt="Treadmill electrical diagram" format="webp" />
+<Image src={TreadmillElectrical} alt="Diagrama eléctrico de la trotadora" format="webp" />
 
-And focusing specifically on this part:
+Y enfocándonos específicamente en esta parte:
 
-<Image src={TreadmillComm} alt="Treadmill communication path" format="webp" />
+<Image src={TreadmillComm} alt="Camino de comunicación de la trotadora" format="webp" />
 
-We can identify the "communication cable" connecting the motor controller as being of 5 pins. There's only one 5-pin connector.
-I've labeled the wires with their corresponding colors (data & switch are optoisolated):
+Podemos identificar el "cable de comunicación" que conecta el controlador del motor como uno de 5 pines. Hay solo un conector de 5 pines.
+He etiquetado los cables con sus colores correspondientes (los datos & interruptor están optoaislados):
 
-| cable color | label |
-|-------------|-------|
-| red         | GND   |
-| white       | RXD   |
-| black       | TXD   |
-| yellow      | +12   |
-| green       | SW    |
+| color del cable | etiqueta |
+|-----------------|----------|
+| rojo            | GND      |
+| blanco          | RXD      |
+| negro           | TXD      |
+| amarillo        | +12      |
+| verde           | SW       |
 
 
-The board is not directly connected to the Android console.
+La tarjeta no está conectada directamente a la consola Android.
 
-The only 5-pin connector is of Molex brand. A Google search for "small Molex connectors" led me to a picture of a so-called `Molex Micro-Fit 3.0 Single Row (5-Pin)`, which is used to connect the motor controller board:
+El único conector de 5 pines es de la marca Molex. Una búsqueda en Google de "conectores Molex pequeños" me llevó a una imagen de lo que llaman `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que se utiliza para conectar la tarjeta controladora del motor:
 
-<Image src={Molex} alt="Molex Micro-Fit 3.0 Connector" format="webp" />
+<Image src={Molex} alt="Conector Molex Micro-Fit 3.0" format="webp" />
 
-[AliExpress Link](https://es.aliexpress.com/item/32902205579.html)
+[Enlace de AliExpress](https://es.aliexpress.com/item/32902205579.html)
 
-By peeking on `NautilusLauncher.apk` through `jadx-gui`, I can see that they communicate with the Android tablet with their "Universal Console" by using Serial at 230400 Baud (using `/dev/ttyS4`). That's NOT what we're analyzing here. That refers to the communication between Android and the "Universal Console". We investigate the comms between the "Universal Console" and the "Motor Control Board".
+Al echar un vistazo en `NautilusLauncher.apk` a través de `jadx-gui`, puedo ver que se comunican con la tablet Android con su "Consola Universal" usando Serie a 230400 Baudios (usando `/dev/ttyS4`). Eso NO es lo que estamos analizando aquí. Eso se refiere a la comunicación entre Android y la "Consola Universal". Investigamos las comms entre la "Consola Universal" y la "Tarjeta de Control del Motor".
 
-Trying to hook an ESP32 or a CH340-based serial bridge directly to the wires between the Treadmill base & Bowflex controller board caused the treadmill base to not properly initialize, so I started to guess they're using RS232.
+Intentar conectar un ESP32 o un puente serie basado en CH340 directamente a los cables entre la base de la trotadora y la tarjeta controladora Bowflex hizo que la base de la trotadora no se inicializara correctamente, así que empecé a sospechar que están usando RS232.
 
-Note: Attaching only to GND and RXD, we can "see" some apparent garbage hex information at 9600 baud. Hooking to TXD makes the treadmill base not initialize.
+Nota: Conectando solo a GND y RXD, podemos "ver" algo de información hexadecimal aparentemente basura a 9600 baudios. Conectar a TXD hace que la base de la trotadora no se inicialice.
 
--- To be continued, I need some time to play with my new logic analyzer --
+-- Continuará, necesito algo de tiempo para jugar con mi nuevo analizador lógico --
