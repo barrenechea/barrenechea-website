@@ -14,22 +14,22 @@ import HeaderImage from "~/assets/images/project-fl3xbl0w.png";
 
 <Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
 
-Welcome to my "Bowflex Console" (what Nautilus refers to as Vantron) Docs!
+¡Bienvenidos a la documentación de mi "Consola Bowflex"! (lo que Nautilus llama Vantron).
 
-Vantron drives most of the "smart devices" from Nautilus Inc. Basically, an Android tablet running proprietary software. Also some hardware-related stuff that I got curious on.
+Vantron es la base de la mayoría de los "dispositivos inteligentes" de Nautilus Inc. Básicamente, una tablet Android corriendo software propietario. Además de algunas cosas relacionadas con el hardware que me dieron curiosidad.
   
-I heavily relied on some previous work provided over [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (thanks [xasmx](https://www.reddit.com/user/xasmx/)!) to achieve a deeper understanding on the machine's software & hardware.
+Me apoyé bastante en un trabajo previo que encontré en [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (gracias [xasmx](https://www.reddit.com/user/xasmx/)!) para lograr una comprensión más profunda del software y hardware de la máquina.
   
-## Supported devices (Android Jailbreak)
+## Dispositivos compatibles (Jailbreak de Android)
 
-After playing with the <a href="/es/projects/fl3xbl0w/decompiling" target="_self">decompiled apps</a> I can certainly say that the following documentation could be extrapolated in one way or another to the following Bowflex devices:
+Después de jugar con las <a href="/es/projects/fl3xbl0w/decompiling" target="_self">aplicaciones decompiladas</a>, puedo decir con certeza que la siguiente documentación podría extrapolarse de una forma u otra a los siguientes dispositivos Bowflex:
 
-### Treadmills
+### Trotadoras
 
-- Treadmill 22 / Treadmill 56 (same treadmill. 56 is 220v AC input, 22 is 120v AC input)
-- Treadmill 10 / Treadmill 25 (same treadmill. 25 is 220v AC input, 10 is 120v AC input)
+- Treadmill 22 / Treadmill 56 (misma trotadora. La 56 tiene entrada de 220v AC, la 22 tiene entrada de 120v AC)
+- Treadmill 10 / Treadmill 25 (misma trotadora. La 25 tiene entrada de 220v AC, la 10 tiene entrada de 120v AC)
 
-### Bikes
+### Bicicletas
 
 - VeloCore
 
@@ -38,33 +38,33 @@ After playing with the <a href="/es/projects/fl3xbl0w/decompiling" target="_self
 - Max Total 16
 - Max Trainer M9
 
-I don't own a Max Trainer or a VeloCore, but it should work as long as you have an available USB port based on the codebase findings.
+No tengo una Max Trainer ni una VeloCore, pero debería funcionar siempre y cuando tengas un puerto USB disponible basado en los hallazgos del código.
 
-Confirmed to be working with NautilusLauncher versions:
+Confirmado que funciona con las versiones de NautilusLauncher:
 
 - 5.0.0.350
 - 5.0.0.382
 
-**This has been already patched by Nautilus.**
+**El jailbreak ya ha sido parcheado por Nautilus.**
 
-## Documentation
+## Documentación
 
-### General information
+### Información general
 
 - <a href="/es/projects/fl3xbl0w/jailbreak" target="_self">Jailbreak de Android</a>
 - <a href="/es/projects/fl3xbl0w/backup" target="_self">Respaldar los contenidos de tu Consola</a>
 - <a href="/es/projects/fl3xbl0w/decompiling" target="_self">Decompilando</a>
 - <a href="/es/projects/fl3xbl0w/quirks" target="_self">Curiosidades de Bowflex</a>
 
-### Work in progress
+### Trabajos en progreso
 
 - <a href="/es/projects/fl3xbl0w/treadmotor" target="_self">Controlador del Motor de la Trotadora</a>
 - <a href="/es/projects/fl3xbl0w/romdump" target="_self">Dump de la ROM</a>
 
-## End goal
+## Objetivo final
 
-To enable as much future-proofing to my treadmill as possible.
+Habilitar la mayor cantidad de actualizaciones a futuro para mi trotadora como sea posible.
 
-Nautilus, Inc. only provides a 1-year warranty on the electronics side of things, and as soon as I saw that the mechanism for turning off the machine (and so, the Android tablet) was to basically "cut the AC power through the back switch", that scared me. Every Linux-based device should be safely turned off to avoid OS corruption, and this Android tablet is no exception. So while it's working, why not have some "extra fun" with it?.
+Nautilus, Inc. solo ofrece una garantía de 1 año en la parte electrónica, y en cuanto vi que el mecanismo para apagar la máquina (y por ende, la tablet Android) era básicamente "cortar la energía AC a través del interruptor trasero", eso me asustó. Cada dispositivo basado en Linux debería ser apagado de manera segura para evitar la corrupción del sistema operativo, y esta tablet Android no es la excepción. Así que mientras esté funcionando, ¿por qué no divertirse un poco más con ella?.
 
-In the end, I want to intercept, understand, and recreate the communication going to the Motor Control Board on my treadmill so if the tablet dies, I still have a working device.
+Al final, quiero interceptar, entender y recrear la comunicación que va hacia el controlador del motor en mi trotadora para que si la tablet muere, aún tenga un dispositivo funcionando.
