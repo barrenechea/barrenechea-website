@@ -6,32 +6,32 @@ img: ~/assets/images/arm-x86.svg
 imgAlt: Dos chips, uno con la etiqueta "x86" y otro con la etiqueta "ARM".
 ---
 
-Back when we started building our initial foundations at [Finalis](https://www.finalis.com), I remember having the idea of giving AWS's Graviton a try.
-It wasn't feasible back in 2018 without building stuff by yourself. Heck, it's 2022, and we (as a community) still struggle to find ARMv8 support in images on Dockerhub.
+Cuando comenzamos a construir nuestras bases iniciales en [Finalis](https://www.finalis.com), recuerdo haber tenido la idea de probar Graviton de AWS.
+No era factible en 2018 sin construir cosas por ti mismo. Cresta, es 2022, y nosotros (como comunidad) todavía luchamos por encontrar soporte ARMv8 en imágenes en Dockerhub.
 
-But on 2020, something big happened: Apple announced the Mac transition to Apple silicon with a 2-year deadline.
+Pero en 2020, algo grande ocurrió: Apple anunció la transición de los Mac a Apple Silicon con un plazo de 2 años.
 
-At Finalis, we stick with Apple hardware for software development. You have a Unix-like Operating System and fantastic screen quality and audio for watching movies or whatever 🍿.
+En Finalis, nos mantenemos con hardware de Apple para el desarrollo de software. Tienes un Sistema Operativo similar a Unix y una calidad de pantalla y audio fantásticos para ver películas o lo que sea 🍿.
 
-Back in 2020, a counter started ticking. If we wanted to keep sourcing new Apple devices in the future, Finalis needed to become multi-arch.
+En 2020, empezó a correr un contador. Si queríamos seguir adquiriendo nuevos dispositivos de Apple en el futuro, Finalis necesitaba volverse multi-arquitectura.
 
 
 ## Docker
 
-When Apple came out with the M1, and we sourced one, Docker was starting to “play nice” with it, but Docker on ARM involved some hiccups in earlier versions just because the engine was just being tested (by us early developers).
+Cuando Apple sacó el M1, y conseguimos uno, Docker estaba empezando a "llevarse bien" con él, pero Docker en ARM tenía algunos problemas en versiones anteriores solo porque el motor estaba siendo probado (por nosotros, los desarrolladores pioneros).
 
-After it seemed everything was fine: 3rd party tools - most of the required images were already available for ARM64, but not all were. [browserless](https://github.com/browserless/chrome) was the one I started tackling to get them built on ARM64, and so I sent a [pull request](https://github.com/browserless/chrome/pull/1847) with the bare minimum of changes for it to work.
+Después parecía que todo estaba bien: herramientas de terceros - la mayoría de las imágenes requeridas ya estaban disponibles para ARM64, pero no todas. [browserless](https://github.com/browserless/chrome) fue la que empecé a abordar para conseguir que se construyeran en ARM64, y así envié un [pull request](https://github.com/browserless/chrome/pull/1847) con el mínimo de cambios necesarios para que funcionara.
 
-With third-party tools covered, it was a thing to make sure Docker built our own images for ARM64. "Hey, you use TypeScript; it should just work!".... Well, as long as your dependencies do not require binaries getting downloaded while running `npm install`.
+Con las herramientas de terceros cubiertas, era cosa de asegurarse de que Docker construyera nuestras propias imágenes para ARM64. "Oye, usas TypeScript; ¡debería funcionar nomás!"... Bueno, siempre y cuando tus dependencias no requieran que se descarguen binarios mientras corres `npm install`.
 
-The major issue? No binaries are provided for ARM64, forcing a binary build while running `npm install` with `make` (post-install scripts anyone?). From a setup perspective, a little bit of love in some of our `Dockerfile` files was all we needed and sorted everything out.
+¿El problema principal? No se proporcionan binarios para ARM64, forzando una construcción binaria mientras corres `npm install` con `make` (¿scripts post-instalación?). Desde una perspectiva de configuración, un poco de amor en algunos de nuestros archivos `Dockerfile` fue todo lo que necesitábamos y resolvió todo.
 
 ## Pipelines
 
-Working with GitHub Actions and dealing with multi-arch, you have two choices: you run two parallel runners (one building for x86/64 and one for arm64), or you run one runner for both architectures.
+Trabajando con GitHub Actions y lidiando con multi-arquitectura, tienes dos opciones: corres dos runners paralelos (uno construyendo para x86/64 y otro para arm64), o corres un runner para ambas arquitecturas.
 
-I chose the latter to play with, though [docker buildx](https://docs.docker.com/build/buildx/). Following the setup instructions for [build-push-action](https://github.com/docker/build-push-action#path-context) you can quickly get a working pipeline.
+Elegí la segunda opción para experimentar, a través de [docker buildx](https://docs.docker.com/build/buildx/). Siguiendo las instrucciones de configuración para [build-push-action](https://github.com/docker/build-push-action#path-context) puedes obtener rápidamente un pipeline operacional.
 
-Letting buildx do the multi-arch build allows you to push to Dockerhub without having to deal with different tags for different architectures. All of your tags WILL BE multi-arch compatible.
+Dejar que buildx haga la construcción multi-arquitectura te permite subir a Dockerhub sin tener que lidiar con diferentes etiquetas para diferentes arquitecturas. Todas tus etiquetas SERÁN compatibles con multi-arquitectura.
 
-The downside of it builds time: having two parallel runners on their proper architectures would be much faster, but the pipeline would require handling merging the results into a single tag. _Only if you care about making it easier for consumers to find the right image._
+La desventaja es el tiempo de construcción: tener dos runners paralelos en sus arquitecturas apropiadas sería mucho más rápido, pero el pipeline requeriría manejar la fusión de los resultados en una sola etiqueta. _Solo si te importa facilitar a los consumidores encontrar la imagen correcta._

@@ -16,130 +16,130 @@ import XboxRRoD from "~/assets/images/xbox-rrod.jpg";
 import { Image } from "astro:assets";
 import { YouTube } from "@astro-community/astro-embed-youtube";
 
-In 2010, AdeS (an Argentinian brand of juice later purchased by Coca-Cola Company in 2016) made a contest over Facebook.
-It was a 4x4 puzzle game where you could win a Nintendo Wii. The conditions to win the prize were:
-- Do it in the least amount of time, and
-- Do it in the least amount of moves
+En 2010, AdeS (una marca argentina de jugos comprada más tarde por Coca-Cola Company en 2016) realizó un concurso en Facebook.
+Era un juego de rompecabezas 4x4 donde podías ganar un Nintendo Wii. Las condiciones para ganar el premio eran:
+- Hacerlo en el menor tiempo posible, y
+- Hacerlo en la menor cantidad de movimientos
 
-I wouldn't say I'm particularly good at 4x4 puzzles, but it sounded like a good challenge to work around it.
+No diría que soy particularmente bueno en rompecabezas 4x4, pero parecía un buen desafío para trabajar en ello.
 
-The game's first seconds displayed the solution (the fully formed picture), and then it was scrambled.
+Los primeros segundos del juego mostraban la solución (la imagen completamente formada), y luego se mezclaba.
 
-I don't have the original image, but here's a stock photo for you to have a reference:
+No tengo la imagen original, pero aquí hay una foto stock para que tengas una referencia:
 
-<Image src={Puzzle} alt="two puzzles side by side, the solution on the left and a scrambled version on the right" format="webp" />
+<Image src={Puzzle} alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha" format="webp" />
 
-There was something particular about the game tho: The timer started to count AFTER you made your first move, leaving you the chance to
-"think" about it before you start playing.
+Sin embargo, había algo particular en el juego: el cronómetro comenzaba a contar DESPUÉS de que hicieras tu primer movimiento, dándote la oportunidad de
+"pensarlo" antes de comenzar a jugar.
 
-After staring at the picture, I made a "side image" to play with, replacing the scrambled pictures with numbers.
-That way, it was easier to figure out "how to sort it from 1 to 15":
+Después de mirar la imagen, hice una "imagen secundaria" para jugar con ella, reemplazando las imágenes mezcladas con números.
+De esa manera, era más fácil averiguar "cómo ordenarlo del 1 al 15":
 
-<Image src={PuzzleNumbered} alt="two puzzles side by side, the solution on the left and a scrambled version on the right, with numbers overlay" format="webp" />
+<Image src={PuzzleNumbered} alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha, con números superpuestos" format="webp" />
 
-My brain liked it more that way... Buuut, I didn't want to spend too much time on this, so I searched for a puzzle solver. After a few hours, I
-found one that worked through brute force, taking quite some time to give you better and better solutions. It gave you several number sequences
-to follow after some time, and then you could solve the puzzle.
+A mi cerebro le gustó más de esa manera... Perooo, no quería pasar demasiado tiempo en esto, así que busqué un solucionador de rompecabezas. Después de unas horas, encontré
+uno que funcionaba por fuerza bruta, tomando bastante tiempo para darte soluciones cada vez mejores. Te daba varias secuencias de números
+para seguir después de un tiempo, y luego podías resolver el rompecabezas.
 
-I spent a lot of time searching for a "good scrambled puzzle" because I wanted it to be solved in less than 20 moves if possible.
-After a few days and several restarts of the Facebook game, **I had a solution within 16 moves**.
+Pasé mucho tiempo buscando un "buen rompecabezas mezclado" porque quería que se resolviera en menos de 20 movimientos si era posible.
+Después de unos días y varios reinicios del juego de Facebook, **tenía una solución en 16 movimientos**.
 
-I overcomplicated after this because of the two constraints of the puzzle - moves count **AND** time. I used an auto-clicker app, where I screenshotted the
-scrambled puzzle and then "solved" the puzzle by following the best number sequence.
+Me compliqué después de esto debido a las dos restricciones del rompecabezas: la cuenta de movimientos **Y** el tiempo. Usé una aplicación de auto-clic, donde capturé con una captura de pantalla el
+rompecabezas mezclado y luego "resolví" el rompecabezas siguiendo la mejor secuencia numérica.
 
-Everything was ready to go.
+Todo estaba listo para comenzar.
 
-I click on "Start" within the auto-clicker app.
+Hago clic en "Iniciar" dentro de la aplicación de auto-clic.
 
-Autoclicker fails at the middle of the puzzle 💀
+El autoclic falla en la mitad del rompecabezas 💀
 
-I messed up by making the auto-clicker go too fast, and a click did not register within the game. I quickly jumped in, fixed a few misclicked tiles, and finished
-the sequence manually. My final mark was **21 moves in 15 seconds**.
+La cagué al hacer que el auto-clic fuera demasiado rápido y un clic no se registró dentro del juego. Rápidamente intervine, arreglé algunas fichas mal clickeadas y terminé
+la secuencia manualmente. Mi marca final fue **21 movimientos en 15 segundos**.
 
-A few days before the due date, I checked the leaderboards, and the second-place player solved it in around 300 moves and 20 minutes.
-It wasn't even a competition at that point.
+Unos días antes de la fecha límite, revisé la tabla de líderes y el jugador en segundo lugar lo resolvió en alrededor de 300 movimientos y 20 minutos.
+En ese punto, ni siquiera era una competencia.
 
-After a few days, I got notified through Facebook that I had won. Yay! 🎉
+Después de unos días, me notificaron a través de Facebook que había ganado. Wena! 🎉
 
-The official AdeS post was [this](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/).
-Here's a video taken at the place when I picked up the console:
+La publicación oficial de AdeS fue [esta](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/).
+Aquí hay un video tomado en el lugar cuando recogí la consola:
 
 <YouTube id="Uf5JHxDxNRw" />
 
-## From Wii to Xbox 360
+## De Wii a Xbox 360
 
-I wanted to play [Alan Wake](https://en.wikipedia.org/wiki/Alan_Wake) so bad! So I never thought about keeping the Wii, so I quickly published it
-on an online forum (rest in peace, CHW 🪦), I could sell it, purchase an Xbox 360, or trade it right away.
+¡Tenía tantas ganas de jugar [Alan Wake](https://es.wikipedia.org/wiki/Alan_Wake)! Así que nunca pensé en quedarme con el Wii, así que rápidamente lo publiqué
+en un foro en línea (descansa en paz, CHW 🪦), podría venderlo, comprar un Xbox 360 o intercambiarlo de inmediato.
 
-And some guy writes me wanting to trade his newly received 360 for a Wii! Isn't this world a beauty sometimes?
+¡Y un tipo me escribe queriendo intercambiar su recién recibido 360 por un Wii! ¿No es este mundo una belleza a veces?
 
-It turns out he won his Xbox 360 playing online poker! It was a PAL console (we're NTSC here in Chile), so that was a bummer, but
-I trade it anyways. I wanted to unlock it after all, so I could play backups. PAL games were a torrent away.
+Resulta que ganó su Xbox 360 jugando póker en línea. Era una consola PAL (aquí en Chile somos NTSC), así que eso fue un problema, pero
+de todas formas hice el intercambio. Después de todo, quería desbloquearla para poder jugar copias de seguridad. Los juegos PAL estaban a una descarga de torrent de distancia.
 
-_Sorry, pirated games were the way for me to play new games then. Thank you, Microsoft!_
+_Lo siento, los juegos piratas eran la forma en que podía jugar juegos nuevos en ese entonces. ¡Gracias, Microsoft!_
 
-## Unlocking it and to the moon 🚀
+## Desbloqueándola y hasta la luna 🚀
 
-I found a thread within the same forum where someone unlocked Xbox 360's (darcito was his username). I went to his house (that's where he worked)
-and saw the unlocking process from a few meters away.
+Encontré un hilo dentro del mismo foro donde alguien desbloqueaba Xbox 360 (darcito era su nombre de usuario). Fui a su casa (ahí era donde trabajaba)
+y vi el proceso de desbloqueo desde unos metros de distancia.
 
-"You're kidding? He's just connecting the DVD drive to his computer through SATA and clicking some buttons? I can do that 💩 by myself!"
+"¿Me estás hueviando? ¡Solo está conectando la unidad de DVD a su computador a través de SATA y haciendo clic en algunos botones! ¡Puedo hacer esa 💩 yo mismo!"
 
-### Optical Drives
+### Unidades Ópticas
 
-And so, for the next few months, I learned on the internet about how the unlocking process works. Xbox 360's have several optical drives
-vendors, different firmware revisions, and for each one, you had a unique unlocking method, but everything around dumping the console's unique
-DVD Key and flashing the drive with a custom firmware developed by c4eva.
+Y así, durante los siguientes meses, aprendí en internet cómo funciona el proceso de desbloqueo. Las Xbox 360 tienen varios
+proveedores de unidades ópticas, diferentes revisiones de firmware y para cada una, tenías un método de desbloqueo único, pero todo giraba en torno a respaldar la
+DVD Key única de la consola y flashear la unidad con un firmware personalizado desarrollado por c4eva.
 
-By the end of the year, I copied darcito's strategy and opened my thread within the forum, unlocking consoles in my own home.
-Several Xbox modders powered the DVD drive with the same console, but the community thought that Microsoft could detect if the console was powered on
-without the DVD drive plugged in, your console was "flagged" (not sure if that was right or not).
+Para fin de año, copié la estrategia de darcito y abrí mi hilo dentro del foro, desbloqueando consolas en mi propia casa.
+Varios modders de Xbox alimentaban la unidad de DVD con la misma consola, pero la comunidad pensaba que Microsoft podría detectar si la consola estaba encendida
+sin la unidad de DVD conectada, tu consola era "marcada" (no estoy seguro si eso era correcto o no).
 
-Anyways, I wanted to protect my client's consoles from being flagged, so I developed a custom power supply with switches for specific voltage
-lines (required to unlock some optical drives):
+De todos modos, quería proteger las consolas de mis clientes de ser marcadas, así que desarrollé una fuente de alimentación personalizada con interruptores para voltajes específicos
+(líneas requeridas para desbloquear algunas unidades ópticas):
 
-<Image src={X360PowerSupply} alt="a custom power supply for Xbox 360 DVD drives" format="webp" />
+<Image src={X360PowerSupply} alt="una fuente de alimentación personalizada para unidades de DVD de Xbox 360" format="webp" />
 
-Of course, after some time, they were better retail options for modders, so eventually, I got an X360 USB Pro v2 from Team Xecuter.
+Por supuesto, después de un tiempo, había mejores opciones de venta para modders, así que eventualmente, conseguí un X360 USB Pro v2 de Team Xecuter.
 
-#### Drilling chips (Kamikaze method)
+#### Taladrando chips (método Kamikaze)
 
-This unlocking method for optical drives was wild; I'm not going to lie! For Xbox 360 Slims coming with locked LiteOn DG-16D4S drives AND Winbond chips
-(they were LiteOn drives with MXIC chips that didn't require this) you had to make a hole on a chip inside the DVD drive with a drill.
+Este método de desbloqueo para unidades ópticas era salvaje; ¡no voy a mentir! Para las Xbox 360 Slim que venían con unidades bloqueadas LiteOn DG-16D4S Y chips Winbond
+(había unidades LiteOn con chips MXIC que no requerían esto) tenías que hacer un agujero en un chip dentro de la unidad de DVD con un taladro.
 
-<Image src={KamikazeLocation} alt="a chip" format="webp" />
+<Image src={KamikazeLocation} alt="un chip" format="webp" />
 
-What we tried to achieve with Kamikaze was to reach a teeny tiny wire and pull it to ground, allowing you to flash a custom firmware into the drive:
+Lo que intentábamos lograr con Kamikaze era alcanzar un cablecito diminuto y llevarlo a tierra, permitiéndote flashear un firmware personalizado en la unidad:
 
-<Image src={WinbondExploitLines} alt="a decapped chip" format="webp" />
+<Image src={WinbondExploitLines} alt="un chip decapsulado" format="webp" />
 
-I guess Microsoft wasn't expecting this kind of craziness to play backups. Never underestimate the power of hackers.
-A funny message that I found on Twitter related to this:
+Supongo que Microsoft no esperaba este tipo de locura para jugar copias de seguridad. Nunca subestimes el poder de los hackers.
+Un mensaje divertido que encontré en Twitter relacionado con esto:
 
-> MS: Okay, if we connect the write protect from *inside* the package with bond wire, they can't just cut a pin or trace
+> MS: Ok, si conectamos la protección de escritura *desde adentro* del paquete con alambre de bondeo, no pueden simplemente cortar un pin o una pista
 
-> Modders: Hold my chip drilling alignment jig
+> Modders: Aguanta mi plantilla de alineación para taladrar chips
 
-### Reset Glitch hack
+### Reset Glitch Hack
 
-On August 28, 2011, GliGli and Tiros (with help from cOz) released the Reset Glitch Hack (or RGH) for the Xbox 360. It is an unpatchable hardware
-exploit to run unsigned code. After a few days, the Xbox 360 scene was slowly making tools for modders to patch the console. You needed
-to be handy with the soldering iron tho.
+El 28 de agosto de 2011, GliGli y Tiros (con ayuda de cOz) lanzaron el Reset Glitch Hack (o RGH) para Xbox 360. Es un exploit de hardware imposible de parchear
+para ejecutar código no firmado. Después de unos días, la escena de Xbox 360 estaba lentamente haciendo herramientas para los modders. Necesitabas
+ser hábil con el soldador eso sí.
 
-Finding compatible chips for you in the early days was tough, but I found a few that worked.
-Nowadays, you don't even require a chip with RGH 3.0.
+Encontrar chips compatibles para ti en los primeros días fue difícil, pero encontré algunos que funcionaban.
+Hoy en día, ni siquiera requieres un chip con RGH 3.0.
 
-Here's a picture of me booting Linux (the couch you see there was where my customers used to wait):
+Aquí hay una foto mía iniciando Linux (el sofá que ves ahí era donde mis clientes solían esperar):
 
-<Image src={X360Linux} alt="an Xbox 360 running Linux" format="webp" />
+<Image src={X360Linux} alt="una Xbox 360 ejecutando Linux" format="webp" />
 
-I genuinely believe I was one of the first to offer the RGH service here in Chile. I attended customers across the country for both
-optical drive unlocks and RGH. Walking to the mailing office with Xbox 360s was a weekly routine for a long time. Crazy, funny times.
+Realmente creo que fui uno de los primeros en ofrecer el servicio RGH aquí en Chile. Atendí a clientes de todo el país tanto para
+desbloqueos de unidades ópticas como para RGH. Caminar a la oficina de correos con Xbox 360 era una rutina semanal durante mucho tiempo. Tiempos locos y divertidos.
 
-A backup of my services' feedback is still alive [here](https://www.capa9.net/temas/feedback-de-sbarrenechea.899146/).
-I met many very nice people and still keep in touch with them. All of that is because of the AdeS juice.
+Una copia de la retroalimentación de mis servicios todavía está viva [aquí](https://www.capa9.net/temas/feedback-de-sbarrenechea.899146/).
+Conocí a muchas personas muy agradables y todavía mantengo contacto con ellas. Todo eso es gracias al jugo AdeS.
 
 <p align="center">
-  <Image src={XboxRRoD} alt="me staring at a broken xbox 360" format="webp" />
-  <h4 align="center">Me staring at a RRoD (dead) Xbox 360</h4>
+  <Image src={XboxRRoD} alt="yo mirando una Xbox 360 rota" format="webp" />
+  <h4 align="center">Yo mirando una RRoD (muerta) Xbox 360</h4>
 </p>
