@@ -2,7 +2,7 @@
 interface Props {
   label: string;
   value: string;
-  icon: any;
+  icon: string;
   width?: string;
   options: Array<{
     label: string;
@@ -12,11 +12,16 @@ interface Props {
 }
 ---
 
-<label class="relative flex cursor-pointer items-center gap-1">
-  <p>{Astro.props.icon}</p>
+<label
+  class="relative flex items-center gap-1"
+  style={{ width: Astro.props.width || "auto", height: "1.5em" }}
+>
+  <p class="absolute inset-0 -z-10 mt-1" aria-hidden="true">
+    <Fragment set:html={Astro.props.icon} />
+  </p>
   <select
     value={Astro.props.value}
-    class="cursor-pointer appearance-none border-0 bg-transparent text-gray-200"
+    class="cursor-pointer border-0 bg-transparent pl-4 pr-1"
   >
     {
       Astro.props.options.map(({ value, selected, label }) => (
@@ -26,20 +31,4 @@ interface Props {
       ))
     }
   </select>
-  <div class="h-full w-6">
-    <svg
-    id="caret-down"
-    class="h-4 w-4"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 15 15"
-  >
-    <path
-      d="M7.5 9.5L3 5h9z"
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="1.5"></path>
-  </svg>
-  </div>
 </label>

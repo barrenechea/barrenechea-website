@@ -1,4 +1,5 @@
 ---
+import translateIcon from "~/assets/images/icon-translate.svg?raw";
 import { languages } from "~/i18n/ui";
 import { useTranslations } from "~/i18n/utils";
 
@@ -19,7 +20,7 @@ const t = useTranslations(langParam);
 
 <lang-select>
   <Select
-    icon="a"
+    icon={translateIcon}
     label={t("nav.language.select")}
     value={localizedPathname(langParam)}
     options={Object.keys(languages).map((lang) => ({
