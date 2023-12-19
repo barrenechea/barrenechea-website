@@ -25,13 +25,13 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     robotsTxt(),
   ],
-  i18n: {
-    defaultLocale: "es",
-    locales: ["en", "es"],
-    routing: {
-        prefixDefaultLocale: true
-    }
-  }
+  // i18n: {
+  //   defaultLocale: "es",
+  //   locales: ["en", "es"],
+  //   routing: {
+  //       prefixDefaultLocale: true
+  //   }
+  // }
   // experimental: {
   //   contentCollectionCache: true,
   // },
