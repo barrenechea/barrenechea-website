@@ -9,6 +9,7 @@ export const ui = {
     "nav.projects": "Projects",
     "nav.posts": "Posts",
     "nav.page": "Page",
+    "nav.language.select": "Select language",
 
     "hero.greeting": "Heey! I'm",
     "hero.description": "A Software Engineer located in Chile 🇨🇱",
@@ -50,6 +51,7 @@ export const ui = {
     "nav.projects": "Proyectos",
     "nav.posts": "Publicaciones",
     "nav.page": "Página",
+    "nav.language.select": "Seleccionar idioma",
 
     "hero.greeting": "Holaa! Soy",
     "hero.description": "Un Ingeniero de Software ubicado en Chile 🇨🇱",

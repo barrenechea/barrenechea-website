@@ -9,13 +9,23 @@ import NavMenu from '~/partials/astro-components/NavMenu.astro';
 import NavMenuItem from '~/partials/astro-components/NavMenuItem.astro';
 import Section from '~/partials/astro-components/Section.astro';
 
+import LanguageSelect from './astro-components/LanguageSelect.astro';
+
 const { lang } = Astro.params;
 const t = useTranslations(lang);
+
+const languages = [
+  { code: 'en', name: 'English (US)', flag: 'path_to_english_flag.svg' },
+  { code: 'de', name: 'Deutsch', flag: 'path_to_german_flag.svg' },
+  { code: 'it', name: 'Italiano', flag: 'path_to_italian_flag.svg' },
+  { code: 'zh', name: '中文 (繁體)', flag: 'path_to_chinese_flag.svg' },
+];
+
 ---
 
 <Section>
   <NavbarTwoColumns>
-    <a href={`/${lang}`} target="_self">
+    <a href={`/${lang}/`} target="_self">
       <Logo name="Barrenechea">
         <svg
           class="mr-1 h-10 w-10 stroke-amber-400"
@@ -52,6 +62,7 @@ const t = useTranslations(lang);
           {name}
         </NavMenuItem>
       ))}
+      <LanguageSelect />
     </NavMenu>
   </NavbarTwoColumns>
 </Section>

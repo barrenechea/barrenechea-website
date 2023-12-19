@@ -1,0 +1,49 @@
+---
+import { languages } from "~/i18n/ui";
+import { useTranslations } from "~/i18n/utils";
+
+import Select from "./Select.astro";
+
+/**
+ * Returns the localized pathname for a given locale.
+ */
+function localizedPathname(locale: string): string {
+  const currentUrl = Astro.url;
+  const newPathname = currentUrl.pathname.split("/").slice(2).join("/");
+  return `/${locale}/${newPathname}`;
+}
+
+const { lang: langParam = "en" } = Astro.params;
+const t = useTranslations(langParam);
+---
+
+<lang-select>
+  <Select
+    icon="translate"
+    label={t("nav.language.select")}
+    value={localizedPathname(langParam)}
+    options={Object.keys(languages).map((lang) => ({
+      value: localizedPathname(lang),
+      selected: lang === langParam,
+      label: languages[lang as keyof typeof languages],
+    }))}
+    width="7em"
+  />
+</lang-select>
+
+<script>
+  class LanguageSelect extends HTMLElement {
+    constructor() {
+      super();
+      const select = this.querySelector("select");
+      if (select) {
+        select.addEventListener("change", (e) => {
+          if (e.currentTarget instanceof HTMLSelectElement) {
+            window.location.pathname = e.currentTarget.value;
+          }
+        });
+      }
+    }
+  }
+  customElements.define("lang-select", LanguageSelect);
+</script>
