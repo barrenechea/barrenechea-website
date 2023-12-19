@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 
 import { AppConfig } from '~/config';
+import { useTranslations } from '~/i18n/utils';
 import PostContent from '~/partials/astro-components/PostContent.astro';
 import PostHeader from '~/partials/astro-components/PostHeader.astro';
 import Section from '~/partials/astro-components/Section.astro';
@@ -11,10 +12,13 @@ interface Props {
 }
 
 const { post } = Astro.props;
+const { lang = AppConfig.defaultLang } = Astro.params;
+
+const t = useTranslations(lang);
 ---
 
 <Section>
-  <PostHeader {post} author={AppConfig.author} />
+  <PostHeader {post} author={t("author.name")} />
 
   <PostContent {post}>
     <slot />

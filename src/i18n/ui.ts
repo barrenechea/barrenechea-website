@@ -5,6 +5,8 @@ export const languages = {
 
 export const ui = {
   en: {
+    "author.name": "Sebastian Barrenechea",
+
     "nav.fork": "Fork me on GitHub",
     "nav.projects": "Projects",
     "nav.posts": "Posts",
@@ -65,6 +67,8 @@ export const ui = {
     "footer.built": "Built with",
   },
   es: {
+    "author.name": "Sebastián Barrenechea",
+
     "nav.fork": "Hazme fork en GitHub",
     "nav.projects": "Proyectos",
     "nav.posts": "Publicaciones",

@@ -20,7 +20,7 @@ const t = useTranslations(lang);
   <HeroAvatar>
     <Fragment slot="title">
       {t("hero.greeting")}
-      <GradientText>{AppConfig.author}</GradientText> 👋
+      <GradientText>{t("author.name")}</GradientText> 👋
     </Fragment>
     <Fragment slot="description">
       <p class="text-xl">{t("hero.description")}</p>

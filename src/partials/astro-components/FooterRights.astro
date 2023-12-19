@@ -5,12 +5,12 @@ import { useTranslations } from "~/i18n/utils";
 import { devDependencies } from "../../../package.json";
 
 const year = new Date().getFullYear();
-const { author } = AppConfig;
-const copyrightText = `2022-${year} ${author}`;
 const astroVersion = devDependencies.astro.replace("^", "");
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
+
+const copyrightText = `2022-${year} ${t("author.name")}`;
 ---
 
 <div class="border-t border-gray-600 pt-5">
