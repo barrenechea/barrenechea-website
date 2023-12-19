@@ -2,24 +2,36 @@ import { OGImageRoute } from "astro-og-canvas";
 
 import { allPages } from "~/content";
 
-const defaultOgImage = {
-  data: {
-    title: "Barrenechea",
-    description:
-      "Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.",
-  },
-};
+const title = "Barrenechea";
+
+const descriptions = {
+  "en": "Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.",
+  "es": "Bienvenidos al sitio web oficial de Sebastián Barrenechea. Descubran mi variada gama de proyectos personales y sumérjanse en publicaciones que invitan a la reflexión."
+} as { [lang: string]: string };
 
 /** An object mapping file paths to file metadata. */
 const pages = Object.fromEntries(
-  allPages.map(({ collection, id, slug, data }) => [
-    `${collection}/${id}`,
-    { data, slug },
-  ])
+  allPages.map(({ collection, slug, data }) => {
+    const [lang, ...slugParts] = slug.split("/");
+    return [`${lang}/${collection}/${slugParts.join("/")}`, { data }];
+  })
 );
 
-// @ts-expect-error - Add default og image to pages object
-pages["default-og-image"] = defaultOgImage;
+const uniqueLanguages = Object.keys(pages).map((path) => path.split("/")[0]);
+
+if (uniqueLanguages.some((lang) => !(lang in descriptions))) {
+  throw new Error("src/pages/open-graph/[...path].ts: Missing OpenGraph default description for some language");
+}
+
+uniqueLanguages.forEach((lang) => {
+  pages[`${lang}/default-og-image`] = {
+    // @ts-expect-error - Add default og image to pages object
+    data: {
+      title,
+      description: descriptions[lang],
+    },
+  };
+});
 
 export const { getStaticPaths, GET } = OGImageRoute({
   param: "path",
