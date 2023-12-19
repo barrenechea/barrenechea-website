@@ -1,19 +1,12 @@
-import { AppConfig } from "~/config";
-
 import { ui } from "./ui";
 
-const { defaultLang } = AppConfig;
-
-export function getLangFromUrl(url: URL) {
-  const [, lang] = url.pathname.split("/");
-  if (lang! in ui) return lang as keyof typeof ui;
-  return defaultLang;
-}
-
-export function useTranslations(lang?: string): ((key: keyof (typeof ui)[typeof defaultLang]) => string) {
-  if (!lang) lang = defaultLang;
-  return function t(key?: keyof (typeof ui)[typeof defaultLang]) {
+export function useTranslations(
+  lang?: string
+): (key: keyof (typeof ui)["en"]) => string {
+  return function t(key?: keyof (typeof ui)["en"]) {
     if (!key) return "";
-    return (ui[lang as typeof defaultLang] as typeof ui[typeof defaultLang])[key] || ui[defaultLang][key] as string;
+    return (
+      (ui[lang as "en"] as (typeof ui)["en"])[key] || (ui["en"][key] as string)
+    );
   };
 }
