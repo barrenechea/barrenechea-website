@@ -12,81 +12,34 @@ interface Props {
 }
 ---
 
-<label style={`--sl-select-width: ${Astro.props.width}`}>
-  <span class="sr-only">{Astro.props.label}</span>
-  <p>icon</p>
-  <select value={Astro.props.value}>
+<label class="relative flex cursor-pointer items-center gap-1">
+  <p>{Astro.props.icon}</p>
+  <select
+    value={Astro.props.value}
+    class="cursor-pointer appearance-none border-0 bg-transparent text-gray-200"
+  >
     {
       Astro.props.options.map(({ value, selected, label }) => (
-        <option value={value} selected={selected} set:html={label} />
+        <option value={value} selected={selected}>
+          {label}
+        </option>
       ))
     }
   </select>
-  <svg id="caret-down">
+  <div class="h-full w-6">
+    <svg
+    id="caret-down"
+    class="h-4 w-4"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 15 15"
+  >
     <path
       d="M7.5 9.5L3 5h9z"
-      fill="none"
       stroke="currentColor"
       stroke-linecap="round"
       stroke-linejoin="round"
-      stroke-width="1.5"
-    />
+      stroke-width="1.5"></path>
   </svg>
+  </div>
 </label>
-
-<style>
-  label {
-    --sl-label-icon-size: 0.875rem;
-    --sl-caret-size: 1.25rem;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: var(--sl-color-gray-1);
-  }
-
-  label:hover {
-    color: var(--sl-color-gray-2);
-  }
-
-  .icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-
-  .label-icon {
-    font-size: var(--sl-label-icon-size);
-    inset-inline-start: 0;
-  }
-
-  .caret {
-    font-size: var(--sl-caret-size);
-    inset-inline-end: 0;
-  }
-
-  select {
-    border: 0;
-    padding-block: 0.625rem;
-    padding-inline: calc(var(--sl-label-icon-size) + 0.25rem)
-      calc(var(--sl-caret-size) + 0.25rem);
-    width: var(--sl-select-width);
-    background-color: transparent;
-    text-overflow: ellipsis;
-    color: inherit;
-    cursor: pointer;
-    appearance: none;
-  }
-
-  option {
-    background-color: var(--sl-color-bg-nav);
-    color: var(--sl-color-gray-1);
-  }
-
-  @media (min-width: 50rem) {
-    select {
-      font-size: var(--sl-text-sm);
-    }
-  }
-</style>
