@@ -26,11 +26,11 @@ const formattedDate = instance.data.pubDate ? formatDate(instance.data.pubDate, 
         <img
           src={instance.data.img.src}
           alt={instance.data.imgAlt}
-          class="h-full w-full object-scale-down object-center"
+          class="size-full object-scale-down object-center"
         />
       ) : (
         <Image
-          class="h-full w-full object-cover object-center"
+          class="size-full object-cover object-center"
           src={instance.data.img}
           alt={instance.data.imgAlt}
           format="webp"
