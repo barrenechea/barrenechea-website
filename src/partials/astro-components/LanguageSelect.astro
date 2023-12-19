@@ -1,5 +1,6 @@
 ---
 import translateIcon from "~/assets/images/icon-translate.svg?raw";
+import { AppConfig } from "~/config";
 import { languages } from "~/i18n/ui";
 import { useTranslations } from "~/i18n/utils";
 
@@ -14,19 +15,19 @@ function localizedPathname(locale: string): string {
   return `/${locale}/${newPathname}`;
 }
 
-const { lang: langParam = "en" } = Astro.params;
-const t = useTranslations(langParam);
+const { lang = AppConfig.defaultLang } = Astro.params;
+const t = useTranslations(lang);
 ---
 
 <lang-select>
   <Select
     icon={translateIcon}
     label={t("nav.language.select")}
-    value={localizedPathname(langParam)}
-    options={Object.keys(languages).map((lang) => ({
-      value: localizedPathname(lang),
-      selected: lang === langParam,
-      label: languages[lang as keyof typeof languages],
+    value={localizedPathname(lang)}
+    options={Object.keys(languages).map((language) => ({
+      value: localizedPathname(language),
+      selected: language === lang,
+      label: languages[language as keyof typeof languages],
     }))}
     width="7em"
   />

@@ -1,6 +1,7 @@
 ---
 import type { Page } from 'astro';
 
+import { AppConfig } from '~/config';
 import { useTranslations } from '~/i18n/utils';
 
 export interface Props {
@@ -9,7 +10,7 @@ export interface Props {
 }
 
 const { page, type } = Astro.props;
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 
 const newer = type === 'posts' ? t('posts.pagination.newer') : t('projects.pagination.newer');

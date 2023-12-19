@@ -30,7 +30,7 @@ const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
 const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || '/open-graph/default-og-image.png';
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
 

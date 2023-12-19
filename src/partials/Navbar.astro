@@ -1,6 +1,7 @@
 ---
 import "./Navbar.css";
 
+import { AppConfig } from "~/config";
 import socials from "~/constants/social";
 import { useTranslations } from "~/i18n/utils";
 import Logo from "~/partials/astro-components/Logo.astro";
@@ -11,7 +12,7 @@ import Section from "~/partials/astro-components/Section.astro";
 
 import LanguageSelect from "./astro-components/LanguageSelect.astro";
 
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
 

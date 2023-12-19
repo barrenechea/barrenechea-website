@@ -9,7 +9,7 @@ const { author } = AppConfig;
 const copyrightText = `2022-${year} ${author}`;
 const astroVersion = devDependencies.astro.replace("^", "");
 
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
 

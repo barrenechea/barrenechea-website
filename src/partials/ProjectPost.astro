@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 
+import { AppConfig } from "~/config";
 import { useTranslations } from "~/i18n/utils";
 import Section from "~/partials/astro-components/Section.astro";
 import { formatDate } from "~/utils/dates";
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pubDate, lang)}`;

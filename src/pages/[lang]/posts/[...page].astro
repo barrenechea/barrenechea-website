@@ -41,7 +41,7 @@ interface Props {
 }
 
 const { page } = Astro.props as Props;
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 const titleBase = `${t("nav.page")} ${page.currentPage} - ${t("nav.posts")}`;

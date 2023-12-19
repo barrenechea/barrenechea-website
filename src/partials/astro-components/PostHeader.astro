@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { AppConfig } from '~/config';
 import { useTranslations } from '~/i18n/utils';
 import { formatDate } from '~/utils/dates';
 
@@ -10,7 +11,7 @@ export interface Props {
 }
 
 const { post, author } = Astro.props as Props;
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import { AppConfig } from "~/config";
 import { useTranslations } from "~/i18n/utils";
 import BlogGallery from "~/partials/astro-components/BlogGallery.astro";
 import GradientText from "~/partials/astro-components/GradientText.astro";
@@ -11,7 +12,7 @@ export interface Props {
 }
 
 const { postsList } = Astro.props as Props;
-const { lang } = Astro.params;
+const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
 
