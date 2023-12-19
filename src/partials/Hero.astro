@@ -59,9 +59,9 @@ const t = useTranslations(lang);
     </Fragment>
     <Fragment slot="socialButtons">
       {
-        socials.map(({ url, icon, name }) => (
+        socials.map(({ url, icon }) => (
           <a href={url}>
-            <HeroSocial src={icon.src} alt={`${name} icon`} />
+            <HeroSocial {icon} />
           </a>
         ))
       }

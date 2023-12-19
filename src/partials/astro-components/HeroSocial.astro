@@ -1,14 +1,15 @@
 ---
 export interface Props {
-  src: string;
-  alt: string;
+  icon: string;
 }
 
-const { src, alt } = Astro.props as Props;
+const { icon } = Astro.props as Props;
 ---
 
 <div
   class="transform-gpu transition ease-out hover:opacity-75 motion-reduce:transition-none motion-reduce:hover:transform-none"
 >
-  <img src={src} alt={alt} class="h-8 w-8 pl-1" />
+  <div class="h-8 w-8 pl-1">
+    <Fragment set:html={icon} />
+  </div>
 </div>

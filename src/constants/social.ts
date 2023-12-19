@@ -1,5 +1,5 @@
-import IconGithub from '~/assets/images/icon-github.svg';
-import IconLinkedIn from '~/assets/images/icon-linkedin.svg';
+import IconGithub from '~/assets/images/icon-github.svg?raw';
+import IconLinkedIn from '~/assets/images/icon-linkedin.svg?raw';
 
 const socialNetworks = [
   {
