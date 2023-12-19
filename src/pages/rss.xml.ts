@@ -4,7 +4,7 @@ import type { APIContext } from "astro";
 import { AppConfig } from '~/config';
 import { allPages } from "~/content";
 
-const customData = "<language>en-us</language>";
+const languageTag = (lang: string) => `<language>${lang}</language>`;
 
 export async function GET(context: APIContext) {
   return rss({
@@ -16,8 +16,8 @@ export async function GET(context: APIContext) {
       title: page.data.title,
       description: page.data.description,
       pubDate: page.data.pubDate,
-      customData,
+      customData: languageTag(page.id.split('/')[0]),
     })),
-    customData,
+    customData: languageTag(AppConfig.defaultLang),
   });
 }
