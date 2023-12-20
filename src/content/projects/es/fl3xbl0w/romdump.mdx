@@ -10,6 +10,7 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import ConsoleMounted from "~/assets/images/fl3xbl0w/console-mounted.jpg";
 import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
@@ -19,23 +20,30 @@ import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
 Un procesador RK3399 alimenta el hardware de Android. Los procesadores Rockchip vienen con un "loader mode" como característica estándar.
 
 El conjunto de herramientas que he utilizado es:
+
 - Rockchip Driver Assistant v4.5 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
 - rkDumper 1.09 test de [este post de XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-*Hay una versión más nueva del controlador disponible para descargar, pero se sabe que es incompatible con rkDumper.*
+_Hay una versión más nueva del controlador disponible para descargar, pero se sabe que es incompatible con rkDumper._
 
 Para jugar con esto, tendrás que desmontar la Consola Bowflex, desatornillar la tapa trasera de plástico y volver a montarla en una "forma desnuda".
 **No intentes esto, ya que jugar con el hardware de Android en Loader Mode puede llevar a un dispositivo permanentemente roto.**
 
-<Image src={ConsoleMounted} alt="Consola montada con la tapa trasera quitada" format="webp" />
+<Image
+  src={ConsoleMounted}
+  alt="Consola montada con la tapa trasera quitada"
+  format="webp"
+/>
 
 Aquí están las partes relevantes de la placa lógica de Android para cosas de Rockchip:
+
 <Image src={VantronPCB} alt="PCB de Vantron" format="webp" />
 
 Puedes tener abierta la aplicación Android Tool Release todo el tiempo como referencia para verificar en qué modo está la consola.
 
 Con la máquina encendida en "modo normal" y conectada a un computador, se identifica como `NFTM-LAR`:
+
 ```
 NFTM-LAR:
   Product ID: 0x0001
@@ -49,11 +57,12 @@ NFTM-LAR:
   Corriente Extra de Operación (mA): 0
 ```
 
-Con la máquina apagada, conectada a través de USB a un computador, manteniendo presionado el "Recovery button" y encendiéndola, debería arrancar en "Loader mode". La máquina "sonará", pero la pantalla permanecerá estática. *Puedes apagar, esperar un minuto, encender y la máquina arrancará normalmente.*
+Con la máquina apagada, conectada a través de USB a un computador, manteniendo presionado el "Recovery button" y encendiéndola, debería arrancar en "Loader mode". La máquina "sonará", pero la pantalla permanecerá estática. _Puedes apagar, esperar un minuto, encender y la máquina arrancará normalmente._
 
-*El hardware de Android no maneja el "sonido" después de encender la máquina, sino a través de las otras PCB de Nautilus.*
+_El hardware de Android no maneja el "sonido" después de encender la máquina, sino a través de las otras PCB de Nautilus._
 
 Ahora se reportará en el computador como `USB download gadget` (Número de Serie oculto):
+
 ```
 USB download gadget:
   Product ID: 0x330c
@@ -65,6 +74,7 @@ USB download gadget:
 ```
 
 Después de ejecutar rkDumper contra la consola, obtenemos información sobre las particiones:
+
 ```
 "EFI PART" sign found (RKFP FW dump)
 
@@ -102,7 +112,6 @@ Partition "userdata" (0x0169bbdf) saved (format: unknown)
 `uboot_a` y `uboot_b` fueron extraídos con éxito, pero todas las demás particiones marcadas como `(formato: desconocido)` están mal respaldadas, solo extrayendo valores hexadecimales `CC` de ellas.
 
 Un caso similar al mío fue documentado en [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), y después de [preguntar](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) al desarrollador de rkDumper, [él dice](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) que debe haber un nuevo loader de RockChip en su lugar. Seguir este método parece ser inviable por ahora.
-
 
 ### ADB
 
@@ -150,7 +159,6 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 ```
-
 
 ### Otras ideas
 

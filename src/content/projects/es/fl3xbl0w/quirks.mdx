@@ -10,12 +10,14 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import HomeAssistantSensor from "~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png";
 
 ### El archivo `/sdcard/Pictures/nautilus`
 
 Al descompilar `NautilusLauncher` puedes ver referencias a esa ruta específica:
+
 ```java
 // ruta: com/nautilus/nautiluslauncher/LauncherService.java
 public void run() {
@@ -42,7 +44,6 @@ protected void onCreate(Bundle bundle) {
 ```
 
 El efecto de colocar el archivo en su lugar es que `NautilusLauncher` activará adb después de cada reinicio. Si el archivo NO está en su lugar, `NautilusLauncher` DESACTIVARÁ activamente adb (si estaba habilitado anteriormente).
-
 
 ### El archivo `/sdcard/Nautilus/redbend/Credentials.txt`
 
@@ -86,19 +87,18 @@ Primera línea: DOMAIN_NAME
 Segunda línea: DOMAIN_PIN
 ```
 
-*`DOMAIN_PIN` parece ser un código pin real ya que es un número de seis dígitos.*
+_`DOMAIN_PIN` parece ser un código pin real ya que es un número de seis dígitos._
 
 Hay algunas credenciales dentro de la "Red Bend Network" para asociar una máquina con una marca/producto específicos para actualizaciones OTA. Espero que esas credenciales sean IDÉNTICAS dentro de todo el hardware de Nautilus. El archivo viene incluido dentro del APK `com.redbend.client` y se extrae al instalarlo.
 
-
 Encontré referencias de `com.redbend.client` [aquí](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), y me pareció bastante gracioso ver que se estrellaba en un auto. Espero que no falle tan a menudo en nuestras máquinas también.
-
 
 ### Monitor de Ritmo Cardíaco Bluetooth
 
-Este fue bastante fácil de descifrar. El nombre Bluetooth aparece como `CL831-xxxxxxx` *(número oculto)* de [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+Este fue bastante fácil de descifrar. El nombre Bluetooth aparece como `CL831-xxxxxxx` _(número oculto)_ de [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
 
 Al escanearlo a través de [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) se expuso la dirección MAC del dispositivo y algunos datos clave:
+
 ```
 Ritmo Cardíaco:
 UUID: 0x180D
@@ -108,4 +108,8 @@ UUID: 0x2A37
 
 Parecía bastante estándar, y un [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) de la Comunidad de Home Assistant ya había descubierto esto (no el mismo modelo, pero parece que el Monitor de Ritmo Cardíaco usa un protocolo estándar). He creado un archivo de configuración de ESPHome [aquí](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) como prueba de concepto:
 
-<Image src={HomeAssistantSensor} alt="Captura de pantalla de HomeAssistant mostrando un sensor de ritmo cardíaco" format="webp" />
+<Image
+  src={HomeAssistantSensor}
+  alt="Captura de pantalla de HomeAssistant mostrando un sensor de ritmo cardíaco"
+  format="webp"
+/>

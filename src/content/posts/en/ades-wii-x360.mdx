@@ -6,6 +6,7 @@ pubDate: 2022-08-23T23:13:00Z
 img: ~/assets/images/project-ades-wii-x360.png
 imgAlt: Composition of Bill Gates playing Guitar Hero on Mordor after being pwned by AdeS juice
 ---
+
 import Puzzle from "~/assets/images/puzzle.png";
 import PuzzleNumbered from "~/assets/images/puzzle-numbered.png";
 import X360PowerSupply from "~/assets/images/x360-dvd-power-supply.jpg";
@@ -18,6 +19,7 @@ import { YouTube } from "@astro-community/astro-embed-youtube";
 
 In 2010, AdeS (an Argentinian brand of juice later purchased by Coca-Cola Company in 2016) made a contest over Facebook.
 It was a 4x4 puzzle game where you could win a Nintendo Wii. The conditions to win the prize were:
+
 - Do it in the least amount of time, and
 - Do it in the least amount of moves
 
@@ -27,7 +29,11 @@ The game's first seconds displayed the solution (the fully formed picture), and 
 
 I don't have the original image, but here's a stock photo for you to have a reference:
 
-<Image src={Puzzle} alt="two puzzles side by side, the solution on the left and a scrambled version on the right" format="webp" />
+<Image
+  src={Puzzle}
+  alt="two puzzles side by side, the solution on the left and a scrambled version on the right"
+  format="webp"
+/>
 
 There was something particular about the game tho: The timer started to count AFTER you made your first move, leaving you the chance to
 "think" about it before you start playing.
@@ -35,7 +41,11 @@ There was something particular about the game tho: The timer started to count AF
 After staring at the picture, I made a "side image" to play with, replacing the scrambled pictures with numbers.
 That way, it was easier to figure out "how to sort it from 1 to 15":
 
-<Image src={PuzzleNumbered} alt="two puzzles side by side, the solution on the left and a scrambled version on the right, with numbers overlay" format="webp" />
+<Image
+  src={PuzzleNumbered}
+  alt="two puzzles side by side, the solution on the left and a scrambled version on the right, with numbers overlay"
+  format="webp"
+/>
 
 My brain liked it more that way... Buuut, I didn't want to spend too much time on this, so I searched for a puzzle solver. After a few hours, I
 found one that worked through brute force, taking quite some time to give you better and better solutions. It gave you several number sequences
@@ -98,7 +108,11 @@ without the DVD drive plugged in, your console was "flagged" (not sure if that w
 Anyways, I wanted to protect my client's consoles from being flagged, so I developed a custom power supply with switches for specific voltage
 lines (required to unlock some optical drives):
 
-<Image src={X360PowerSupply} alt="a custom power supply for Xbox 360 DVD drives" format="webp" />
+<Image
+  src={X360PowerSupply}
+  alt="a custom power supply for Xbox 360 DVD drives"
+  format="webp"
+/>
 
 Of course, after some time, they were better retail options for modders, so eventually, I got an X360 USB Pro v2 from Team Xecuter.
 
@@ -116,7 +130,7 @@ What we tried to achieve with Kamikaze was to reach a teeny tiny wire and pull i
 I guess Microsoft wasn't expecting this kind of craziness to play backups. Never underestimate the power of hackers.
 A funny message that I found on Twitter related to this:
 
-> MS: Okay, if we connect the write protect from *inside* the package with bond wire, they can't just cut a pin or trace
+> MS: Okay, if we connect the write protect from _inside_ the package with bond wire, they can't just cut a pin or trace
 
 > Modders: Hold my chip drilling alignment jig
 

@@ -10,12 +10,14 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import HomeAssistantSensor from "~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png";
 
 ### The `/sdcard/Pictures/nautilus` file
 
 When decompiling `NautilusLauncher` you can see references to that specific path:
+
 ```java
 // path: com/nautilus/nautiluslauncher/LauncherService.java
 public void run() {
@@ -42,7 +44,6 @@ protected void onCreate(Bundle bundle) {
 ```
 
 The effect of putting the file in place is that `NautilusLauncher` will actively enable adb after every restart. If the file is NOT in place, `NautilusLauncher` will actively DISABLE adb (if it was previously enabled).
-
 
 ### The `/sdcard/Nautilus/redbend/Credentials.txt` file
 
@@ -86,19 +87,18 @@ First line: DOMAIN_NAME
 Second line: DOMAIN_PIN
 ```
 
-*`DOMAIN_PIN` looks like an actual pin code since it is a six-digit number.*
+_`DOMAIN_PIN` looks like an actual pin code since it is a six-digit number._
 
 There are some credentials within the "Red Bend Network" to match a machine with a specific brand/product for OTA updates. I expect those credentials to be IDENTICAL within all Nautilus' hardware. The file is bundled within the `com.redbend.client` APK and gets extracted upon installation.
 
-
 I found references for `com.redbend.client` [over here](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), and found it quite funny to see it crashing on a car. I hope it doesn't fail that often on our machines too.
-
 
 ### Bluetooth Heart Rate Monitor
 
-This one was pretty easy to figure out. The Bluetooth name appears as `CL831-xxxxxxx` *(hidden number)* from [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+This one was pretty easy to figure out. The Bluetooth name appears as `CL831-xxxxxxx` _(hidden number)_ from [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
 
 Scanning it through [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) exposed the devices' MAC Address and some key data:
+
 ```
 Heart Rate:
 UUID: 0x180D
@@ -108,4 +108,8 @@ UUID: 0x2A37
 
 It seemed pretty standard, and a Home Assistant Community [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) already figured this one out (not the same model, but it seems the Heart Rate Monitor is using a standard protocol). I've made an ESPHome [config file](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) as a proof of concept:
 
-<Image src={HomeAssistantSensor} alt="HomeAssistant screenshot displaying a heart rate sensor" format="webp" />
+<Image
+  src={HomeAssistantSensor}
+  alt="HomeAssistant screenshot displaying a heart rate sensor"
+  format="webp"
+/>

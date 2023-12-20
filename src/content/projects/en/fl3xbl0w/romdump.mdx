@@ -10,6 +10,7 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import ConsoleMounted from "~/assets/images/fl3xbl0w/console-mounted.jpg";
 import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
@@ -19,23 +20,30 @@ import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
 An RK3399 processor powers the Android hardware. Rockchip processors come with a "loader mode" as a standard feature.
 
 The toolset that I've used is:
+
 - Rockchip Driver Assistant v4.5 from [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
 - rkDumper 1.09 test from [this XDA post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 from [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-*There is a newer driver version available for download, but it's known to be incompatible with rkDumper.*
+_There is a newer driver version available for download, but it's known to be incompatible with rkDumper._
 
 In order to play with this, you'll have to unmount the Bowflex Console, unscrew the plastic back cover, and mount it back in a "naked form".
 **Do not attempt this, as playing with the Android hardware in Loader Mode can lead to a permanently bricked device.**
 
-<Image src={ConsoleMounted} alt="Console mounted with back cover removed" format="webp" />
+<Image
+  src={ConsoleMounted}
+  alt="Console mounted with back cover removed"
+  format="webp"
+/>
 
 Here are the relevant parts of the Android logic board for Rockchip stuff:
+
 <Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
 You can have the Android Tool Release app opened at all times as a reference to check on which mode the console is at.
 
 With the machine turned on in "normal mode" and plugging it into a computer, it identifies itself as `NFTM-LAR`:
+
 ```
 NFTM-LAR:
   Product ID: 0x0001
@@ -49,11 +57,12 @@ NFTM-LAR:
   Extra Operating Current (mA): 0
 ```
 
-Having the machine turned off, plugged in through USB to a computer, keeping the "Recovery button" pressed and turning it on, it should boot in "Loader mode". The machine will "chime", but the screen will remain static. *You can turn off, wait a minute, turn it on, and the machine will boot normally.*
+Having the machine turned off, plugged in through USB to a computer, keeping the "Recovery button" pressed and turning it on, it should boot in "Loader mode". The machine will "chime", but the screen will remain static. _You can turn off, wait a minute, turn it on, and the machine will boot normally._
 
-*The Android hardware does not handle the "chime" after turning the machine on, but through Nautilus' other PCB's.*
+_The Android hardware does not handle the "chime" after turning the machine on, but through Nautilus' other PCB's._
 
 It will now report itself in the computer as `USB download gadget` (hidden Serial Number):
+
 ```
 USB download gadget:
   Product ID: 0x330c
@@ -65,6 +74,7 @@ USB download gadget:
 ```
 
 After running rkDumper against the console, we get some information regarding partitions:
+
 ```
 "EFI PART" sign found (RKFP FW dump)
 
@@ -102,7 +112,6 @@ Partition "userdata" (0x0169bbdf) saved (format: unknown)
 `uboot_a` and `uboot_b` were successfully extracted, but all other partitions marked as `(format: unknown)` are improperly dumped, only extracting hex `CC` values from it.
 
 A similar case to mine was documented over [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), and after [asking](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) the developer of rkDumper, [he says](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) a new RockChip loader must be in place. Going through this method seems to be a no-go for now.
-
 
 ### ADB
 
@@ -150,7 +159,6 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 ```
-
 
 ### Other ideas
 

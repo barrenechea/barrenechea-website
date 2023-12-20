@@ -5,12 +5,17 @@ pubDate: 2022-07-28T12:00:00Z
 img: ~/assets/images/post-astro.png
 imgAlt: Astro logo
 ---
+
 import { Image } from "astro:assets";
 import OldWebsiteImage from "~/assets/images/old-website.png";
 
 Si has estado por aquí antes, este sitio web ha tenido el mensaje de "hola" por algunos años. ¡Pero han cambiado hartas cosas con el tiempo!
 
-<Image src={OldWebsiteImage} alt="Captura de pantalla de cómo se veía antes el sitio web" format="webp" />
+<Image
+  src={OldWebsiteImage}
+  alt="Captura de pantalla de cómo se veía antes el sitio web"
+  format="webp"
+/>
 
 El sitio web allá por el 2016 estaba alojado en un droplet de [DigitalOcean](https://digitalocean.com). Más tarde,
 decidí abrir puertos dentro de mi propia red y usé [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website)

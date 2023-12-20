@@ -6,6 +6,7 @@ pubDate: 2022-08-23T23:13:00Z
 img: ~/assets/images/project-ades-wii-x360.png
 imgAlt: Composición de Bill Gates jugando Guitar Hero en Mordor después de ser pwned por el jugo AdeS
 ---
+
 import Puzzle from "~/assets/images/puzzle.png";
 import PuzzleNumbered from "~/assets/images/puzzle-numbered.png";
 import X360PowerSupply from "~/assets/images/x360-dvd-power-supply.jpg";
@@ -18,6 +19,7 @@ import { YouTube } from "@astro-community/astro-embed-youtube";
 
 En 2010, AdeS (una marca argentina de jugos comprada más tarde por Coca-Cola Company en 2016) realizó un concurso en Facebook.
 Era un juego de rompecabezas 4x4 donde podías ganar un Nintendo Wii. Las condiciones para ganar el premio eran:
+
 - Hacerlo en el menor tiempo posible, y
 - Hacerlo en la menor cantidad de movimientos
 
@@ -27,7 +29,11 @@ Los primeros segundos del juego mostraban la solución (la imagen completamente 
 
 No tengo la imagen original, pero aquí hay una foto stock para que tengas una referencia:
 
-<Image src={Puzzle} alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha" format="webp" />
+<Image
+  src={Puzzle}
+  alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha"
+  format="webp"
+/>
 
 Sin embargo, había algo particular en el juego: el cronómetro comenzaba a contar DESPUÉS de que hicieras tu primer movimiento, dándote la oportunidad de
 "pensarlo" antes de comenzar a jugar.
@@ -35,7 +41,11 @@ Sin embargo, había algo particular en el juego: el cronómetro comenzaba a cont
 Después de mirar la imagen, hice una "imagen secundaria" para jugar con ella, reemplazando las imágenes mezcladas con números.
 De esa manera, era más fácil averiguar "cómo ordenarlo del 1 al 15":
 
-<Image src={PuzzleNumbered} alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha, con números superpuestos" format="webp" />
+<Image
+  src={PuzzleNumbered}
+  alt="dos rompecabezas uno al lado del otro, la solución a la izquierda y una versión mezclada a la derecha, con números superpuestos"
+  format="webp"
+/>
 
 A mi cerebro le gustó más de esa manera... Perooo, no quería pasar demasiado tiempo en esto, así que busqué un solucionador de rompecabezas. Después de unas horas, encontré
 uno que funcionaba por fuerza bruta, tomando bastante tiempo para darte soluciones cada vez mejores. Te daba varias secuencias de números
@@ -98,7 +108,11 @@ sin la unidad de DVD conectada, tu consola era "marcada" (no estoy seguro si eso
 De todos modos, quería proteger las consolas de mis clientes de ser marcadas, así que desarrollé una fuente de alimentación personalizada con interruptores para voltajes específicos
 (líneas requeridas para desbloquear algunas unidades ópticas):
 
-<Image src={X360PowerSupply} alt="una fuente de alimentación personalizada para unidades de DVD de Xbox 360" format="webp" />
+<Image
+  src={X360PowerSupply}
+  alt="una fuente de alimentación personalizada para unidades de DVD de Xbox 360"
+  format="webp"
+/>
 
 Por supuesto, después de un tiempo, había mejores opciones de venta para modders, así que eventualmente, conseguí un X360 USB Pro v2 de Team Xecuter.
 
@@ -116,7 +130,7 @@ Lo que intentábamos lograr con Kamikaze era alcanzar un cablecito diminuto y ll
 Supongo que Microsoft no esperaba este tipo de locura para jugar copias de seguridad. Nunca subestimes el poder de los hackers.
 Un mensaje divertido que encontré en Twitter relacionado con esto:
 
-> MS: Ok, si conectamos la protección de escritura *desde adentro* del paquete con alambre de bondeo, no pueden simplemente cortar un pin o una pista
+> MS: Ok, si conectamos la protección de escritura _desde adentro_ del paquete con alambre de bondeo, no pueden simplemente cortar un pin o una pista
 
 > Modders: Aguanta mi plantilla de alineación para taladrar chips
 

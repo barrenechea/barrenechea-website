@@ -16,8 +16,8 @@ Quería rastrear un scooter eléctrico mío en caso de que me lo robaran. Aunque
 
 Así que lo adapté como un componente de [ESPHome](https://esphome.io/), un software que ya utilizo para las necesidades de mis dispositivos embebidos.
 
-
 ## ¿Por qué ESPHome? ¿No es "para la casa"?
+
 Estoy _un poco_ obsesionado con mantener mis dispositivos IoT/Embebidos lo más actualizados posible (y, por supuesto, fuera de cualquier nube si es posible), así que ESPHome es una solución atractiva para mantener tus dispositivos actualizados con los frameworks de Arduino y Espressif. A través de ESPHome, puedo "actualizar" mi scooter cuando quiera.
 
 ## ¿Por qué no es este un componente oficial?
@@ -25,13 +25,14 @@ Estoy _un poco_ obsesionado con mantener mis dispositivos IoT/Embebidos lo más 
 ¡Lo intenté! Abrí [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), y su [documentación de soporte](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), pero comprensiblemente no quisieron mezclarlo.
 
 ## Ejemplo de ESPHome - ESP32
+
 ```yaml
 external_components:
   - source:
       type: git
       url: https://github.com/barrenechea/esphome-config-files
       ref: main
-    components: [ openhaystack ]
+    components: [openhaystack]
 
 esphome:
   name: openhaystack-demo
@@ -58,15 +59,15 @@ openhaystack:
   key: !secret openhaystack_key
 ```
 
-
 ## Ejemplo de ESPHome - ESP32-C3
+
 ```yaml
 external_components:
   - source:
       type: git
       url: https://github.com/barrenechea/esphome-config-files
       ref: main
-    components: [ openhaystack ]
+    components: [openhaystack]
 
 esphome:
   name: openhaystack-demo
@@ -1464,45 +1465,48 @@ openhaystack:
   Wrote 0x130040 bytes to file /config/.esphome/build/esp32-c3-12f/.pioenvs/esp32-c3-12f/firmware-factory.bin, ready to flash to offset 0x0
   ======================== [SUCCESS] Took 1038.68 seconds ========================
 
-  ********************************************************************************
-  INFO Successfully compiled program.
-  INFO Resolving IP address of esp32-c3-12f.local
-  INFO  -> 10.0.0.171
-  INFO Uploading /config/.esphome/build/esp32-c3-12f/.pioenvs/esp32-c3-12f/firmware.bin (1179712 bytes)
-  Uploading: [============================================================] 100% Done...
+---
 
-  INFO Waiting for result...
-  INFO OTA successful
-  INFO Successfully uploaded program.
-  INFO Starting log output from esp32-c3-12f.local using esphome API
-  INFO Successfully connected to esp32-c3-12f.local
-  [21:15:17][I][app:102]: ESPHome version 2022.6.3 compiled on Aug  7 2022, 20:59:47
-  [21:15:17][C][wifi:491]: WiFi:
-  [21:15:17][C][wifi:353]:   Local MAC: [redacted]
-  [21:15:17][C][wifi:354]:   SSID: [redacted]
-  [21:15:17][C][wifi:355]:   IP Address: 10.0.0.171
-  [21:15:17][C][wifi:357]:   BSSID: [redacted]
-  [21:15:17][C][wifi:358]:   Hostname: 'esp32-c3-12f'
-  [21:15:17][C][wifi:360]:   Signal strength: -37 dB ▂▄▆█
-  [21:15:17][C][wifi:364]:   Channel: 2
-  [21:15:17][C][wifi:365]:   Subnet: 255.255.255.0
-  [21:15:17][C][wifi:366]:   Gateway: 10.0.0.1
-  [21:15:17][C][wifi:367]:   DNS1: 10.0.0.1
-  [21:15:17][C][wifi:368]:   DNS2: 0.0.0.0
-  [21:15:17][C][logger:275]: Logger:
-  [21:15:17][C][logger:276]:   Level: DEBUG
-  [21:15:17][C][logger:277]:   Log Baud Rate: 115200
-  [21:15:17][C][logger:278]:   Hardware UART: UART0
-  [21:15:17][C][openhaystack:037]: OpenHaystack:
-  [21:15:17][C][openhaystack:046]:   Bluetooth MAC: ED:5F:2C:74:12:75
-  [21:15:17][C][openhaystack:055]:   Advertising Key (first six digits): 6D 5F 2C 74 12 75
-  [21:15:17][C][mdns:084]: mDNS:
-  [21:15:17][C][mdns:085]:   Hostname: esp32-c3-12f
-  [21:15:17][C][ota:085]: Over-The-Air Updates:
-  [21:15:17][C][ota:086]:   Address: esp32-c3-12f.local:3232
-  [21:15:17][C][ota:089]:   Using Password.
-  [21:15:18][C][api:138]: API Server:
-  [21:15:18][C][api:139]:   Address: esp32-c3-12f.local:6053
-  [21:15:18][C][api:143]:   Using noise encryption: NO
-  ```
+INFO Successfully compiled program.
+INFO Resolving IP address of esp32-c3-12f.local
+INFO -> 10.0.0.171
+INFO Uploading /config/.esphome/build/esp32-c3-12f/.pioenvs/esp32-c3-12f/firmware.bin (1179712 bytes)
+Uploading: [============================================================] 100% Done...
+
+INFO Waiting for result...
+INFO OTA successful
+INFO Successfully uploaded program.
+INFO Starting log output from esp32-c3-12f.local using esphome API
+INFO Successfully connected to esp32-c3-12f.local
+[21:15:17][I][app:102]: ESPHome version 2022.6.3 compiled on Aug 7 2022, 20:59:47
+[21:15:17][C][wifi:491]: WiFi:
+[21:15:17][C][wifi:353]: Local MAC: [redacted]
+[21:15:17][C][wifi:354]: SSID: [redacted]
+[21:15:17][C][wifi:355]: IP Address: 10.0.0.171
+[21:15:17][C][wifi:357]: BSSID: [redacted]
+[21:15:17][C][wifi:358]: Hostname: 'esp32-c3-12f'
+[21:15:17][C][wifi:360]: Signal strength: -37 dB ▂▄▆█
+[21:15:17][C][wifi:364]: Channel: 2
+[21:15:17][C][wifi:365]: Subnet: 255.255.255.0
+[21:15:17][C][wifi:366]: Gateway: 10.0.0.1
+[21:15:17][C][wifi:367]: DNS1: 10.0.0.1
+[21:15:17][C][wifi:368]: DNS2: 0.0.0.0
+[21:15:17][C][logger:275]: Logger:
+[21:15:17][C][logger:276]: Level: DEBUG
+[21:15:17][C][logger:277]: Log Baud Rate: 115200
+[21:15:17][C][logger:278]: Hardware UART: UART0
+[21:15:17][C][openhaystack:037]: OpenHaystack:
+[21:15:17][C][openhaystack:046]: Bluetooth MAC: ED:5F:2C:74:12:75
+[21:15:17][C][openhaystack:055]: Advertising Key (first six digits): 6D 5F 2C 74 12 75
+[21:15:17][C][mdns:084]: mDNS:
+[21:15:17][C][mdns:085]: Hostname: esp32-c3-12f
+[21:15:17][C][ota:085]: Over-The-Air Updates:
+[21:15:17][C][ota:086]: Address: esp32-c3-12f.local:3232
+[21:15:17][C][ota:089]: Using Password.
+[21:15:18][C][api:138]: API Server:
+[21:15:18][C][api:139]: Address: esp32-c3-12f.local:6053
+[21:15:18][C][api:143]: Using noise encryption: NO
+
+```
 </details>
+```

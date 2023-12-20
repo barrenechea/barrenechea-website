@@ -10,12 +10,14 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
 
 Después de ser liberado de `AppMonitorService` (o después de recibir cualquier actualización OTA), lo primero que hay que hacer es respaldar la mayor cantidad de datos posible.
 
 Asegúrate de estar ya conectado a la consola:
+
 ```sh
 > adb connect <Dirección IP de la Consola>
 ```
@@ -23,6 +25,7 @@ Asegúrate de estar ya conectado a la consola:
 ## Respaldo del contenido de /sdcard
 
 Puede contener algunos archivos necesarios para que la máquina funcione correctamente después de un restablecimiento de fábrica (principalmente en las carpetas `/sdcard/Android` y `/sdcard/Nautilus`). Respaldaremos todo con:
+
 ```sh
 > adb pull /sdcard/ .
 ```
@@ -30,6 +33,7 @@ Puede contener algunos archivos necesarios para que la máquina funcione correct
 ## Respaldo de APKs
 
 Primero, obtén la lista de todos los paquetes instalados en la Consola (solo para que tengas una referencia):
+
 ```sh
 > adb shell pm list packages -f
 ```
@@ -37,11 +41,13 @@ Primero, obtén la lista de todos los paquetes instalados en la Consola (solo pa
 Aparecerán en el siguiente formato: `package:<ubicación del APK>=<nombre del paquete>`
 
 Tendrás que encontrar las aplicaciones que quieres respaldar. NO TODAS LAS APLICACIONES SON NECESARIAS, la mayoría son aplicaciones estándar de Android, así que solo buscaremos "aplicaciones no estándar" mediante algunos filtros:
+
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 ```
 
 Podrás ver registros de aplicaciones de `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` y quizás algunas más en el futuro. Querremos respaldar todo lo que veamos en esa lista (ID únicos ocultos, usa tus propios resultados):
+
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
@@ -63,28 +69,33 @@ package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.dis
 > NOTA: `com.redbend.dualpart.service.app` proviene de `/system/priv-app/`, lo que significa que permanecerá instalado incluso después de un restablecimiento de fábrica. Podemos respaldarla de todas formas si te interesa la ingeniería inversa de las aplicaciones.
 
 Tomemos Disney Plus como ejemplo (ID único oculto)
+
 ```
 package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
 ```
 
 Esa línea, basada en el formato que he mencionado, sería:
+
 ```
 Ubicación del paquete: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
 Nombre del paquete: com.disney.disneyplus
 ```
 
 Buscaremos qué versión de la aplicación tenemos con esa información. Usemos el Nombre del paquete que acabamos de identificar y ejecutemos:
+
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
 ```
 
 En mi caso, he recibido:
+
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
     versionName=2.4.2-rc2
 ```
 
 Ahora, para crear un respaldo para el paquete de Disney Plus, el procedimiento sería:
+
 ```sh
 > adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
 ```
@@ -96,24 +107,33 @@ El formato que sugiero para los APKs, dado ese ejemplo, es: `<Nombre del paquete
 Ahora repite el proceso para el resto de las aplicaciones.
 
 ## Respaldo de AppData
-Parece ser capaz de respaldar *algunos (no estoy seguro si todos)* los datos de las aplicaciones.
 
-*Ten en cuenta que no todas las aplicaciones instaladas generan datos de aplicaciones, o nosotros, como el usuario `shell`, es posible que no tengamos permisos para respaldar todo.*
+Parece ser capaz de respaldar _algunos (no estoy seguro si todos)_ los datos de las aplicaciones.
+
+_Ten en cuenta que no todas las aplicaciones instaladas generan datos de aplicaciones, o nosotros, como el usuario `shell`, es posible que no tengamos permisos para respaldar todo._
 
 Crea un respaldo completo de todas las aplicaciones instaladas por el usuario:
+
 ```sh
 > adb backup -f appdata.adb -all -noapk -nosystem
 ```
 
 Alternativamente, puedes obtener el mismo resultado de un comando alternativo:
+
 ```sh
 > adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
 ```
 
 Ambos comandos solicitarán una "confirmación en pantalla" de que quieres hacer un respaldo. Toca en "**BACK UP MY DATA**":
-<Image src={DialogBackupConfirm} alt="pantalla de confirmación de respaldo" format="webp" />
+
+<Image
+  src={DialogBackupConfirm}
+  alt="pantalla de confirmación de respaldo"
+  format="webp"
+/>
 
 Si quieres extraer los contenidos (en Linux, macOS), necesitarás `zlib-flate` de [qpdf](https://command-not-found.com/qpdf) y ejecutar:
+
 ```sh
 > dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
 ```
@@ -121,7 +141,7 @@ Si quieres extraer los contenidos (en Linux, macOS), necesitarás `zlib-flate` d
 Hay algunos datos fascinantes para `com.nautilus.bowflex.usb`.
 Hay información personal identificable (PII) dentro, así que **asegúrate de revisar bien qué archivos compartes**.
 
-*Estos métodos de respaldo y extracción provienen de [este Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Solo he probado los métodos de respaldo listados allí, que son seguros para jugar. **Si juegas con la Restauración del Gist, estás por tu cuenta**. ¡Avísanos si funciona!*
+_Estos métodos de respaldo y extracción provienen de [este Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Solo he probado los métodos de respaldo listados allí, que son seguros para jugar. **Si juegas con la Restauración del Gist, estás por tu cuenta**. ¡Avísanos si funciona!_
 
 ## Script
 

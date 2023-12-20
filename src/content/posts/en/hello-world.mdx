@@ -5,12 +5,17 @@ pubDate: 2022-07-28T12:00:00Z
 img: ~/assets/images/post-astro.png
 imgAlt: Astro logo
 ---
+
 import { Image } from "astro:assets";
 import OldWebsiteImage from "~/assets/images/old-website.png";
 
 If you've been here before, this website has been with the "hi there" message for a few years. A lot has changed over the years tho!
 
-<Image src={OldWebsiteImage} alt="Screenshot of how the website used to look like" format="webp" />
+<Image
+  src={OldWebsiteImage}
+  alt="Screenshot of how the website used to look like"
+  format="webp"
+/>
 
 The website back in 2016 was allocated in a [DigitalOcean](https://digitalocean.com) droplet. Later,
 I decided to open up ports within my own network and used [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website)

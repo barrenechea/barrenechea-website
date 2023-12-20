@@ -10,6 +10,7 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import JadxGUIScreen from "~/assets/images/fl3xbl0w/screen-jadx-init.png";
 import JadxGUISelect from "~/assets/images/fl3xbl0w/screen-jadx-open.png";
@@ -19,32 +20,39 @@ import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
 
 This assumes you already [have your own APKs](/en/projects/fl3xbl0w/backup). Note that even though I'm specifying this on Nautilus' apps, this applies to pretty much any Android application you'd like to "peek under the hood".
 
-
 ## Turning apps into Java code
 
 The following instructions are intended to get some "readable code", but it's improbable that you'll be able to compile them back to an APK. I'm using this as a reference to understand Nautilus' developers. If you want to alter the codebase and package it back, go to [Turning apps into Smali code](#turning-apps-into-smali-code).
 
 ### Requirements
+
 - [jadx](https://github.com/skylot/jadx)
 
-
-### Let's open some sh*t
+### Let's open some sh\*t
 
 After installing `jadx` you should be able to open `jadx-gui`. Go to File -> Open files ...
+
 <Image src={JadxGUIScreen} alt="jadx-gui screen" format="webp" />
 
 Search for your desired APK and click on "Open file":
+
 <Image src={JadxGUISelect} alt="jadx-gui selecting apk" format="webp" />
 
 And from there, you can start poking around:
-<Image src={JadxGUIOpened} alt="jadx-gui decompiling NautilusLauncher" format="webp" />
+
+<Image
+  src={JadxGUIOpened}
+  alt="jadx-gui decompiling NautilusLauncher"
+  format="webp"
+/>
 
 If you want to save the project as Java files, go into File -> Save as gradle project:
+
 <Image src={JadxGUISave} alt="jadx-gui saving project" format="webp" />
 
 If useful, here are my `jadx-gui` preferences:
-<Image src={JadxGUIPrefs} alt="jadx-gui preferences" format="webp" />
 
+<Image src={JadxGUIPrefs} alt="jadx-gui preferences" format="webp" />
 
 ## Turning apps into Smali code
 

@@ -10,13 +10,14 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import B017D from "~/assets/images/fl3xbl0w/b017d.jpg";
 import TreadmillElectrical from "~/assets/images/fl3xbl0w/treadmill-electrical.png";
 import TreadmillComm from "~/assets/images/fl3xbl0w/treadmill-comm.png";
 import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
 
-*This mostly applies to Treadmill 22 & Treadmill 56.*
+_This mostly applies to Treadmill 22 & Treadmill 56._
 
 The motor control board is manufactured by [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
 
@@ -24,7 +25,11 @@ The motor control board is manufactured by [Electronics Way Industry](https://ww
 
 Given the [service manual](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) provided by Nautilus Inc. ([backup on archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={TreadmillElectrical} alt="Treadmill electrical diagram" format="webp" />
+<Image
+  src={TreadmillElectrical}
+  alt="Treadmill electrical diagram"
+  format="webp"
+/>
 
 And focusing specifically on this part:
 
@@ -34,13 +39,12 @@ We can identify the "communication cable" connecting the motor controller as bei
 I've labeled the wires with their corresponding colors (data & switch are optoisolated):
 
 | cable color | label |
-|-------------|-------|
+| ----------- | ----- |
 | red         | GND   |
 | white       | RXD   |
 | black       | TXD   |
 | yellow      | +12   |
 | green       | SW    |
-
 
 The board is not directly connected to the Android console.
 

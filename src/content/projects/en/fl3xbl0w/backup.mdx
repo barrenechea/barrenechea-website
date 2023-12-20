@@ -10,12 +10,14 @@ tags:
   - Hardware
   - Android
 ---
+
 import { Image } from "astro:assets";
 import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
 
 After being freed from `AppMonitorService` (or after any OTA update is received), the first thing to do is back up as much data as possible.
 
 Make sure you're already connected to the Console:
+
 ```sh
 > adb connect <Console IP Address>
 ```
@@ -23,6 +25,7 @@ Make sure you're already connected to the Console:
 ## Backup /sdcard contents
 
 It may contain some required files for the machine to work properly after a factory reset (mainly on the `/sdcard/Android` and `/sdcard/Nautilus` folders). We'll back up everything with:
+
 ```sh
 > adb pull /sdcard/ .
 ```
@@ -30,6 +33,7 @@ It may contain some required files for the machine to work properly after a fact
 ## Backup APKs
 
 First, get the list of all packages installed on the Console (just for you to have a reference):
+
 ```sh
 > adb shell pm list packages -f
 ```
@@ -37,11 +41,13 @@ First, get the list of all packages installed on the Console (just for you to ha
 They will appear in the following format: `package:<APK location>=<package name>`
 
 You'll have to find the apps you want to backup. NOT ALL APPS ARE REQUIRED, most of them are stock Android apps, and so we'll only search for "non-stock apps" through some filtering:
+
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 ```
 
 You'll be able to see records for apps from `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` and maybe some more in the future. We'll want to back up everything we see on that list (unique ID's hidden, use your own results):
+
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
@@ -62,30 +68,34 @@ package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.dis
 
 > NOTE: `com.redbend.dualpart.service.app` comes from `/system/priv-app/`, meaning that it will remain installed even after a factory reset. We can dump it anyways if you are interested in reverse engineering the apps.
 
-
 Let's take Disney Plus as an example (unique ID hidden)
+
 ```
 package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
 ```
 
 That line, based on the format I've mentioned, would be:
+
 ```
 Package location: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
 Package name: com.disney.disneyplus
 ```
 
 We'll search for which version of the app we have with that info. Let's use the Package name that we've just identified and run:
+
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
 ```
 
 In my case, I've received:
+
 ```sh
 > adb shell dumpsys package com.disney.disneyplus | grep versionName
     versionName=2.4.2-rc2
 ```
 
 Now, to create a backup for the Disney Plus package, the procedure would be:
+
 ```sh
 > adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
 ```
@@ -96,26 +106,34 @@ The format for APKs that I suggest, given that example, is: `<Package name>-<ver
 
 Now repeat the process for the rest of the apps.
 
-
 ## Backup AppData
-This seems to be able to backup *some (not sure if all)* AppData.
 
-*Note that not all installed apps generate AppData, or we, as the `shell` user, may not have permissions to backup everything.*
+This seems to be able to backup _some (not sure if all)_ AppData.
+
+_Note that not all installed apps generate AppData, or we, as the `shell` user, may not have permissions to backup everything._
 
 Create a full backup of all user-installed apps:
+
 ```sh
 > adb backup -f appdata.adb -all -noapk -nosystem
 ```
 
 Alternatively, you can have the same output from an alternative command:
+
 ```sh
 > adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
 ```
 
 Both commands will request an "in-screen confirmation" that you want to do a backup. Touch on "**BACK UP MY DATA**":
-<Image src={DialogBackupConfirm} alt="backup confirmation screen" format="webp" />
+
+<Image
+  src={DialogBackupConfirm}
+  alt="backup confirmation screen"
+  format="webp"
+/>
 
 If you want to extract the contents (on Linux, macOS), you'll need `zlib-flate` from [qpdf](https://command-not-found.com/qpdf) and run:
+
 ```sh
 > dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
 ```
@@ -123,9 +141,7 @@ If you want to extract the contents (on Linux, macOS), you'll need `zlib-flate` 
 There is some fascinating data for `com.nautilus.bowflex.usb`.
 There is Personally identifiable information (PII) inside, so **make sure to double-check what files you share**.
 
-
-*These backup and extraction methods are from [this Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). I've only tested the Backup methods listed there, which are safe to play. **If you play with the Gist Restore, you're on your own**. Let us know if it works tho!*
-
+_These backup and extraction methods are from [this Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). I've only tested the Backup methods listed there, which are safe to play. **If you play with the Gist Restore, you're on your own**. Let us know if it works tho!_
 
 ## Script
 
