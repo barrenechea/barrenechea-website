@@ -43,7 +43,9 @@
     "github-fork-ribbon-css": "^0.2.3",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
-    "tailwindcss": "^3.4.0"
+    "openai": "^4.24.0",
+    "tailwindcss": "^3.4.0",
+    "ts-node": "^10.9.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,astro}": [

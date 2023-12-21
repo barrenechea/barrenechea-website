@@ -19,7 +19,6 @@ export const ui = {
     "hero.currentEmployment": "I'm currently working at",
     "hero.currentTeam": "with the DevOps Team",
     "hero.avatar.alt": "AI-generated avatar using",
-    "hero.avatar.using": "Using",
     "hero.avatar.with": "with",
 
     "home.recentProjects": "Recent",
@@ -81,7 +80,6 @@ export const ui = {
     "hero.currentEmployment": "Actualmente trabajo en",
     "hero.currentTeam": "con el equipo de DevOps",
     "hero.avatar.alt": "Avatar generado por IA usando",
-    "hero.avatar.using": "Usando",
     "hero.avatar.with": "con",
 
     "home.recentProjects": "Últimos",
