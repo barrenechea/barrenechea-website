@@ -6,7 +6,8 @@ const title = "Barrenechea";
 
 const descriptions = {
   "en": "Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.",
-  "es": "Bienvenidos al sitio web oficial de Sebastián Barrenechea. Descubran mi variada gama de proyectos personales y sumérjanse en publicaciones que invitan a la reflexión."
+  "es": "Bienvenidos al sitio web oficial de Sebastián Barrenechea. Descubran mi variada gama de proyectos personales y sumérjanse en publicaciones que invitan a la reflexión.",
+  "de": "Willkommen auf der offiziellen Website von Sebastian Barrenechea. Entdecken Sie meine vielfältige Palette an persönlichen Projekten und tauchen Sie ein in nachdenkliche Blog-Beiträge.",
 } as { [lang: string]: string };
 
 /** An object mapping file paths to file metadata. */

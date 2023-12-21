@@ -1,0 +1,165 @@
+---
+title: ROM-Dump - fl3xbl0w
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+pubDate: 2022-05-28T10:28:00Z
+link: /de/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Projektlogo fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+---
+
+import { Image } from "astro:assets";
+import ConsoleMounted from "~/assets/images/fl3xbl0w/console-mounted.jpg";
+import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
+
+### Rockchip-Lademodus
+
+Ein RK3399-Prozessor betreibt die Android-Hardware. Rockchip-Prozessoren verfügen standardmäßig über einen "Loader-Modus".
+
+Das Toolset, das ich verwendet habe, ist:
+
+- Rockchip Driver Assistant v4.5 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 Test von [diesem XDA-Post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+
+_Es gibt eine neuere Version des Treibers zum Download, aber es ist bekannt, dass sie mit rkDumper inkompatibel ist._
+
+Um damit zu spielen, musst du die Bowflex-Konsole demontieren, die hintere Kunststoffabdeckung abschrauben und sie in einer "nackten Form" wieder montieren.
+**Versuche dies nicht, da das Spielen mit der Android-Hardware im Loader-Modus zu einem dauerhaft beschädigten Gerät führen kann.**
+
+<Image
+  src={ConsoleMounted}
+  alt="Montierte Konsole mit entfernter Rückabdeckung"
+  format="webp"
+/>
+
+Hier sind die relevanten Teile der Android-Logikplatine für Rockchip-Dinge:
+
+<Image src={VantronPCB} alt="Vantron-PCB" format="webp" />
+
+Du kannst die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu überprüfen, in welchem Modus sich die Konsole befindet.
+
+Mit der Maschine im "normalen Modus" eingeschaltet und mit einem Computer verbunden, wird sie als `NFTM-LAR` identifiziert:
+
+```
+NFTM-LAR:
+  Product ID: 0x0001
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 3.10
+  Geschwindigkeit: Bis zu 480 Mb/s
+  Hersteller: Vanzo
+  Standort-ID: 0x14120000 / 9
+  Verfügbare Stromstärke (mA): 500
+  Erforderliche Stromstärke (mA): 500
+  Zusätzlicher Betriebsstrom (mA): 0
+```
+
+Mit der Maschine ausgeschaltet, über USB an einen Computer angeschlossen, den "Recovery-Button" gedrückt haltend und einschaltend, sollte sie im "Loader-Modus" starten. Die Maschine "ertönt", aber der Bildschirm bleibt statisch. _Du kannst ausschalten, eine Minute warten, einschalten und die Maschine wird normal starten._
+
+_Die Android-Hardware verwaltet den "Sound" nach dem Einschalten der Maschine nicht, sondern über die anderen PCBs von Nautilus._
+
+Jetzt wird sie am Computer als `USB-Download-Gadget` (Seriennummer versteckt) gemeldet:
+
+```
+USB-Download-Gadget:
+  Product ID: 0x330c
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 99.99
+  Seriennummer: XXXXXXXXXXXXXXX
+  Hersteller: Rockchip
+  Standort-ID: 0x14120000
+```
+
+Nach dem Ausführen von rkDumper gegen die Konsole erhalten wir Informationen über die Partitionen:
+
+```
+"EFI PART"-Zeichen gefunden (RKFP FW-Dump)
+
+Partition "EFI_part" (0x00004000) gespeichert (Format: RockChip RKFP-Dump)
+Partition "uboot_a" (0x00002000) gespeichert (Format: Rockchip uboot-Image-Datei)
+Partition "uboot_b" (0x00002000) gespeichert (Format: Rockchip uboot-Image-Datei)
+Partition "trust_a" (0x00002000) gespeichert (Format: unbekannt)
+Partition "trust_b" (0x00002000) gespeichert (Format: unbekannt)
+Partition "misc" (0x00002000) gespeichert (Format: unbekannt)
+Partition "resource" (0x00008000) gespeichert (Format: unbekannt)
+Partition "kernel" (0x00010000) gespeichert (Format: unbekannt)
+Partition "dtb" (0x00002000) gespeichert (Format: unbekannt)
+Partition "dtbo_a" (0x00002000) gespeichert (Format: unbekannt)
+Partition "dtbo_b" (0x00002000) gespeichert (Format: unbekannt)
+Partition "vbmeta_a" (0x00000800) gespeichert (Format: unbekannt)
+Partition "vbmeta_b" (0x00000800) gespeichert (Format: unbekannt)
+Partition "boot_a" (0x00020000) gespeichert (Format: unbekannt)
+Partition "boot_b" (0x00020000) gespeichert (Format: unbekannt)
+Partition "backup" (0x00038000) gespeichert (Format: unbekannt)
+Partition "security" (0x00002000) gespeichert (Format: unbekannt)
+Partition "cache" (0x00100000) gespeichert (Format: unbekannt)
+Partition "system_a" (0x00500000) gespeichert (Format: unbekannt)
+Partition "system_b" (0x00500000) gespeichert (Format: unbekannt)
+Partition "metadata" (0x00008000) gespeichert (Format: unbekannt)
+Partition "vendor_a" (0x00100000) gespeichert (Format: unbekannt)
+Partition "vendor_b" (0x00100000) gespeichert (Format: unbekannt)
+Partition "oem_a" (0x00100000) gespeichert (Format: unbekannt)
+Partition "oem_b" (0x00100000) gespeichert (Format: unbekannt)
+Partition "frp" (0x00000400) gespeichert (Format: unbekannt)
+Partition "sw_release" (0x00ed7000) gespeichert (Format: unbekannt)
+Partition "video" (0x0047e000) gespeichert (Format: unbekannt)
+Partition "userdata" (0x0169bbdf) gespeichert (Format: unbekannt)
+```
+
+`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, nur das Extrahieren von hexadezimalen `CC`-Werten aus ihnen.
+
+Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, sagt der Entwickler von rkDumper, [er sagt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss. Diese Methode scheint vorerst nicht praktikabel zu sein.
+
+### ADB
+
+Einige ähnliche Daten können über adb gefunden werden, aber es scheint nicht möglich zu sein, ein Backup zu erstellen, da uns Root-Rechte fehlen:
+
+```sh
+> ls -al /dev/block/platform/
+total 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+total 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### Weitere Ideen
+
+Etwas, das wir tun könnten, ist, den eMMC-Chip abzulöten und ihn extern zu lesen, um seinen gesamten Inhalt zu sichern. Das wäre gut, um eine benutzerdefinierte ROM (Custom ROM) zu erstellen, aber ich werde den von meiner EINZIGEN Konsole nicht ablöten (es wäre cool, eine Ersatzkonsole zu haben).

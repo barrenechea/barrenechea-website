@@ -1,0 +1,26 @@
+---
+title: Hallo Welt!
+description: Ich habe die Website neu gestartet, sie funktioniert jetzt mit Astro und wird über Edge bereitgestellt!
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Astro Logo
+---
+
+import { Image } from "astro:assets";
+import OldWebsiteImage from "~/assets/images/old-website.png";
+
+Wenn Sie früher hier waren, hatte diese Website die Botschaft "Hallo" seit einigen Jahren. Aber es hat sich viel geändert!
+
+<Image
+  src={OldWebsiteImage}
+  alt="Screenshot des alten Aussehens der Website"
+  format="webp"
+/>
+
+Die Website im Jahr 2016 war auf einem [DigitalOcean](https://digitalocean.com) Droplet gehostet. Später habe ich mich dazu entschlossen, Ports innerhalb meines eigenen Netzwerks zu öffnen und [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) zu verwenden, um die Website auf meinem [Unraid](https://unraid.net) Server auszuführen.
+
+Bevor ich zu Bereitstellungen über Edge gewechselt habe, habe ich einen [Cloudflare Tunnel](https://www.cloudflare.com/es-es/products/tunnel/) verwendet, um die dynamische IP-Natur meines Internetdienstleisters zu lindern und die "Zugangspunkte" meines Heimnetzwerks zu stärken.
+
+Das, was Sie gerade lesen, ist eine Neukonstruktion der Website, die von [Astro](https://astro.build) angetrieben wird. Ihre Fähigkeit, über Edge bereitgestellt zu werden (ich nutze derzeit die [Perimeter-Netzwerk](https://www.cloudflare.com/es-es/learning/cdn/glossary/edge-server/) von Cloudflare), ist eine enorme Verbesserung sowohl aus Sicherheits- als auch aus Leistungssicht für die Endbenutzer (das sind Sie!).
+
+Die Schriftart, die ich für diese Website gewählt habe, ist ~~[JetBrains Mono](https://www.jetbrains.com/lp/mono/) 👨🏻‍💻~~ [Work Sans](https://fonts.google.com/specimen/Work+Sans).
