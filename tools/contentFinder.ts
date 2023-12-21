@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { AppConfig } from "../src/config.ts";
-import { languages } from "../src/i18n/ui.ts";
+import { languages } from "../src/i18n/translations.ts";
 
 const { defaultLang } = AppConfig;
 

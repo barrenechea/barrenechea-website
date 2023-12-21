@@ -2,8 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 
 import { AppConfig } from "~/config";
-import type { ui } from "~/i18n/ui";
-import { useTranslations } from "~/i18n/utils";
+import type { Translations } from "~/i18n/es";
+import { useTranslations } from "~/i18n/translations";
 import GradientText from "~/partials/astro-components/GradientText.astro";
 import Project from "~/partials/astro-components/Project.astro";
 import Section from "~/partials/astro-components/Section.astro";
@@ -70,8 +70,7 @@ const t = useTranslations(lang);
         >
           {(project.data.tags || []).map((tag) => (
             <Tags color={tagColors[tag] || defaultTagColor}>
-              {t(`tags.${tag}` as keyof (typeof ui)["en"]) ??
-                t("tags.undefined")}
+              {t(`tags.${tag}` as keyof Translations) || t("tags.undefined")}
             </Tags>
           ))}
         </Project>
