@@ -2,7 +2,7 @@ import { llmCall, type LlmMessage, userMessage } from "./llm.ts";
 
 const systemMessage = (language: string): LlmMessage => ({
   role: "system",
-  content: `You are an expert MDX content translator API. You translate all content including frontmatter values directly to ${language}, keeping variable names and links intact.`,
+  content: `You are an expert MDX content translator API. You translate all content including frontmatter values directly to ${language}, keeping variable names and external links intact.`,
 });
 
 /**

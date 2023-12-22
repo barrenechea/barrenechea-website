@@ -24,8 +24,7 @@ for (const file of missingFiles) {
   });
 
   const stream = await translate(file.targetLanguage, fileContent);
-  console.log(` - Received stream for ${file.target}`);
-  console.log(` - Writing to ${file.target}...`);
+  console.log(` - Streaming response to ${file.target}...`);
   const targetPath = path.join(
     contentDir,
     file.target.split("/").slice(0, -1).join("/")
@@ -37,5 +36,19 @@ for (const file of missingFiles) {
       part.choices[0]?.delta?.content ?? ""
     );
   }
+
+  // Clear empty characters at the beginning of first line if any, and add a newline at the end if missing
+  console.log(" - Cleaning up...");
+  const fileContentAfter = await fsp.readFile(
+    path.join(contentDir, file.target),
+    { encoding: "utf8" }
+  );
+  const lines = fileContentAfter.split("\n");
+  lines[0] = lines[0].trimStart();
+  if (lines[lines.length - 1] !== "") {
+    lines.push("");
+  }
+  await fsp.writeFile(path.join(contentDir, file.target), lines.join("\n"));
+
   console.log(" - Done!");
 }

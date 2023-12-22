@@ -10,6 +10,10 @@ interface LlmPayload {
   temperature: number;
 }
 
+export const model = process.env.LLM_MODEL || "gpt-4-1106-preview";
+
+// requires to have OPENAI_API_KEY set in env
+// optionally, OPENAI_BASE_URL can be set to point to a different API endpoint
 const openai = new OpenAI();
 
 /**
@@ -23,14 +27,14 @@ export const userMessage = (text: string): LlmMessage => ({
 });
 
 /**
- * Calls the OpenAI Completions API
+ * Calls the OpenAI-compatible Completions API
  * @param data request data
  * @returns response stream
  */
 export const llmCall = async (data: LlmPayload) => {
   const stream = await openai.chat.completions.create({
     ...data,
-    model: "gpt-4-1106-preview",
+    model,
     stream: true,
   });
 
