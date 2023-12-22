@@ -16,6 +16,7 @@ const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pubDate, lang)}`;
+const translatedBy = project.data.translatedBy ? `${t("blog.translatedBy")} ${project.data.translatedBy}` : "";
 ---
 
 <Section>
@@ -52,9 +53,9 @@ const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pub
         <h3 class="mb-1 text-2xl font-bold leading-normal text-zinc-200">
           {project.data.title}
         </h3>
-            <div class="mb-2 mt-0 text-xs font-bold uppercase text-zinc-400">
-              {formattedDate}
-            </div>
+        <div class="mb-2 mt-0 text-xs font-bold uppercase text-zinc-400">
+          {formattedDate}
+        </div>
       </div>
       <div class="mt-6 border-t border-zinc-200 py-6 text-center">
         <div class="flex flex-wrap justify-center">
@@ -85,5 +86,10 @@ const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pub
     <div class="prose prose-invert mt-8 prose-img:rounded-lg">
       <slot />
     </div>
+    {translatedBy && (
+      <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
+        {translatedBy}
+      </div>
+    )}
   </div>
 </Section>

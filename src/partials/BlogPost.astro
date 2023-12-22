@@ -15,12 +15,13 @@ const { post } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
+const translatedBy = post.data.translatedBy ? `${t("blog.translatedBy")} ${post.data.translatedBy}` : "";
 ---
 
 <Section>
   <PostHeader {post} author={t("author.name")} />
 
-  <PostContent {post}>
+  <PostContent {post} {translatedBy}>
     <slot />
   </PostContent>
 </Section>

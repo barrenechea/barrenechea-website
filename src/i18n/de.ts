@@ -22,6 +22,8 @@ export const de: OptionalTranslations = {
   "home.recentPosts": "Aktuelle",
   "home.recentPosts.viewAll": "Alle Beiträge ansehen",
 
+  "blog.translatedBy": "Inhalt übersetzt von",
+
   "posts.paginationDescription": "Ergebnis einiger Brain-Dumping-Prozesse, die ich von Zeit zu Zeit durchlaufe",
   "posts.by": "Von",
   "posts.on": "am",

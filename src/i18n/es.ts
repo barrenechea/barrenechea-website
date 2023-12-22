@@ -20,6 +20,8 @@ export const es = {
   "home.recentPosts": "Últimas",
   "home.recentPosts.viewAll": "Ver todas las publicaciones",
 
+  "blog.translatedBy": "Contenido traducido por",
+
   "posts.paginationDescription": "Resultado de algunos procesos de brain-dumping por los que paso de vez en cuando",
   "posts.by": "Por",
   "posts.on": "el",

@@ -4,9 +4,10 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   post: CollectionEntry<'posts'>;
+  translatedBy?: string;
 }
 
-const { post } = Astro.props;
+const { post, translatedBy } = Astro.props;
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
@@ -28,4 +29,9 @@ const { post } = Astro.props;
   <div class="prose prose-invert mt-8 prose-img:rounded-lg">
     <slot />
   </div>
+  {translatedBy && (
+    <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
+      {translatedBy}
+    </div>
+  )}
 </div>
