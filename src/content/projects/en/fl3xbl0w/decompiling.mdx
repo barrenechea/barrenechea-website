@@ -1,10 +1,11 @@
 ---
 title: Decompiling - fl3xbl0w
-description: Reverse engineering project. Started on Bowflex Treadmill 22 but ended up generalized to any Android powered machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
+translatedBy: gpt-4-1106-preview
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Logo of the flexblow project
+imgAlt: fl3xbl0w project logo
 tags:
   - ReverseEngineering
   - Hardware
@@ -18,23 +19,23 @@ import JadxGUIOpened from "~/assets/images/fl3xbl0w/screen-jadx-opened.png";
 import JadxGUISave from "~/assets/images/fl3xbl0w/screen-jadx-save.png";
 import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
 
-This assumes you already [have your own APKs](/en/projects/fl3xbl0w/backup). Note that even though I'm specifying this on Nautilus' apps, this applies to pretty much any Android application you'd like to "peek under the hood".
+This assumes that you already [have your own APKs](/en/projects/fl3xbl0w/backup). Keep in mind that, although I am specifying this for Nautilus apps, this applies to virtually any Android app you want to "take a look under the hood".
 
-## Turning apps into Java code
+## Converting apps into Java code
 
-The following instructions are intended to get some "readable code", but it's improbable that you'll be able to compile them back to an APK. I'm using this as a reference to understand Nautilus' developers. If you want to alter the codebase and package it back, go to [Turning apps into Smali code](#turning-apps-into-smali-code).
+The following instructions aim to obtain "readable code", but it is unlikely that you will be able to compile them back into an APK. I am using this as a reference to understand Nautilus developers. If you want to modify the codebase and repackage it, go to [Converting apps into Smali code](#converting-apps-into-smali-code).
 
 ### Requirements
 
 - [jadx](https://github.com/skylot/jadx)
 
-### Let's open some sh\*t
+### Let's open some stuff!
 
-After installing `jadx` you should be able to open `jadx-gui`. Go to File -> Open files ...
+After installing `jadx`, you should be able to open `jadx-gui`. Go to File -> Open files...
 
 <Image src={JadxGUIScreen} alt="jadx-gui screen" format="webp" />
 
-Search for your desired APK and click on "Open file":
+Look for the APK you want and click on "Open file":
 
 <Image src={JadxGUISelect} alt="jadx-gui selecting apk" format="webp" />
 
@@ -46,7 +47,7 @@ And from there, you can start poking around:
   format="webp"
 />
 
-If you want to save the project as Java files, go into File -> Save as gradle project:
+If you want to save the project as Java files, go to File -> Save as gradle project:
 
 <Image src={JadxGUISave} alt="jadx-gui saving project" format="webp" />
 
@@ -54,6 +55,6 @@ If useful, here are my `jadx-gui` preferences:
 
 <Image src={JadxGUIPrefs} alt="jadx-gui preferences" format="webp" />
 
-## Turning apps into Smali code
+## Converting apps into Smali code
 
-The community has tested [this](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) to apply some patches to our APKs. It would only work for non-system apps, as without the proper signing key, the app will not have access to system resources (such as the Serial port).
+The community has tested [this](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) to apply some patches to our APKs. It would only work for non-system apps, as without the proper signing key, the app will not have access to system resources (like the Serial port).

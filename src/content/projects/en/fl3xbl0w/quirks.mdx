@@ -1,10 +1,11 @@
 ---
 title: Bowflex Quirks - fl3xbl0w
-description: Reverse engineering project. Started on Bowflex Treadmill 22 but ended up generalized to any Android powered machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
+translatedBy: gpt-4-1106-preview
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Logo of the flexblow project
+imgAlt: fl3xbl0w project logo
 tags:
   - ReverseEngineering
   - Hardware
@@ -16,7 +17,7 @@ import HomeAssistantSensor from "~/assets/images/fl3xbl0w/homeassistant-hr-senso
 
 ### The `/sdcard/Pictures/nautilus` file
 
-When decompiling `NautilusLauncher` you can see references to that specific path:
+When decompiling `NautilusLauncher`, you can see references to that specific path:
 
 ```java
 // path: com/nautilus/nautiluslauncher/LauncherService.java
@@ -43,15 +44,15 @@ protected void onCreate(Bundle bundle) {
   // more code
 ```
 
-The effect of putting the file in place is that `NautilusLauncher` will actively enable adb after every restart. If the file is NOT in place, `NautilusLauncher` will actively DISABLE adb (if it was previously enabled).
+The effect of placing the file in its place is that `NautilusLauncher` will activate adb after each restart. If the file is NOT in place, `NautilusLauncher` will ACTIVELY DISABLE adb (if it was previously enabled).
 
 ### The `/sdcard/Nautilus/redbend/Credentials.txt` file
 
-From what it looks like, [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([purchased by Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), now I get **why** so many references to KNOX) is providing OTA services for Nautilus hardware. I've found some references to that file within `com.redbend.client.apk`.
+It seems that [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([acquired by Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), now I understand **why** so many references to KNOX) is providing OTA services for Nautilus hardware. I found some references to that file within `com.redbend.client.apk`.
 
 ```java
 package com.redbend.client;
-// I'll skip some in-between code for clarity purposes
+// I will omit some intermediate code for clarity
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -66,7 +67,7 @@ public class Ipl {
 
 ```
 
-Also on `com.redbend.client.ClientService` we can find:
+Also in `com.redbend.client.ClientService` we can find:
 
 ```java
 // ...
@@ -80,24 +81,24 @@ public class ClientService extends SmmService {
       }
 ```
 
-Given that info, we can label the contents on the `/sdcard/Nautilus/redbend/Credentials.txt` as:
+Given that information, we can label the content in the file `/sdcard/Nautilus/redbend/Credentials.txt` as:
 
 ```
 First line: DOMAIN_NAME
 Second line: DOMAIN_PIN
 ```
 
-_`DOMAIN_PIN` looks like an actual pin code since it is a six-digit number._
+_`DOMAIN_PIN` seems to be a real pin code as it is a six-digit number._
 
-There are some credentials within the "Red Bend Network" to match a machine with a specific brand/product for OTA updates. I expect those credentials to be IDENTICAL within all Nautilus' hardware. The file is bundled within the `com.redbend.client` APK and gets extracted upon installation.
+There are some credentials within the "Red Bend Network" to associate a machine with a specific brand/product for OTA updates. I hope those credentials are IDENTICAL across all Nautilus hardware. The file is included within the `com.redbend.client` APK and is extracted upon installation.
 
-I found references for `com.redbend.client` [over here](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), and found it quite funny to see it crashing on a car. I hope it doesn't fail that often on our machines too.
+I found references to `com.redbend.client` [here](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), and I found it quite funny to see that it was crashing in a car. I hope it doesn't fail that often in our machines as well.
 
 ### Bluetooth Heart Rate Monitor
 
-This one was pretty easy to figure out. The Bluetooth name appears as `CL831-xxxxxxx` _(hidden number)_ from [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+This one was quite straightforward to decipher. The Bluetooth name appears as `CL831-xxxxxxx` _(number hidden)_ from [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
 
-Scanning it through [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) exposed the devices' MAC Address and some key data:
+When scanned through [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile), the device's MAC address and some key data were exposed:
 
 ```
 Heart Rate:
@@ -106,10 +107,10 @@ Heart Rate Measurement
 UUID: 0x2A37
 ```
 
-It seemed pretty standard, and a Home Assistant Community [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) already figured this one out (not the same model, but it seems the Heart Rate Monitor is using a standard protocol). I've made an ESPHome [config file](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) as a proof of concept:
+It seemed pretty standard, and a [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) from the Home Assistant Community had already figured this out (not the same model, but it seems that the Heart Rate Monitor uses a standard protocol). I have created an ESPHome configuration file [here](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) as a proof of concept:
 
 <Image
   src={HomeAssistantSensor}
-  alt="HomeAssistant screenshot displaying a heart rate sensor"
+  alt="HomeAssistant screenshot showing a heart rate sensor"
   format="webp"
 />

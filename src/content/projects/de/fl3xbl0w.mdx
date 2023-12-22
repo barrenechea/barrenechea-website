@@ -1,6 +1,6 @@
 ---
 title: fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede Maschine mit Android, die von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkauft wird.
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -16,15 +16,15 @@ import HeaderImage from "~/assets/images/project-fl3xbl0w.png";
 
 <Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
 
-Willkommen zur Dokumentation meiner "Bowflex Konsole"! (was Nautilus als Vantron bezeichnet).
+Willkommen zu meiner Dokumentation der "Bowflex Konsole"! (was Nautilus als Vantron bezeichnet).
 
-Vantron ist die Basis für die meisten "intelligenten Geräte" von Nautilus Inc. Im Wesentlichen ein Android-Tablet, das proprietäre Software ausführt. Zusätzlich zu einigen Hardware-bezogenen Dingen, die meine Neugier geweckt haben.
+Vantron ist die Basis für die meisten "Smart Devices" von Nautilus Inc. Im Wesentlichen ein Android-Tablet, das proprietäre Software ausführt. Zusätzlich zu einigen Hardware-bezogenen Dingen, die meine Neugier geweckt haben.
 
 Ich habe mich stark auf frühere Arbeiten gestützt, die ich auf [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) gefunden habe (danke [xasmx](https://www.reddit.com/user/xasmx/)!) um ein tieferes Verständnis der Software und Hardware des Geräts zu erlangen.
 
 ## Kompatible Geräte (Android Jailbreak)
 
-Nachdem ich mit dem <a href="/de/projects/fl3xbl0w/decompiling" target="_self">Decompilieren</a> herumgespielt habe, kann ich mit Sicherheit sagen, dass die folgende Dokumentation in der einen oder anderen Form auf die folgenden Bowflex-Geräte übertragen werden könnte:
+Nachdem ich mit den <a href="/de/projects/fl3xbl0w/decompiling" target="_self">decompilierten Anwendungen</a> herumgespielt habe, kann ich mit Sicherheit sagen, dass die folgende Dokumentation in der einen oder anderen Form auf die folgenden Bowflex-Geräte übertragen werden könnte:
 
 ### Laufbänder
 
@@ -63,7 +63,7 @@ Bestätigt, dass es mit den NautilusLauncher-Versionen funktioniert:
     Decompilieren
   </a>
 - <a href="/de/projects/fl3xbl0w/quirks" target="_self">
-    Bowflex Wissenswertes
+    Kuriositäten von Bowflex
   </a>
 
 ### Laufende Arbeiten
@@ -79,6 +79,6 @@ Bestätigt, dass es mit den NautilusLauncher-Versionen funktioniert:
 
 So viele zukünftige Upgrades für mein Laufband wie möglich zu ermöglichen.
 
-Nautilus, Inc. bietet nur eine einjährige Garantie auf die Elektronik, und als ich sah, dass der Mechanismus zum Ausschalten des Geräts (und damit des Android-Tablets) im Wesentlichen darin bestand, "die AC-Energie über den hinteren Schalter zu unterbrechen", machte mir das Angst. Jedes auf Linux basierende Gerät sollte sicher heruntergefahren werden, um eine Beschädigung des Betriebssystems zu vermeiden, und dieses Android-Tablet ist keine Ausnahme. Also, solange es funktioniert, warum nicht ein wenig mehr Spaß damit haben?
+Nautilus, Inc. bietet nur eine einjährige Garantie auf die Elektronik, und als ich sah, dass der Mechanismus zum Ausschalten der Maschine (und damit des Android-Tablets) im Grunde genommen "Abschalten der AC-Stromversorgung über den hinteren Schalter" war, hat mich das erschreckt. Jedes auf Linux basierende Gerät sollte sicher heruntergefahren werden, um eine Beschädigung des Betriebssystems zu vermeiden, und dieses Android-Tablet ist keine Ausnahme. Also, solange es funktioniert, warum nicht ein wenig mehr Spaß damit haben?
 
-Letztendlich möchte ich die Kommunikation, die zum Motorcontroller meines Laufbands geht, abfangen, verstehen und nachbilden, damit, wenn das Tablet stirbt, ich immer noch ein funktionierendes Gerät habe.
+Letztendlich möchte ich die Kommunikation, die zum Motorcontroller in meinem Laufband geht, abfangen, verstehen und nachbilden, damit, wenn das Tablet stirbt, ich immer noch ein funktionierendes Gerät habe.
