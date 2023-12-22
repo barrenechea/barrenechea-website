@@ -52,13 +52,9 @@ const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pub
         <h3 class="mb-1 text-2xl font-bold leading-normal text-zinc-200">
           {project.data.title}
         </h3>
-        {
-          formattedDate && (
             <div class="mb-2 mt-0 text-xs font-bold uppercase text-zinc-400">
               {formattedDate}
             </div>
-          )
-        }
       </div>
       <div class="mt-6 border-t border-zinc-200 py-6 text-center">
         <div class="flex flex-wrap justify-center">

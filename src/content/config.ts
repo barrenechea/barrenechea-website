@@ -4,6 +4,7 @@ const blogBaseSchema = z.object({
   title: z.string(),
   description: z.string(),
   pubDate: z.date(),
+  translatedBy: z.string().optional(),
   img: z.string(), // will be validated by the collection
   imgAlt: z.string(),
 });
