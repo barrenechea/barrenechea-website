@@ -25,6 +25,8 @@ const {
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 
+const langDirection = t("language.direction");
+
 // Ensures the canonicalURL always has a trailing slash.
 const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
 
@@ -36,7 +38,7 @@ const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
 
 ---
 
-<html lang={lang}>
+<html lang={lang} dir={langDirection}>
 
 <head>
   <meta charset="UTF-8" />

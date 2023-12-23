@@ -1,5 +1,6 @@
 export const es = {
   "author.name": "Sebastián Barrenechea",
+  "language.direction": "ltr",
 
   "nav.fork": "Hazme fork en GitHub",
   "nav.sr.open": "Abrir el menú de navegación",

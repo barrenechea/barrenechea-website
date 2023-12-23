@@ -29,7 +29,7 @@ const currentLanguage =
       viewBox="0 0 512 512"
       set:html={currentLanguage.icon.body}
     />
-    {currentLanguage.name}
+    {currentLanguage.label}
   </button>
   <div
     class="absolute z-50 mt-11 hidden list-none divide-y divide-zinc-100 rounded-lg bg-white text-base shadow dark:bg-zinc-800"
@@ -53,7 +53,7 @@ const currentLanguage =
                     languages[language as keyof typeof languages].icon.body
                   }
                 />
-                {languages[language as keyof typeof languages].name}
+                {languages[language as keyof typeof languages].label}
               </div>
             </a>
           </li>

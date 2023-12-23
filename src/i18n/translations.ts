@@ -8,15 +8,15 @@ import { es, type Translations } from "./es.ts";
 
 export const languages = {
   en: {
-    name: "English (US)",
+    label: "English (US)",
     icon: usIcon,
   },
   es: {
-    name: "Español (CL)",
+    label: "Español (CL)",
     icon: clIcon,
   },
   de: {
-    name: "Deutsch",
+    label: "Deutsch",
     icon: deIcon,
   },
 } as const;

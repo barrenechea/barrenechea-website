@@ -71,7 +71,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
       ...missingLangFiles.map((file) => ({
         origin: file.replace(`/${langCode}/`, `/${defaultLang}/`),
         target: file,
-        targetLanguage: langData.name,
+        targetLanguage: langData.label,
       }))
     );
   }
