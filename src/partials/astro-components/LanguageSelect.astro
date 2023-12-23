@@ -17,50 +17,64 @@ const currentLanguage =
   languages[lang as keyof typeof languages] ?? languages[AppConfig.defaultLang];
 ---
 
-<button
-  type="button"
-  data-dropdown-toggle="language-dropdown-menu"
-  class="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white"
->
-  <svg
-    class="me-3 size-5 rounded-full"
-    aria-hidden="true"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 0 512 512"
-    set:html={currentLanguage.icon.body}
-  />
-  {currentLanguage.name}
-</button>
-<!-- Dropdown -->
-<div
-  class="z-50 my-4 hidden list-none divide-y divide-zinc-100 rounded-lg bg-white text-base shadow dark:bg-zinc-700"
-  id="language-dropdown-menu"
->
-  <ul class="py-2 font-medium" role="none">
-    {
-      Object.keys(languages).map((language) => (
-        <li>
-          <a
-            href={localizedPathname(language)}
-            class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-white"
-            role="menuitem"
-          >
-            <div class="inline-flex items-center">
-              <svg
-                aria-hidden="true"
-                class="me-2 size-3.5 rounded-full"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                set:html={
-                  languages[language as keyof typeof languages].icon.body
-                }
-              />
-              {languages[language as keyof typeof languages].name}
-            </div>
-          </a>
-        </li>
-      ))
+<language-selector class="flex justify-center">
+  <button
+    id="language-toggle"
+    type="button"
+    class="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white"
+  >
+    <svg
+      class="me-3 size-5 rounded-full"
+      aria-hidden="true"
+      viewBox="0 0 512 512"
+      set:html={currentLanguage.icon.body}
+    />
+    {currentLanguage.name}
+  </button>
+  <div
+    class="absolute z-50 mt-11 hidden list-none divide-y divide-zinc-100 rounded-lg bg-white text-base shadow dark:bg-zinc-700"
+    id="language-dropdown-menu"
+  >
+    <ul class="py-2 font-medium" role="none">
+      {
+        Object.keys(languages).map((language) => (
+          <li>
+            <a
+              href={localizedPathname(language)}
+              class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-white"
+              role="menuitem"
+            >
+              <div class="inline-flex items-center">
+                <svg
+                  aria-hidden="true"
+                  class="me-2 size-3.5 rounded-full"
+                  viewBox="0 0 512 512"
+                  set:html={
+                    languages[language as keyof typeof languages].icon.body
+                  }
+                />
+                {languages[language as keyof typeof languages].name}
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</language-selector>
+
+<script>
+  class LanguageSelector extends HTMLElement {
+    constructor() {
+      super();
+      const toggleButton = this.querySelector("#language-toggle");
+      const dropdownMenu = this.querySelector("#language-dropdown-menu");
+
+      toggleButton?.addEventListener("click", () => {
+        dropdownMenu?.classList.toggle("hidden");
+      });
     }
-  </ul>
-</div>
+  }
+
+  customElements.define("language-selector", LanguageSelector);
+</script>
