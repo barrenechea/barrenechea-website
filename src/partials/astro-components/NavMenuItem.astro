@@ -15,7 +15,7 @@ const isCurrentUrl = isProjectOrPostPage ? currentPathname.includes(href) : curr
     isCurrentUrl ? (
       <a
         href={href}
-        class="block rounded bg-amber-500 px-3 py-2 text-white md:p-0 md:text-amber-400 md:dark:bg-zinc-900 md:dark:text-amber-400"
+        class="block rounded  px-3 py-2 text-amber-400 md:p-0"
         aria-current="page"
       >
         <slot />
@@ -23,7 +23,7 @@ const isCurrentUrl = isProjectOrPostPage ? currentPathname.includes(href) : curr
     ) : (
       <a
         href={href}
-        class="block rounded px-3 py-2 text-zinc-900 hover:bg-zinc-100 md:p-0 md:hover:bg-transparent dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-amber-400"
+        class="block rounded border-zinc-700 px-3 py-2 text-white hover:bg-zinc-700 md:p-0 md:hover:bg-transparent md:hover:text-amber-400"
       >
         <slot />
       </a>
