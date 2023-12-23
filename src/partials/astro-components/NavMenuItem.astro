@@ -1,14 +1,32 @@
 ---
 export interface Props {
   href: string;
-  target?: '_self' | '_blank' | '_parent' | '_top';
 }
 
-const { href, target } = Astro.props as Props;
+const { href } = Astro.props as Props;
+const currentPathname = Astro.url.pathname;
+const pathSegments = href.split('/').filter(Boolean);
+const isProjectOrPostPage = pathSegments.includes('projects') || pathSegments.includes('posts');
+const isCurrentUrl = isProjectOrPostPage ? currentPathname.includes(href) : currentPathname === href;
 ---
 
-<li class="hover:underline">
-  <a href={href} target={target}>
-    <slot />
-  </a>
+<li>
+  {
+    isCurrentUrl ? (
+      <a
+        href={href}
+        class="block rounded bg-amber-500 px-3 py-2 text-white md:p-0 md:text-amber-400 md:dark:bg-zinc-900 md:dark:text-amber-400"
+        aria-current="page"
+      >
+        <slot />
+      </a>
+    ) : (
+      <a
+        href={href}
+        class="block rounded px-3 py-2 text-zinc-900 hover:bg-zinc-100 md:p-0 md:hover:bg-transparent dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white md:dark:hover:bg-transparent md:dark:hover:text-amber-400"
+      >
+        <slot />
+      </a>
+    )
+  }
 </li>

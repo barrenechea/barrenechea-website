@@ -1,25 +1,23 @@
 ---
-import "./Navbar.css";
+import "./LogoAnimation.css";
 
 import { AppConfig } from "~/config";
 import socials from "~/constants/social";
 import { useTranslations } from "~/i18n/translations";
+import LanguageSelect from "~/partials/astro-components/LanguageSelect.astro";
 import Logo from "~/partials/astro-components/Logo.astro";
-import NavbarTwoColumns from "~/partials/astro-components/NavbarTwoColumns.astro";
-import NavMenu from "~/partials/astro-components/NavMenu.astro";
+import NavbarHeader from "~/partials/astro-components/NavbarHeader.astro";
 import NavMenuItem from "~/partials/astro-components/NavMenuItem.astro";
 import Section from "~/partials/astro-components/Section.astro";
-
-import LanguageSelect from "./astro-components/LanguageSelect.astro";
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
 
 <Section>
-  <NavbarTwoColumns>
+  <NavbarHeader>
     <a href={`/${lang}/`} target="_self">
-      <Logo name="Barrenechea">
+      <Logo name={AppConfig.siteName}>
         <svg
           class="mr-1 size-10 stroke-amber-400"
           xmlns="http://www.w3.org/2000/svg"
@@ -46,20 +44,58 @@ const t = useTranslations(lang);
         </svg>
       </Logo>
     </a>
-
-    <NavMenu>
-      <NavMenuItem href={`/${lang}/projects/`} target="_self">
-        {t("nav.projects")}
-      </NavMenuItem>
-      <NavMenuItem href={`/${lang}/posts/`} target="_self">
-        {t("nav.posts")}
-      </NavMenuItem>
-      {
-        socials.map(({ name, url }) => (
-          <NavMenuItem href={url}>{name}</NavMenuItem>
-        ))
-      }
+    <div
+      class="flex items-center space-x-1 md:order-2 md:space-x-0 rtl:space-x-reverse"
+    >
       <LanguageSelect />
-    </NavMenu>
-  </NavbarTwoColumns>
+      <button
+        data-collapse-toggle="navbar-language"
+        type="button"
+        class="inline-flex size-10 items-center justify-center rounded-lg p-2 text-sm text-zinc-500 hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 md:hidden dark:text-zinc-400 dark:hover:bg-zinc-700 dark:focus:ring-zinc-600"
+        aria-controls="navbar-language"
+        aria-expanded="false"
+      >
+        <span class="sr-only">{t("nav.sr.open")}</span>
+        <svg
+          class="h-5 w-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 17 14"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15"></path>
+        </svg>
+      </button>
+    </div>
+    <div
+      class="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto"
+      id="navbar-language"
+    >
+      <ul
+        class="mt-4 flex flex-col rounded-lg border border-zinc-100 bg-zinc-50 p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 rtl:space-x-reverse dark:border-zinc-700 dark:bg-zinc-900 md:dark:bg-zinc-900"
+      >
+        <NavMenuItem href={`/${lang}/`}>
+          {t("nav.home")}
+        </NavMenuItem>
+        <NavMenuItem href={`/${lang}/projects/`}>
+          {t("nav.projects")}
+        </NavMenuItem>
+        <NavMenuItem href={`/${lang}/posts/`}>
+          {t("nav.posts")}
+        </NavMenuItem>
+        {
+          socials.map(({ name, url }) => (
+            <NavMenuItem href={url}>{name}</NavMenuItem>
+          ))
+        }
+      </ul>
+    </div>
+  </NavbarHeader>
 </Section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>

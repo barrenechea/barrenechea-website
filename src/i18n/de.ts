@@ -4,6 +4,8 @@ export const de: OptionalTranslations = {
   "author.name": "Sebastian Barrenechea",
 
   "nav.fork": "Fork mich auf GitHub",
+  "nav.sr.open": "Navigationsmenü öffnen",
+  "nav.home": "Startseite",
   "nav.projects": "Projekte",
   "nav.posts": "Beiträge",
   "nav.page": "Seite",

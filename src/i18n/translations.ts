@@ -1,11 +1,24 @@
+import clIcon from "@iconify-icons/circle-flags/cl.js";
+import deIcon from "@iconify-icons/circle-flags/de.js";
+import usIcon from "@iconify-icons/circle-flags/us.js";
+
 import { deWithFallback } from "./de.ts";
 import { enWithFallback } from "./en.ts";
 import { es, type Translations } from "./es.ts";
 
 export const languages = {
-  en: "English",
-  es: "Español",
-  de: "Deutsch",
+  en: {
+    name: "English (US)",
+    icon: usIcon,
+  },
+  es: {
+    name: "Español (CL)",
+    icon: clIcon,
+  },
+  de: {
+    name: "Deutsch",
+    icon: deIcon,
+  },
 } as const;
 
 export const langData = {

@@ -1,9 +1,6 @@
 ---
-import translateIcon from "~/assets/images/icon-translate.svg?raw";
 import { AppConfig } from "~/config";
-import { languages, useTranslations } from "~/i18n/translations";
-
-import Select from "./Select.astro";
+import { languages } from "~/i18n/translations";
 
 /**
  * Returns the localized pathname for a given locale.
@@ -15,36 +12,55 @@ function localizedPathname(locale: string): string {
 }
 
 const { lang = AppConfig.defaultLang } = Astro.params;
-const t = useTranslations(lang);
+
+const currentLanguage =
+  languages[lang as keyof typeof languages] ?? languages[AppConfig.defaultLang];
 ---
 
-<lang-select>
-  <Select
-    icon={translateIcon}
-    label={t("nav.language.select")}
-    value={localizedPathname(lang)}
-    options={Object.keys(languages).map((language) => ({
-      value: localizedPathname(language),
-      selected: language === lang,
-      label: languages[language as keyof typeof languages],
-    }))}
-    width="7em"
+<button
+  type="button"
+  data-dropdown-toggle="language-dropdown-menu"
+  class="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700 dark:hover:text-white"
+>
+  <svg
+    class="me-3 size-5 rounded-full"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 512 512"
+    set:html={currentLanguage.icon.body}
   />
-</lang-select>
-
-<script>
-  class LanguageSelect extends HTMLElement {
-    constructor() {
-      super();
-      const select = this.querySelector("select");
-      if (select) {
-        select.addEventListener("change", (e) => {
-          if (e.currentTarget instanceof HTMLSelectElement) {
-            window.location.pathname = e.currentTarget.value;
-          }
-        });
-      }
+  {currentLanguage.name}
+</button>
+<!-- Dropdown -->
+<div
+  class="z-50 my-4 hidden list-none divide-y divide-zinc-100 rounded-lg bg-white text-base shadow dark:bg-zinc-700"
+  id="language-dropdown-menu"
+>
+  <ul class="py-2 font-medium" role="none">
+    {
+      Object.keys(languages).map((language) => (
+        <li>
+          <a
+            href={localizedPathname(language)}
+            class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-white"
+            role="menuitem"
+          >
+            <div class="inline-flex items-center">
+              <svg
+                aria-hidden="true"
+                class="me-2 size-3.5 rounded-full"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                set:html={
+                  languages[language as keyof typeof languages].icon.body
+                }
+              />
+              {languages[language as keyof typeof languages].name}
+            </div>
+          </a>
+        </li>
+      ))
     }
-  }
-  customElements.define("lang-select", LanguageSelect);
-</script>
+  </ul>
+</div>

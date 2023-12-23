@@ -55,7 +55,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
   const missingFiles: MissingFile[] = [];
   const defaultLangFiles = contentFiles[defaultLang] || [];
 
-  for (const [langCode, langName] of Object.entries(languages)) {
+  for (const [langCode, langData] of Object.entries(languages)) {
     if (langCode === defaultLang) continue;
 
     const expectedFiles = defaultLangFiles.map((file) =>
@@ -71,7 +71,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
       ...missingLangFiles.map((file) => ({
         origin: file.replace(`/${langCode}/`, `/${defaultLang}/`),
         target: file,
-        targetLanguage: langName,
+        targetLanguage: langData.name,
       }))
     );
   }
