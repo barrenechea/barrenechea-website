@@ -1,7 +1,9 @@
 ---
-title: OpenHaystack on ESPHome
-description: OpenHaystack port as an ESPHome Component. Compatible with all BLE-enabled devices from Espressif.
+title: OpenHaystack in ESPHome
+description: Porting OpenHaystack as an ESPHome component. Compatible with all Espressif BLE devices.
 pubDate: 2022-06-23T10:42:00Z
+translatedBy: gpt-4-1106-preview
+originSha: a20e88356e7a07d3b0f26dff9351b4e7269106b1636a435b27bcd525a848ff9d
 link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
 img: ~/assets/images/project-openhaystack.png
 imgAlt: OpenHaystack and ESPHome logos
@@ -10,20 +12,19 @@ tags:
   - Embedded
 ---
 
-[OpenHaystack](https://github.com/seemoo-lab/openhaystack) is an application that allows you to create your own accessories that are tracked by Apple's [Find My network](https://developer.apple.com/find-my/). They reverse-engineered the Apple protocol and documented it, a pretty awesome project.
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) is an application that allows you to create your own accessories that are tracked by Apple's [Find My network](https://developer.apple.com/find-my/). They have reverse-engineered Apple's protocol and documented it, a quite impressive project.
 
-I wanted to track an electric scooter of mine in case it gets stolen. While the provided "official" way to build your accessories was "fine", it is pretty buggy and with several compatibility issues across different Espressif boards.
+I wanted to track my electric scooter in case it was stolen. Although the "official" way to build your accessories was "acceptable," it turns out to be quite problematic with several compatibility issues on different Espressif boards.
 
-So I ported it as an [ESPHome](https://esphome.io/) component, a piece of software I already use for my embedded devices' requirements.
+So I ported it as a component of [ESPHome](https://esphome.io/), a software I already use for my embedded devices' needs.
 
 ## Why ESPHome? Isn't it "for the home"?
 
-I'm _a little bit_ obsessed with keeping my IoT/Embedded devices as updated as possible (and, of course, out of any cloud if likely), so ESPHome is an attractive solution to keep
-your devices updated with Arduino and Espressif frameworks. Through ESPHome, I can "update" my scooter anytime I want.
+I am _a bit_ obsessed with keeping my IoT/Embedded devices as up-to-date as possible (and, of course, out of any cloud if possible), so ESPHome is an attractive solution to keep your devices updated with Arduino and Espressif frameworks. Through ESPHome, I can "update" my scooter whenever I want.
 
 ## Why isn't this an official component?
 
-I tried! I opened [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), and it's supporting [docs](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), but understandably they didn't want to merge it.
+I tried! I opened [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), and its [support documentation](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), but understandably they didn't want to merge it.
 
 ## ESPHome Example - ESP32
 
@@ -45,7 +46,7 @@ wifi:
   ssid: <your-wifi-ssid>
   password: <your-wifi-password>
 
-# Enable logging
+# Enable logs
 logger:
 
 # Enable Home Assistant API
@@ -55,8 +56,8 @@ ota:
   password: !secret ota_password
 
 openhaystack:
-  # Here goes the Base64-encoded key from OpenHaystack
-  # I highly suggest you to handle it as a secret
+  # Here goes the OpenHaystack key encoded in Base64
+  # I strongly suggest you handle it as a secret
   key: !secret openhaystack_key
 ```
 
@@ -86,17 +87,17 @@ esp32:
       CONFIG_COMPILER_OPTIMIZATION_SIZE: y
       # Enable WPA3 support just because we can
       CONFIG_WPA_SUITE_B_192: y
-      # Specific to Bluetooth usage
+      # Specific for Bluetooth use
       CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
       CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
-      # Payload size fix - Extend Watchdog timeout
+      # Fix "Payload size error" - Extend Watchdog timeout
       CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
 
 wifi:
   ssid: <your-wifi-ssid>
   password: <your-wifi-password>
 
-# Enable logging
+# Enable logs
 logger:
 
 # Enable Home Assistant API
@@ -106,8 +107,8 @@ ota:
   password: !secret ota_password
 
 openhaystack:
-  # Here goes the Base64-encoded key from OpenHaystack
-  # I highly suggest you handle it as a secret
+  # Here goes the OpenHaystack key encoded in Base64
+  # I strongly suggest you handle it as a secret
   key: !secret openhaystack_key
 ```
 
@@ -1510,4 +1511,3 @@ INFO Successfully connected to esp32-c3-12f.local
 
 ```
 </details>
-```

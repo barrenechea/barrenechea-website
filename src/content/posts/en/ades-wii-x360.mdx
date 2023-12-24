@@ -4,6 +4,7 @@ ogOverride: Of game consoles thanks to a juice - I hacked hundreds
 description: What I did instead of partying when I was young
 pubDate: 2022-08-23T23:13:00Z
 translatedBy: gpt-4-1106-preview
+originSha: 759e62881bcd033d7445d3606b44db1eb54a969ea1445fdd1323608ea590caec
 img: ~/assets/images/project-ades-wii-x360.png
 imgAlt: A composition of Bill Gates playing Guitar Hero in Mordor after being pwned by AdeS juice
 ---
@@ -26,25 +27,25 @@ It was a 4x4 puzzle game where you could win a Nintendo Wii. The conditions to w
 
 I wouldn't say I'm particularly good at 4x4 puzzles, but it seemed like a good challenge to work on.
 
-The first few seconds of the game showed the solution (the fully formed image), and then it was mixed up.
+The first few seconds of the game showed the solution (the fully formed image), and then it was scrambled.
 
 I don't have the original image, but here's a stock photo for reference:
 
 <Image
   src={Puzzle}
-  alt="two puzzles side by side, the solution on the left and a mixed version on the right"
+  alt="two puzzles side by side, the solution on the left and a scrambled version on the right"
   format="webp"
 />
 
 However, there was something particular about the game: the timer started counting AFTER you made your first move, giving you the opportunity to
-"think about it" before you started playing.
+"think about it" before starting to play.
 
-After looking at the image, I made a "secondary image" to play with, replacing the mixed images with numbers.
+After looking at the image, I made a "secondary image" to play with, replacing the scrambled images with numbers.
 That way, it was easier to figure out "how to order it from 1 to 15":
 
 <Image
   src={PuzzleNumbered}
-  alt="two puzzles side by side, the solution on the left and a mixed version on the right, with numbers superimposed"
+  alt="two puzzles side by side, the solution on the left and a scrambled version on the right, with numbers superimposed"
   format="webp"
 />
 
@@ -52,11 +53,11 @@ My brain liked it better that way... Buttt, I didn't want to spend too much time
 one that worked by brute force, taking quite a while to give you better and better solutions. It gave you several number sequences
 to follow after a while, and then you could solve the puzzle.
 
-I spent a lot of time looking for a "good mixed puzzle" because I wanted it to be solved in less than 20 moves if possible.
+I spent a lot of time looking for a "good scrambled puzzle" because I wanted it to be solved in less than 20 moves if possible.
 After a few days and several restarts of the Facebook game, **I had a solution in 16 moves**.
 
 I complicated myself after this due to the two restrictions of the puzzle: the move count **AND** the time. I used an auto-click app, where I captured with a screenshot the
-mixed puzzle and then "solved" the puzzle following the best number sequence.
+scrambled puzzle and then "solved" the puzzle following the best numerical sequence.
 
 Everything was ready to start.
 
@@ -64,13 +65,13 @@ I click "Start" within the auto-click app.
 
 The auto-click fails in the middle of the puzzle 💀
 
-I screwed up by making the auto-click too fast and a click was not registered within the game. I quickly intervened, fixed some mis-clicked tiles, and finished
+I screwed up by making the auto-click too fast and a click didn't register within the game. I quickly intervened, fixed some mis-clicked tiles, and finished
 the sequence manually. My final mark was **21 moves in 15 seconds**.
 
 A few days before the deadline, I checked the leaderboard and the player in second place solved it in about 300 moves and 20 minutes.
 At that point, it wasn't even a competition.
 
-After a few days, I was notified through Facebook that I had won. Yay! 🎉
+After a few days, I was notified through Facebook that I had won. Nice! 🎉
 
 The official AdeS post was [this one](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/).
 Here's a video taken on the spot when I picked up the console:
@@ -84,12 +85,12 @@ on an online forum (rest in peace, CHW 🪦), I could sell it, buy an Xbox 360, 
 
 And a guy writes to me wanting to trade his newly received 360 for a Wii! Isn't this world a beauty sometimes?
 
-It turns out he won his Xbox 360 playing online poker. It was a PAL console (here in Chile we are NTSC), so that was a problem, but
+Turns out he won his Xbox 360 playing online poker. It was a PAL console (here in Chile we are NTSC), so that was a problem, but
 I made the exchange anyway. After all, I wanted to unlock it to be able to play backup copies. PAL games were a torrent download away.
 
 _Sorry, pirated games were the way I could play new games back then. Thanks, Microsoft!_
 
-## Unlocking it and to the moon 🚀
+## Unlocking It and to the Moon 🚀
 
 I found a thread within the same forum where someone was unlocking Xbox 360 (darcito was his username). I went to his house (that's where he worked)
 and watched the unlocking process from a few meters away.
@@ -106,8 +107,8 @@ By the end of the year, I copied darcito's strategy and opened my thread within 
 Several Xbox modders powered the DVD drive with the same console, but the community thought Microsoft could detect if the console was on
 without the DVD drive connected, your console was "flagged" (I'm not sure if that was correct or not).
 
-Anyway, I wanted to protect my customers' consoles from being flagged, so I developed a custom power supply with switches for specific voltage
-lines (required to unlock some optical drives):
+Anyway, I wanted to protect my customers' consoles from being flagged, so I developed a custom power supply with switches for
+specific voltage lines (required to unlock some optical drives):
 
 <Image
   src={X360PowerSupply}
@@ -117,7 +118,7 @@ lines (required to unlock some optical drives):
 
 Of course, after a while, there were better sales options for modders, so eventually, I got a X360 USB Pro v2 from Team Xecuter.
 
-#### Drilling chips (Kamikaze method)
+#### Drilling Chips (Kamikaze Method)
 
 This unlocking method for optical drives was wild; I'm not going to lie! For Xbox 360 Slims that came with locked LiteOn DG-16D4S and Winbond chips
 (there were LiteOn drives with MXIC chips that didn't require this) you had to drill a hole in a chip inside the DVD drive.
@@ -131,7 +132,7 @@ What we were trying to achieve with Kamikaze was to reach a tiny wire and ground
 I guess Microsoft didn't expect this kind of madness to play backup copies. Never underestimate the power of hackers.
 A funny message I found on Twitter related to this:
 
-> MS: Okay, if we connect the write protect from _inside_ the package with bond wire, they can't just cut a pin or trace
+> MS: Ok, if we connect the write protection _from inside_ the package with bonding wire, they can't just cut a pin or a track
 
 > Modders: Hold my chip drilling alignment jig
 

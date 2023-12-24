@@ -1,8 +1,9 @@
 ---
 title: Treadmill Motor Controller - fl3xbl0w
-description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: f214c3cbc87b324ba7d2554f6beb9ba85135737d293e6f8ae3c71f13bdf34d5c
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
 imgAlt: fl3xbl0w project logo
@@ -57,7 +58,7 @@ The only 5-pin connector is from the Molex brand. A Google search for "small Mol
 
 Taking a look at `NautilusLauncher.apk` through `jadx-gui`, I can see that they communicate with the Android tablet with their "Universal Console" using Serial at 230400 Baud (using `/dev/ttyS4`). That is NOT what we are analyzing here. That refers to the communication between Android and the "Universal Console". We are investigating the comms between the "Universal Console" and the "Motor Control Board".
 
-Trying to connect an ESP32 or a CH340-based serial bridge directly to the wires between the treadmill base and the Bowflex controller board caused the treadmill base not to initialize correctly, so I started to suspect that they are using RS232.
+Attempting to connect an ESP32 or a CH340-based serial bridge directly to the wires between the treadmill base and the Bowflex controller board caused the treadmill base not to initialize correctly, so I started to suspect that they are using RS232.
 
 Note: By connecting only to GND and RXD, we can "see" some seemingly garbage hexadecimal information at 9600 baud. Connecting to TXD causes the treadmill base not to initialize.
 

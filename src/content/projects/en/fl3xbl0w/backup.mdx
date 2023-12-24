@@ -1,8 +1,9 @@
 ---
-title: Backing Up Your Console's Contents - fl3xbl0w
-description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: Backing Up the Contents of Your Console - fl3xbl0w
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: 341fa22c86cbc116f394ace2857f4fad5dcaf6b35a02d8d678f5412ea1d6b685
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
 imgAlt: fl3xbl0w project logo
@@ -47,7 +48,7 @@ You will have to find the applications you want to back up. NOT ALL APPLICATIONS
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
 ```
 
-You will see records of applications from `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney`, and perhaps some more in the future. We will want to back up everything we see on that list (unique IDs hidden, use your own results):
+You will see records of applications from `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney`, and perhaps some more in the future. We will want to back up everything we see on that list (hidden unique IDs, use your own results):
 
 ```sh
 > adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
@@ -69,7 +70,7 @@ package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.dis
 
 > NOTE: `com.redbend.dualpart.service.app` comes from `/system/priv-app/`, which means it will remain installed even after a factory reset. We can back it up anyway if you are interested in reverse engineering the applications.
 
-Let's take Disney Plus as an example (unique ID hidden)
+Let's take Disney Plus as an example (hidden unique ID)
 
 ```
 package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
@@ -146,7 +147,7 @@ _These backup and extraction methods come from [this Gist](https://gist.github.c
 
 ## Script
 
-I developed a quick and dirty Python script to back up some content (it does not include AppData for now).
+I developed a quick and dirty Python script to back up some contents (it does not include AppData for now).
 **Only tested on macOS with android-platform-tools installed via brew**.
 Read the script and make sure it makes sense to you before running it.
 
@@ -198,7 +199,7 @@ packages = (
 # filter out empty lines
 packages = [x for x in packages if x.strip()]
 
-# filter lines containing "com.android", "com.google", "framework-res"
+# filter out lines containing "com.android", "com.google", "framework-res"
 packages = [package for package in packages if package.find("com.android") == -1]
 packages = [package for package in packages if package.find("com.google") == -1]
 packages = [package for package in packages if package.find("framework-res") == -1]
@@ -231,7 +232,7 @@ for package in packages:
 
 # backup appdata
 print("Backing up appdata.adb ...")
-print('TAP THE "BACK UP MY DATA" BUTTON ON SCREEN NOW!!!')
+print('TAP THE "BACK UP MY DATA" BUTTON ON SCREEN NOW !!!')
 subprocess.call(
     ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
     shell=True,
