@@ -19,9 +19,7 @@ if (missingFiles.length === 0) {
 console.log(`Files to translate: ${missingFiles.length}`);
 for (const file of missingFiles) {
   console.log(`Translating ${file.origin} into ${file.targetLanguage}...`);
-  const fileContent = await fsp.readFile(path.join(contentDir, file.origin), {
-    encoding: "utf8",
-  });
+  const fileContent = await fsp.readFile(path.join(contentDir, file.origin));
 
   const stream = await translate(file.targetLanguage, fileContent);
   console.log(` - Streaming response to ${file.target}...`);
