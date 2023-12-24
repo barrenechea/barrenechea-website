@@ -59,6 +59,6 @@ const { color } = Astro.props as Props;
 const className = colorToClassMap[color];
 ---
 
-<div class={`rounded-full px-2 py-1 text-xs font-semibold ${className}`}>
+<div class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${className}`}>
   <slot />
 </div>
