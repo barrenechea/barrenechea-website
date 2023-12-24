@@ -3,7 +3,7 @@ title: Hello world!
 description: I've rebooted the website, it now runs on Astro and is distributed on the Edge!
 pubDate: 2022-07-28T12:00:00Z
 translatedBy: gpt-4-1106-preview
-originSha: 09f757c121e5a065744a290222340be5fdf6b855d73c313dded4a7cba9dd791d
+originSha: b35631e19d61c45ded4bac20ceea81dc525750c059ebaf650787e61128d1c3ce
 img: ~/assets/images/post-astro.png
 imgAlt: Astro logo
 ---
@@ -11,7 +11,7 @@ imgAlt: Astro logo
 import { Image } from "astro:assets";
 import OldWebsiteImage from "~/assets/images/old-website.png";
 
-If you've been around here before, this website has had the "hi there" message for a few years. But a lot of things have changed over time!
+If you've been around here before, this website has had the "hi there" message for a few years. But a lot has changed over time!
 
 <Image
   src={OldWebsiteImage}
@@ -19,15 +19,10 @@ If you've been around here before, this website has had the "hi there" message f
   format="webp"
 />
 
-The website back in 2016 was hosted on a [DigitalOcean](https://digitalocean.com) droplet. Later,
-I decided to open ports within my own network and used [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website)
-to run the website on my [Unraid](https://unraid.net) server.
+Back in 2016, the website was hosted on a [DigitalOcean](https://digitalocean.com) droplet. Later on, I decided to open ports within my own network and used [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) to run the website as a container on my [Unraid](https://unraid.net) server.
 
-Before switching to Edge deployments, I used a [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/)
-to alleviate the dynamic IP nature of my ISP and reinforce the "accessibility points" of my local network.
+Before switching to Edge deployments, I used a [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) to alleviate the dynamic IP nature of my ISP and to reinforce the "accessibility points" of my local network.
 
-What you're reading now is a rebuild of the website, powered by [Astro](https://astro.build). Its ability
-to deploy on the Edge (I'm currently leveraging Cloudflare's [edge network](https://www.cloudflare.com/learning/cdn/glossary/edge-server/)) is a huge improvement both from a security perspective
-and the resulting performance for end-users (you!).
+What you're reading now is a rebuild of the website developed with [Astro](https://astro.build). Its ability to deploy on the Edge (I'm currently using Cloudflare's [edge network](https://www.cloudflare.com/learning/cdn/glossary/edge-server/)) is a huge improvement both from a security perspective and the resulting performance for end-users (you!).
 
-The font I chose for this website is ~~[JetBrains Mono](https://www.jetbrains.com/lp/mono/) 👨🏻‍💻~~ [Work Sans](https://fonts.google.com/specimen/Work+Sans).
+The font I chose for this website is [Work Sans](https://fonts.google.com/specimen/Work+Sans).
