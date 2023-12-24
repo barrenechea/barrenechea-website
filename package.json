@@ -13,7 +13,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "lint": "astro check",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "i18n:generate": "node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts"
   },
   "devDependencies": {
     "@astro-community/astro-embed-youtube": "^0.4.3",
