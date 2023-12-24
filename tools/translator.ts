@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import { createHash } from "crypto";
 
 import { llmCall, type LlmMessage, model, userMessage } from "./llm.ts";
 
@@ -14,13 +14,11 @@ const systemMessage = (language: string, shaSum: string): LlmMessage => ({
  * @returns translated text
  */
 export async function translate(targetLanguage: string, content: Buffer) {
-  const hashSum = crypto.createHash("sha256");
-  hashSum.update(content);
-  const hex = hashSum.digest("hex");
+  const hashSum = createHash("sha256").update(content).digest("hex");
 
   const stream = await llmCall({
     messages: [
-      systemMessage(targetLanguage, hex),
+      systemMessage(targetLanguage, hashSum),
       userMessage(content.toString("utf8")),
     ],
     temperature: 0,
