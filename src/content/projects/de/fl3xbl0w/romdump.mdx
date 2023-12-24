@@ -1,11 +1,12 @@
 ---
 title: ROM-Dump - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: 1ac9a16faf5ca41f5098b6e690678e0c23c7237536494e9f6a2d44e8775f4c3a
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Projektlogo fl3xbl0w
+imgAlt: Logo des fl3xbl0w-Projekts
 tags:
   - ReverseEngineering
   - Hardware
@@ -20,13 +21,13 @@ import VantronPCB from "~/assets/images/fl3xbl0w/vantron-pcb.jpg";
 
 Ein RK3399-Prozessor betreibt die Android-Hardware. Rockchip-Prozessoren verfügen standardmäßig über einen "Loader-Modus".
 
-Das Toolset, das ich verwendet habe, ist:
+Das Toolkit, das ich verwendet habe, ist:
 
 - Rockchip Driver Assistant v4.5 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
 - rkDumper 1.09 Test von [diesem XDA-Post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-_Es gibt eine neuere Version des Treibers zum Download, aber es ist bekannt, dass sie mit rkDumper inkompatibel ist._
+_Es gibt eine neuere Version des Treibers zum Download, aber es ist bekannt, dass sie mit rkDumper nicht kompatibel ist._
 
 Um damit zu spielen, musst du die Bowflex-Konsole demontieren, die hintere Kunststoffabdeckung abschrauben und sie in einer "nackten Form" wieder montieren.
 **Versuche dies nicht, da das Spielen mit der Android-Hardware im Loader-Modus zu einem dauerhaft beschädigten Gerät führen kann.**
@@ -41,9 +42,9 @@ Hier sind die relevanten Teile der Android-Logikplatine für Rockchip-Dinge:
 
 <Image src={VantronPCB} alt="Vantron-PCB" format="webp" />
 
-Du kannst die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu überprüfen, in welchem Modus sich die Konsole befindet.
+Du kannst die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu dienen und zu überprüfen, in welchem Modus sich die Konsole befindet.
 
-Mit der Maschine im "normalen Modus" eingeschaltet und mit einem Computer verbunden, wird sie als `NFTM-LAR` identifiziert:
+Mit der Maschine im "normalen Modus" und an einen Computer angeschlossen, wird sie als `NFTM-LAR` identifiziert:
 
 ```
 NFTM-LAR:
@@ -55,17 +56,17 @@ NFTM-LAR:
   Standort-ID: 0x14120000 / 9
   Verfügbare Stromstärke (mA): 500
   Erforderliche Stromstärke (mA): 500
-  Zusätzlicher Betriebsstrom (mA): 0
+  Zusätzliche Betriebsstromstärke (mA): 0
 ```
 
-Mit der Maschine ausgeschaltet, über USB an einen Computer angeschlossen, den "Recovery-Button" gedrückt haltend und einschaltend, sollte sie im "Loader-Modus" starten. Die Maschine "ertönt", aber der Bildschirm bleibt statisch. _Du kannst ausschalten, eine Minute warten, einschalten und die Maschine wird normal starten._
+Mit der Maschine ausgeschaltet, über USB an einen Computer angeschlossen, den "Recovery-Button" gedrückt haltend und einschaltend, sollte sie im "Loader-Modus" starten. Die Maschine "ertönt", aber der Bildschirm bleibt statisch. _Du kannst ausschalten, eine Minute warten, wieder einschalten und die Maschine wird normal starten._
 
 _Die Android-Hardware verwaltet den "Sound" nach dem Einschalten der Maschine nicht, sondern über die anderen PCBs von Nautilus._
 
-Jetzt wird sie am Computer als `USB-Download-Gadget` (Seriennummer versteckt) gemeldet:
+Jetzt wird sie am Computer als `USB download gadget` (Seriennummer versteckt) gemeldet:
 
 ```
-USB-Download-Gadget:
+USB download gadget:
   Product ID: 0x330c
   Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 99.99
@@ -110,17 +111,17 @@ Partition "video" (0x0047e000) gespeichert (Format: unbekannt)
 Partition "userdata" (0x0169bbdf) gespeichert (Format: unbekannt)
 ```
 
-`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, nur das Extrahieren von hexadezimalen `CC`-Werten aus ihnen.
+`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, nur hexadezimale Werte `CC` aus ihnen extrahierend.
 
-Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, sagt der Entwickler von rkDumper, [er sagt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss. Diese Methode scheint vorerst nicht praktikabel zu sein.
+Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich den Entwickler von rkDumper [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, [sagt er](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss, der stattdessen verwendet wird. Diese Methode scheint vorerst nicht praktikabel zu sein.
 
 ### ADB
 
-Einige ähnliche Daten können über adb gefunden werden, aber es scheint nicht möglich zu sein, ein Backup zu erstellen, da uns Root-Rechte fehlen:
+Einige ähnliche Daten können über adb gefunden werden, aber ein Backup scheint nicht möglich zu sein, da uns Root-Rechte fehlen:
 
 ```sh
 > ls -al /dev/block/platform/
-total 0
+insgesamt 0
 drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
 drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
 drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
@@ -128,7 +129,7 @@ drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
 
 ```sh
 > ls -al /dev/block/platform/fe330000.sdhci/by-name/
-total 0
+insgesamt 0
 drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
 drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15

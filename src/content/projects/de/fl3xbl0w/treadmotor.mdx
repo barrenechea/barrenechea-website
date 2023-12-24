@@ -1,11 +1,12 @@
 ---
 title: Motorsteuerung des Laufbands - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: f214c3cbc87b324ba7d2554f6beb9ba85135737d293e6f8ae3c71f13bdf34d5c
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Projektlogo fl3xbl0w
+imgAlt: Logo des fl3xbl0w-Projekts
 tags:
   - ReverseEngineering
   - Hardware
@@ -20,19 +21,19 @@ import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
 
 _Dies gilt hauptsächlich für das Laufband 22 & Laufband 56._
 
-Die Motorsteuerplatine wird von [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html) hergestellt.
+Die Motorsteuerkarte wird von [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html) hergestellt.
 
-<Image src={B017D} alt="Motorsteuerungsplatine B017D" format="webp" />
+<Image src={B017D} alt="Motorsteuerkarte B017D" format="webp" />
 
 Basierend auf dem [Servicehandbuch](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf), das von Nautilus Inc. bereitgestellt wird ([Backup auf archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
 <Image
   src={TreadmillElectrical}
-  alt="Elektrisches Schaltbild des Laufbands"
+  alt="Elektrisches Diagramm des Laufbands"
   format="webp"
 />
 
-Und wenn wir uns speziell auf diesen Teil konzentrieren:
+Und speziell auf diesen Teil fokussierend:
 
 <Image
   src={TreadmillComm}
@@ -40,29 +41,29 @@ Und wenn wir uns speziell auf diesen Teil konzentrieren:
   format="webp"
 />
 
-Können wir das "Kommunikationskabel" identifizieren, das den Motorcontroller als ein 5-poliges verbindet. Es gibt nur einen 5-poligen Stecker.
-Ich habe die Drähte mit ihren entsprechenden Farben beschriftet (Daten & Schalter sind optoisoliert):
+Können wir das "Kommunikationskabel" identifizieren, das den Motorcontroller als einen 5-poligen Stecker verbindet. Es gibt nur einen 5-poligen Stecker.
+Ich habe die Kabel mit ihren entsprechenden Farben markiert (die Daten & der Schalter sind optoisoliert):
 
-| Drahtfarbe | Beschriftung |
-| ---------- | ------------ |
-| rot        | GND          |
-| weiß       | RXD          |
-| schwarz    | TXD          |
-| gelb       | +12          |
-| grün       | SW           |
+| Kabel Farbe | Bezeichnung |
+| ----------- | ----------- |
+| rot         | GND         |
+| weiß        | RXD         |
+| schwarz     | TXD         |
+| gelb        | +12         |
+| grün        | SW          |
 
-Die Platine ist nicht direkt mit der Android-Konsole verbunden.
+Die Karte ist nicht direkt mit der Android-Konsole verbunden.
 
-Der einzige 5-polige Stecker ist von der Marke Molex. Eine Google-Suche nach "kleinen Molex-Steckern" führte mich zu einem Bild von dem, was sie `Molex Micro-Fit 3.0 Einzelreihe (5-polig)` nennen, das verwendet wird, um die Motorsteuerplatine zu verbinden:
+Der einzige 5-polige Stecker ist von der Marke Molex. Eine Google-Suche nach "kleinen Molex-Steckern" führte mich zu einem Bild von dem, was sie `Molex Micro-Fit 3.0 Einzelreihe (5-polig)` nennen, das verwendet wird, um die Motorsteuerkarte zu verbinden:
 
 <Image src={Molex} alt="Molex Micro-Fit 3.0 Stecker" format="webp" />
 
 [AliExpress-Link](https://es.aliexpress.com/item/32902205579.html)
 
-Beim Blick in `NautilusLauncher.apk` durch `jadx-gui` kann ich sehen, dass sie mit der Android-Tablette über ihre "Universal Console" mit Serie bei 230400 Baud (über `/dev/ttyS4`) kommunizieren. Das ist NICHT das, was wir hier untersuchen. Das bezieht sich auf die Kommunikation zwischen Android und der "Universal Console". Wir untersuchen die Kommunikation zwischen der "Universal Console" und der "Motorsteuerplatine".
+Beim Blick in `NautilusLauncher.apk` durch `jadx-gui` kann ich sehen, dass sie mit der Android-Tablette über ihre "Universal Console" mit Serie bei 230400 Baud (über `/dev/ttyS4`) kommunizieren. Das ist NICHT das, was wir hier analysieren. Das bezieht sich auf die Kommunikation zwischen Android und der "Universal Console". Wir untersuchen die Kommunikation zwischen der "Universal Console" und der "Motorsteuerkarte".
 
-Der Versuch, ein ESP32 oder eine auf CH340 basierende serielle Brücke direkt an die Kabel zwischen dem Laufbandsockel und der Bowflex-Steuerplatine anzuschließen, führte dazu, dass der Laufbandsockel nicht richtig initialisiert wurde, also begann ich zu vermuten, dass sie RS232 verwenden.
+Der Versuch, ein ESP32 oder eine auf CH340 basierende serielle Brücke direkt an die Kabel zwischen der Basis des Laufbands und der Bowflex-Steuerkarte anzuschließen, führte dazu, dass die Basis des Laufbands nicht richtig startete, also begann ich zu vermuten, dass sie RS232 verwenden.
 
-Hinweis: Wenn man nur an GND und RXD anschließt, können wir einige scheinbar zufällige hexadezimale Informationen bei 9600 Baud "sehen". Wenn man an TXD anschließt, initialisiert sich der Laufbandsockel nicht.
+Hinweis: Wenn man nur an GND und RXD anschließt, können wir einige scheinbar zufällige hexadezimale Informationen bei 9600 Baud "sehen". Wenn man an TXD anschließt, startet die Basis des Laufbands nicht.
 
 -- Fortsetzung folgt, ich brauche etwas Zeit, um mit meinem neuen Logikanalysator zu spielen --

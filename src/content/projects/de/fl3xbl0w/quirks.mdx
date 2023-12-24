@@ -1,11 +1,12 @@
 ---
 title: Kuriositäten von Bowflex - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: 2c12b122ce59d3743be3b22247ea90a6e8f70d7095e21fab381b17553dccd324
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Projektlogo fl3xbl0w
+imgAlt: Logo des fl3xbl0w-Projekts
 tags:
   - ReverseEngineering
   - Hardware
@@ -17,7 +18,7 @@ import HomeAssistantSensor from "~/assets/images/fl3xbl0w/homeassistant-hr-senso
 
 ### Die Datei `/sdcard/Pictures/nautilus`
 
-Beim Dekompilieren von `NautilusLauncher` können Sie Verweise auf diesen spezifischen Pfad sehen:
+Beim Dekompilieren von `NautilusLauncher` können Sie Referenzen zu diesem spezifischen Pfad sehen:
 
 ```java
 // Pfad: com/nautilus/nautiluslauncher/LauncherService.java
@@ -44,11 +45,11 @@ protected void onCreate(Bundle bundle) {
   // weiterer Code
 ```
 
-Das Platzieren der Datei an ihrem Platz bewirkt, dass `NautilusLauncher` adb nach jedem Neustart aktiviert. Wenn die Datei NICHT vorhanden ist, wird `NautilusLauncher` adb aktiv deaktivieren (wenn es zuvor aktiviert war).
+Das Platzieren der Datei an ihrem Platz bewirkt, dass `NautilusLauncher` adb nach jedem Neustart aktiviert. Wenn die Datei NICHT vorhanden ist, wird `NautilusLauncher` adb aktiv DEAKTIVIEREN (wenn es zuvor aktiviert war).
 
 ### Die Datei `/sdcard/Nautilus/redbend/Credentials.txt`
 
-Es scheint, dass [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([übernommen von Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), jetzt verstehe ich **warum** so viele Verweise auf KNOX) OTA-Dienste für Nautilus-Hardware bereitstellt. Ich habe einige Verweise auf diese Datei in `com.redbend.client.apk` gefunden.
+Es scheint, dass [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([übernommen von Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), jetzt verstehe ich **warum** so viele Referenzen zu KNOX) OTA-Dienste für Nautilus-Hardware bereitstellt. Ich habe einige Referenzen zu dieser Datei innerhalb von `com.redbend.client.apk` gefunden.
 
 ```java
 package com.redbend.client;
@@ -81,7 +82,7 @@ public class ClientService extends SmmService {
       }
 ```
 
-Angesichts dieser Informationen können wir den Inhalt der Datei `/sdcard/Nautilus/redbend/Credentials.txt` wie folgt kennzeichnen:
+Mit diesen Informationen können wir den Inhalt in der Datei `/sdcard/Nautilus/redbend/Credentials.txt` wie folgt kennzeichnen:
 
 ```
 Erste Zeile: DOMAIN_NAME
@@ -92,13 +93,13 @@ _`DOMAIN_PIN` scheint eine echte PIN zu sein, da es sich um eine sechsstellige Z
 
 Es gibt einige Anmeldeinformationen innerhalb des "Red Bend Network", um eine Maschine mit einer bestimmten Marke/einem bestimmten Produkt für OTA-Updates zu verknüpfen. Ich hoffe, dass diese Anmeldeinformationen IDENTISCH innerhalb der gesamten Nautilus-Hardware sind. Die Datei ist im APK `com.redbend.client` enthalten und wird bei der Installation extrahiert.
 
-Ich fand Verweise auf `com.redbend.client` [hier](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), und es war ziemlich lustig zu sehen, dass es in einem Auto abstürzte. Ich hoffe, es stürzt nicht so oft in unseren Maschinen ab.
+Ich fand Referenzen von `com.redbend.client` [hier](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), und es war ziemlich lustig zu sehen, dass es in einem Auto abstürzte. Ich hoffe, es stürzt nicht so oft in unseren Maschinen ab.
 
 ### Bluetooth Herzfrequenzmonitor
 
-Dies war ziemlich einfach zu entschlüsseln. Der Bluetooth-Name erscheint als `CL831-xxxxxxx` _(Nummer versteckt)_ von [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+Dieser war ziemlich einfach zu entschlüsseln. Der Bluetooth-Name erscheint als `CL831-xxxxxxx` _(Nummer versteckt)_ von [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
 
-Beim Scannen mit [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) wurde die MAC-Adresse des Geräts und einige Schlüsseldaten offengelegt:
+Beim Scannen über [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) wurde die MAC-Adresse des Geräts und einige Schlüsseldaten offengelegt:
 
 ```
 Herzfrequenz:
@@ -107,7 +108,7 @@ Herzfrequenzmessung
 UUID: 0x2A37
 ```
 
-Es schien ziemlich standardmäßig zu sein, und ein [Post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) aus der Home Assistant Community hatte dies bereits herausgefunden (nicht dasselbe Modell, aber es scheint, dass der Herzfrequenzmonitor ein Standardprotokoll verwendet). Ich habe eine ESPHome-Konfigurationsdatei [hier](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) als Proof of Concept erstellt:
+Es schien ziemlich standard zu sein, und ein [Post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) der Home Assistant Community hatte dies bereits herausgefunden (nicht das gleiche Modell, aber es scheint, dass der Herzfrequenzmonitor ein Standardprotokoll verwendet). Ich habe eine ESPHome-Konfigurationsdatei [hier](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) als Proof of Concept erstellt:
 
 <Image
   src={HomeAssistantSensor}

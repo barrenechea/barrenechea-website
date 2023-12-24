@@ -1,11 +1,12 @@
 ---
 title: Decompilieren - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber später auf jede Maschine mit Android von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 translatedBy: gpt-4-1106-preview
+originSha: 6612fd3e1ff0536ec359ba9ca8c52421d39bf2b940f6bb06d7806abed2711bd1
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Projektlogo fl3xbl0w
+imgAlt: Logo des fl3xbl0w-Projekts
 tags:
   - ReverseEngineering
   - Hardware
@@ -19,11 +20,11 @@ import JadxGUIOpened from "~/assets/images/fl3xbl0w/screen-jadx-opened.png";
 import JadxGUISave from "~/assets/images/fl3xbl0w/screen-jadx-save.png";
 import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
 
-Dies setzt voraus, dass du bereits [deine eigenen APKs gesichert hast](/de/projects/fl3xbl0w/backup). Beachte, dass ich dies zwar für die Nautilus-Apps spezifiziere, es aber auf praktisch jede Android-App anwendbar ist, bei der du "unter die Haube schauen" möchtest.
+Dies setzt voraus, dass du bereits [deine eigenen APKs hast](/de/projects/fl3xbl0w/backup). Beachte, dass ich dies zwar für die Nautilus-Apps spezifiziere, es aber praktisch auf jede Android-App anwendbar ist, bei der du "unter die Haube schauen" möchtest.
 
 ## Umwandlung von Apps in Java-Code
 
-Die folgenden Anweisungen zielen darauf ab, "lesbaren Code" zu erhalten, aber es ist unwahrscheinlich, dass du sie wieder in eine APK kompilieren kannst. Ich verwende dies als Referenz, um die Entwickler von Nautilus zu verstehen. Wenn du die Codebasis ändern und sie wieder verpacken möchtest, gehe zu [Umwandlung von Apps in Smali-Code](#umwandlung-von-apps-in-smali-code).
+Die folgenden Anweisungen zielen darauf ab, "lesbaren Code" zu erhalten, aber es ist unwahrscheinlich, dass du ihn wieder in eine APK kompilieren kannst. Ich verwende dies als Referenz, um die Entwickler von Nautilus zu verstehen. Wenn du die Codebasis ändern und sie wieder verpacken möchtest, gehe zu [Umwandlung von Apps in Smali-Code](#umwandlung-von-apps-in-smali-code).
 
 ### Voraussetzungen
 
@@ -31,11 +32,11 @@ Die folgenden Anweisungen zielen darauf ab, "lesbaren Code" zu erhalten, aber es
 
 ### Lass uns einige Sachen öffnen!
 
-Nach der Installation von `jadx` solltest du in der Lage sein, `jadx-gui` zu öffnen. Gehe zu File -> Open files...
+Nach der Installation von `jadx` solltest du in der Lage sein, `jadx-gui` zu öffnen. Gehe zu Datei -> Dateien öffnen...
 
 <Image src={JadxGUIScreen} alt="jadx-gui Bildschirm" format="webp" />
 
-Suche die APK, die du öffnen möchtest, und klicke auf "Open file":
+Suche die APK, die du öffnen möchtest, und klicke auf "Datei öffnen":
 
 <Image src={JadxGUISelect} alt="jadx-gui wählt apk aus" format="webp" />
 
@@ -47,7 +48,7 @@ Und von dort aus kannst du anfangen zu stöbern:
   format="webp"
 />
 
-Wenn du das Projekt als Java-Dateien speichern möchtest, gehe zu File -> Save as gradle project:
+Wenn du das Projekt als Java-Dateien speichern möchtest, gehe zu Datei -> Als Gradle-Projekt speichern:
 
 <Image src={JadxGUISave} alt="jadx-gui speichert Projekt" format="webp" />
 
@@ -57,4 +58,4 @@ Falls es hilfreich ist, hier sind meine `jadx-gui` Einstellungen:
 
 ## Umwandlung von Apps in Smali-Code
 
-Die Community hat [dies](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) ausprobiert, um einige Patches auf unsere APKs anzuwenden. Es würde nur für Nicht-System-Apps funktionieren, da ohne den richtigen Signaturschlüssel die App keinen Zugriff auf Systemressourcen (wie den Serial Port) haben wird.
+Die Community hat [dies](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) ausprobiert, um einige Patches auf unsere APKs anzuwenden. Es würde nur für Nicht-System-Apps funktionieren, da die App ohne den richtigen Signaturschlüssel keinen Zugriff auf Systemressourcen (wie den Serial Port) haben wird.
