@@ -30,7 +30,7 @@ async function getFilesInDirectory(
 }
 
 // Helper function to compute SHA-256 checksum of a file's content
-const computeSha256 = async (filePath: string): Promise<string> => {
+export const computeSha256 = async (filePath: string): Promise<string> => {
   const content = await fsp.readFile(filePath, "utf8");
   return createHash("sha256").update(content).digest("hex");
 };

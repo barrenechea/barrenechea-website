@@ -1,9 +1,9 @@
-import { createHash } from "crypto";
 import { promises as fsp } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
 import {
+  computeSha256,
   findMissingFiles,
   findOutdatedFiles,
   type MissingFile,
@@ -44,8 +44,7 @@ async function cleanUpFile(file: MissingFile) {
   }
 
   // get sha sum of the original file
-  const originalFile = await fsp.readFile(path.join(contentDir, file.origin));
-  const hashSum = createHash("sha256").update(originalFile).digest("hex");
+  const hashSum = await computeSha256(path.join(contentDir, file.origin));
 
   // find location of the second `---` and insert translatedBy: ${model} and originSha: ${shaSum} before it
   const secondSeparator = lines.indexOf("---", 3);
