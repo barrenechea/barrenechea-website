@@ -44,7 +44,7 @@ const hasOriginShaLine = async (
   return content.includes(`originSha: ${sha256sum}`);
 };
 
-interface MissingFile {
+export interface MissingFile {
   origin: string;
   target: string;
   targetLanguage: string;
