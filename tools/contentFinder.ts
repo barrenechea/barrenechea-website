@@ -29,19 +29,32 @@ async function getFilesInDirectory(
   return files;
 }
 
-// Helper function to compute SHA-256 checksum of a file's content
-export const computeSha256 = async (filePath: string): Promise<string> => {
+/**
+ * Helper function to compute the checksum of a file's content
+ * @param filePath path to the file
+ * @param algorithm algorithm to use for the checksum (default: sha256)
+ * @returns checksum of the file's content
+ */
+export const computeChecksum = async (
+  filePath: string,
+  algorithm: string = "sha256"
+): Promise<string> => {
   const content = await fsp.readFile(filePath, "utf8");
-  return createHash("sha256").update(content).digest("hex");
+  return createHash(algorithm).update(content).digest("hex");
 };
 
-// Helper function to check if the SHA-256 checksum line is present in the file
-const hasOriginShaLine = async (
+/**
+ * Helper function to check if a matching checksum line is present in the file
+ * @param filePath path to the file
+ * @param checksum checksum to check
+ * @returns true if the checksum line is present, false otherwise
+ */
+const hasChecksumLine = async (
   filePath: string,
-  sha256sum: string
+  checksum: string
 ): Promise<boolean> => {
   const content = await fsp.readFile(filePath, "utf8");
-  return content.includes(`originSha: ${sha256sum}`);
+  return content.includes(`checksum: ${checksum}`);
 };
 
 export interface MissingFile {
@@ -116,22 +129,22 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
   for (const [langCode, langData] of Object.entries(languages)) {
     if (langCode === defaultLang) continue;
 
-    // for each file in the default language, get their sha256sum as a record
-    const defaultLangFilesSha: Record<string, string> = {};
+    // for each file in the default language, get their checksum as a record
+    const defaultLangChecksums: Record<string, string> = {};
     const defaultLangFiles = contentFiles[defaultLang] || [];
     for (const file of defaultLangFiles) {
-      const sha256sum = await computeSha256(path.join(contentDir, file));
-      defaultLangFilesSha[file] = sha256sum;
+      const checksum = await computeChecksum(path.join(contentDir, file));
+      defaultLangChecksums[file] = checksum;
     }
 
-    // check if the existing files have the same sha256sum as the default language using hasOriginShaLine, if not, push to missingFiles
+    // check if the existing files have the same checksum as the default language using hasChecksumLine, if not, push to missingFiles
     const existingFiles = contentFiles[langCode] || [];
     for (const file of existingFiles) {
       const defaultLangFile = file.replace(`/${langCode}/`, `/${defaultLang}/`);
-      const sha256sum = defaultLangFilesSha[defaultLangFile];
-      const isOutdated = !(await hasOriginShaLine(
+      const checksum = defaultLangChecksums[defaultLangFile];
+      const isOutdated = !(await hasChecksumLine(
         path.join(contentDir, file),
-        sha256sum
+        checksum
       ));
 
       if (isOutdated) {
