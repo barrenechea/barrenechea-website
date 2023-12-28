@@ -11,12 +11,12 @@ tags:
   - Android
 ---
 
-import { Image } from "astro:assets";
-import JadxGUIScreen from "~/assets/images/fl3xbl0w/screen-jadx-init.png";
-import JadxGUISelect from "~/assets/images/fl3xbl0w/screen-jadx-open.png";
-import JadxGUIOpened from "~/assets/images/fl3xbl0w/screen-jadx-opened.png";
-import JadxGUISave from "~/assets/images/fl3xbl0w/screen-jadx-save.png";
-import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
 
 Esto asume que ya [tienes tus propios APKs](/es/projects/fl3xbl0w/backup). Ten en cuenta que, aunque estoy especificando esto para las aplicaciones de Nautilus, esto se aplica a prácticamente cualquier aplicación de Android que quieras "echar un vistazo bajo el capó".
 
@@ -40,11 +40,7 @@ Busca el APK que deseas y haz clic en "Open file":
 
 Y desde ahí, puedes comenzar a cachurear:
 
-<Image
-  src={JadxGUIOpened}
-  alt="jadx-gui descompilando NautilusLauncher"
-  format="webp"
-/>
+<Image src={JadxGUIOpened} alt="jadx-gui descompilando NautilusLauncher" format="webp" />
 
 Si quieres guardar el proyecto como archivos Java, ve a File -> Save as gradle project:
 

@@ -11,37 +11,25 @@ tags:
   - Android
 ---
 
-import { Image } from "astro:assets";
-import B017D from "~/assets/images/fl3xbl0w/b017d.jpg";
-import TreadmillElectrical from "~/assets/images/fl3xbl0w/treadmill-electrical.png";
-import TreadmillComm from "~/assets/images/fl3xbl0w/treadmill-comm.png";
-import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
 
 _Esto aplica principalmente a la Treadmill 22 & Treadmill 56._
 
-La tarjeta de control del motor es fabricada por [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
+La tarjeta de control del motor es fabricada por [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image
-  src={B017D}
-  alt="Controlador de Tarjeta de Control del Motor B017D"
-  format="webp"
-/>
+<Image src={B017D} alt="Controlador de Tarjeta de Control del Motor B017D" format="webp" />
 
 Dado el [manual de servicio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) proporcionado por Nautilus Inc. ([respaldo en archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image
-  src={TreadmillElectrical}
-  alt="Diagrama eléctrico de la trotadora"
-  format="webp"
-/>
+<Image src={TreadmillElectrical} alt="Diagrama eléctrico de la trotadora" format="webp" />
 
 Y enfocándonos específicamente en esta parte:
 
-<Image
-  src={TreadmillComm}
-  alt="Camino de comunicación de la trotadora"
-  format="webp"
-/>
+<Image src={TreadmillComm} alt="Camino de comunicación de la trotadora" format="webp" />
 
 Podemos identificar el "cable de comunicación" que conecta el controlador del motor como uno de 5 pines. Hay solo un conector de 5 pines.
 He etiquetado los cables con sus colores correspondientes (los datos & interruptor están optoaislados):
@@ -60,7 +48,7 @@ El único conector de 5 pines es de la marca Molex. Una búsqueda en Google de "
 
 <Image src={Molex} alt="Conector Molex Micro-Fit 3.0" format="webp" />
 
-[Enlace de AliExpress](https://es.aliexpress.com/item/32902205579.html)
+[Enlace de AliExpress](https://aliexpress.com/item/32902205579.html)
 
 Al echar un vistazo en `NautilusLauncher.apk` a través de `jadx-gui`, puedo ver que se comunican con la tablet Android con su "Consola Universal" usando Serie a 230400 Baudios (usando `/dev/ttyS4`). Eso NO es lo que estamos analizando aquí. Eso se refiere a la comunicación entre Android y la "Consola Universal". Investigamos las comms entre la "Consola Universal" y la "Tarjeta de Control del Motor".
 

@@ -11,8 +11,8 @@ tags:
   - Android
 ---
 
-import { Image } from "astro:assets";
-import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
 
 Después de ser liberado de `AppMonitorService` (o después de recibir cualquier actualización OTA), lo primero que hay que hacer es respaldar la mayor cantidad de datos posible.
 
@@ -126,11 +126,7 @@ Alternativamente, puedes obtener el mismo resultado de un comando alternativo:
 
 Ambos comandos solicitarán una "confirmación en pantalla" de que quieres hacer un respaldo. Toca en "**BACK UP MY DATA**":
 
-<Image
-  src={DialogBackupConfirm}
-  alt="pantalla de confirmación de respaldo"
-  format="webp"
-/>
+<Image src={DialogBackupConfirm} alt="pantalla de confirmación de respaldo" format="webp" />
 
 Si quieres extraer los contenidos (en Linux, macOS), necesitarás `zlib-flate` de [qpdf](https://command-not-found.com/qpdf) y ejecutar:
 
