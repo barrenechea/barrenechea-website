@@ -10,36 +10,28 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: f214c3cbc87b324ba7d2554f6beb9ba85135737d293e6f8ae3c71f13bdf34d5c
+checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
 ---
 
-import { Image } from "astro:assets";
-import B017D from "~/assets/images/fl3xbl0w/b017d.jpg";
-import TreadmillElectrical from "~/assets/images/fl3xbl0w/treadmill-electrical.png";
-import TreadmillComm from "~/assets/images/fl3xbl0w/treadmill-comm.png";
-import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
 
 _Dies gilt hauptsächlich für das Laufband 22 & Laufband 56._
 
-Die Motorsteuerkarte wird von [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html) hergestellt.
+Die Motorsteuerkarte wird von [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html) hergestellt.
 
 <Image src={B017D} alt="Motorsteuerkarte B017D" format="webp" />
 
 Basierend auf dem [Servicehandbuch](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf), das von Nautilus Inc. bereitgestellt wird ([Backup auf archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image
-  src={TreadmillElectrical}
-  alt="Elektrisches Diagramm des Laufbands"
-  format="webp"
-/>
+<Image src={TreadmillElectrical} alt="Elektrisches Diagramm des Laufbands" format="webp" />
 
 Und speziell auf diesen Teil fokussierend:
 
-<Image
-  src={TreadmillComm}
-  alt="Kommunikationsweg des Laufbands"
-  format="webp"
-/>
+<Image src={TreadmillComm} alt="Kommunikationsweg des Laufbands" format="webp" />
 
 Können wir das "Kommunikationskabel" identifizieren, das den Motorcontroller als einen 5-poligen Stecker verbindet. Es gibt nur einen 5-poligen Stecker.
 Ich habe die Kabel mit ihren entsprechenden Farben markiert (die Daten & der Schalter sind optoisoliert):
@@ -58,7 +50,7 @@ Der einzige 5-polige Stecker ist von der Marke Molex. Eine Google-Suche nach "kl
 
 <Image src={Molex} alt="Molex Micro-Fit 3.0 Stecker" format="webp" />
 
-[AliExpress-Link](https://es.aliexpress.com/item/32902205579.html)
+[AliExpress-Link](https://aliexpress.com/item/32902205579.html)
 
 Beim Blick in `NautilusLauncher.apk` durch `jadx-gui` kann ich sehen, dass sie mit der Android-Tablette über ihre "Universal Console" mit Serie bei 230400 Baud (über `/dev/ttyS4`) kommunizieren. Das ist NICHT das, was wir hier analysieren. Das bezieht sich auf die Kommunikation zwischen Android und der "Universal Console". Wir untersuchen die Kommunikation zwischen der "Universal Console" und der "Motorsteuerkarte".
 

@@ -10,28 +10,24 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: f214c3cbc87b324ba7d2554f6beb9ba85135737d293e6f8ae3c71f13bdf34d5c
+checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
 ---
 
-import { Image } from "astro:assets";
-import B017D from "~/assets/images/fl3xbl0w/b017d.jpg";
-import TreadmillElectrical from "~/assets/images/fl3xbl0w/treadmill-electrical.png";
-import TreadmillComm from "~/assets/images/fl3xbl0w/treadmill-comm.png";
-import Molex from "~/assets/images/fl3xbl0w/molex.jpg";
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
 
 _This mainly applies to the Treadmill 22 & Treadmill 56._
 
-The motor control board is manufactured by [Electronics Way Industry](https://www.ewayindustry.com/ew-dc-b017.html).
+The motor control board is manufactured by [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
 <Image src={B017D} alt="B017D Motor Control Board Controller" format="webp" />
 
 Given the [service manual](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) provided by Nautilus Inc. ([backup on archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image
-  src={TreadmillElectrical}
-  alt="Treadmill electrical diagram"
-  format="webp"
-/>
+<Image src={TreadmillElectrical} alt="Treadmill electrical diagram" format="webp" />
 
 And focusing specifically on this part:
 
@@ -54,7 +50,7 @@ The only 5-pin connector is from the Molex brand. A Google search for "small Mol
 
 <Image src={Molex} alt="Molex Micro-Fit 3.0 Connector" format="webp" />
 
-[AliExpress link](https://es.aliexpress.com/item/32902205579.html)
+[AliExpress link](https://aliexpress.com/item/32902205579.html)
 
 Taking a look at `NautilusLauncher.apk` through `jadx-gui`, I can see that they communicate with the Android tablet with their "Universal Console" using Serial at 230400 Baud (using `/dev/ttyS4`). That is NOT what we are analyzing here. That refers to the communication between Android and the "Universal Console". We are investigating the comms between the "Universal Console" and the "Motor Control Board".
 

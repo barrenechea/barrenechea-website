@@ -10,15 +10,15 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: 6612fd3e1ff0536ec359ba9ca8c52421d39bf2b940f6bb06d7806abed2711bd1
+checksum: d446b328c0ea9a5cb92d84b8df43b2237c9ef5b49b6baa3603eab86dc7980902
 ---
 
-import { Image } from "astro:assets";
-import JadxGUIScreen from "~/assets/images/fl3xbl0w/screen-jadx-init.png";
-import JadxGUISelect from "~/assets/images/fl3xbl0w/screen-jadx-open.png";
-import JadxGUIOpened from "~/assets/images/fl3xbl0w/screen-jadx-opened.png";
-import JadxGUISave from "~/assets/images/fl3xbl0w/screen-jadx-save.png";
-import JadxGUIPrefs from "~/assets/images/fl3xbl0w/screen-jadx-preferences.png";
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
 
 Dies setzt voraus, dass du bereits [deine eigenen APKs hast](/de/projects/fl3xbl0w/backup). Beachte, dass ich dies zwar für die Nautilus-Apps spezifiziere, es aber praktisch auf jede Android-App anwendbar ist, bei der du "unter die Haube schauen" möchtest.
 
@@ -42,11 +42,7 @@ Suche die APK, die du öffnen möchtest, und klicke auf "Datei öffnen":
 
 Und von dort aus kannst du anfangen zu stöbern:
 
-<Image
-  src={JadxGUIOpened}
-  alt="jadx-gui dekompiliert NautilusLauncher"
-  format="webp"
-/>
+<Image src={JadxGUIOpened} alt="jadx-gui dekompiliert NautilusLauncher" format="webp" />
 
 Wenn du das Projekt als Java-Dateien speichern möchtest, gehe zu Datei -> Als Gradle-Projekt speichern:
 

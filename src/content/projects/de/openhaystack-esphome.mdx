@@ -9,7 +9,7 @@ tags:
   - Hardware
   - Embedded
 translatedBy: gpt-4-1106-preview
-checksum: e487dcdeda89df21fb06697b62dee63ab160b4b80d47a17539937808339181ab
+checksum: 8e7e1aa1f299aa516c4c6b26be5bdd4c8ebf07aa2ef0e7188d6e44d34e5e06c1
 ---
 
 [OpenHaystack](https://github.com/seemoo-lab/openhaystack) ist eine Anwendung, die es Ihnen ermöglicht, Ihre eigenen Zubehörteile zu erstellen, die vom [Find My network](https://developer.apple.com/find-my/) von Apple verfolgt werden können. Sie haben das Protokoll von Apple reverse-engineered und dokumentiert, ein ziemlich beeindruckendes Projekt.
@@ -91,7 +91,7 @@ esp32:
       CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
       CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
       # "Payload size error" korrigieren - Watchdog-Wartezeit verlängern
-      CONFIG_ESP_TASK_WDT_TIMEOUT_S: "10"
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
 
 wifi:
   ssid: <dein-wifi-ssid>

@@ -10,11 +10,11 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: 341fa22c86cbc116f394ace2857f4fad5dcaf6b35a02d8d678f5412ea1d6b685
+checksum: 3d9a41a7fed58bbf851e9c505c9291eed097cb534da1052eb6faa022c6afb876
 ---
 
-import { Image } from "astro:assets";
-import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
 
 Nachdem Sie sich von `AppMonitorService` befreit haben (oder nachdem Sie ein OTA-Update erhalten haben), ist das Erste, was Sie tun sollten, so viele Daten wie möglich zu sichern.
 
@@ -128,11 +128,7 @@ Alternativ können Sie das gleiche Ergebnis mit einem alternativen Befehl erziel
 
 Beide Befehle fordern eine "Bestätigung auf dem Bildschirm", dass Sie ein Backup durchführen möchten. Tippen Sie auf "**BACK UP MY DATA**":
 
-<Image
-  src={DialogBackupConfirm}
-  alt="Bestätigungsbildschirm für Backup"
-  format="webp"
-/>
+<Image src={DialogBackupConfirm} alt="Bestätigungsbildschirm für Backup" format="webp" />
 
 Wenn Sie den Inhalt extrahieren möchten (unter Linux, macOS), benötigen Sie `zlib-flate` von [qpdf](https://command-not-found.com/qpdf) und führen aus:
 

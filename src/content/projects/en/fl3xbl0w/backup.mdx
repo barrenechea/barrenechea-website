@@ -10,11 +10,11 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: 341fa22c86cbc116f394ace2857f4fad5dcaf6b35a02d8d678f5412ea1d6b685
+checksum: 3d9a41a7fed58bbf851e9c505c9291eed097cb534da1052eb6faa022c6afb876
 ---
 
-import { Image } from "astro:assets";
-import DialogBackupConfirm from "~/assets/images/fl3xbl0w/dialog-backup-confirm.png";
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
 
 After being released from `AppMonitorService` (or after receiving any OTA update), the first thing to do is to back up as much data as possible.
 
@@ -128,11 +128,7 @@ Alternatively, you can get the same result from an alternative command:
 
 Both commands will request an "on-screen confirmation" that you want to make a backup. Tap on "**BACK UP MY DATA**":
 
-<Image
-  src={DialogBackupConfirm}
-  alt="backup confirmation screen"
-  format="webp"
-/>
+<Image src={DialogBackupConfirm} alt="backup confirmation screen" format="webp" />
 
 If you want to extract the contents (on Linux, macOS), you will need `zlib-flate` from [qpdf](https://command-not-found.com/qpdf) and run:
 
