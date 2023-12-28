@@ -4,21 +4,32 @@ module.exports = {
     es2022: true,
     browser: true,
   },
-  extends: ["eslint:recommended", "plugin:astro/recommended"],
+  extends: [
+    'eslint:recommended',
+    'plugin:astro/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+  ],
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
   rules: {},
   overrides: [
     {
-      files: ["*.astro"],
-      parser: "astro-eslint-parser",
-      plugins: ["unused-imports", "tailwindcss", "simple-import-sort"],
-      extends: ["plugin:astro/jsx-a11y-recommended", "plugin:tailwindcss/recommended", "plugin:@typescript-eslint/recommended"],
+      files: ['*.astro'],
+      parser: 'astro-eslint-parser',
+      plugins: ['unused-imports', 'tailwindcss', 'simple-import-sort', 'prettier'],
+      extends: [
+        'plugin:astro/jsx-a11y-recommended',
+        'plugin:tailwindcss/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+        'plugin:prettier/recommended',
+      ],
       parserOptions: {
-        parser: "@typescript-eslint/parser",
-        extraFileExtensions: [".astro"],
+        parser: '@typescript-eslint/parser',
+        extraFileExtensions: ['.astro'],
       },
       rules: {
         'simple-import-sort/imports': 'error',
@@ -26,16 +37,21 @@ module.exports = {
       },
     },
     {
-      files: ["*.ts"],
-      parser: "@typescript-eslint/parser",
-      plugins: ["unused-imports", "tailwindcss", "simple-import-sort"],
-      extends: ["plugin:tailwindcss/recommended", "plugin:@typescript-eslint/recommended"],
+      files: ['*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['unused-imports', 'tailwindcss', 'simple-import-sort', 'prettier'],
+      extends: [
+        'plugin:tailwindcss/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+        'plugin:prettier/recommended',
+      ],
       rules: {
-        "@typescript-eslint/no-unused-vars": [
-          "error",
-          { argsIgnorePattern: "^_", destructuredArrayIgnorePattern: "^_" },
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
         ],
-        "@typescript-eslint/no-non-null-assertion": "off",
+        '@typescript-eslint/no-non-null-assertion': 'off',
         'simple-import-sort/imports': 'error',
         'simple-import-sort/exports': 'error',
       },
@@ -43,15 +59,16 @@ module.exports = {
     {
       // Define the configuration for `<script>` tag.
       // Script in `<script>` is assigned a virtual file name with the `.js` extension.
-      files: ["**/*.astro/*.js", "*.astro/*.js"],
-      plugins: [
-        "jsx-a11y",
-        'unused-imports',
-        'tailwindcss',
-        'simple-import-sort',
+      files: ['**/*.astro/*.js', '*.astro/*.js'],
+      plugins: ['jsx-a11y', 'unused-imports', 'tailwindcss', 'simple-import-sort', 'prettier'],
+      extends: [
+        'plugin:jsx-a11y/recommended',
+        'plugin:tailwindcss/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+        'plugin:prettier/recommended',
       ],
-      extends: ["plugin:jsx-a11y/recommended", "plugin:tailwindcss/recommended", "plugin:@typescript-eslint/recommended"],
-      parser: "@typescript-eslint/parser",
+      parser: '@typescript-eslint/parser',
       rules: {
         'simple-import-sort/imports': 'error',
         'simple-import-sort/exports': 'error',

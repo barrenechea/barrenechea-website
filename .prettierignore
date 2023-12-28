@@ -1,0 +1,6 @@
+dist
+.astro
+.github
+public
+node_modules
+package-lock.json
