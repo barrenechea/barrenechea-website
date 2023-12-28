@@ -1,6 +1,6 @@
 import aspectRatio from '@tailwindcss/aspect-ratio';
 import typography from '@tailwindcss/typography';
-import { type Config } from "tailwindcss";
+import { type Config } from 'tailwindcss';
 import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
@@ -23,8 +23,5 @@ export default {
   corePlugins: {
     aspectRatio: false,
   },
-  plugins: [
-    aspectRatio,
-    typography
-  ],
+  plugins: [aspectRatio, typography],
 } satisfies Config;

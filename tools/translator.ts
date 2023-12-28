@@ -1,7 +1,7 @@
-import { llmCall, type LlmMessage, userMessage } from "./llm.ts";
+import { llmCall, type LlmMessage, userMessage } from './llm.ts';
 
 const systemMessage = (language: string): LlmMessage => ({
-  role: "system",
+  role: 'system',
   content: `You are an expert MDX content translator API. You translate all content including frontmatter values directly to ${language}. Translate lang path for links, but keep variable names intact.`,
 });
 
@@ -13,10 +13,7 @@ const systemMessage = (language: string): LlmMessage => ({
  */
 export async function translate(targetLanguage: string, content: Buffer) {
   const stream = await llmCall({
-    messages: [
-      systemMessage(targetLanguage),
-      userMessage(content.toString("utf8")),
-    ],
+    messages: [systemMessage(targetLanguage), userMessage(content.toString('utf8'))],
     temperature: 0,
   });
 

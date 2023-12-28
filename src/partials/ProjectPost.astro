@@ -1,22 +1,24 @@
 ---
-import { Image } from "astro:assets";
-import type { CollectionEntry } from "astro:content";
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 
-import { AppConfig } from "~/config";
-import { useTranslations } from "~/i18n/translations";
-import Section from "~/partials/astro-components/Section.astro";
-import { formatDate } from "~/utils/dates";
+import { AppConfig } from '~/config';
+import { useTranslations } from '~/i18n/translations';
+import Section from '~/partials/astro-components/Section.astro';
+import { formatDate } from '~/utils/dates';
 
 interface Props {
-  project: CollectionEntry<"projects">;
+  project: CollectionEntry<'projects'>;
 }
 
 const { project } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
-const formattedDate = `${t("projects.releasedOn")} ${formatDate(project.data.pubDate, lang)}`;
-const translatedBy = project.data.translatedBy ? `${t("blog.translatedBy")} ${project.data.translatedBy}` : "";
+const formattedDate = `${t('projects.releasedOn')} ${formatDate(project.data.pubDate, lang)}`;
+const translatedBy = project.data.translatedBy
+  ? `${t('blog.translatedBy')} ${project.data.translatedBy}`
+  : '';
 ---
 
 <Section>
@@ -28,7 +30,7 @@ const translatedBy = project.data.translatedBy ? `${t("blog.translatedBy")} ${pr
         <div class="flex w-full justify-center">
           <div class="relative">
             {
-              project.data.img.format === "svg" ? (
+              project.data.img.format === 'svg' ? (
                 <img
                   src={project.data.img.src}
                   alt={project.data.imgAlt}
@@ -71,10 +73,10 @@ const translatedBy = project.data.translatedBy ? `${t("blog.translatedBy")} ${pr
           <div class="flex translate-y-4 justify-center space-x-2">
             <a
               href={project.data.link}
-              target={project.data.link.startsWith("http") ? "_blank" : "_self"}
+              target={project.data.link.startsWith('http') ? '_blank' : '_self'}
               class="inline-block rounded bg-amber-400 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-amber-500 hover:shadow-lg focus:bg-amber-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-amber-800 active:shadow-lg"
             >
-              {t("projects.go")}
+              {t('projects.go')}
             </a>
           </div>
         )
@@ -86,10 +88,12 @@ const translatedBy = project.data.translatedBy ? `${t("blog.translatedBy")} ${pr
     <div class="prose prose-invert mt-8 prose-img:rounded-lg">
       <slot />
     </div>
-    {translatedBy && (
-      <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
-        {translatedBy}
-      </div>
-    )}
+    {
+      translatedBy && (
+        <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
+          {translatedBy}
+        </div>
+      )
+    }
   </div>
 </Section>

@@ -1,12 +1,12 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 
-import { AppConfig } from "~/config";
-import { useTranslations } from "~/i18n/translations";
-import { formatDate } from "~/utils/dates";
+import { AppConfig } from '~/config';
+import { useTranslations } from '~/i18n/translations';
+import { formatDate } from '~/utils/dates';
 
 export interface Props {
-  post: CollectionEntry<"posts">;
+  post: CollectionEntry<'posts'>;
   author: string;
 }
 
@@ -15,7 +15,10 @@ const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 
-const formattedDate = `${t("posts.by")} ${author} ${t("posts.on")} ${formatDate(post.data.pubDate, lang)}`;
+const formattedDate = `${t('posts.by')} ${author} ${t('posts.on')} ${formatDate(
+  post.data.pubDate,
+  lang
+)}`;
 ---
 
 <h1 class="text-center text-3xl font-bold">{post.data.title}</h1>

@@ -1,14 +1,14 @@
-@import "@fontsource/work-sans";
-@import "github-fork-ribbon-css/gh-fork-ribbon.css";
+@import '@fontsource/work-sans';
+@import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  div[class*="prose"] > * > a,
-  div[class*="prose"] > * > * > a,
-  div[class*="prose"] > * > * > * > a {
+  div[class*='prose'] > * > a,
+  div[class*='prose'] > * > * > a,
+  div[class*='prose'] > * > * > * > a {
     @apply text-amber-400 no-underline hover:underline;
   }
 }

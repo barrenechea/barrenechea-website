@@ -4,12 +4,7 @@ module.exports = {
     es2022: true,
     browser: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:astro/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:astro/recommended'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
@@ -66,7 +61,6 @@ module.exports = {
         'plugin:tailwindcss/recommended',
         'plugin:@typescript-eslint/recommended',
         'prettier',
-        'plugin:prettier/recommended',
       ],
       parser: '@typescript-eslint/parser',
       rules: {

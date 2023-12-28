@@ -1,21 +1,18 @@
-import { createHash } from "crypto";
-import { promises as fsp } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { createHash } from 'crypto';
+import { promises as fsp } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import { AppConfig } from "../src/config.ts";
-import { languages } from "../src/i18n/translations.ts";
+import { AppConfig } from '../src/config.ts';
+import { languages } from '../src/i18n/translations.ts';
 
 const { defaultLang } = AppConfig;
 
 // Derive the directory name from the current file's URL
 const __dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
-const contentDir = path.join(__dirname, "src", "content");
+const contentDir = path.join(__dirname, 'src', 'content');
 
-async function getFilesInDirectory(
-  dir: string,
-  ext: string = ".mdx"
-): Promise<string[]> {
+async function getFilesInDirectory(dir: string, ext: string = '.mdx'): Promise<string[]> {
   let files: string[] = [];
   const items = await fsp.readdir(dir, { withFileTypes: true });
   for (const item of items) {
@@ -37,10 +34,10 @@ async function getFilesInDirectory(
  */
 export const computeChecksum = async (
   filePath: string,
-  algorithm: string = "sha256"
+  algorithm: string = 'sha256'
 ): Promise<string> => {
-  const content = await fsp.readFile(filePath, "utf8");
-  return createHash(algorithm).update(content).digest("hex");
+  const content = await fsp.readFile(filePath, 'utf8');
+  return createHash(algorithm).update(content).digest('hex');
 };
 
 /**
@@ -49,11 +46,8 @@ export const computeChecksum = async (
  * @param checksum checksum to check
  * @returns true if the checksum line is present, false otherwise
  */
-const hasChecksumLine = async (
-  filePath: string,
-  checksum: string
-): Promise<boolean> => {
-  const content = await fsp.readFile(filePath, "utf8");
+const hasChecksumLine = async (filePath: string, checksum: string): Promise<boolean> => {
+  const content = await fsp.readFile(filePath, 'utf8');
   return content.includes(`checksum: ${checksum}`);
 };
 
@@ -69,7 +63,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
   // Organize files by language
   const contentFiles: Record<string, string[]> = allFiles.reduce(
     (acc: Record<string, string[]>, file) => {
-      const langCode = file.split("/")[1];
+      const langCode = file.split('/')[1];
       if (!acc[langCode]) {
         acc[langCode] = [];
       }
@@ -91,9 +85,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
     );
 
     const existingFiles = contentFiles[langCode] || [];
-    const missingLangFiles = expectedFiles.filter(
-      (file) => !existingFiles.includes(file)
-    );
+    const missingLangFiles = expectedFiles.filter((file) => !existingFiles.includes(file));
 
     missingFiles.push(
       ...missingLangFiles.map((file) => ({
@@ -113,7 +105,7 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
   // Organize files by language
   const contentFiles: Record<string, string[]> = allFiles.reduce(
     (acc: Record<string, string[]>, file) => {
-      const langCode = file.split("/")[1];
+      const langCode = file.split('/')[1];
       if (!acc[langCode]) {
         acc[langCode] = [];
       }
@@ -142,10 +134,7 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
     for (const file of existingFiles) {
       const defaultLangFile = file.replace(`/${langCode}/`, `/${defaultLang}/`);
       const checksum = defaultLangChecksums[defaultLangFile];
-      const isOutdated = !(await hasChecksumLine(
-        path.join(contentDir, file),
-        checksum
-      ));
+      const isOutdated = !(await hasChecksumLine(path.join(contentDir, file), checksum));
 
       if (isOutdated) {
         outdatedFiles.push({

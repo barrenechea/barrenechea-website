@@ -7,17 +7,15 @@ const { href } = Astro.props as Props;
 const currentPathname = Astro.url.pathname;
 const pathSegments = href.split('/').filter(Boolean);
 const isProjectOrPostPage = pathSegments.includes('projects') || pathSegments.includes('posts');
-const isCurrentUrl = isProjectOrPostPage ? currentPathname.includes(href) : currentPathname === href;
+const isCurrentUrl = isProjectOrPostPage
+  ? currentPathname.includes(href)
+  : currentPathname === href;
 ---
 
 <li>
   {
     isCurrentUrl ? (
-      <a
-        href={href}
-        class="block rounded px-3 py-2 text-amber-400 md:p-0"
-        aria-current="page"
-      >
+      <a href={href} class="block rounded px-3 py-2 text-amber-400 md:p-0" aria-current="page">
         <slot />
       </a>
     ) : (

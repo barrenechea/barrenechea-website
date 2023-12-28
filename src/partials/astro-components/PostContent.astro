@@ -12,26 +12,30 @@ const { post, translatedBy } = Astro.props;
 
 <div class="mx-auto mt-5 max-w-prose">
   <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
-    {post.data.img.format === 'svg' ? (
-      <img src={post.data.img.src} alt={post.data.imgAlt} />
-    ) : (
-      <Image
-        class="size-full object-cover object-center"
-        src={post.data.img}
-        alt={post.data.imgAlt}
-        format="webp"
-        width={800}
-        height={533}
-      />
-    )}
+    {
+      post.data.img.format === 'svg' ? (
+        <img src={post.data.img.src} alt={post.data.imgAlt} />
+      ) : (
+        <Image
+          class="size-full object-cover object-center"
+          src={post.data.img}
+          alt={post.data.imgAlt}
+          format="webp"
+          width={800}
+          height={533}
+        />
+      )
+    }
   </div>
 
   <div class="prose prose-invert mt-8 prose-img:rounded-lg">
     <slot />
   </div>
-  {translatedBy && (
-    <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
-      {translatedBy}
-    </div>
-  )}
+  {
+    translatedBy && (
+      <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
+        {translatedBy}
+      </div>
+    )
+  }
 </div>

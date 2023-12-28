@@ -2,7 +2,7 @@
 import type { Page } from 'astro';
 
 import { AppConfig } from '~/config';
-import { useTranslations } from "~/i18n/translations";
+import { useTranslations } from '~/i18n/translations';
 
 export interface Props {
   page: Page;
@@ -18,10 +18,18 @@ const older = type === 'posts' ? t('posts.pagination.older') : t('projects.pagin
 ---
 
 <div class="flex justify-center gap-8">
-  {page.url.prev && (
-    <a href={page.url.prev} target="_self">← {newer}</a>
-  )}
-  {page.url.next && (
-    <a href={page.url.next} target="_self">{older} →</a>
-  )}
+  {
+    page.url.prev && (
+      <a href={page.url.prev} target="_self">
+        ← {newer}
+      </a>
+    )
+  }
+  {
+    page.url.next && (
+      <a href={page.url.next} target="_self">
+        {older} →
+      </a>
+    )
+  }
 </div>

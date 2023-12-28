@@ -13,20 +13,36 @@ export interface Props {
 const { name, description, link, img, imgAlt } = Astro.props as Props;
 ---
 
-<a class="transform-gpu transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
-  href={link} target="_self">
+<a
+  class="transform-gpu transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
+  href={link}
+  target="_self"
+>
   <div
-    class="flex flex-col items-center gap-x-8 rounded-md bg-zinc-800 p-3 md:flex-row md:rounded-l-full md:rounded-br-full">
+    class="flex flex-col items-center gap-x-8 rounded-md bg-zinc-800 p-3 md:flex-row md:rounded-l-full md:rounded-br-full"
+  >
     <div class="shrink-0">
       <div class="size-36">
         <div class="flex w-full justify-center">
           <div class="relative">
-            {img.format === 'svg' ? (
-            <img src={img.src} alt={imgAlt}
-              class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />
-            ) : (
-            <Image src={img} alt={imgAlt} format="webp" width={300} height={300}
-              class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500" />)}
+            {
+              img.format === 'svg' ? (
+                <img
+                  src={img.src}
+                  alt={imgAlt}
+                  class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+                />
+              ) : (
+                <Image
+                  src={img}
+                  alt={imgAlt}
+                  format="webp"
+                  width={300}
+                  height={300}
+                  class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+                />
+              )
+            }
           </div>
         </div>
       </div>

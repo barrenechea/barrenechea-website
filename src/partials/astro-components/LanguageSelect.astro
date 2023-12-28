@@ -1,13 +1,13 @@
 ---
-import { AppConfig } from "~/config";
-import { languages } from "~/i18n/translations";
+import { AppConfig } from '~/config';
+import { languages } from '~/i18n/translations';
 
 /**
  * Returns the localized pathname for a given locale.
  */
 function localizedPathname(locale: string): string {
   const currentUrl = Astro.url;
-  const newPathname = currentUrl.pathname.split("/").slice(2).join("/");
+  const newPathname = currentUrl.pathname.split('/').slice(2).join('/');
   return `/${locale}/${newPathname}`;
 }
 
@@ -49,9 +49,7 @@ const currentLanguage =
                   aria-hidden="true"
                   class="me-2 size-3.5 rounded-full"
                   viewBox="0 0 512 512"
-                  set:html={
-                    languages[language as keyof typeof languages].icon.body
-                  }
+                  set:html={languages[language as keyof typeof languages].icon.body}
                 />
                 {languages[language as keyof typeof languages].label}
               </div>
@@ -67,14 +65,14 @@ const currentLanguage =
   class LanguageSelector extends HTMLElement {
     constructor() {
       super();
-      const toggleButton = this.querySelector("#language-toggle");
-      const dropdownMenu = this.querySelector("#language-dropdown-menu");
+      const toggleButton = this.querySelector('#language-toggle');
+      const dropdownMenu = this.querySelector('#language-dropdown-menu');
 
-      toggleButton?.addEventListener("click", () => {
-        dropdownMenu?.classList.toggle("hidden");
+      toggleButton?.addEventListener('click', () => {
+        dropdownMenu?.classList.toggle('hidden');
       });
     }
   }
 
-  customElements.define("language-selector", LanguageSelector);
+  customElements.define('language-selector', LanguageSelector);
 </script>

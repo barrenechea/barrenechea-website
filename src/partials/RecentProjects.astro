@@ -1,40 +1,40 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 
-import { AppConfig } from "~/config";
-import type { Translations } from "~/i18n/es";
-import { useTranslations } from "~/i18n/translations";
-import GradientText from "~/partials/astro-components/GradientText.astro";
-import Project from "~/partials/astro-components/Project.astro";
-import Section from "~/partials/astro-components/Section.astro";
-import Tags from "~/partials/astro-components/Tags.astro";
+import { AppConfig } from '~/config';
+import type { Translations } from '~/i18n/es';
+import { useTranslations } from '~/i18n/translations';
+import GradientText from '~/partials/astro-components/GradientText.astro';
+import Project from '~/partials/astro-components/Project.astro';
+import Section from '~/partials/astro-components/Section.astro';
+import Tags from '~/partials/astro-components/Tags.astro';
 
 export interface Props {
-  projectsList: CollectionEntry<"projects">[];
+  projectsList: CollectionEntry<'projects'>[];
 }
 
 const tagColors = {
-  CSharp: "PURPLE",
-  DotNet6: "FUCHSIA",
-  Xcode: "CYAN",
-  Containers: "ROSE",
-  Architecture: "ORANGE",
-  Pipelines: "LIME",
-  TailwindCSS: "SKY",
-  TypeScript: "BLUE",
-  WebScraping: "VIOLET",
-  Blog: "EMERALD",
-  JavaScript: "YELLOW",
-  AstroJS: "INDIGO",
-  ReverseEngineering: "STONE",
-  Hardware: "AMBER",
-  Android: "EMERALD",
-  Embedded: "PINK",
+  CSharp: 'PURPLE',
+  DotNet6: 'FUCHSIA',
+  Xcode: 'CYAN',
+  Containers: 'ROSE',
+  Architecture: 'ORANGE',
+  Pipelines: 'LIME',
+  TailwindCSS: 'SKY',
+  TypeScript: 'BLUE',
+  WebScraping: 'VIOLET',
+  Blog: 'EMERALD',
+  JavaScript: 'YELLOW',
+  AstroJS: 'INDIGO',
+  ReverseEngineering: 'STONE',
+  Hardware: 'AMBER',
+  Android: 'EMERALD',
+  Embedded: 'PINK',
 } as {
   [key: string]: string;
 };
 
-const defaultTagColor = "GRAY";
+const defaultTagColor = 'GRAY';
 
 const { projectsList } = Astro.props as Props;
 const { lang = AppConfig.defaultLang } = Astro.params;
@@ -44,17 +44,13 @@ const t = useTranslations(lang);
 <Section>
   <div slot="title" class="flex items-baseline justify-between">
     <div>
-      {t("home.recentProjects")}
-      <GradientText>{t("nav.projects")}</GradientText>
+      {t('home.recentProjects')}
+      <GradientText>{t('nav.projects')}</GradientText>
     </div>
 
     <div class="text-sm">
-      <a
-        href={`/${lang}/projects/`}
-        target="_self"
-        class="text-zinc-200 hover:underline"
-      >
-        {t("home.recentProjects.viewAll")} →
+      <a href={`/${lang}/projects/`} target="_self" class="text-zinc-200 hover:underline">
+        {t('home.recentProjects.viewAll')} →
       </a>
     </div>
   </div>
@@ -64,13 +60,13 @@ const t = useTranslations(lang);
         <Project
           name={project.data.title}
           description={project.data.description}
-          link={`/${lang}/projects/${project.slug.split("/").pop()}/`}
+          link={`/${lang}/projects/${project.slug.split('/').pop()}/`}
           img={project.data.img}
           imgAlt={project.data.imgAlt}
         >
           {(project.data.tags || []).map((tag) => (
             <Tags color={tagColors[tag] || defaultTagColor}>
-              {t(`tags.${tag}` as keyof Translations) || t("tags.undefined")}
+              {t(`tags.${tag}` as keyof Translations) || t('tags.undefined')}
             </Tags>
           ))}
         </Project>

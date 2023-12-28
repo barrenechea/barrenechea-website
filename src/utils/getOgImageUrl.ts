@@ -13,7 +13,7 @@ const paths = new Set(routes.map(({ params }) => params.path));
  * @returns Path to the OpenGraph image if found. Otherwise, `undefined`.
  */
 export function getOgImageUrl(path: string): string | undefined {
-	const imagePath = path.replace(/^\//, '').replace(/\/$/, '') + '.png';
-	if (paths.has(imagePath)) return '/open-graph/' + imagePath;
+  const imagePath = path.replace(/^\//, '').replace(/\/$/, '') + '.png';
+  if (paths.has(imagePath)) return '/open-graph/' + imagePath;
   return;
 }

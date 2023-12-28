@@ -1,22 +1,22 @@
 ---
-import { type CollectionEntry } from "astro:content";
+import { type CollectionEntry } from 'astro:content';
 
-import { postPages } from "~/content";
-import BasePost from "~/templates/BasePost.astro";
+import { postPages } from '~/content';
+import BasePost from '~/templates/BasePost.astro';
 
 export async function getStaticPaths() {
   return postPages.map((post) => {
-    const [lang, ...slug] = post.slug.split("/");
+    const [lang, ...slug] = post.slug.split('/');
 
     return {
-      params: { lang, slug: slug.join("/") },
+      params: { lang, slug: slug.join('/') },
       props: { post },
     };
   });
 }
 
 interface Props {
-  post: CollectionEntry<"posts">;
+  post: CollectionEntry<'posts'>;
 }
 
 const { post } = Astro.props;

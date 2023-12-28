@@ -1,8 +1,8 @@
-import rss from "@astrojs/rss";
-import type { APIContext } from "astro";
+import rss from '@astrojs/rss';
+import type { APIContext } from 'astro';
 
 import { AppConfig } from '~/config';
-import { allPages } from "~/content";
+import { allPages } from '~/content';
 
 const languageTag = (lang: string) => `<language>${lang}</language>`;
 

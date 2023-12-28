@@ -1,38 +1,35 @@
 ---
-import { AppConfig } from "~/config";
-import { useTranslations } from "~/i18n/translations";
-import { languages } from "~/i18n/translations";
-import Section from "~/partials/astro-components/Section.astro";
-import Base from "~/templates/Base.astro";
+import { AppConfig } from '~/config';
+import { useTranslations } from '~/i18n/translations';
+import { languages } from '~/i18n/translations';
+import Section from '~/partials/astro-components/Section.astro';
+import Base from '~/templates/Base.astro';
 
-export const getStaticPaths = () =>
-  Object.keys(languages).map((lang) => ({ params: { lang } }));
+export const getStaticPaths = () => Object.keys(languages).map((lang) => ({ params: { lang } }));
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
 
-const title = `${t("404.title")} - Barrenechea`;
-const description = t("404.description");
+const title = `${t('404.title')} - Barrenechea`;
+const description = t('404.description');
 ---
 
 <Base head={{ title, description }}>
   <Section>
     <div class="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
       <div class="mx-auto max-w-screen-sm text-center">
-        <h1 class="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">
-          404
-        </h1>
+        <h1 class="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">404</h1>
         <p class="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-          {t("404.heading")}
+          {t('404.heading')}
         </p>
         <p class="mb-4 text-lg font-light text-gray-500">
-          {t("404.body")}
+          {t('404.body')}
         </p>
         <a
           href={`/${lang}/`}
           target="_self"
           class="my-4 inline-flex rounded-lg px-5 py-2.5 text-center text-sm font-medium text-amber-400 hover:underline"
-          >{t("404.back")}</a
+          >{t('404.back')}</a
         >
       </div>
     </div>

@@ -22,22 +22,24 @@ const formattedDate = formatDate(instance.data.pubDate, lang);
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">
     <div class="aspect-h-2 aspect-w-3 bg-zinc-200">
-      {instance.data.img.format === 'svg' ? (
-        <img
-          src={instance.data.img.src}
-          alt={instance.data.imgAlt}
-          class="size-full object-scale-down object-center"
-        />
-      ) : (
-        <Image
-          class="size-full object-cover object-center"
-          src={instance.data.img}
-          alt={instance.data.imgAlt}
-          format="webp"
-          width={400}
-          height={267}
-        />
-      )}
+      {
+        instance.data.img.format === 'svg' ? (
+          <img
+            src={instance.data.img.src}
+            alt={instance.data.imgAlt}
+            class="size-full object-scale-down object-center"
+          />
+        ) : (
+          <Image
+            class="size-full object-cover object-center"
+            src={instance.data.img}
+            alt={instance.data.imgAlt}
+            format="webp"
+            width={400}
+            height={267}
+          />
+        )
+      }
     </div>
 
     <div class="px-3 pb-6 pt-4 text-center">

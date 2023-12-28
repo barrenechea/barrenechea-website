@@ -5,7 +5,7 @@ import { ViewTransitions } from 'astro:transitions';
 
 import faviconSvg from '~/assets/favicon.svg';
 import { AppConfig } from '~/config';
-import { useTranslations } from "~/i18n/translations";
+import { useTranslations } from '~/i18n/translations';
 import Footer from '~/partials/Footer.astro';
 import Navbar from '~/partials/Navbar.astro';
 import { getOgImageUrl } from '~/utils/getOgImageUrl';
@@ -25,56 +25,57 @@ const {
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 
-const langDirection = t("language.direction");
+const langDirection = t('language.direction');
 
 // Ensures the canonicalURL always has a trailing slash.
 const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
 
-const ogImageUrl = getOgImageUrl(canonicalURL.pathname) || `/open-graph/${lang}/default-og-image.png`;
+const ogImageUrl =
+  getOgImageUrl(canonicalURL.pathname) || `/open-graph/${lang}/default-og-image.png`;
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 
 // remove " - Barrenechea" from the title
 const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
-
 ---
 
 <html lang={lang} dir={langDirection}>
+  <head>
+    <meta charset="UTF-8" />
+    <base target="_blank" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={t('author.name')} />
+    <meta property="og:image" content={canonicalImageSrc} />
+    <meta property="og:image:alt" content={filteredTitle} />
 
-<head>
-  <meta charset="UTF-8" />
-  <base target="_blank">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <meta name="author" content={t("author.name")} />
-  <meta property="og:image" content={canonicalImageSrc} />
-  <meta property="og:image:alt" content={filteredTitle} />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    <link rel="icon" href={faviconSvg.src} type="image/svg+xml" />
+    <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE"
+    ></script>
+    <script type="text/partytown">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-L5QEGL7QZE');
+    </script>
+    <ViewTransitions />
+  </head>
 
-  <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
-  <link rel="icon" href={faviconSvg.src} type="image/svg+xml" />
-  <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE">
+  <body class="bg-zinc-900 font-sans text-gray-100">
+    <a
+      class="github-fork-ribbon hidden lg:block"
+      href={AppConfig.repo}
+      data-ribbon={t('nav.fork')}
+      title={t('nav.fork')}>{t('nav.fork')}</a
+    >
 
-  </script>
-  <script type="text/partytown">
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', 'G-L5QEGL7QZE');
-  </script>
-  <ViewTransitions />
-</head>
+    <Navbar />
 
-<body class="bg-zinc-900 font-sans text-gray-100">
-  <a class="github-fork-ribbon hidden lg:block" href={AppConfig.repo} data-ribbon={t("nav.fork")}
-    title={t("nav.fork")}>{t("nav.fork")}</a>
+    <slot />
 
-  <Navbar />
-
-  <slot />
-
-  <Footer />
-</body>
-
+    <Footer />
+  </body>
 </html>

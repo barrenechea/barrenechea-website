@@ -1,19 +1,19 @@
-import { promises as fsp } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { promises as fsp } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import {
   computeChecksum,
   findMissingFiles,
   findOutdatedFiles,
   type MissingFile,
-} from "./contentFinder.ts";
-import { model } from "./llm.ts";
-import { translate } from "./translator.ts";
+} from './contentFinder.ts';
+import { model } from './llm.ts';
+import { translate } from './translator.ts';
 
 // Derive the directory name from the current file's URL
 const __dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
-const contentDir = path.join(__dirname, "src", "content");
+const contentDir = path.join(__dirname, 'src', 'content');
 
 /**
  * Helper function to translate a file
@@ -25,16 +25,10 @@ async function translateFile(file: MissingFile) {
   const fileContent = await fsp.readFile(path.join(contentDir, file.origin));
   const stream = await translate(file.targetLanguage, fileContent);
   console.log(` - Streaming response to ${file.target}...`);
-  const targetPath = path.join(
-    contentDir,
-    file.target.split("/").slice(0, -1).join("/")
-  );
+  const targetPath = path.join(contentDir, file.target.split('/').slice(0, -1).join('/'));
   await fsp.mkdir(targetPath, { recursive: true });
   for await (const part of stream) {
-    await fsp.appendFile(
-      path.join(contentDir, file.target),
-      part.choices[0]?.delta?.content ?? ""
-    );
+    await fsp.appendFile(path.join(contentDir, file.target), part.choices[0]?.delta?.content ?? '');
   }
 }
 
@@ -45,29 +39,23 @@ async function translateFile(file: MissingFile) {
  * @returns void
  */
 async function cleanUpFile(file: MissingFile) {
-  const translatedFile = await fsp.readFile(
-    path.join(contentDir, file.target),
-    { encoding: "utf8" }
-  );
-  const lines = translatedFile.split("\n");
+  const translatedFile = await fsp.readFile(path.join(contentDir, file.target), {
+    encoding: 'utf8',
+  });
+  const lines = translatedFile.split('\n');
   lines[0] = lines[0].trimStart();
-  if (lines[lines.length - 1] !== "") {
-    lines.push("");
+  if (lines[lines.length - 1] !== '') {
+    lines.push('');
   }
 
   const checksum = await computeChecksum(path.join(contentDir, file.origin));
 
   // find location of the second `---` and insert translatedBy: ${model} and checksum: ${checksum} before it
-  const secondSeparator = lines.indexOf("---", 3);
-  lines.splice(
-    secondSeparator,
-    0,
-    `translatedBy: ${model}`,
-    `checksum: ${checksum}`
-  );
+  const secondSeparator = lines.indexOf('---', 3);
+  lines.splice(secondSeparator, 0, `translatedBy: ${model}`, `checksum: ${checksum}`);
 
-  await fsp.writeFile(path.join(contentDir, file.target), lines.join("\n"));
-  console.log(" - Finished file!");
+  await fsp.writeFile(path.join(contentDir, file.target), lines.join('\n'));
+  console.log(' - Finished file!');
 }
 
 /**
@@ -102,9 +90,9 @@ async function processOutdatedFiles() {
 async function main() {
   await processMissingFiles();
   await processOutdatedFiles();
-  console.log("All done!");
+  console.log('All done!');
 }
 
 main().catch((error) => {
-  console.error("Error:", error);
+  console.error('Error:', error);
 });

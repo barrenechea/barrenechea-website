@@ -4,7 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BlogCard from './BlogCard.astro';
 
 export interface Props {
-  postsList: (CollectionEntry<'posts' | 'projects'>)[];
+  postsList: CollectionEntry<'posts' | 'projects'>[];
 }
 
 const { postsList } = Astro.props as Props;

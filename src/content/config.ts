@@ -1,4 +1,4 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection, z } from 'astro:content';
 
 const blogBaseSchema = z.object({
   title: z.string(),
@@ -17,11 +17,11 @@ const projectsSchema = blogBaseSchema.extend({
 });
 
 const postsCollection = defineCollection({
-  type: "content",
+  type: 'content',
   schema: (context) => postsSchema.extend({ img: context.image() }),
 });
 const projectsCollection = defineCollection({
-  type: "content",
+  type: 'content',
   schema: (context) => projectsSchema.extend({ img: context.image() }),
 });
 
