@@ -1,0 +1,28 @@
+---
+title: Bonjour le monde !
+description: J'ai relancé le site web, il fonctionne maintenant avec Astro et est distribué sur Edge !
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Logo Astro
+translatedBy: gpt-4-1106-preview
+checksum: ccd7f51e2f54980ddcc736b7c65c369bfeb70cb4966b0ca1870da55c07533cc8
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+Si vous avez déjà visité ce site, vous avez peut-être remarqué que le message de "bonjour" était le même depuis quelques années. Mais beaucoup de choses ont changé avec le temps !
+
+<Image
+  src={OldWebsiteImage}
+  alt="Capture d'écran de l'ancienne apparence du site web"
+  format="webp"
+/>
+
+Le site web, en 2016, était hébergé sur un droplet de [DigitalOcean](https://digitalocean.com). Plus tard, j'ai décidé d'ouvrir des ports dans mon propre réseau et j'ai utilisé [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) pour exécuter le site web comme un conteneur sur mon serveur [Unraid](https://unraid.net/fr).
+
+Avant de passer aux déploiements sur Edge, j'utilisais un [Tunnel Cloudflare](https://www.cloudflare.com/fr-fr/products/tunnel/) pour pallier la nature dynamique de l'IP de mon FAI et renforcer les "points d'accès" de mon réseau local.
+
+Ce que vous lisez maintenant est une reconstruction du site web développée avec [Astro](https://astro.build). Sa capacité à être déployé sur Edge (je suis actuellement en train d'utiliser le [réseau périphérique](https://www.cloudflare.com/fr-fr/learning/cdn/glossary/edge-server/) de Cloudflare) représente une énorme amélioration tant du point de vue de la sécurité que des performances pour les utilisateurs finaux (c'est-à-dire vous !).
+
+La police que j'ai choisie pour ce site web est [Work Sans](https://fonts.google.com/specimen/Work+Sans?subset=latin).

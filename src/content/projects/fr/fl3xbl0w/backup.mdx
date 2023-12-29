@@ -1,0 +1,240 @@
+---
+title: Sauvegarder le contenu de votre Console - fl3xbl0w
+description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /fr/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo du projet fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 3d9a41a7fed58bbf851e9c505c9291eed097cb534da1052eb6faa022c6afb876
+---
+
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
+
+Après avoir été libéré de `AppMonitorService` (ou après avoir reçu une mise à jour OTA), la première chose à faire est de sauvegarder autant de données que possible.
+
+Assurez-vous d'être déjà connecté à la console :
+
+```sh
+> adb connect <Adresse IP de la Console>
+```
+
+## Sauvegarde du contenu de /sdcard
+
+Il peut contenir certains fichiers nécessaires au bon fonctionnement de la machine après une réinitialisation d'usine (principalement dans les dossiers `/sdcard/Android` et `/sdcard/Nautilus`). Nous allons tout sauvegarder avec :
+
+```sh
+> adb pull /sdcard/ .
+```
+
+## Sauvegarde des APKs
+
+D'abord, obtenez la liste de tous les paquets installés sur la console (juste pour avoir une référence) :
+
+```sh
+> adb shell pm list packages -f
+```
+
+Ils apparaîtront dans le format suivant : `package:<emplacement de l'APK>=<nom du paquet>`
+
+Vous devrez trouver les applications que vous souhaitez sauvegarder. TOUTES LES APPLICATIONS NE SONT PAS NÉCESSAIRES, la plupart sont des applications standard Android, donc nous chercherons seulement les "applications non standard" en utilisant quelques filtres :
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+```
+
+Vous pourrez voir des enregistrements d'applications de `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` et peut-être d'autres à l'avenir. Nous voulons sauvegarder tout ce que nous voyons dans cette liste (identifiants uniques cachés, utilisez vos propres résultats) :
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
+package:/data/app/com.redbend.client-XXXXXXXXXXXXXXXX/base.apk=com.redbend.client
+package:/data/app/com.nautilus.nlssbcsystemsettings-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nlssbcsystemsettings
+package:/system/priv-app/RBDualPartService/RBDualPartService.apk=com.redbend.dualpart.service.app
+package:/data/app/com.netflix.mediaclient-XXXXXXXXXXXXXXXX/base.apk=com.netflix.mediaclient
+package:/data/app/com.nautilus.nautiluslauncher-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nautiluslauncher
+package:/data/app/com.amazon.avod.thirdpartyclient-XXXXXXXXXXXXXXXX/base.apk=com.amazon.avod.thirdpartyclient
+package:/data/app/com.nautilus.sbc_demo_app-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbc_demo_app
+package:/data/app/com.nautilus.UtilityApp-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.UtilityApp
+package:/data/app/com.nautilus.g4assetmanager-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.g4assetmanager
+package:/data/app/com.nautilus.platform_hardwaretest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.platform_hardwaretest
+package:/data/app/com.nautilus.webviewer-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.webviewer
+package:/data/app/com.nautilus.bowflex.usb-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.bowflex.usb
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+> REMARQUE : `com.redbend.dualpart.service.app` provient de `/system/priv-app/`, ce qui signifie qu'il restera installé même après une réinitialisation d'usine. Nous pouvons le sauvegarder de toute façon si vous êtes intéressé par l'ingénierie inverse des applications.
+
+Prenons Disney Plus comme exemple (identifiant unique caché)
+
+```
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+Cette ligne, basée sur le format que j'ai mentionné, serait :
+
+```
+Emplacement du paquet : /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
+Nom du paquet : com.disney.disneyplus
+```
+
+Nous rechercherons quelle version de l'application nous avons avec ces informations. Utilisons le nom du paquet que nous venons d'identifier et exécutons :
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+```
+
+Dans mon cas, j'ai reçu :
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+    versionName=2.4.2-rc2
+```
+
+Maintenant, pour créer une sauvegarde pour le paquet Disney Plus, la procédure serait :
+
+```sh
+> adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
+```
+
+Immédiatement après la fin, allez dans votre explorateur de fichiers et renommez le fichier `base.apk` fraîchement sauvegardé en `com.disney.disneyplus-2.4.2-rc2.apk`.
+
+Le format que je suggère pour les APKs, étant donné cet exemple, est : `<Nom du paquet>-<version>.apk`
+
+Maintenant, répétez le processus pour le reste des applications.
+
+## Sauvegarde des données d'application
+
+Il semble être capable de sauvegarder _certains (je ne suis pas sûr si tous)_ les données des applications.
+
+_Gardez à l'esprit que toutes les applications installées ne génèrent pas de données d'application, ou nous, en tant qu'utilisateur `shell`, pourrions ne pas avoir les autorisations pour sauvegarder tout._
+
+Créez une sauvegarde complète de toutes les applications installées par l'utilisateur :
+
+```sh
+> adb backup -f appdata.adb -all -noapk -nosystem
+```
+
+Alternativement, vous pouvez obtenir le même résultat avec une commande alternative :
+
+```sh
+> adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
+```
+
+Les deux commandes demanderont une "confirmation à l'écran" que vous souhaitez faire une sauvegarde. Appuyez sur "**SAUVEGARDER MES DONNÉES**" :
+
+<Image src={DialogBackupConfirm} alt="écran de confirmation de sauvegarde" format="webp" />
+
+Si vous souhaitez extraire le contenu (sous Linux, macOS), vous aurez besoin de `zlib-flate` de [qpdf](https://command-not-found.com/qpdf) et exécuter :
+
+```sh
+> dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
+```
+
+Il y a des données fascinantes pour `com.nautilus.bowflex.usb`.
+Il y a des informations personnelles identifiables (PII) à l'intérieur, donc **assurez-vous de bien vérifier quels fichiers vous partagez**.
+
+_Ces méthodes de sauvegarde et d'extraction proviennent de [ce Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Je n'ai testé que les méthodes de sauvegarde listées là, qui sont sûres pour jouer. **Si vous jouez avec la restauration du Gist, vous êtes seul responsable**. Faites-nous savoir si cela fonctionne !_
+
+## Script
+
+J'ai développé un script Python rapide et sale pour sauvegarder certains contenus (pour l'instant, cela n'inclut pas les données d'application).
+**Testé uniquement sur macOS avec android-platform-tools installé via brew**.
+Lisez le script et assurez-vous qu'il a du sens pour vous avant de l'exécuter.
+
+```python
+import sys
+import os
+import subprocess
+from datetime import datetime
+
+# vérifier si un argument a été donné
+if len(sys.argv) != 2:
+    print("Utilisation : python3 dump.py <Adresse IP de la Console>")
+    sys.exit(1)
+
+ipaddr = sys.argv[1]
+
+# vérifier si adb est disponible pour le shell
+adb_path = subprocess.check_output(["which", "adb"]).decode("utf-8").strip()
+if not os.path.exists(adb_path):
+    print("adb non trouvé")
+    exit()
+
+# configurer le dossier de sauvegarde avec la date et l'heure actuelles
+dump_folder = os.path.join(
+    os.environ["HOME"],
+    "Desktop",
+    "nautilus_dump",
+    "{}".format(datetime.now().strftime("%Y-%m-%d_%H-%M-%S")),
+)
+if not os.path.exists(dump_folder):
+    os.makedirs(dump_folder)
+
+# connecter adb
+print("Connexion à {}...".format(ipaddr))
+subprocess.call(["adb connect {}".format(ipaddr)], shell=True)
+
+# sauvegarder le contenu de /sdcard
+print("Sauvegarde du contenu de /sdcard...")
+subprocess.call(["adb pull /sdcard/ {}".format(dump_folder)], shell=True)
+
+# obtenir des informations sur les APK
+print("Sauvegarde des APKs...")
+packages = (
+    subprocess.check_output(["adb shell pm list packages -f"], shell=True)
+    .decode("utf-8")
+    .split("\n")
+)
+
+# filtrer les lignes vides
+packages = [x for x in packages if x.strip()]
+
+# filtrer les lignes contenant "com.android", "com.google", "framework-res"
+packages = [package for package in packages if package.find("com.android") == -1]
+packages = [package for package in packages if package.find("com.google") == -1]
+packages = [package for package in packages if package.find("framework-res") == -1]
+
+print("Trouvé {} APKs".format(len(packages)))
+
+for package in packages:
+    package_name = package.split("=")
+    package_name = package_name[len(package_name) - 1].strip()
+    package_version = (
+        subprocess.check_output(
+            ["adb shell dumpsys package {} | grep versionName".format(package_name)],
+            shell=True,
+        )
+        .decode("utf-8")
+        .split("=")[1]
+        .strip()
+    )
+
+    package_path = package.split(":")[1].split(".apk=")[0].strip()
+    package_path = "{}.apk".format(package_path)
+    print("Sauvegarde de {} v{}...".format(package_name, package_version))
+
+    subprocess.call(["adb pull {} {}".format(package_path, dump_folder)], shell=True)
+
+    os.rename(
+        os.path.join(dump_folder, os.path.basename(package_path)),
+        os.path.join(dump_folder, "{}-{}.apk".format(package_name, package_version)),
+    )
+
+# sauvegarder appdata
+print("Sauvegarde de appdata.adb ...")
+print('APPUYEZ SUR LE BOUTON "SAUVEGARDER MES DONNÉES" SUR L'ÉCRAN MAINTENANT !!!')
+subprocess.call(
+    ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
+    shell=True,
+)
+
+# déconnecter adb
+print("Déconnexion...")
+subprocess.check_output(["adb disconnect"], shell=True)
+```

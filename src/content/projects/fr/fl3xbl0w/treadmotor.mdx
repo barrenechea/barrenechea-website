@@ -1,0 +1,61 @@
+---
+title: Contrôleur de Moteur du Tapis de Course - fl3xbl0w
+description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /fr/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo du projet fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_Cela s'applique principalement au Treadmill 22 & Treadmill 56._
+
+La carte de contrôle du moteur est fabriquée par [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="Contrôleur de Carte de Contrôle du Moteur B017D" format="webp" />
+
+Compte tenu du [manuel de service](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fourni par Nautilus Inc. ([sauvegarde sur archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)) :
+
+<Image src={TreadmillElectrical} alt="Schéma électrique du tapis de course" format="webp" />
+
+Et en se concentrant spécifiquement sur cette partie :
+
+<Image src={TreadmillComm} alt="Chemin de communication du tapis de course" format="webp" />
+
+Nous pouvons identifier le "câble de communication" qui connecte le contrôleur du moteur comme étant un connecteur à 5 broches. Il n'y a qu'un seul connecteur à 5 broches.
+J'ai étiqueté les fils avec leurs couleurs correspondantes (les données & l'interrupteur sont opto-isolés) :
+
+| couleur du fil | étiquette |
+| -------------- | --------- |
+| rouge          | GND       |
+| blanc          | RXD       |
+| noir           | TXD       |
+| jaune          | +12       |
+| vert           | SW        |
+
+La carte n'est pas connectée directement à la console Android.
+
+Le seul connecteur à 5 broches est de la marque Molex. Une recherche Google pour "connecteurs Molex petits" m'a mené à une image de ce qu'ils appellent `Molex Micro-Fit 3.0 Single Row (5-Pin)`, qui est utilisé pour connecter la carte de contrôle du moteur :
+
+<Image src={Molex} alt="Connecteur Molex Micro-Fit 3.0" format="webp" />
+
+[Lien AliExpress](https://aliexpress.com/item/32902205579.html)
+
+En regardant dans `NautilusLauncher.apk` via `jadx-gui`, je peux voir qu'ils communiquent avec la tablette Android avec leur "Console Universelle" en utilisant Série à 230400 Bauds (en utilisant `/dev/ttyS4`). Ce n'est PAS ce que nous analysons ici. Cela se réfère à la communication entre Android et la "Console Universelle". Nous enquêtons sur les comms entre la "Console Universelle" et la "Carte de Contrôle du Moteur".
+
+Essayer de connecter un ESP32 ou un pont série basé sur CH340 directement aux fils entre la base du tapis de course et la carte de contrôle Bowflex a fait que la base du tapis de course ne s'initialisait pas correctement, donc j'ai commencé à soupçonner qu'ils utilisent RS232.
+
+Note : En se connectant seulement à GND et RXD, nous pouvons "voir" des informations hexadécimales apparemment aléatoires à 9600 bauds. Se connecter à TXD empêche la base du tapis de course de s'initialiser.
+
+-- À suivre, j'ai besoin de temps pour jouer avec mon nouvel analyseur logique --

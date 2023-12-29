@@ -1,0 +1,163 @@
+---
+title: Dump de la ROM - fl3xbl0w
+description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /fr/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo du projet fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: b18c469c50acb988210796ef5e4b6cecf18ddf9245ad33a9ee1bbf0633c1c4ca
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### Mode de Chargement Rockchip
+
+Un processeur RK3399 alimente le matériel Android. Les processeurs Rockchip sont équipés d'un "mode de chargement" en tant que fonctionnalité standard.
+
+La suite d'outils que j'ai utilisée est :
+
+- Rockchip Driver Assistant v4.5 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 test de [ce post sur XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+
+_Il existe une version plus récente du pilote disponible au téléchargement, mais elle est connue pour être incompatible avec rkDumper._
+
+Pour jouer avec cela, vous devrez démonter la console Bowflex, dévisser le couvercle arrière en plastique et la remonter dans une "forme nue".
+**N'essayez pas cela, car manipuler le matériel Android en mode Loader peut entraîner un appareil irrémédiablement cassé.**
+
+<Image src={ConsoleMounted} alt="Console montée avec le couvercle arrière enlevé" format="webp" />
+
+Voici les parties pertinentes de la carte logique Android pour les choses Rockchip :
+
+<Image src={VantronPCB} alt="PCB de Vantron" format="webp" />
+
+Vous pouvez garder l'application Android Tool Release ouverte tout le temps comme référence pour vérifier dans quel mode se trouve la console.
+
+Avec la machine allumée en "mode normal" et connectée à un ordinateur, elle est identifiée comme `NFTM-LAR` :
+
+```
+NFTM-LAR:
+  Product ID: 0x0001
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 3.10
+  Vitesse: Jusqu'à 480 Mb/s
+  Fabricant: Vanzo
+  Emplacement ID: 0x14120000 / 9
+  Courant Disponible (mA): 500
+  Courant Requis (mA): 500
+  Courant Supplémentaire en Fonctionnement (mA): 0
+```
+
+Avec la machine éteinte, connectée via USB à un ordinateur, en maintenant le bouton "Recovery" enfoncé et en l'allumant, elle devrait démarrer en "mode Loader". La machine "sonnera", mais l'écran restera statique. _Vous pouvez éteindre, attendre une minute, allumer et la machine démarrera normalement._
+
+_Le matériel Android ne gère pas le "son" après l'allumage de la machine, mais à travers les autres PCB de Nautilus._
+
+Elle sera maintenant signalée sur l'ordinateur comme `USB download gadget` (Numéro de Série caché) :
+
+```
+USB download gadget:
+  Product ID: 0x330c
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 99.99
+  Numéro de Série: XXXXXXXXXXXXXXX
+  Fabricant: Rockchip
+  Emplacement ID: 0x14120000
+```
+
+Après avoir exécuté rkDumper contre la console, nous obtenons des informations sur les partitions :
+
+```
+"EFI PART" sign found (RKFP FW dump)
+
+Partition "EFI_part" (0x00004000) saved (format: RockChip RKFP dump)
+Partition "uboot_a" (0x00002000) saved (format: Rockchip uboot image file)
+Partition "uboot_b" (0x00002000) saved (format: Rockchip uboot image file)
+Partition "trust_a" (0x00002000) saved (format: inconnu)
+Partition "trust_b" (0x00002000) saved (format: inconnu)
+Partition "misc" (0x00002000) saved (format: inconnu)
+Partition "resource" (0x00008000) saved (format: inconnu)
+Partition "kernel" (0x00010000) saved (format: inconnu)
+Partition "dtb" (0x00002000) saved (format: inconnu)
+Partition "dtbo_a" (0x00002000) saved (format: inconnu)
+Partition "dtbo_b" (0x00002000) saved (format: inconnu)
+Partition "vbmeta_a" (0x00000800) saved (format: inconnu)
+Partition "vbmeta_b" (0x00000800) saved (format: inconnu)
+Partition "boot_a" (0x00020000) saved (format: inconnu)
+Partition "boot_b" (0x00020000) saved (format: inconnu)
+Partition "backup" (0x00038000) saved (format: inconnu)
+Partition "security" (0x00002000) saved (format: inconnu)
+Partition "cache" (0x00100000) saved (format: inconnu)
+Partition "system_a" (0x00500000) saved (format: inconnu)
+Partition "system_b" (0x00500000) saved (format: inconnu)
+Partition "metadata" (0x00008000) saved (format: inconnu)
+Partition "vendor_a" (0x00100000) saved (format: inconnu)
+Partition "vendor_b" (0x00100000) saved (format: inconnu)
+Partition "oem_a" (0x00100000) saved (format: inconnu)
+Partition "oem_b" (0x00100000) saved (format: inconnu)
+Partition "frp" (0x00000400) saved (format: inconnu)
+Partition "sw_release" (0x00ed7000) saved (format: inconnu)
+Partition "video" (0x0047e000) saved (format: inconnu)
+Partition "userdata" (0x0169bbdf) saved (format: inconnu)
+```
+
+`uboot_a` et `uboot_b` ont été extraits avec succès, mais toutes les autres partitions marquées comme `(format: inconnu)` sont mal sauvegardées, extrayant seulement des valeurs hexadécimales `CC` d'elles.
+
+Un cas similaire au mien a été documenté sur [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), et après [avoir demandé](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) au développeur de rkDumper, [il dit](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) qu'il doit y avoir un nouveau chargeur RockChip en place. Suivre cette méthode semble être inviable pour le moment.
+
+### ADB
+
+Des données similaires peuvent être trouvées via adb, mais il ne semble pas possible de faire une sauvegarde car nous manquons de permissions root :
+
+```sh
+> ls -al /dev/block/platform/
+total 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+total 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### Autres idées
+
+Une chose que nous pourrions faire est de dessouder la puce eMMC et de la lire de manière externe pour pouvoir sauvegarder tout son contenu. Cela serait utile pour créer une ROM personnalisée (Custom ROM), mais je ne vais pas dessouder celle de ma SEULE Console (ce serait génial d'en avoir une de rechange).

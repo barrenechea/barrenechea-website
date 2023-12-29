@@ -1,0 +1,57 @@
+---
+title: Décompilation - fl3xbl0w
+description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /fr/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo du projet fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: d446b328c0ea9a5cb92d84b8df43b2237c9ef5b49b6baa3603eab86dc7980902
+---
+
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
+
+Cela suppose que vous avez déjà [vos propres APKs](/fr/projects/fl3xbl0w/backup). Gardez à l'esprit que, bien que je spécifie cela pour les applications Nautilus, cela s'applique à pratiquement n'importe quelle application Android que vous souhaitez "jeter un coup d'œil sous le capot".
+
+## Convertir des applications en code Java
+
+Les instructions suivantes visent à obtenir un "code lisible", mais il est peu probable que vous puissiez le recompiler en un APK. Je l'utilise comme référence pour comprendre les développeurs de Nautilus. Si vous souhaitez modifier la base de code et la reconditionner, allez à [Convertir des applications en code Smali](#convertir-des-applications-en-code-smali).
+
+### Exigences
+
+- [jadx](https://github.com/skylot/jadx)
+
+### Ouvrons quelques trucs !
+
+Après avoir installé `jadx`, vous devriez pouvoir ouvrir `jadx-gui`. Allez dans Fichier -> Ouvrir des fichiers...
+
+<Image src={JadxGUIScreen} alt="écran de jadx-gui" format="webp" />
+
+Recherchez l'APK que vous souhaitez et cliquez sur "Ouvrir le fichier" :
+
+<Image src={JadxGUISelect} alt="jadx-gui sélectionnant un apk" format="webp" />
+
+Et à partir de là, vous pouvez commencer à fouiner :
+
+<Image src={JadxGUIOpened} alt="jadx-gui décompilant NautilusLauncher" format="webp" />
+
+Si vous souhaitez enregistrer le projet en tant que fichiers Java, allez dans Fichier -> Enregistrer en tant que projet gradle :
+
+<Image src={JadxGUISave} alt="jadx-gui enregistrant le projet" format="webp" />
+
+Si c'est utile, voici mes préférences pour `jadx-gui` :
+
+<Image src={JadxGUIPrefs} alt="préférences de jadx-gui" format="webp" />
+
+## Convertir des applications en code Smali
+
+La communauté a testé [cela](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) pour appliquer certains correctifs à nos APKs. Cela ne fonctionnerait que pour les applications qui ne sont pas des applications système, car sans la clé de signature appropriée, l'application n'aura pas accès aux ressources du système (comme le port série).

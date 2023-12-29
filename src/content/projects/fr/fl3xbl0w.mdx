@@ -1,0 +1,85 @@
+---
+title: fl3xbl0w
+description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo du projet fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: c0130a435f67cbcb19ac8072c88354c5f3e181e9f644a9e82f19d85517a20d2f
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="logo fl3xbl0w" format="webp" width={800} />
+
+Bienvenue dans ma documentation de la "Console Bowflex" ! (ce que Nautilus appelle Vantron).
+
+Vantron est la base de la plupart des "appareils intelligents" de Nautilus Inc. Fondamentalement, une tablette Android exécutant un logiciel propriétaire. En plus de quelques curiosités liées au matériel qui ont piqué ma curiosité.
+
+Je me suis beaucoup appuyé sur un travail antérieur que j'ai trouvé sur [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (merci [xasmx](https://www.reddit.com/user/xasmx/) !) pour obtenir une compréhension plus approfondie du logiciel et du matériel de la machine.
+
+## Appareils compatibles (Jailbreak Android)
+
+Après avoir joué avec les <a href="/fr/projects/fl3xbl0w/decompiling" target="_self">applications décompilées</a>, je peux dire avec certitude que la documentation suivante pourrait être extrapolée d'une manière ou d'une autre aux appareils Bowflex suivants :
+
+### Tapis de course
+
+- Treadmill 22 / Treadmill 56 (même tapis de course. Le 56 a une entrée de 220v AC, le 22 a une entrée de 120v AC)
+- Treadmill 10 / Treadmill 25 (même tapis de course. Le 25 a une entrée de 220v AC, le 10 a une entrée de 120v AC)
+
+### Vélos
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+Je n'ai pas de Max Trainer ni de VeloCore, mais cela devrait fonctionner tant que vous avez un port USB disponible basé sur les découvertes du code.
+
+Confirmé pour fonctionner avec les versions de NautilusLauncher :
+
+- 5.0.0.350
+- 5.0.0.382
+
+**Le jailbreak a déjà été corrigé par Nautilus.**
+
+## Documentation
+
+### Informations générales
+
+- <a href="/fr/projects/fl3xbl0w/jailbreak" target="_self">
+    Jailbreak d'Android
+  </a>
+- <a href="/fr/projects/fl3xbl0w/backup" target="_self">
+    Sauvegarder le contenu de votre Console
+  </a>
+- <a href="/fr/projects/fl3xbl0w/decompiling" target="_self">
+    Décompilation
+  </a>
+- <a href="/fr/projects/fl3xbl0w/quirks" target="_self">
+    Curiosités de Bowflex
+  </a>
+
+### Travaux en cours
+
+- <a href="/fr/projects/fl3xbl0w/treadmotor" target="_self">
+    Contrôleur de Moteur du Tapis de Course
+  </a>
+- <a href="/fr/projects/fl3xbl0w/romdump" target="_self">
+    Dump de la ROM
+  </a>
+
+## Objectif final
+
+Activer autant de mises à jour futures pour mon tapis de course que possible.
+
+Nautilus, Inc. n'offre qu'une garantie d'un an sur la partie électronique, et dès que j'ai vu que le mécanisme pour éteindre la machine (et donc la tablette Android) était essentiellement de "couper l'alimentation AC via l'interrupteur arrière", cela m'a effrayé. Chaque appareil basé sur Linux devrait être éteint de manière sûre pour éviter la corruption du système d'exploitation, et cette tablette Android ne fait pas exception. Alors tant qu'elle fonctionne, pourquoi ne pas s'amuser un peu plus avec elle ?
+
+En fin de compte, je veux intercepter, comprendre et recréer la communication qui va vers le contrôleur du moteur de mon tapis de course pour que si la tablette meurt, j'ai toujours un appareil fonctionnel.
