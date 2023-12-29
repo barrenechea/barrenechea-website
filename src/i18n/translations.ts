@@ -24,16 +24,16 @@ export const languages = {
   },
 } as const;
 
-export const langData = {
+export type LanguageKey = keyof typeof languages;
+
+const langData = {
   en: enWithFallback,
   es,
   de: deWithFallback,
 } as const;
 
-export type LanguageKeys = keyof typeof langData;
-
 export function useTranslations(lang: string = 'es'): (key: keyof Translations) => string {
   return function t(key: keyof Translations): string {
-    return langData[lang as LanguageKeys][key] || es[key];
+    return langData[lang as LanguageKey][key] || es[key];
   };
 }

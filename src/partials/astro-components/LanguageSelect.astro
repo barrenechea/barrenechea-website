@@ -1,6 +1,6 @@
 ---
 import { AppConfig } from '~/config';
-import { languages } from '~/i18n/translations';
+import { type LanguageKey, languages } from '~/i18n/translations';
 
 /**
  * Returns the localized pathname for a given locale.
@@ -13,8 +13,7 @@ function localizedPathname(locale: string): string {
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 
-const currentLanguage =
-  languages[lang as keyof typeof languages] ?? languages[AppConfig.defaultLang];
+const currentLanguage = languages[lang as LanguageKey] ?? languages[AppConfig.defaultLang];
 ---
 
 <language-selector class="flex justify-center">
@@ -49,9 +48,9 @@ const currentLanguage =
                   aria-hidden="true"
                   class="me-2 size-3.5 rounded-full"
                   viewBox="0 0 512 512"
-                  set:html={languages[language as keyof typeof languages].icon.body}
+                  set:html={languages[language as LanguageKey].icon.body}
                 />
-                {languages[language as keyof typeof languages].label}
+                {languages[language as LanguageKey].label}
               </div>
             </a>
           </li>
