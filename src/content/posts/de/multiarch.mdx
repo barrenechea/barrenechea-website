@@ -1,38 +1,38 @@
 ---
-title: Multi-Architektur in Allem
-description: Der Weg von einer x86/64-Welt zu einem Universum von Architekturen.
+title: Multi-Arch für alles
+description: Die Reise von einer x86/64-Welt zu einem Universum von Architekturen.
 pubDate: 2021-09-06T00:00:00Z
 img: ~/assets/images/arm-x86.svg
-imgAlt: Zwei Chips, einer mit der Beschriftung "x86" und der andere mit der Beschriftung "ARM".
+imgAlt: Zwei Chips, einer beschriftet mit "x86" und der andere mit "ARM".
 translatedBy: gpt-4-1106-preview
-checksum: facf75ab9d5bc3c05e77ef62d401bc43f67681d096c323db1412b565a15cd49c
+checksum: fa8c71668cd9e14e1349122d69ac1a0696e5a23dff0182b9145a50b33a68cbf6
 ---
 
-Als wir begannen, unsere ersten Grundlagen bei [Finalis](https://www.finalis.com) zu bauen, erinnere ich mich an den Gedanken, AWS Graviton auszuprobieren.
-Es war 2018 nicht machbar, ohne Dinge selbst zu bauen. Es ist 2022, und wir (als Gemeinschaft) kämpfen immer noch darum, ARMv8-Unterstützung in Dockerhub-Images zu finden.
+Als wir bei [Finalis](https://www.finalis.com) unsere ersten Grundlagen legten, erinnere ich mich an die Idee, AWS's Graviton zu testen.
+Das war 2018 nicht machbar, ohne Dinge selbst zu bauen. Schnell vorwärts, es ist 2022, und wir (als Gemeinschaft) kämpfen immer noch darum, ARMv8-Unterstützung in Dockerhub-Bildern zu finden.
 
-Aber 2020 passierte etwas Großes: Apple kündigte den Übergang der Macs zu Apple Silicon mit einer Frist von 2 Jahren an.
+Aber 2020 passierte etwas Großes: Apple kündigte den Übergang von Macs zu Apple Silicon mit einem Zeitplan von 2 Jahren an.
 
-Bei Finalis halten wir uns an Apple-Hardware für die Softwareentwicklung. Du bekommst ein Unix-ähnliches Betriebssystem und eine fantastische Bild- und Tonqualität für Filme oder was auch immer 🍿.
+Bei Finalis halten wir uns an Apple-Hardware für die Softwareentwicklung. Man bekommt ein Unix-ähnliches Betriebssystem und fantastische Bild- und Tonqualität für das Anschauen von Filmen oder was auch immer 🍿.
 
 Im Jahr 2020 begann ein Countdown. Wenn wir in Zukunft weiterhin neue Apple-Geräte erwerben wollten, musste Finalis multi-architekturfähig werden.
 
 ## Docker
 
-Als Apple den M1 herausbrachte und wir einen bekamen, begann Docker gerade, sich damit "anzufreunden", aber Docker auf ARM hatte einige Probleme in früheren Versionen, einfach weil der Motor getestet wurde (von uns, den Pionierentwicklern).
+Als Apple den M1 herausbrachte und wir einen bekamen, begann Docker, sich damit zu "vertragen", aber Docker auf ARM hatte in früheren Versionen einige Probleme, einfach weil die Engine getestet wurde (von uns, den Pionierentwicklern).
 
-Dann schien alles in Ordnung zu sein: Drittanbieter-Tools - die meisten der benötigten Bilder waren bereits für ARM64 verfügbar, aber nicht alle. [browserless](https://github.com/browserless/chrome) war das, was ich zuerst angegangen bin, um es auf ARM64 zu bauen, und so habe ich einen [Pull-Request](https://github.com/browserless/chrome/pull/1847) mit den minimal notwendigen Änderungen eingereicht, damit es funktioniert.
+Später schien alles in Ordnung zu sein: Drittanbieter-Tools - die meisten der benötigten Bilder waren bereits für ARM64 verfügbar, aber nicht alle. [browserless](https://github.com/browserless/chrome) war das, was ich anpackte, um es auf ARM64 zu bauen, und so schickte ich einen [Pull-Request](https://github.com/browserless/chrome/pull/1847) mit den minimalen Änderungen, die notwendig waren, um es zum Laufen zu bringen.
 
-Mit den Drittanbieter-Tools abgedeckt, ging es darum, sicherzustellen, dass Docker unsere eigenen Bilder für ARM64 baute. "Hey, du verwendest TypeScript; das sollte einfach funktionieren!"... Nun, solange deine Abhängigkeiten nicht erfordern, dass Binärdateien heruntergeladen werden, während du `npm install` ausführst.
+Mit den Drittanbieter-Tools abgedeckt, war es nur noch eine Frage der Sicherstellung, dass Docker unsere eigenen Bilder für ARM64 baute. "Hey, du verwendest TypeScript; es sollte einfach funktionieren!"... Nun, solange deine Abhängigkeiten nicht erfordern, dass Binärdateien während des Ausführens von `npm install` heruntergeladen werden.
 
-Das Hauptproblem? Binärdateien für ARM64 wurden nicht bereitgestellt, was einen Binärbau erzwang, während du `npm install` mit `make` (Post-Installations-Skripte?) ausführst. Aus einer Konfigurationsperspektive war ein wenig Liebe in einigen unserer `Dockerfile`-Dateien alles, was wir brauchten und alles löste.
+Das Hauptproblem? Keine Binärdateien werden für ARM64 bereitgestellt, was einen Binärbau erzwingt, während man `npm install` mit `make` ausführt (Post-Installation-Skripte?). Aus Konfigurationssicht war ein wenig Liebe in einigen unserer `Dockerfile`-Dateien alles, was wir brauchten, und es löste alles.
 
 ## Pipelines
 
-Wenn du mit GitHub Actions arbeitest und dich mit Multi-Architektur auseinandersetzt, hast du zwei Optionen: Du führst zwei parallele Runner aus (einen für den Bau für x86/64 und einen für arm64), oder du führst einen Runner für beide Architekturen aus.
+Wenn man mit GitHub Actions arbeitet und sich mit Multi-Architektur beschäftigt, hat man zwei Optionen: zwei parallele Runner betreiben (einer baut für x86/64 und der andere für arm64), oder einen Runner für beide Architekturen laufen lassen.
 
-Ich habe mich für die zweite Option entschieden, um zu experimentieren, über [docker buildx](https://docs.docker.com/build/buildx/). Wenn du den Konfigurationsanweisungen für [build-push-action](https://github.com/docker/build-push-action#path-context) folgst, kannst du schnell eine betriebsbereite Pipeline erhalten.
+Ich wählte die zweite Option, um zu experimentieren, durch [docker buildx](https://docs.docker.com/build/buildx/). Wenn man den Einrichtungsanweisungen für [build-push-action](https://github.com/docker/build-push-action#path-context) folgt, kann man schnell eine betriebsbereite Pipeline erhalten.
 
-Das Überlassen der Multi-Architektur-Bauweise an buildx ermöglicht es dir, auf Dockerhub hochzuladen, ohne sich mit verschiedenen Tags für verschiedene Architekturen auseinandersetzen zu müssen. Alle deine Tags WERDEN multi-architekturfähig sein.
+Wenn man buildx die Multi-Architektur-Builds überlassen kann, kann man zu Dockerhub pushen, ohne sich mit verschiedenen Tags für verschiedene Architekturen auseinandersetzen zu müssen. Alle deine Tags WERDEN multi-architekturkompatibel sein.
 
-Der Nachteil ist die Bauzeit: Zwei parallele Runner in ihren jeweiligen Architekturen wären viel schneller, aber die Pipeline würde erfordern, dass das Zusammenführen der Ergebnisse in einem einzigen Tag gehandhabt wird. _Nur wenn es dir wichtig ist, den Konsumenten zu erleichtern, das richtige Bild zu finden._
+Der Nachteil ist die Bauzeit: Zwei parallele Runner auf ihren entsprechenden Architekturen wären viel schneller, aber die Pipeline würde das Management des Zusammenführens der Ergebnisse in einen einzigen Tag erfordern. _Nur wenn es dir darum geht, es den Verbrauchern leichter zu machen, das richtige Bild zu finden._

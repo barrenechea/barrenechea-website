@@ -1,16 +1,16 @@
 ---
 title: Android Jailbreak - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-Maschine.
 pubDate: 2022-05-28T10:28:00Z
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Logo des fl3xbl0w-Projekts
+imgAlt: fl3xbl0w Projektlogo
 tags:
   - ReverseEngineering
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: bd460c49ce657f84a94e6e4b3fbe21ca5002d70e96ab7f2b853d0add7453db64
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
 ---
 
 import { Image } from 'astro:assets';
@@ -25,15 +25,15 @@ import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
 import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
 import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
 
-Diese Methode hängt davon ab, dass die Spezifikationen der Bowflex-Konsole für die heutige Software zu langsam sind (sie hat nur 2 GB RAM auf dem Android-Board). Deshalb, und wenn wir _schneller als das Tablet_ sind, können wir einen Jailbreak über den `AppMonitorService` von Nautilus durchführen.
+Diese Methode beruht darauf, dass die Spezifikationen der Bowflex-Konsole für die heutige Software zu langsam sind (sie hat nur 2 GB RAM auf dem Android-Board). Deshalb können wir, wenn wir _schneller als das Tablet_ sind, von Nautilus' `AppMonitorService` aus einen Jailbreak durchführen.
 
 _Könnte man es als Brute-Force-Angriff bezeichnen?_
 
-Du kannst die Maschine jederzeit während des Prozesses neu starten, und alles wird so sein, wie es sein sollte. Es gibt kein Risiko auf der Softwareseite, dies zu tun. Probier es aus!
+Sie können die Maschine jederzeit im Prozess neu starten, und alles wird so sein, wie es sein sollte. Es besteht kein Risiko auf der Softwareseite, dies zu tun. Probieren Sie es aus!
 
 ## Voraussetzungen
 
-- Eine USB-Tastatur (kabelgebunden oder drahtlos über einen USB-Dongle) mit "Medientasten" für Home, Back.
+- Eine USB-Tastatur (kabelgebunden oder kabellos über einen USB-Dongle) mit Medientasten für Home, Zurück.
 - Schnelle Finger! (der "intensive Teil" muss in etwa einer Sekunde passieren)
 - Ein Computer mit [adb](https://developer.android.com/studio/command-line/adb) ([Download-Link](https://developer.android.com/studio/releases/platform-tools))
 
@@ -41,58 +41,58 @@ Ich habe eine Logitech K600 verwendet, aber jede Tastatur mit diesen Tasten soll
 
 <Image src={LogiKeys} alt="Logitech K600 Tastatur" format="webp" />
 
-_Bluetooth-Tastaturen scheinen sich nicht über JRNY koppeln zu lassen._
+_Bluetooth-Tastaturen scheinen sich nicht über JRNY koppeln zu können._
 
 ## Tipps
 
-- Versuche nicht, es von Anfang an "richtig zu machen". Es dauert einige Versuche, um herauszufinden, "an welchen Stellen des Bildschirms die Tasten erscheinen", so dass du etwas Muskelgedächtnis für die Berührungsaktionen aufbauen kannst.
-- SCHLAG NICHT STARK AUF DEN BILDSCHIRM! Schnell zu sein bedeutet nicht, ihn zu zerbrechen. Ich bin nicht verantwortlich für Personen, die ihre Bildschirme zu stark schlagen.
+- Versuchen Sie nicht, es von Anfang an "richtig zu machen". Es dauert ein paar Versuche, um herauszufinden, "wo die Tasten auf dem Bildschirm erscheinen", damit Sie etwas Muskelgedächtnis für die Tippaktionen aufbauen können.
+- SCHLAGEN SIE NICHT HART AUF DEN BILDSCHIRM! Schnell zu sein bedeutet nicht, ihn zu zerbrechen. Ich bin nicht verantwortlich für Personen, die zu hart auf ihre Bildschirme schlagen.
 
 ## Anleitung
 
-Zuerst schalten wir die Maschine ein und verbinden die USB-Tastatur mit der Bowflex-Konsole. Du findest sie auf der rechten Seite:
+Zuerst schalten wir die Maschine ein und verbinden die USB-Tastatur mit der Bowflex-Konsole. Sie finden sie auf der rechten Seite:
 
-<Image src={ConsoleUSB} alt="Zeigt den Standort des USB-Ports der Konsole an" format="webp" />
+<Image src={ConsoleUSB} alt="Zeigt, wo sich der USB-Anschluss der Konsole befindet" format="webp" />
 
-Stellen wir sicher, dass die Tastatur funktioniert, indem wir die "Home"-Taste auf der Tastatur drücken. Das sollte die JRNY-App neu starten.
+Stellen wir sicher, dass die Tastatur funktioniert, indem wir die "Home"-Taste auf der Tastatur drücken. Dies sollte dazu führen, dass die JRNY-App neu startet.
 
 <Image src={Console01} alt="Konsolenanimation" format="webp" />
 
-Android hat eine Abkürzung, um die aktuelle App über die "Back"-Taste zu schließen, wenn man sie etwa eine Sekunde lang gedrückt hält.
-Spielen wir ein wenig mit der "Back"-Taste - wir werden die JRNY-App kontinuierlich schließen, sobald sie sich wieder öffnet, bis ein neues Dialogfeld erscheint:
+Android hat eine Verknüpfung, um die aktuelle App über die "Zurück"-Taste zu schließen, wenn Sie sie etwa eine Sekunde lang gedrückt halten.
+Spielen wir ein wenig mit der "Zurück"-Taste - wir werden die JRNY-App kontinuierlich schließen, sobald sie sich wieder öffnet, bis ein neues Dialogfeld zu erscheinen beginnt:
 
 <Image src={Console02} alt="Konsolenanimation" format="webp" />
 
-Ok, jetzt der lustige Teil: Dieses Dialogfeld gehört zum "Fehlerüberprüfungssystem" von Standard-Android. Wir haben gerade "Android dazu gebracht zu denken", dass NautilusLauncher defekt ist (gut!). Lassen wir uns durch dieses Dialogfeld ausnutzen.
+Ok, jetzt der lustige Teil: Dieses Dialogfeld gehört zum standardmäßigen "Fehlerüberprüfungssystem" von Android. Wir haben "Android dazu gebracht zu denken", dass NautilusLauncher schlecht ist (gut!). Nutzen wir das durch dieses Dialogfeld aus.
 
-Sobald es erscheint, tippe auf "App-Info". Durch Klicken auf "App-Info" öffnen wir die Einstellungs-App (die in der Ablehnungsliste von `AppMonitorService` steht). Sie wird sich in etwa einer Sekunde schließen, also müssen wir schnell sein! Tippe auf den Button "STOPP ERZWINGEN" und dann auf "OK".
+Sobald es erscheint, tippen Sie auf "App-Info". Indem wir auf "App-Info" klicken, öffnen wir die Einstellungs-App (die auf der `AppMonitorService`-Verbotsliste steht). Sie wird in etwa einer Sekunde schließen, also müssen wir schnell sein! Tippen Sie auf die Schaltfläche "STOPP ERZWINGEN" und dann auf "OK".
 
 <Image src={Console03} alt="Konsolenanimation" format="webp" />
 
-Sobald du auf "OK" klicken kannst, kannst du dich ausruhen (gutes Training, nicht wahr?). Jetzt gehen wir weiter mit den Funden auf Reddit. Wir aktivieren adb, indem wir auf das "Lupe"-Symbol in der oberen rechten Ecke klicken und nach "Entwickleroptionen" suchen:
+Sobald Sie auf "OK" klicken können, können Sie sich ausruhen (gutes Training, was?). Jetzt gehen wir weiter mit den Erkenntnissen auf Reddit. Wir werden adb aktivieren, indem wir auf das "Lupe"-Symbol in der oberen rechten Ecke klicken und nach "Entwickleroptionen" suchen:
 
 <Image src={Console04} alt="Konsolenanimation" format="webp" />
 
-Finde die IP-Adresse der Konsole. Der einfachste Weg ist über die Wi-Fi-Einstellungen:
+Finden Sie die IP-Adresse der Konsole. Der einfachste Weg ist über die Wi-Fi-Einstellungen:
 
 <Image src={Console05} alt="Konsolenanimation" format="webp" />
 
-Jetzt, da adb aktiviert ist und wir die IP-Adresse haben, wechseln wir zu einem Computer und verbinden uns mit adb. Öffne ein Terminal und führe `adb connect <IP-Adresse>` aus (in meinem Fall 10.0.0.205):
+Jetzt, da adb aktiviert ist und wir die IP-Adresse haben, springen wir zu einem Computer und verbinden uns mit adb. Öffnen Sie ein Terminal und führen Sie `adb connect <IP-Adresse>` aus (in meinem Fall 10.0.0.205):
 
 ```sh
 > adb connect 10.0.0.205
 connected to 10.0.0.205:5555
 ```
 
-_Bei der ersten Remote-Verbindung über adb wird eine Bestätigung auf dem Bildschirm angefordert._
+_Bei der ersten Verbindung über adb wird auf dem Bildschirm um eine Bestätigung gebeten._
 
-Lassen Sie uns eine leere Datei in `/sdcard/Pictures/` namens `nautilus` erstellen. Mehr über das "Warum" kannst du in [Bowflex Kuriositäten](/de/projects/fl3xbl0w/quirks) lesen.
+Lassen Sie uns eine leere Datei in `/sdcard/Pictures/` namens `nautilus` erstellen. Mehr über das "Warum" können Sie in [Bowflex Eigenheiten](/de/projects/fl3xbl0w/quirks) lesen.
 
 ```sh
 > adb shell touch /sdcard/Pictures/nautilus
 ```
 
-Jetzt stellen wir einige Funktionalitäten wieder her. Sende die folgenden Befehle über dein Terminal:
+Jetzt stellen wir einige Funktionalitäten wieder her. Senden Sie die folgenden Befehle über Ihr Terminal:
 
 ```sh
 > adb shell settings put secure ntls_launcher_preference 0
@@ -101,27 +101,27 @@ Jetzt stellen wir einige Funktionalitäten wieder her. Sende die folgenden Befeh
 > adb shell settings put secure statusbar_switch 1
 ```
 
-Du wirst die Benutzeroberfläche sehen:
+Sie werden die Benutzeroberfläche sehen:
 
 <Image src={Console06} alt="Konsolenanimation" format="webp" />
 
-Es gibt einen letzten Schritt - den Standard-Launcher ändern. Suche nach "Standard-Apps" und setze Quickstep als Start-App:
+Es gibt einen letzten Schritt - das Ändern des Standard-Launchers. Suchen Sie nach "Standard-Apps" und stellen Sie Quickstep als Home-App ein:
 
 <Image src={Console07} alt="Konsolenanimation" format="webp" />
 
-**Jetzt bist du frei!**
+**Sie sind jetzt frei!**
 
-Dieser Zustand bleibt erhalten, solange NautilusLauncher zum Anhalten gezwungen wird. Er bleibt auch nach Neustarts bestehen.
+Dieser Zustand bleibt so lange bestehen, wie NautilusLauncher zum Stoppen gezwungen wird. Er bleibt auch nach Neustarts erhalten.
 
-Wenn du zu "Stock" zurückkehren möchtest, öffne einfach die App `NautilusLauncher` (ich schlage dringend vor, dass du die Datei `/sdcard/Pictures/nautilus` im Voraus erstellt hast):
+Wenn Sie zu "Stock" zurückkehren möchten, öffnen Sie einfach die `NautilusLauncher`-App (ich schlage dringend vor, dass Sie die Datei `/sdcard/Pictures/nautilus` vorher erstellt haben):
 
 <Image src={Console08} alt="Konsolenanimation" format="webp" />
 
-## Anmerkungen zum "Sperrsystem"
+## Anmerkungen zum "Lockdown-System"
 
 `NautilusLauncher` ist der Standard-"Android-Launcher", was bedeutet, dass, wenn die JRNY-App geschlossen wird, sie sofort "wieder geöffnet" wird.
 
-Es gibt auch eine weitere "Sicherheitssperre", einen Vordergrunddienst in der `NautilusLauncher`-Apk, genannt `AppMonitorService`. Wenn man die Apk dekompiliert, kann man drei interessante Variablen sehen:
+Es gibt auch eine weitere "Sicherheitssperre", einen Vordergrunddienst in der `NautilusLauncher`-APK, genannt `AppMonitorService`. Durch das Dekompilieren der APK können Sie drei interessante Variablen sehen:
 
 ```java
 public static final int MonitorIntervalSeconds = 1;
@@ -130,6 +130,6 @@ private static String[] TargtedAppsToKill = {"com.android.vending", "com.android
 private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
 ```
 
-Und so schützt dieser Dienst "aktiv" das Sperrsystem. Bei jedem Schließen der App (durch Halten der "Back"-Taste) wird versucht, JRNY wieder zu öffnen. Durch das Erzwingen des Schließens deaktivieren wir auch alle Vordergrunddienste.
+Und so schützt dieser Dienst "aktiv" die Abschottung. Bei jeder App-Schließung (durch Halten der "Zurück"-Taste) wird versucht, JRNY wieder zu öffnen. Durch das Erzwingen seiner Schließung deaktivieren wir auch alle Vordergrunddienste.
 
-_(Die Tippfehler, die du in den Code-Backups sehen kannst, stammen von den Nautilus-Entwicklern selbst, nicht von mir)_
+_(alle Tippfehler, die Sie im Code-Backup sehen, stammen von den eigenen Entwicklern von Nautilus, nicht von mir)_

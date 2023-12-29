@@ -1,46 +1,46 @@
 ---
 title: ROM-Dump - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-Maschine.
 pubDate: 2022-05-28T10:28:00Z
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Logo des fl3xbl0w-Projekts
+imgAlt: fl3xbl0w Projektlogo
 tags:
   - ReverseEngineering
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: b18c469c50acb988210796ef5e4b6cecf18ddf9245ad33a9ee1bbf0633c1c4ca
+checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
-### Rockchip-Lademodus
+### Rockchip Loader-Modus
 
-Ein RK3399-Prozessor betreibt die Android-Hardware. Rockchip-Prozessoren verfügen standardmäßig über einen "Loader-Modus".
+Ein RK3399-Prozessor betreibt die Android-Hardware. Rockchip-Prozessoren verfügen über einen standardmäßigen "Loader-Modus".
 
 Das Toolkit, das ich verwendet habe, ist:
 
 - Rockchip Driver Assistant v4.5 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 Test von [diesem XDA-Post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- rkDumper 1.09 Test von [diesem XDA-Beitrag](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
 _Es gibt eine neuere Version des Treibers zum Download, aber es ist bekannt, dass sie mit rkDumper nicht kompatibel ist._
 
-Um damit zu spielen, musst du die Bowflex-Konsole demontieren, die hintere Kunststoffabdeckung abschrauben und sie in einer "nackten Form" wieder montieren.
-**Versuche dies nicht, da das Spielen mit der Android-Hardware im Loader-Modus zu einem dauerhaft beschädigten Gerät führen kann.**
+Um damit zu spielen, müssen Sie die Bowflex-Konsole zerlegen, die Kunststoffrückabdeckung abschrauben und sie in einer "nackten Form" wieder zusammenbauen.
+**Versuchen Sie dies nicht, da das Spielen mit Android-Hardware im Loader-Modus zu einem dauerhaft defekten Gerät führen kann.**
 
 <Image src={ConsoleMounted} alt="Montierte Konsole mit entfernter Rückabdeckung" format="webp" />
 
-Hier sind die relevanten Teile der Android-Logikplatine für Rockchip-Dinge:
+Hier sind die relevanten Teile der Android-Logikplatine für Rockchip-Sachen:
 
-<Image src={VantronPCB} alt="Vantron-PCB" format="webp" />
+<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
-Du kannst die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu dienen und zu überprüfen, in welchem Modus sich die Konsole befindet.
+Sie können die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu überprüfen, in welchem Modus sich die Konsole befindet.
 
-Mit der Maschine im "normalen Modus" und an einen Computer angeschlossen, wird sie als `NFTM-LAR` identifiziert:
+Mit eingeschalteter Maschine im "normalen Modus" und verbunden mit einem Computer, identifiziert sie sich als `NFTM-LAR`:
 
 ```
 NFTM-LAR:
@@ -50,16 +50,16 @@ NFTM-LAR:
   Geschwindigkeit: Bis zu 480 Mb/s
   Hersteller: Vanzo
   Standort-ID: 0x14120000 / 9
-  Verfügbare Stromstärke (mA): 500
-  Erforderliche Stromstärke (mA): 500
-  Zusätzliche Betriebsstromstärke (mA): 0
+  Aktuell verfügbar (mA): 500
+  Aktuell erforderlich (mA): 500
+  Zusätzlicher Betriebsstrom (mA): 0
 ```
 
-Mit der Maschine ausgeschaltet, über USB an einen Computer angeschlossen, den "Recovery-Button" gedrückt haltend und einschaltend, sollte sie im "Loader-Modus" starten. Die Maschine "ertönt", aber der Bildschirm bleibt statisch. _Du kannst ausschalten, eine Minute warten, wieder einschalten und die Maschine wird normal starten._
+Mit ausgeschalteter Maschine, verbunden über USB mit einem Computer, halten Sie den "Recovery-Button" gedrückt und schalten Sie ihn ein, sollte sie in den "Loader-Modus" booten. Die Maschine wird "klingen", aber der Bildschirm bleibt statisch. _Sie können ausschalten, eine Minute warten, einschalten und die Maschine wird normal booten._
 
-_Die Android-Hardware verwaltet den "Sound" nach dem Einschalten der Maschine nicht, sondern über die anderen PCBs von Nautilus._
+_Die Android-Hardware behandelt das "Klingen" nach dem Einschalten der Maschine nicht, sondern über die anderen Nautilus-PCBs._
 
-Jetzt wird sie am Computer als `USB download gadget` (Seriennummer versteckt) gemeldet:
+Nun wird sie am Computer als `USB download gadget` gemeldet (Seriennummer versteckt):
 
 ```
 USB download gadget:
@@ -107,13 +107,13 @@ Partition "video" (0x0047e000) gespeichert (Format: unbekannt)
 Partition "userdata" (0x0169bbdf) gespeichert (Format: unbekannt)
 ```
 
-`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, nur hexadezimale Werte `CC` aus ihnen extrahierend.
+`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, es werden nur hexadezimale `CC`-Werte daraus extrahiert.
 
-Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich den Entwickler von rkDumper [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, [sagt er](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss, der stattdessen verwendet wird. Diese Methode scheint vorerst nicht praktikabel zu sein.
+Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich den rkDumper-Entwickler [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, [sagt er](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss. Diese Methode scheint vorerst nicht praktikabel zu sein.
 
 ### ADB
 
-Einige ähnliche Daten können über adb gefunden werden, aber ein Backup scheint nicht möglich zu sein, da uns Root-Rechte fehlen:
+Einige ähnliche Daten können über adb gefunden werden, aber es scheint nicht möglich zu sein, ein Backup zu erstellen, da uns Root-Berechtigungen fehlen:
 
 ```sh
 > ls -al /dev/block/platform/
@@ -160,4 +160,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### Weitere Ideen
 
-Etwas, das wir tun könnten, ist, den eMMC-Chip abzulöten und ihn extern zu lesen, um seinen gesamten Inhalt zu sichern. Das wäre gut, um eine benutzerdefinierte ROM (Custom ROM) zu erstellen, aber ich werde den von meiner EINZIGEN Konsole nicht ablöten (es wäre cool, eine Ersatzkonsole zu haben).
+Etwas, was wir tun können, ist den eMMC-Chip auszulöten und ihn extern zu lesen, um all seine Inhalte sichern zu können. Das wäre gut für die Erstellung eines benutzerdefinierten ROMs, aber ich werde nicht von meiner EINZIGEN Konsole auslöten (es wäre cool, eine Ersatzkonsole zu haben).

@@ -10,14 +10,17 @@ export const languages = {
   en: {
     label: 'English (US)',
     icon: usIcon,
+    translateFrom: 'es',
   },
   es: {
     label: 'Español (CL)',
     icon: clIcon,
+    translateFrom: null,
   },
   de: {
     label: 'Deutsch',
     icon: deIcon,
+    translateFrom: 'en',
   },
 } as const;
 
@@ -27,7 +30,7 @@ export const langData = {
   de: deWithFallback,
 } as const;
 
-type LanguageKeys = keyof typeof langData;
+export type LanguageKeys = keyof typeof langData;
 
 export function useTranslations(lang: string = 'es'): (key: keyof Translations) => string {
   return function t(key: keyof Translations): string {

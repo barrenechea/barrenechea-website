@@ -1,32 +1,32 @@
 ---
 title: OpenHaystack in ESPHome
-description: Portierung von OpenHaystack als eine Komponente für ESPHome. Kompatibel mit allen Espressif-Geräten mit BLE.
+description: Portierung von OpenHaystack als ESPHome-Komponente. Kompatibel mit allen Espressif BLE-Geräten.
 pubDate: 2022-06-23T10:42:00Z
 link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
 img: ~/assets/images/project-openhaystack.png
-imgAlt: Logos von OpenHaystack und ESPHome
+imgAlt: OpenHaystack und ESPHome Logos
 tags:
   - Hardware
   - Embedded
 translatedBy: gpt-4-1106-preview
-checksum: 8e7e1aa1f299aa516c4c6b26be5bdd4c8ebf07aa2ef0e7188d6e44d34e5e06c1
+checksum: 3d98279a41f3f41bf8b90d213cc20a02d8083438c29b65e9f8ae8d2d96d8a017
 ---
 
-[OpenHaystack](https://github.com/seemoo-lab/openhaystack) ist eine Anwendung, die es Ihnen ermöglicht, Ihre eigenen Zubehörteile zu erstellen, die vom [Find My network](https://developer.apple.com/find-my/) von Apple verfolgt werden können. Sie haben das Protokoll von Apple reverse-engineered und dokumentiert, ein ziemlich beeindruckendes Projekt.
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) ist eine Anwendung, die es Ihnen ermöglicht, eigene Zubehörteile zu erstellen, die vom [Find My-Netzwerk](https://developer.apple.com/find-my/) von Apple verfolgt werden. Sie haben Apples Protokoll reverse-engineered und dokumentiert, ein ziemlich beeindruckendes Projekt.
 
-Ich wollte meinen Elektroroller verfolgen können, falls er gestohlen würde. Obwohl die "offizielle" Methode zum Erstellen Ihrer Zubehörteile "akzeptabel" war, stellte sie sich als ziemlich problematisch und mit verschiedenen Kompatibilitätsproblemen auf verschiedenen Espressif-Boards heraus.
+Ich wollte meinen Elektroroller verfolgen, falls er gestohlen wird. Obwohl die "offizielle" Methode zum Erstellen Ihrer Zubehörteile "akzeptabel" war, stellte sich heraus, dass sie mit mehreren Kompatibilitätsproblemen auf verschiedenen Espressif-Boards ziemlich problematisch ist.
 
 Also habe ich es als eine Komponente von [ESPHome](https://esphome.io/) portiert, einer Software, die ich bereits für die Bedürfnisse meiner eingebetteten Geräte verwende.
 
-## Warum ESPHome? Ist das nicht "für zu Hause"?
+## Warum ESPHome? Ist es nicht "für das Zuhause"?
 
-Ich bin _ein wenig_ besessen davon, meine IoT/Embedded-Geräte so aktuell wie möglich zu halten (und natürlich, wenn möglich, außerhalb jeglicher Cloud), also ist ESPHome eine attraktive Lösung, um Ihre Geräte mit den Arduino- und Espressif-Frameworks aktuell zu halten. Mit ESPHome kann ich meinen Roller aktualisieren, wann immer ich will.
+Ich bin _ein wenig_ besessen davon, meine IoT/Eingebetteten Geräte so aktuell wie möglich zu halten (und natürlich, wenn möglich, ohne Cloud), daher ist ESPHome eine attraktive Lösung, um Ihre Geräte mit Arduino und Espressif-Frameworks zu aktualisieren. Durch ESPHome kann ich meinen Roller aktualisieren, wann immer ich will.
 
-## Warum ist dies kein offizieller Bestandteil?
+## Warum ist dies keine offizielle Komponente?
 
-Ich habe es versucht! Ich habe [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584) und seine [Support-Dokumentation](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html) eröffnet, aber verständlicherweise wollten sie es nicht mischen.
+Ich habe es versucht! Ich habe [Unterstützung für OpenHaystack hinzufügen #3584](https://github.com/esphome/esphome/pull/3584) und seine [Unterstützungsdokumentation](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html) geöffnet, aber verständlicherweise wollten sie es nicht zusammenführen.
 
-## ESPHome-Beispiel - ESP32
+## ESPHome Beispiel - ESP32
 
 ```yaml
 external_components:
@@ -43,8 +43,8 @@ esp32:
   board: wemos_d1_mini32
 
 wifi:
-  ssid: <dein-wifi-ssid>
-  password: <dein-wifi-passwort>
+  ssid: <Ihr-WLAN-SSID>
+  password: <Ihr-WLAN-Passwort>
 
 # Logs aktivieren
 logger:
@@ -56,12 +56,12 @@ ota:
   password: !secret ota_password
 
 openhaystack:
-  # Hier kommt der in Base64 codierte OpenHaystack-Schlüssel
-  # Ich empfehle dringend, ihn als Geheimnis zu behandeln
+  # Hier geht der OpenHaystack-Schlüssel kodiert in Base64
+  # Ich schlage dringend vor, dass Sie es als Geheimnis behandeln
   key: !secret openhaystack_key
 ```
 
-## ESPHome-Beispiel - ESP32-C3
+## ESPHome Beispiel - ESP32-C3
 
 ```yaml
 external_components:
@@ -87,15 +87,15 @@ esp32:
       CONFIG_COMPILER_OPTIMIZATION_SIZE: y
       # WPA3-Unterstützung aktivieren, nur weil wir können
       CONFIG_WPA_SUITE_B_192: y
-      # Spezifisch für die Verwendung von Bluetooth
+      # Spezifisch für die Bluetooth-Nutzung
       CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
       CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
-      # "Payload size error" korrigieren - Watchdog-Wartezeit verlängern
+      # "Payload size error" beheben - Watchdog-Timeout verlängern
       CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
 
 wifi:
-  ssid: <dein-wifi-ssid>
-  password: <dein-wifi-passwort>
+  ssid: <Ihr-WLAN-SSID>
+  password: <Ihr-WLAN-Passwort>
 
 # Logs aktivieren
 logger:
@@ -107,7 +107,7 @@ ota:
   password: !secret ota_password
 
 openhaystack:
-  # Hier kommt der in Base64 codierte OpenHaystack-Schlüssel
-  # Ich empfehle dringend, ihn als Geheimnis zu behandeln
+  # Hier geht der OpenHaystack-Schlüssel kodiert in Base64
+  # Ich schlage dringend vor, dass Sie es als Geheimnis behandeln
   key: !secret openhaystack_key
 ```

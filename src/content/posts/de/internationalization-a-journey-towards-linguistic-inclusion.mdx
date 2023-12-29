@@ -1,11 +1,11 @@
 ---
-title: 'Internationalisierung: Eine Reise zur sprachlichen Inklusion'
-description: Meine Website macht den Sprung zur Internationalisierung und beseitigt sprachliche Barrieren, um ein vielfältiges Publikum zu umarmen.
+title: 'Internationalisierung: Eine Reise hin zur sprachlichen Inklusion'
+description: Meine Website macht einen Sprung in Richtung Internationalisierung, um Sprachbarrieren abzubauen und ein vielfältiges Publikum zu umarmen.
 pubDate: 2023-12-27T12:00:00Z
 img: ~/assets/images/post-i18n.jpg
-imgAlt: 'Bild erstellt von Firefly Image 2 mit dem Text: award winning art, a branched tree made of light rays and energy, dramatic, impactful, colorful, high definition, 4k uhd'
+imgAlt: 'Bild erstellt von Firefly Image 2 mit dem Text: preisgekrönte Kunst, ein verzweigter Baum aus Lichtstrahlen und Energie, dramatisch, eindrucksvoll, farbenfroh, hochauflösend, 4k uhd'
 translatedBy: gpt-4-1106-preview
-checksum: 93206014fe06872f692c475a34b48c9edc8ae6468139dfd677805120c2ace267
+checksum: 9152144bfb0073463515012d0e5c806b427c41dad120b351bcee8d7103688f7b
 ---
 
 import OldNavbar from '~/assets/images/post-i18n-old-navbar.png';
@@ -13,17 +13,17 @@ import NewNavbar from '~/assets/images/post-i18n-new-navbar.png';
 import WrongEsTranslation from '~/assets/images/post-i18n-wrong-es-translation.png';
 import { Image } from 'astro:assets';
 
-Seit dem Beginn dieser Seite habe ich mich dafür entschieden, Englisch als Hauptsprache zu verwenden, in der Annahme, dass es die am weitesten verbreitete Sprache im Internet ist. Kürzlich jedoch hörte ich, dass unter den Netzwerken von Meta und X Spanisch die zweithäufigste verwendete Sprache ist. Persönlich hatte ich eine ausstehende Schuld, meine Inhalte in meiner Muttersprache zu präsentieren, und heute ist das bereits Realität.
+Seit dem Beginn dieser Seite habe ich mich für Englisch als Hauptsprache entschieden, in der Annahme, dass es die am weitesten verbreitete im Internet ist. Kürzlich habe ich jedoch erfahren, dass unter Meta und X-Netzwerken Spanisch die zweithäufigste verwendete Sprache ist. Persönlich hatte ich eine ausstehende Schuld, meine Inhalte in meiner Muttersprache zu präsentieren, und heute ist das Realität geworden.
 
-In den letzten Tagen habe ich jede Ecke der Website internationalisiert, indem ich Schlüssel/Wert-Paare für die Benutzeroberfläche zugewiesen und den Inhalt von Projekten und Veröffentlichungen automatisiert mit LLMs (Large Language Models) übersetzt habe.
+In den letzten Tagen habe ich jede Ecke der Website internationalisiert, Schlüssel/Wert-Formatwerte für die Schnittstelle zugewiesen und die Inhalte von Projekten und Veröffentlichungen automatisch mit LLMs (Large Language Models) übersetzt.
 
-## Wo fange ich an, amigo?
+## Wo fange ich an, mein Freund?
 
 Es gibt zwei Hauptaspekte zu berücksichtigen: die Benutzeroberfläche und den Inhalt.
 
 Die [Dokumentation](https://docs.astro.build/de/recipes/i18n/) von Astro und ihr [Quellcode](https://github.com/withastro/docs/tree/main/src/i18n) waren sehr hilfreich für die Grundlogik, jedoch habe ich mehrere Anpassungen vorgenommen, um sie an meine Bedürfnisse anzupassen und den Code so sauber wie möglich zu halten.
 
-Diese Website konzentriert sich hauptsächlich auf den Inhalt der Veröffentlichungen und ist in Bezug auf die Benutzeroberfläche ziemlich einfach. Der größte Teil des statischen Textes befand sich auf der Startseite, also begann ich, jeden Wert in Schlüssel/Wert-Objekte zu extrahieren, sodass die Ansicht auf die gleiche Weise gerendert werden konnte.
+Diese Website konzentriert sich hauptsächlich auf den Inhalt der Beiträge und ist in Bezug auf die Schnittstelle recht einfach. Die größte Menge an statischem Text befand sich auf der Startseite, also begann ich, jeden Wert in Schlüssel/Wert-Objekte zu extrahieren, damit die Ansicht auf die gleiche Weise gerendert wird.
 
 ```typescript
 export const en = {
@@ -42,55 +42,55 @@ export const en = {
 };
 ```
 
-Das Routing ist entscheidend, um die zu erstellenden Seiten zu identifizieren. Astro erleichtert dies mit seinem Routingsystem, das die Sprache als Parameter verfügbar macht:
+Die Routenverwaltung ist entscheidend für die Identifizierung der zu erstellenden Seiten. Astro erleichtert dies mit seinem Routenverwaltungssystem, das die Sprache als Parameter verfügbar macht:
 
-- Alle Seiten im Verzeichnis `src/pages` in ein Verzeichnis `src/pages/[lang]` verschieben
-- Etwas wie das Folgende auf jeder Seite hinzufügen, die i18n-Handling benötigt:
+- Verschieben Sie alle Seiten im Verzeichnis `src/pages` in ein Verzeichnis `src/pages/[lang]`.
+- Fügen Sie so etwas auf jeder der Seiten hinzu, die eine i18n-Behandlung benötigen:
   ```typescript
   const { lang } = Astro.params;
   ```
 
-Mit der englischen Version funktionierend, begann ich, Unterstützung für Spanisch hinzuzufügen. Hier stieß ich auf ein Übersetzungsproblem:
+Mit der englischen Version funktionsfähig, begann ich mit der Unterstützung für Spanisch. Hier stieß ich auf ein Übersetzungsproblem:
 
 <Image
   src={WrongEsTranslation}
-  alt="Screenshot der Startseite mit den falsch übersetzten spanischen Texten 'Últimos Publicaciones' und 'Ver todos los publicaciones'"
+  alt="Screenshot der Startseite mit spanischen Texten 'Últimos Publicaciones' und 'Ver todos los publicaciones', die falsch übersetzt wurden"
   format="webp"
 />
 
-Auf Englisch konnte ich dieselben Werte sowohl für Projekte als auch für Veröffentlichungen verwenden, aber auf Spanisch nicht.
+Auf Englisch konnte ich die gleichen Werte für Projekte und Beiträge verwenden, aber auf Spanisch konnte ich das nicht.
 
-In einer idealen Welt würde ich geschlechtsneutrale Sprache verwenden. Ich hätte mich für "Reciente Proyectos" und "Reciente Publicaciones" entscheiden können, was es mir erlaubt hätte, das Wort zu recyceln. Um jedoch die visuelle Kohärenz der Seite zu wahren, musste der Satz mit "Proyectos" oder "Publicaciones" enden. Nach einigen Anpassungen gelang es mir, es in allen Ansichten vollständig übersetzt zu bekommen (Index, Navigationsseiten und Vorlagen, die den Inhalt verwenden).
+In einer idealen Welt würde ich geschlechtsneutrale Sprache verwenden. Ich hätte mich für "Proyectos recientes" und "Publicaciones recientes" entscheiden können, was es mir erlauben würde, das Wort zu recyceln. Um jedoch die visuelle Konsistenz der Seite zu wahren, musste der Satz mit "proyectos" oder "publicaciones" enden. Nach einigen Anpassungen gelang es mir, es in allen Ansichten vollständig übersetzt zu haben (der Index, die Navigationsseiten und die Vorlagen, die den Inhalt verwenden).
 
-Und es gab ein Problem mit der Sprachauswahlkomponente, die ich verwendet hatte, das mich sehr störte. Die Komponente benötigte die Klasse `absolute`, um Objekte darunter zu positionieren, was dazu führte, dass sie den Seitenrand nicht mehr respektierte, wenn der Text zu lang war:
+Und es gab ein Problem mit der Sprachauswahlkomponente, die ich verwendet hatte, die mich sehr störte. Die Komponente erforderte die Klasse `absolute`, um Objekte darunter zu positionieren, was dazu führte, dass sie aufhörte, den Seitenrand bei sehr langem Text zu respektieren:
 
 <div align="center">
   <Image
     src={OldNavbar}
-    alt="Screenshot der alten Navigationsleiste mit dem Sprachauswähler in der oberen rechten Ecke, der über den Rand hinausgeht"
+    alt="Screenshot der vorherigen Navigationsleiste, mit dem Sprachauswähler in der oberen rechten Ecke, der das Randlimit überschreitet"
     format="webp"
   />
-  <p class="italic">Rand in Rot markiert, um das Problem hervorzuheben</p>
+  <p class="italic">Rand in Rot hervorgehoben, um das Problem zu verdeutlichen</p>
 </div>
 
-Ich habe diese Komponente von [Starlight](https://starlight.astro.build/de/) extrahiert, weil sie mir einfach und minimalistisch erschien, aber am Ende habe ich sie durch eine von [Flowbite](https://flowbite.com/docs/components/navbar/#language-dropdown) ersetzt und die Interaktivität mit der [Web Components](https://web.dev/articles/custom-elements-v1) API neu implementiert. Die neue Komponente benötigt ein zusätzliches Grafikelement für jede Sprache (die Flagge, die [@iconify-icons/circle-flags](https://icon-sets.iconify.design/circle-flags/)) verwendet), aber es lohnt sich.
+Ich habe diese Komponente von [Starlight](https://starlight.astro.build/de/) extrahiert, da sie einfach und minimalistisch erschien, aber am Ende habe ich sie durch eine von [Flowbite](https://flowbite.com/docs/components/navbar/#language-dropdown) ersetzt und die Interaktivität mit der [Web Components](https://web.dev/articles/custom-elements-v1) API neu implementiert. Die neue Komponente erfordert ein zusätzliches Grafikelement für jede Sprache (die Flagge, unter Verwendung von [@iconify-icons/circle-flags](https://icon-sets.iconify.design/circle-flags/)), aber es lohnt sich.
 
 <Image
   src={NewNavbar}
-  alt="Screenshot der aktuellen Navigationsleiste mit dem Sprachauswähler in der oberen rechten Ecke"
+  alt="Screenshot der aktuellen Navigationsleiste, mit dem Sprachauswähler in der oberen rechten Ecke"
   format="webp"
 />
 
-## Aber man sieht doch keinen Inhalt, oder?
+## Aber es gibt keinen Inhalt zu sehen, oder?
 
-Als ich den Inhalt der Website (Projekte und Veröffentlichungen) auf den entsprechenden englischen Pfad anpasste, konnte die Website den Inhalt auf Spanisch nicht finden, was zu einer Seite ohne navigierbaren Inhalt führte. Die ersten Tests machte ich manuell mit der OpenAI-API, und dann automatisierte ich den Prozess, um die Dinge zu erleichtern.
+Als ich den Seiteninhalt (Projekte und Beiträge) an ihre entsprechenden englischen Routen anpasste, konnte die Website den Inhalt auf Spanisch nicht finden, was zu einer Seite ohne navigierbaren Inhalt führte. Die ersten Tests, die ich durchführte, waren manuelle Übersetzungen mit der OpenAI-API, und dann automatisierte ich den Prozess, um die Dinge zu vereinfachen.
 
-_Du kannst mehr Details in einem kommenden Beitrag über die Verwendung von LLMs in der Produktion sehen._
+_Sie können mehr Details in einem kommenden Beitrag über den Einsatz von LLMs in der Produktion sehen._
 
-Nachdem ich die Übersetzung von Projekten und Veröffentlichungen ins Spanische abgeschlossen hatte, machte ich einige Anpassungen an den resultierenden Übersetzungen. Ich legte Spanisch als Referenzstandard für den automatisierten Übersetzungsprozess fest und regenerierte nach den notwendigen Anpassungen den Inhalt auf Englisch.
+Nachdem ich die Übersetzung von Projekten und Beiträgen ins Spanische abgeschlossen hatte, nahm ich einige Anpassungen an den resultierenden Übersetzungen vor. Ich legte Spanisch als Referenzstandard für den automatisierten Übersetzungsprozess fest und regenerierte nach den notwendigen Anpassungen den Inhalt auf Englisch.
 
-## Und was jetzt?
+## Was nun?
 
-Jetzt ist es überraschend einfach, Unterstützung für weitere Sprachen hinzuzufügen! Es gibt bestimmte Überlegungen zu berücksichtigen, wie zum Beispiel die "Annahme", dass die Sprache von links nach rechts gelesen wird, was Sprachen wie Arabisch oder Hebräisch ausschließt. Tailwind, das CSS-Framework, das ich auf dieser Website verwende, unterstützt nativ LTR (left to right) und RTL (right to left), aber einige Details müssen angepasst werden (zum Beispiel die Klasse `rtl:space-x-reverse` verwenden, wo nötig).
+Jetzt ist es überraschend einfach, Unterstützung für weitere Sprachen hinzuzufügen! Es gibt bestimmte Überlegungen zu berücksichtigen, wie zum Beispiel die "Annahme", dass die Sprache von links nach rechts gelesen wird, was Sprachen wie Arabisch oder Hebräisch ausschließt. Tailwind, das CSS-Framework, das ich auf dieser Website verwende, unterstützt nativ LTR (links nach rechts) und RTL (rechts nach links), aber einige Details müssen angepasst werden (zum Beispiel die Verwendung der Klasse `rtl:space-x-reverse` wo nötig).
 
-Mit Deutschland auf dem dritten Platz der Besucher meiner Seite habe ich die Übersetzung ins Deutsche problemlos implementiert und werde bald Italienisch, Französisch, traditionelles Chinesisch und Isländisch (I♥️Iceland) hinzufügen. Obwohl die Automatisierung den Prozess erleichtert, ist es unerlässlich, die Übersetzungen zu überprüfen, um ihre Qualität sicherzustellen, da sie nicht immer perfekt sind. Im Falle des Englischen konnte ich eine persönliche Überprüfung durchführen; für Sprachen wie Deutsch, die ich nicht beherrsche, habe ich jedoch auf Hilfsmittel wie die automatische Übersetzung von Google Chrome zurückgegriffen, um die Konsistenz zu überprüfen. Mein Ziel ist es, schließlich mit Muttersprachlern für jede Sprache zusammenzuarbeiten, um den Standard der angebotenen Übersetzungen zu erhöhen.
+Mit Deutschland auf dem dritten Platz der Besucher meiner Website habe ich die Übersetzung ins Deutsche ohne Schwierigkeiten implementiert und werde bald Italienisch, Französisch, Traditionelles Chinesisch und Isländisch (I♥️Iceland) hinzufügen. Obwohl die Automatisierung den Prozess erleichtert, ist es wichtig, die Übersetzungen zu überprüfen, um ihre Qualität sicherzustellen, da sie nicht immer perfekt sind. Im Falle von Englisch konnte ich eine persönliche Überprüfung durchführen; jedoch habe ich für Sprachen wie Deutsch, die ich nicht spreche, auf die Hilfe von Tools wie der automatischen Übersetzung von Google Chrome zurückgegriffen, um die Konsistenz zu überprüfen. Mein Ziel ist es, schließlich mit Muttersprachlern für jede Sprache zusammenzuarbeiten, um den Standard der angebotenen Übersetzungen zu erhöhen.

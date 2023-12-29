@@ -78,7 +78,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
   const defaultLangFiles = contentFiles[defaultLang] || [];
 
   for (const [langCode, langData] of Object.entries(languages)) {
-    if (langCode === defaultLang) continue;
+    if (!langData.translateFrom) continue;
 
     const expectedFiles = defaultLangFiles.map((file) =>
       file.replace(`/${defaultLang}/`, `/${langCode}/`)
@@ -89,7 +89,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
 
     missingFiles.push(
       ...missingLangFiles.map((file) => ({
-        origin: file.replace(`/${langCode}/`, `/${defaultLang}/`),
+        origin: file.replace(`/${langCode}/`, `/${langData.translateFrom}/`),
         target: file,
         targetLanguage: langData.label,
       }))
@@ -119,11 +119,11 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
   const outdatedFiles: MissingFile[] = [];
 
   for (const [langCode, langData] of Object.entries(languages)) {
-    if (langCode === defaultLang) continue;
+    if (!langData.translateFrom) continue;
 
     // for each file in the default language, get their checksum as a record
     const defaultLangChecksums: Record<string, string> = {};
-    const defaultLangFiles = contentFiles[defaultLang] || [];
+    const defaultLangFiles = contentFiles[langData.translateFrom] || [];
     for (const file of defaultLangFiles) {
       const checksum = await computeChecksum(path.join(contentDir, file));
       defaultLangChecksums[file] = checksum;
@@ -132,7 +132,7 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
     // check if the existing files have the same checksum as the default language using hasChecksumLine, if not, push to missingFiles
     const existingFiles = contentFiles[langCode] || [];
     for (const file of existingFiles) {
-      const defaultLangFile = file.replace(`/${langCode}/`, `/${defaultLang}/`);
+      const defaultLangFile = file.replace(`/${langCode}/`, `/${langData.translateFrom}/`);
       const checksum = defaultLangChecksums[defaultLangFile];
       const isOutdated = !(await hasChecksumLine(path.join(contentDir, file), checksum));
 

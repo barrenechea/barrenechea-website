@@ -2,6 +2,7 @@ import { promises as fsp } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { languages } from '../src/i18n/translations.ts';
 import {
   computeChecksum,
   findMissingFiles,
@@ -48,6 +49,18 @@ async function cleanUpFile(file: MissingFile) {
     lines.push('');
   }
 
+  // if there is a line containing `translatedBy:`, remove it
+  const translatedByIndex = lines.findIndex((line) => line.startsWith('translatedBy: '));
+  if (translatedByIndex !== -1) {
+    lines.splice(translatedByIndex, 1);
+  }
+
+  // if there is a line containing `checksum:`, remove it
+  const checksumIndex = lines.findIndex((line) => line.startsWith('checksum: '));
+  if (checksumIndex !== -1) {
+    lines.splice(checksumIndex, 1);
+  }
+
   const checksum = await computeChecksum(path.join(contentDir, file.origin));
 
   // find location of the second `---` and insert translatedBy: ${model} and checksum: ${checksum} before it
@@ -68,8 +81,11 @@ async function removeFile(file: MissingFile) {
   await fsp.rm(path.join(contentDir, file.target));
 }
 
-async function processMissingFiles() {
-  const missingFiles = await findMissingFiles();
+async function processMissingFiles(targetLanguage?: string) {
+  const files = await findMissingFiles();
+  const missingFiles = targetLanguage
+    ? files.filter((file) => file.targetLanguage === targetLanguage)
+    : files;
   console.log(`Missing files: ${missingFiles.length}`);
   for (const file of missingFiles) {
     await translateFile(file);
@@ -77,8 +93,11 @@ async function processMissingFiles() {
   }
 }
 
-async function processOutdatedFiles() {
-  const outdatedFiles = await findOutdatedFiles();
+async function processOutdatedFiles(targetLanguage?: string) {
+  const files = await findOutdatedFiles();
+  const outdatedFiles = targetLanguage
+    ? files.filter((file) => file.targetLanguage === targetLanguage)
+    : files;
   console.log(`Outdated files: ${outdatedFiles.length}`);
   for (const file of outdatedFiles) {
     await removeFile(file);
@@ -88,11 +107,15 @@ async function processOutdatedFiles() {
 }
 
 async function main() {
-  await processMissingFiles();
-  await processOutdatedFiles();
+  // read targetLanguage from command line arguments
+  const targetLanguage = process.argv[2];
+  if (targetLanguage && !Object.keys(languages).includes(targetLanguage)) {
+    throw new Error(`Invalid target language: ${targetLanguage}`);
+  }
+
+  await processMissingFiles(targetLanguage);
+  await processOutdatedFiles(targetLanguage);
   console.log('All done!');
 }
 
-main().catch((error) => {
-  console.error('Error:', error);
-});
+main();

@@ -1,15 +1,15 @@
 ---
 title: fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber auf jede von Nautilus Inc. verkaufte Android-Maschine (Nautilus, Bowflex, Schwinn) verallgemeinert.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-Maschine.
 pubDate: 2022-05-28T10:28:00Z
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: Logo des fl3xbl0w-Projekts
+imgAlt: fl3xbl0w Projektlogo
 tags:
   - ReverseEngineering
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: c0130a435f67cbcb19ac8072c88354c5f3e181e9f644a9e82f19d85517a20d2f
+checksum: 3c68be7b1aeedf296c2ef7e572afbb18bf245164c15815cf15fb013ab8703dc1
 ---
 
 import { Image } from 'astro:assets';
@@ -19,18 +19,18 @@ import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
 Willkommen zu meiner Dokumentation der "Bowflex Konsole"! (was Nautilus als Vantron bezeichnet).
 
-Vantron ist die Basis für die meisten "Smart Devices" von Nautilus Inc. Im Wesentlichen ein Android-Tablet, das proprietäre Software ausführt. Zusätzlich zu einigen Hardware-bezogenen Dingen, die meine Neugier geweckt haben.
+Vantron ist die Basis für die meisten "Smart Devices" von Nautilus Inc. Im Wesentlichen ein Android-Tablet, das proprietäre Software ausführt. Zusätzlich zu einigen hardwarebezogenen Dingen, die meine Neugier geweckt haben.
 
-Ich habe mich stark auf frühere Arbeiten gestützt, die ich auf [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) gefunden habe (danke [xasmx](https://www.reddit.com/user/xasmx/)!) um ein tieferes Verständnis der Software und Hardware des Geräts zu erlangen.
+Ich habe mich ziemlich auf vorherige Arbeiten gestützt, die ich auf [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) gefunden habe (danke [xasmx](https://www.reddit.com/user/xasmx/)!), um ein tieferes Verständnis für die Software und Hardware der Maschine zu erlangen.
 
 ## Kompatible Geräte (Android Jailbreak)
 
-Nachdem ich mit den <a href="/de/projects/fl3xbl0w/decompiling" target="_self">decompilierten Anwendungen</a> herumgespielt habe, kann ich mit Sicherheit sagen, dass die folgende Dokumentation in der einen oder anderen Form auf die folgenden Bowflex-Geräte übertragen werden könnte:
+Nachdem ich mit den <a href="/de/projects/fl3xbl0w/decompiling" target="_self">decompilierten Anwendungen</a> gespielt habe, kann ich mit Sicherheit sagen, dass die folgende Dokumentation auf die eine oder andere Weise auf die folgenden Bowflex-Geräte extrapoliert werden könnte:
 
 ### Laufbänder
 
-- Laufband 22 / Laufband 56 (gleiches Laufband. Das 56 hat einen 220V AC Eingang, das 22 einen 120V AC Eingang)
-- Laufband 10 / Laufband 25 (gleiches Laufband. Das 25 hat einen 220V AC Eingang, das 10 einen 120V AC Eingang)
+- Laufband 22 / Laufband 56 (gleiches Laufband. Das 56 hat einen 220V Wechselstromeingang, das 22 einen 120V Wechselstromeingang)
+- Laufband 10 / Laufband 25 (gleiches Laufband. Das 25 hat einen 220V Wechselstromeingang, das 10 einen 120V Wechselstromeingang)
 
 ### Fahrräder
 
@@ -41,9 +41,9 @@ Nachdem ich mit den <a href="/de/projects/fl3xbl0w/decompiling" target="_self">d
 - Max Total 16
 - Max Trainer M9
 
-Ich besitze keinen Max Trainer oder VeloCore, aber es sollte funktionieren, solange du einen verfügbaren USB-Port hast, basierend auf den Code-Funden.
+Ich habe keinen Max Trainer oder VeloCore, aber es sollte funktionieren, solange Sie einen verfügbaren USB-Anschluss basierend auf den Code-Ergebnissen haben.
 
-Bestätigt, dass es mit den NautilusLauncher-Versionen funktioniert:
+Bestätigt, dass es mit NautilusLauncher-Versionen funktioniert:
 
 - 5.0.0.350
 - 5.0.0.382
@@ -61,16 +61,16 @@ Bestätigt, dass es mit den NautilusLauncher-Versionen funktioniert:
     Sichern des Inhalts Ihrer Konsole
   </a>
 - <a href="/de/projects/fl3xbl0w/decompiling" target="_self">
-    Decompilieren
+    Dekompilieren
   </a>
 - <a href="/de/projects/fl3xbl0w/quirks" target="_self">
-    Kuriositäten von Bowflex
+    Bowflex Eigenheiten
   </a>
 
-### Laufende Arbeiten
+### Arbeit in Bearbeitung
 
 - <a href="/de/projects/fl3xbl0w/treadmotor" target="_self">
-    Laufbandmotorsteuerung
+    Laufband-Motorsteuerung
   </a>
 - <a href="/de/projects/fl3xbl0w/romdump" target="_self">
     ROM-Dump
@@ -80,6 +80,6 @@ Bestätigt, dass es mit den NautilusLauncher-Versionen funktioniert:
 
 So viele zukünftige Upgrades für mein Laufband wie möglich zu ermöglichen.
 
-Nautilus, Inc. bietet nur eine einjährige Garantie auf die Elektronik, und als ich sah, dass der Mechanismus zum Ausschalten des Geräts (und damit des Android-Tablets) im Grunde genommen "Abschalten der AC-Stromversorgung über den hinteren Schalter" war, hat mich das erschreckt. Jedes auf Linux basierende Gerät sollte sicher heruntergefahren werden, um eine Beschädigung des Betriebssystems zu vermeiden, und dieses Android-Tablet ist keine Ausnahme. Also, solange es funktioniert, warum nicht ein wenig mehr Spaß damit haben?
+Nautilus, Inc. bietet nur eine 1-Jahres-Garantie auf die elektronischen Teile, und sobald ich sah, dass der Mechanismus zum Ausschalten der Maschine (und damit des Android-Tablets) im Grunde "den Wechselstrom über den hinteren Schalter abschneiden" war, hat mich das erschreckt. Jedes auf Linux basierende Gerät sollte sicher heruntergefahren werden, um eine Betriebssystemkorruption zu vermeiden, und dieses Android-Tablet ist keine Ausnahme. Also, solange es läuft, warum nicht ein wenig mehr Spaß damit haben?
 
 Letztendlich möchte ich die Kommunikation, die zum Motorcontroller meines Laufbands geht, abfangen, verstehen und nachbilden, damit, wenn das Tablet stirbt, ich immer noch ein funktionierendes Gerät habe.

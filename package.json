@@ -15,7 +15,7 @@
     "lint": "astro check",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
+    "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts en && npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
   },
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.4.3",
