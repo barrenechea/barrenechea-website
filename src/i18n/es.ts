@@ -6,7 +6,7 @@ export const es = {
   'nav.sr.open': 'Abrir el menú de navegación',
   'nav.home': 'Inicio',
   'nav.projects': 'Proyectos',
-  'nav.posts': 'Publicaciones',
+  'nav.posts': 'Posteos',
   'nav.page': 'Página',
   'nav.language.select': 'Seleccionar idioma',
 
@@ -21,8 +21,8 @@ export const es = {
 
   'home.recentProjects': 'Últimos',
   'home.recentProjects.viewAll': 'Ver todos los proyectos',
-  'home.recentPosts': 'Últimas',
-  'home.recentPosts.viewAll': 'Ver todas las publicaciones',
+  'home.recentPosts': 'Últimos',
+  'home.recentPosts.viewAll': 'Ver todos los posteos',
 
   'blog.translatedBy': 'Contenido traducido por',
 
@@ -30,8 +30,8 @@ export const es = {
     'Resultado de algunos procesos de brain-dumping por los que paso de vez en cuando',
   'posts.by': 'Por',
   'posts.on': 'el',
-  'posts.pagination.older': 'Publicaciones anteriores',
-  'posts.pagination.newer': 'Publicaciones más recientes',
+  'posts.pagination.older': 'Posteos anteriores',
+  'posts.pagination.newer': 'Posteos más recientes',
 
   'projects.paginationDescription':
     'No necesariamente todo lo que he hecho, pero lo que puedo compartir legalmente 😄',
