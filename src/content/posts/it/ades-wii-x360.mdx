@@ -1,0 +1,161 @@
+---
+title: Ho hackerato centinaia di console di gioco grazie a un succo
+ogOverride: Di console di gioco grazie a un succo - Ho hackerato centinaia
+description: Cosa ho fatto invece di festeggiare quando ero giovane
+pubDate: 2022-08-23T23:13:00Z
+img: ~/assets/images/project-ades-wii-x360.png
+imgAlt: Composizione di Bill Gates che gioca a Guitar Hero in Mordor dopo essere stato pwned dal succo AdeS
+translatedBy: gpt-4-1106-preview
+checksum: 5b9963934f2337cd9691df7e96b24232d29b20ba0ee7f19332c9b42382ea01f2
+---
+
+import Puzzle from '~/assets/images/puzzle.png';
+import PuzzleNumbered from '~/assets/images/puzzle-numbered.png';
+import X360PowerSupply from '~/assets/images/x360-dvd-power-supply.jpg';
+import X360Linux from '~/assets/images/x360-linux.jpg';
+import KamikazeLocation from '~/assets/images/kamikaze-location.jpg';
+import WinbondExploitLines from '~/assets/images/winbond-exploit-lines.jpg';
+import XboxRRoD from '~/assets/images/xbox-rrod.jpg';
+import { Image } from 'astro:assets';
+import { YouTube } from '@astro-community/astro-embed-youtube';
+
+Nel 2010, AdeS (un marchio argentino di succhi di frutta acquistato in seguito dalla Coca-Cola Company nel 2016) ha organizzato un concorso su Facebook.
+Era un gioco di puzzle 4x4 dove potevi vincere un Nintendo Wii. Le condizioni per vincere il premio erano:
+
+- Farlo nel minor tempo possibile, e
+- Farlo nel minor numero di mosse
+
+Non direi di essere particolarmente bravo nei puzzle 4x4, ma sembrava una buona sfida su cui lavorare.
+
+I primi secondi del gioco mostravano la soluzione (l'immagine completamente formata), e poi veniva mischiata.
+
+Non ho l'immagine originale, ma ecco una foto stock per darti un riferimento:
+
+<Image
+  src={Puzzle}
+  alt="due puzzle uno accanto all'altro, la soluzione a sinistra e una versione mischiata a destra"
+  format="webp"
+/>
+
+Tuttavia, c'era qualcosa di particolare nel gioco: il cronometro iniziava a contare DOPO che avevi fatto la tua prima mossa, dandoti l'opportunità di
+"pensarci" prima di iniziare a giocare.
+
+Dopo aver guardato l'immagine, ho fatto una "immagine secondaria" per giocare con essa, sostituendo le immagini mischiate con numeri.
+In questo modo, era più facile capire "come ordinarli dall'1 al 15":
+
+<Image
+  src={PuzzleNumbered}
+  alt="due puzzle uno accanto all'altro, la soluzione a sinistra e una versione mischiata a destra, con numeri sovrapposti"
+  format="webp"
+/>
+
+Al mio cervello piaceva di più in questo modo... Ma non volevo passare troppo tempo su questo, quindi ho cercato un risolutore di puzzle. Dopo alcune ore, ho trovato
+uno che funzionava per forza bruta, impiegando molto tempo per darti soluzioni sempre migliori. Ti dava diverse sequenze di numeri
+da seguire dopo un po', e poi potevi risolvere il puzzle.
+
+Ho passato molto tempo cercando un "buon puzzle mischiato" perché volevo che si risolvesse in meno di 20 mosse se possibile.
+Dopo alcuni giorni e vari riavvii del gioco su Facebook, **avevo una soluzione in 16 mosse**.
+
+Mi sono complicato la vita dopo questo a causa delle due restrizioni del puzzle: il conteggio delle mosse **E** il tempo. Ho usato un'applicazione di auto-click, dove ho catturato con uno screenshot il
+puzzle mischiato e poi "risolto" il puzzle seguendo la migliore sequenza numerica.
+
+Tutto era pronto per iniziare.
+
+Faccio clic su "Inizia" all'interno dell'applicazione di auto-click.
+
+L'auto-click fallisce a metà del puzzle 💀
+
+Ho sbagliato a rendere l'auto-click troppo veloce e un clic non è stato registrato all'interno del gioco. Sono intervenuto rapidamente, ho sistemato alcune tessere cliccate male e ho finito
+la sequenza manualmente. Il mio punteggio finale è stato **21 mosse in 15 secondi**.
+
+Un paio di giorni prima della scadenza, ho controllato la classifica e il giocatore al secondo posto lo aveva risolto in circa 300 mosse e 20 minuti.
+A quel punto, non era nemmeno una competizione.
+
+Dopo alcuni giorni, sono stato notificato tramite Facebook che avevo vinto. Bene! 🎉
+
+Il post ufficiale di AdeS era [questo](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/).
+Ecco un video girato sul posto quando ho ritirato la console:
+
+<YouTube id="Uf5JHxDxNRw" />
+
+## Da Wii a Xbox 360
+
+Non vedevo l'ora di giocare [Alan Wake](https://it.wikipedia.org/wiki/Alan_Wake)! Quindi non ho mai pensato di tenere il Wii, quindi l'ho rapidamente pubblicato
+su un forum online (riposa in pace, CHW 🪦), potrei venderlo, comprare un Xbox 360 o scambiarlo immediatamente.
+
+E un ragazzo mi scrive volendo scambiare la sua appena ricevuta 360 per un Wii! Non è questo mondo una bellezza a volte?
+
+Si scopre che aveva vinto il suo Xbox 360 giocando a poker online. Era una console PAL (qui in Cile siamo NTSC), quindi quello era un problema, ma
+comunque ho fatto lo scambio. Dopo tutto, volevo sbloccarla per poter giocare a copie di backup. I giochi PAL erano a un download torrent di distanza.
+
+_Mi dispiace, i giochi pirata erano il modo in cui potevo giocare a nuovi giochi in quel momento. Grazie, Microsoft!_
+
+## Sbloccandola e fino alla luna 🚀
+
+Ho trovato un thread all'interno dello stesso forum dove qualcuno sbloccava Xbox 360 (darcito era il suo nome utente). Sono andato a casa sua (lì era dove lavorava)
+e ho visto il processo di sblocco da qualche metro di distanza.
+
+"Mi stai prendendo in giro? Sta solo collegando l'unità DVD al suo computer tramite SATA e cliccando su alcuni pulsanti! Posso fare quella 💩 da solo!"
+
+### Unità Ottiche
+
+E così, nei mesi successivi, ho imparato su internet come funziona il processo di sblocco. Le Xbox 360 hanno vari
+fornitori di unità ottiche, diverse revisioni del firmware e per ognuna, avevi un metodo di sblocco unico, ma tutto ruotava attorno al backup della
+DVD Key unica della console e al flash dell'unità con un firmware personalizzato sviluppato da c4eva.
+
+Entro la fine dell'anno, ho copiato la strategia di darcito e ho aperto il mio thread all'interno del forum, sbloccando console a casa mia.
+Molti modder di Xbox alimentavano l'unità DVD con la stessa console, ma la comunità pensava che Microsoft potesse rilevare se la console era accesa
+senza l'unità DVD collegata, la tua console era "marchiata" (non sono sicuro se fosse vero o no).
+
+Comunque, volevo proteggere le console dei miei clienti dall'essere marchiate, quindi ho sviluppato un'alimentazione personalizzata con interruttori per
+linee di tensione specifiche (necessarie per sbloccare alcune unità ottiche):
+
+<Image
+  src={X360PowerSupply}
+  alt="un'alimentazione personalizzata per unità DVD di Xbox 360"
+  format="webp"
+/>
+
+Ovviamente, dopo un po' di tempo, c'erano opzioni di vendita migliori per i modder, quindi alla fine ho ottenuto un X360 USB Pro v2 di Team Xecuter.
+
+#### Forando chip (metodo Kamikaze)
+
+Questo metodo di sblocco per unità ottiche era selvaggio; non mentirò! Per le Xbox 360 Slim che venivano con unità bloccate LiteOn DG-16D4S e chip Winbond
+(c'erano unità LiteOn con chip MXIC che non richiedevano questo) dovevi fare un buco in un chip all'interno dell'unità DVD con un trapano.
+
+<Image src={KamikazeLocation} alt="un chip" format="webp" />
+
+Ciò che cercavamo di ottenere con Kamikaze era raggiungere un filo minuscolo e portarlo a terra, permettendoti di flashare un firmware personalizzato nell'unità:
+
+<Image src={WinbondExploitLines} alt="un chip decapsulato" format="webp" />
+
+Suppongo che Microsoft non si aspettasse questo tipo di follia per giocare a copie di backup. Non sottovalutare mai il potere degli hacker.
+Un messaggio divertente che ho trovato su Twitter relativo a questo:
+
+> MS: Ok, se connettiamo la protezione dalla scrittura _dall'interno_ del pacchetto con filo di bonding, non possono semplicemente tagliare un pin o una traccia
+
+> Modder: Tieni il mio modello di allineamento per forare i chip
+
+### Reset Glitch Hack
+
+Il 28 agosto 2011, GliGli e Tiros (con l'aiuto di cOz) hanno rilasciato il Reset Glitch Hack (o RGH) per Xbox 360. È un exploit hardware impossibile da patchare
+per eseguire codice non firmato. Dopo alcuni giorni, la scena Xbox 360 stava lentamente creando strumenti per i modder. Avevi bisogno di
+essere abile con il saldatore però.
+
+Trovare chip compatibili per te nei primi giorni era difficile, ma ho trovato alcuni che funzionavano.
+Oggi non hai nemmeno bisogno di un chip con RGH 3.0.
+
+Ecco una foto mia che avvia Linux (il divano che vedi lì era dove i miei clienti di solito aspettavano):
+
+<Image src={X360Linux} alt="una Xbox 360 che esegue Linux" format="webp" />
+
+Credo davvero di essere stato uno dei primi a offrire il servizio RGH qui in Cile. Ho servito clienti da tutto il paese sia per
+sblocco delle unità ottiche che per RGH. Andare all'ufficio postale con Xbox 360 era una routine settimanale per molto tempo. Tempi pazzi e divertenti.
+
+Una copia del feedback sui miei servizi è ancora viva [qui](https://www.capa9.net/temas/feedback-de-sbarrenechea.899146/).
+Ho conosciuto molte persone molto gentili e mantengo ancora il contatto con loro. Tutto questo grazie al succo AdeS.
+
+<p align="center">
+  <Image src={XboxRRoD} alt="io che guardo una Xbox 360 rotta" format="webp" />
+  <h4 align="center">Io che guardo una RRoD (morta) Xbox 360</h4>
+</p>

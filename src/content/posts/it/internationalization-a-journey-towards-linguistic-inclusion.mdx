@@ -1,0 +1,96 @@
+---
+title: "Internazionalizzazione: Un viaggio verso l'inclusione linguistica"
+description: Il mio sito fa il salto verso l'internazionalizzazione, eliminando le barriere linguistiche per abbracciare un pubblico diversificato.
+pubDate: 2023-12-27T12:00:00Z
+img: ~/assets/images/post-i18n.jpg
+imgAlt: "Immagine generata da Firefly Image 2 con il testo: arte premiata, un albero ramificato fatto di raggi di luce ed energia, drammatico, d'impatto, colorato, alta definizione, 4k uhd"
+translatedBy: gpt-4-1106-preview
+checksum: 93206014fe06872f692c475a34b48c9edc8ae6468139dfd677805120c2ace267
+---
+
+import OldNavbar from '~/assets/images/post-i18n-old-navbar.png';
+import NewNavbar from '~/assets/images/post-i18n-new-navbar.png';
+import WrongEsTranslation from '~/assets/images/post-i18n-wrong-es-translation.png';
+import { Image } from 'astro:assets';
+
+Dall'inizio di questa pagina, ho scelto di utilizzare l'inglese come lingua principale, assumendo che fosse la più prevalente su internet. Tuttavia, di recente ho sentito che tra le reti di Meta e X, la seconda lingua più utilizzata è lo spagnolo. Personalmente, avevo un debito pendente nel mostrare i miei contenuti nella mia lingua madre e oggi questo è diventato realtà.
+
+Negli ultimi giorni ho internazionalizzato ogni angolo del sito, assegnando valori in formato chiave/valore per l'interfaccia e traducendo automaticamente il contenuto di progetti e pubblicazioni utilizzando LLM (Modelli di Linguaggio di Grande Dimensione).
+
+## Da dove inizio, amico?
+
+Ci sono due aspetti principali da considerare: l'interfaccia utente e il contenuto.
+
+La [documentazione](https://docs.astro.build/it/recipes/i18n/) di Astro e il suo [codice sorgente](https://github.com/withastro/docs/tree/main/src/i18n) mi hanno aiutato molto con la logica di base, tuttavia, ho fatto diverse modifiche per adattarlo alle mie esigenze e mantenere il codice il più pulito possibile.
+
+Questo sito si concentra principalmente sul contenuto delle pubblicazioni e, in termini di interfaccia, è piuttosto semplice. La maggior parte del testo statico era nella pagina iniziale, quindi ho iniziato ad estrarre ogni valore in oggetti chiave/valore, permettendo che la vista si rendesse nella stessa forma.
+
+```typescript
+export const it = {
+  'author.name': 'Sebastian Barrenechea',
+
+  'nav.fork': 'Fork me on GitHub',
+  'nav.sr.open': 'Apri il menu di navigazione',
+  'nav.home': 'Home',
+  'nav.projects': 'Progetti',
+  'nav.posts': 'Post',
+  'nav.page': 'Pagina',
+  'nav.language.select': 'Seleziona lingua',
+
+  'hero.greeting': 'Ciao! Sono',
+  // ...
+};
+```
+
+La gestione dei percorsi è cruciale per identificare le pagine da costruire. Astro facilita questo con il suo sistema di gestione dei percorsi, permettendo che la lingua sia disponibile come parametro:
+
+- Spostare tutte le pagine all'interno della directory `src/pages` in una directory `src/pages/[lang]`
+- Aggiungere qualcosa come questo in ciascuna delle pagine che richiedono la gestione dell'i18n:
+  ```typescript
+  const { lang } = Astro.params;
+  ```
+
+Con la versione in inglese funzionante, ho iniziato ad aggiungere supporto in spagnolo. Qui mi sono imbattuto in un dilemma di traduzione:
+
+<Image
+  src={WrongEsTranslation}
+  alt="Screenshot della pagina iniziale con i testi in spagnolo 'Últimos Publicaciones' e 'Ver todos los publicaciones', tradotti in modo errato"
+  format="webp"
+/>
+
+In inglese potevo usare gli stessi valori sia per i progetti che per le pubblicazioni, ma in spagnolo no.
+
+In un mondo ideale, userei un linguaggio neutro in termini di genere. Avrei potuto optare per "Progetti recenti" e "Pubblicazioni recenti", il che mi avrebbe permesso di riciclare la parola. Tuttavia, per mantenere la coerenza visiva della pagina, avevo bisogno che la frase finisse in "progetti" o "pubblicazioni". Dopo alcuni aggiustamenti, sono riuscito a farla tradurre completamente in tutte le viste (l'indice, le pagine di navigazione e i template che usano il contenuto).
+
+E c'era un problema con il componente di selezione della lingua che avevo usato che mi infastidiva molto. Il componente richiedeva la classe `absolute` per posizionare oggetti al di sotto di esso, il che causava la perdita del rispetto del margine della pagina in caso di testo molto lungo:
+
+<div align="center">
+  <Image
+    src={OldNavbar}
+    alt="Screenshot della barra di navigazione precedente, con il selettore di lingua nell'angolo in alto a destra che supera il limite del margine"
+    format="webp"
+  />
+  <p class="italic">Margine evidenziato in rosso per sottolineare il problema</p>
+</div>
+
+Ho estratto quel componente da [Starlight](https://starlight.astro.build/it/) perché mi sembrava semplice e minimalista, ma alla fine l'ho sostituito con uno di [Flowbite](https://flowbite.com/docs/components/navbar/#language-dropdown) reimplementando l'interattività utilizzando l'API di [Componenti Web](https://web.dev/articles/custom-elements-v1). Il nuovo componente richiede un'immagine aggiuntiva per ogni lingua (la bandiera, utilizzando [@iconify-icons/circle-flags](https://icon-sets.iconify.design/circle-flags/)), ma ne vale la pena.
+
+<Image
+  src={NewNavbar}
+  alt="Screenshot della barra di navigazione attuale, con il selettore di lingua nell'angolo in alto a destra"
+  format="webp"
+/>
+
+## Ma non si vede alcun contenuto po'
+
+Ajustando il contenuto del sito (progetti e pubblicazioni) al suo percorso corrispondente in inglese, il sito non trovava il contenuto in spagnolo, risultando in una pagina senza contenuto navigabile. I primi test li ho fatti traducendo manualmente con l'API di OpenAI, e poi ho automatizzato il processo per facilitare le cose.
+
+_Potrai vedere più dettagli in una prossima pubblicazione sull'uso di LLM in produzione._
+
+Dopo aver finito la traduzione dei progetti e delle pubblicazioni in spagnolo, ho fatto alcuni aggiustamenti alle traduzioni risultanti. Ho stabilito lo spagnolo come standard di riferimento per il processo di traduzione automatizzato e, dopo gli aggiustamenti necessari, ho rigenerato il contenuto in inglese.
+
+## E ora cosa?
+
+Ora è sorprendentemente semplice aggiungere supporto per altre lingue! Ci sono alcune considerazioni da tenere in mente, come "assumere" che la lingua si legga da sinistra a destra, il che esclude lingue come l'arabo o l'ebraico. Tailwind, il framework CSS che uso in questo sito, supporta nativamente LTR (left to right) e RTL (right to left), ma alcuni dettagli devono essere aggiustati (ad esempio, usare la classe `rtl:space-x-reverse` dove necessario).
+
+Con la Germania al terzo posto tra i visitatori del mio sito, ho implementato la traduzione in tedesco senza difficoltà e presto includerò italiano, francese, cinese tradizionale e islandese (I♥️Iceland). Anche se l'automazione facilita il processo, è essenziale rivedere le traduzioni per assicurare la loro qualità, poiché non sono sempre perfette. Nel caso dell'inglese, ho potuto fare una revisione personale; tuttavia, per lingue come il tedesco, che non conosco, ho fatto affidamento sull'aiuto di strumenti come la traduzione automatica di Google Chrome per verificare la coerenza. Il mio obiettivo è collaborare eventualmente con madrelingua per ogni lingua e così elevare lo standard delle traduzioni offerte.

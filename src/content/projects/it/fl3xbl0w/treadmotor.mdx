@@ -1,0 +1,61 @@
+---
+title: Controllo del Motore del Tapis Roulant - fl3xbl0w
+description: Progetto di ingegneria inversa. È iniziato con il tapis roulant Bowflex Treadmill 22 ma si è poi generalizzato per qualsiasi macchina con Android venduta da Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /it/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo del progetto fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_Questo si applica principalmente al Treadmill 22 & Treadmill 56._
+
+La scheda di controllo del motore è prodotta da [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="Controllore della Scheda di Controllo del Motore B017D" format="webp" />
+
+Dato il [manuale di servizio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornito da Nautilus Inc. ([backup su archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+
+<Image src={TreadmillElectrical} alt="Schema elettrico del tapis roulant" format="webp" />
+
+E focalizzandoci specificamente su questa parte:
+
+<Image src={TreadmillComm} alt="Percorso di comunicazione del tapis roulant" format="webp" />
+
+Possiamo identificare il "cavo di comunicazione" che collega il controllore del motore come uno a 5 pin. C'è solo un connettore a 5 pin.
+Ho etichettato i cavi con i loro colori corrispondenti (i dati & l'interruttore sono optoisolati):
+
+| colore del cavo | etichetta |
+| --------------- | --------- |
+| rosso           | GND       |
+| bianco          | RXD       |
+| nero            | TXD       |
+| giallo          | +12       |
+| verde           | SW        |
+
+La scheda non è collegata direttamente alla console Android.
+
+L'unico connettore a 5 pin è di marca Molex. Una ricerca su Google di "connettori Molex piccoli" mi ha portato a un'immagine di quello che chiamano `Molex Micro-Fit 3.0 Single Row (5-Pin)`, che viene utilizzato per collegare la scheda di controllo del motore:
+
+<Image src={Molex} alt="Connettore Molex Micro-Fit 3.0" format="webp" />
+
+[Link di AliExpress](https://aliexpress.com/item/32902205579.html)
+
+Dando un'occhiata a `NautilusLauncher.apk` attraverso `jadx-gui`, posso vedere che comunicano con il tablet Android con la loro "Console Universale" usando Serie a 230400 Baud (usando `/dev/ttyS4`). Questo NON è ciò che stiamo analizzando qui. Questo si riferisce alla comunicazione tra Android e la "Console Universale". Stiamo indagando le comms tra la "Console Universale" e la "Scheda di Controllo del Motore".
+
+Provare a collegare un ESP32 o un ponte seriale basato su CH340 direttamente ai cavi tra la base del tapis roulant e la scheda di controllo Bowflex ha fatto sì che la base del tapis roulant non si inizializzasse correttamente, quindi ho iniziato a sospettare che stessero utilizzando RS232.
+
+Nota: Collegando solo a GND e RXD, possiamo "vedere" alcune informazioni esadecimali apparentemente senza senso a 9600 baud. Collegare a TXD impedisce l'inizializzazione della base del tapis roulant.
+
+-- Continuerà, ho bisogno di un po' di tempo per giocare con il mio nuovo analizzatore logico --

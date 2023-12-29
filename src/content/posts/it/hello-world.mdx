@@ -1,0 +1,28 @@
+---
+title: Ciao mondo!
+description: Ho ripristinato il sito web, ora funziona con Astro ed è distribuito su Edge!
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Logo di Astro
+translatedBy: gpt-4-1106-preview
+checksum: ccd7f51e2f54980ddcc736b7c65c369bfeb70cb4966b0ca1870da55c07533cc8
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+Se sei stato qui prima, questo sito web ha avuto il messaggio di "ciao" per alcuni anni. Ma molte cose sono cambiate nel tempo!
+
+<Image
+  src={OldWebsiteImage}
+  alt="Screenshot di come appariva il sito web in precedenza"
+  format="webp"
+/>
+
+Il sito web nel 2016 era ospitato su un droplet di [DigitalOcean](https://digitalocean.com). Più tardi, ho deciso di aprire porte all'interno della mia rete e ho usato [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) per eseguire il sito web come un contenitore sul mio server [Unraid](https://unraid.net).
+
+Prima di passare a deployment su Edge, ho usato un [Tunnel di Cloudflare](https://www.cloudflare.com/it-it/products/tunnel/) per alleviare la natura di IP dinamico del mio ISP e rafforzare i "punti di accessibilità" della mia rete locale.
+
+Quello che stai leggendo ora è una ricostruzione del sito web sviluppata con [Astro](https://astro.build). La sua capacità di essere distribuito su Edge (attualmente sto utilizzando la [rete perimetrale](https://www.cloudflare.com/it-it/learning/cdn/glossary/edge-server/) di Cloudflare) è un enorme miglioramento sia dal punto di vista della sicurezza che delle prestazioni risultanti per gli utenti finali (tu!).
+
+Il font che ho scelto per questo sito web è [Work Sans](https://fonts.google.com/specimen/Work+Sans).
