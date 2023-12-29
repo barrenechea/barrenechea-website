@@ -2,10 +2,10 @@
 import { AppConfig } from '~/config';
 import { useTranslations } from '~/i18n/translations';
 
-import { devDependencies } from '../../../package.json';
+import { dependencies } from '../../../package.json';
 
 const year = new Date().getFullYear();
-const astroVersion = devDependencies.astro.replace('^', '');
+const astroVersion = dependencies.astro.replace('^', '');
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);

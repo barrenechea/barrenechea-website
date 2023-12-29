@@ -17,7 +17,7 @@
     "prepare": "husky install",
     "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
   },
-  "devDependencies": {
+  "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.4.3",
     "@astrojs/check": "^0.3.4",
     "@astrojs/mdx": "^2.0.3",
@@ -43,7 +43,7 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-tailwindcss": "^3.13.0",
+    "eslint-plugin-tailwindcss": "^3.13.1",
     "eslint-plugin-unused-imports": "^3.0.0",
     "github-fork-ribbon-css": "^0.2.3",
     "husky": "^8.0.3",
