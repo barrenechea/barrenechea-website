@@ -1,0 +1,240 @@
+---
+title: Afritaðu innihald tölvunnar þinnar - fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /is/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 65ec4f05ff473ccae32695390fa759ddf2c4115337bf3223d577b481cd053ea0
+---
+
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
+
+Eftir að hafa verið leystur úr `AppMonitorService` (eða eftir að hafa fengið OTA uppfærslu), er fyrsta skrefið að afrita eins mikið gögn og mögulegt er.
+
+Gakktu úr skugga um að þú sért þegar tengdur við stjórnborðið:
+
+```sh
+> adb connect <IP-tala stjórnborðs>
+```
+
+## Afritun af /sdcard innihaldi
+
+Það gæti innihaldið sumar skrár sem nauðsynlegar eru fyrir vélina til að virka rétt eftir verksmiðjuendurstillingu (aðallega í `/sdcard/Android` og `/sdcard/Nautilus` möppunum). Við munum afrita allt með:
+
+```sh
+> adb pull /sdcard/ .
+```
+
+## APK Afritun
+
+Fyrst, fáðu lista yfir alla pakka sem uppsettir eru á stjórnborðinu (bara svo þú hafir tilvísun):
+
+```sh
+> adb shell pm list packages -f
+```
+
+Þeir munu birtast á eftirfarandi sniði: `package:<APK staðsetning>=<pakkanafn>`
+
+Þú þarft að finna forritin sem þú vilt afrita. EKKI ÖLL FORRIT ERU NÁUÐSYNLEG, flest eru staðlaðar Android forrit, svo við munum aðeins leita að "óstaðlaðum forritum" með því að nota sumar síur:
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+```
+
+Þú munt sjá skrár forrita frá `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney`, og kannski fleiri í framtíðinni. Við viljum afrita allt sem við sjáum á þeirri lista (faldar einstakar auðkenni, notaðu þínar eigin niðurstöður):
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
+package:/data/app/com.redbend.client-XXXXXXXXXXXXXXXX/base.apk=com.redbend.client
+package:/data/app/com.nautilus.nlssbcsystemsettings-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nlssbcsystemsettings
+package:/system/priv-app/RBDualPartService/RBDualPartService.apk=com.redbend.dualpart.service.app
+package:/data/app/com.netflix.mediaclient-XXXXXXXXXXXXXXXX/base.apk=com.netflix.mediaclient
+package:/data/app/com.nautilus.nautiluslauncher-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nautiluslauncher
+package:/data/app/com.amazon.avod.thirdpartyclient-XXXXXXXXXXXXXXXX/base.apk=com.amazon.avod.thirdpartyclient
+package:/data/app/com.nautilus.sbc_demo_app-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbc_demo_app
+package:/data/app/com.nautilus.UtilityApp-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.UtilityApp
+package:/data/app/com.nautilus.g4assetmanager-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.g4assetmanager
+package:/data/app/com.nautilus.platform_hardwaretest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.platform_hardwaretest
+package:/data/app/com.nautilus.webviewer-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.webviewer
+package:/data/app/com.nautilus.bowflex.usb-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.bowflex.usb
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+> ATHUGIÐ: `com.redbend.dualpart.service.app` kemur frá `/system/priv-app/`, sem þýðir að það mun vera uppsett jafnvel eftir verksmiðjuendurstillingu. Við getum afritað það samt ef þú hefur áhuga á að öfugverkfræða forritin.
+
+Tökum Disney Plus sem dæmi (falið einstakt auðkenni)
+
+```
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+Sú lína, byggð á sniðinu sem ég nefndi, væri:
+
+```
+Pakka staðsetning: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
+Pakkanafn: com.disney.disneyplus
+```
+
+Við munum leita að hvaða útgáfu af forritinu við höfum með þeim upplýsingum. Notum pakkanafnið sem við höfum þegar búið til og keyrum:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+```
+
+Í mínu tilfelli fékk ég:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+    versionName=2.4.2-rc2
+```
+
+Núna, til að búa til afrit fyrir Disney Plus pakka, væri ferlið:
+
+```sh
+> adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
+```
+
+Strax eftir að það klárast, farðu í skráastjórann þinn og endurnefndu nýja afritaða `base.apk` skrána í `com.disney.disneyplus-2.4.2-rc2.apk`.
+
+Sniðið sem ég legg til fyrir APKs, miðað við það dæmi, er: `<Pakkanafn>-<útgáfa>.apk`
+
+Endurtaktu núna ferlið fyrir restina af forritunum.
+
+## AppData Afritun
+
+Það virðist geta afritað _sum (ég er ekki viss um allt)_ forritagögn.
+
+_Hafðu í huga að ekki öll uppsett forrit búa til forritagögn, eða við, sem `shell` notandi, gætum ekki haft heimildir til að afrita allt._
+
+Búðu til fullt afrit af öllum notendauppsettum forritum:
+
+```sh
+> adb backup -f appdata.adb -all -noapk -nosystem
+```
+
+Einnig geturðu fengið sömu niðurstöðu frá öðru skipun:
+
+```sh
+> adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
+```
+
+Báðar skipanir munu biðja um "á-skjá staðfestingu" að þú viljir gera afrit. Smelltu á "**BACK UP MY DATA**":
+
+<Image src={DialogBackupConfirm} alt="afritunarstaðfestingarskjár" format="webp" />
+
+Ef þú vilt draga út innihaldið (á Linux, macOS), þarftu `zlib-flate` frá [qpdf](https://command-not-found.com/qpdf) og keyra:
+
+```sh
+> dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
+```
+
+Það er einhver áhugaverð gögn fyrir `com.nautilus.bowflex.usb`.
+Það er persónugreinanlegar upplýsingar (PII) inni, svo **gakktu úr skugga um að skoða vel hvaða skrár þú deilir**.
+
+_Þessar afritunar- og útdráttaraðferðir koma frá [þessum Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Ég hef aðeins prófað afritunaraðferðirnar sem þar eru taldar upp, sem eru öruggar til að leika sér með. **Ef þú leikur þér með endurheimtina frá Gist, ertu á eigin ábyrgð**. Láttu okkur vita ef það virkar!_
+
+## Handrit
+
+Ég þróaði fljótlega og óhreina Python handrit til að afrita sumt innihald (það inniheldur ekki AppData enn sem komið er).
+**Aðeins prófað á macOS með android-platform-tools uppsett í gegnum brew**.
+Lestu handritið og gakktu úr skugga um að það sé skynsamlegt fyrir þig áður en þú keyrir það.
+
+```python
+import sys
+import os
+import subprocess
+from datetime import datetime
+
+# athuga hvort rök hafi verið gefin
+if len(sys.argv) != 2:
+    print("Notkun: python3 dump.py <IP-tala stjórnborðs>")
+    sys.exit(1)
+
+ipaddr = sys.argv[1]
+
+# athuga hvort adb sé aðgengilegt fyrir skel
+adb_path = subprocess.check_output(["which", "adb"]).decode("utf-8").strip()
+if not os.path.exists(adb_path):
+    print("adb fannst ekki")
+    exit()
+
+# setja upp afritunarmöppu með núverandi dagsetningu og tíma
+dump_folder = os.path.join(
+    os.environ["HOME"],
+    "Desktop",
+    "nautilus_dump",
+    "{}".format(datetime.now().strftime("%Y-%m-%d_%H-%M-%S")),
+)
+if not os.path.exists(dump_folder):
+    os.makedirs(dump_folder)
+
+# tengja adb
+print("Tengist við {}...".format(ipaddr))
+subprocess.call(["adb connect {}".format(ipaddr)], shell=True)
+
+# afrita innihald /sdcard
+print("Afritar innihald /sdcard...")
+subprocess.call(["adb pull /sdcard/ {}".format(dump_folder)], shell=True)
+
+# fá APK upplýsingar
+print("Afritar APKs...")
+packages = (
+    subprocess.check_output(["adb shell pm list packages -f"], shell=True)
+    .decode("utf-8")
+    .split("\n")
+)
+
+# síu út tómar línur
+packages = [x for x in packages if x.strip()]
+
+# síu út línur sem innihalda "com.android", "com.google", "framework-res"
+packages = [package for package in packages if package.find("com.android") == -1]
+packages = [package for package in packages if package.find("com.google") == -1]
+packages = [package for package in packages if package.find("framework-res") == -1]
+
+print("Fann {} APKs".format(len(packages)))
+
+for package in packages:
+    package_name = package.split("=")
+    package_name = package_name[len(package_name) - 1].strip()
+    package_version = (
+        subprocess.check_output(
+            ["adb shell dumpsys package {} | grep versionName".format(package_name)],
+            shell=True,
+        )
+        .decode("utf-8")
+        .split("=")[1]
+        .strip()
+    )
+
+    package_path = package.split(":")[1].split(".apk=")[0].strip()
+    package_path = "{}.apk".format(package_path)
+    print("Afritar {} v{}...".format(package_name, package_version))
+
+    subprocess.call(["adb pull {} {}".format(package_path, dump_folder)], shell=True)
+
+    os.rename(
+        os.path.join(dump_folder, os.path.basename(package_path)),
+        os.path.join(dump_folder, "{}-{}.apk".format(package_name, package_version)),
+    )
+
+# afrita appdata
+print("Afritar appdata.adb ...")
+print('SMELLTU Á "BACK UP MY DATA" HNAPPIÐ Á SKJÁNUM NÚNA !!!')
+subprocess.call(
+    ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
+    shell=True,
+)
+
+# aftengja adb
+print("Aftengi...")
+subprocess.check_output(["adb disconnect"], shell=True)
+```

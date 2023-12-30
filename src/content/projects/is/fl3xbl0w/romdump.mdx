@@ -1,0 +1,163 @@
+---
+title: ROM Dump - fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /is/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### Rockchip Hleðslustilling
+
+RK3399 örgjörvi knýr Android vélbúnaðinn. Rockchip örgjörvar koma með staðlaða "hleðslustillingu".
+
+Verkfærasettið sem ég notaði er:
+
+- Rockchip Driver Assistant v4.5 frá [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 prófun frá [þessari XDA færslu](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 frá [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+
+_Það er til nýrri útgáfa af ökumanni til niðurhals, en þekkt er að hún sé ósamhæf við rkDumper._
+
+Til að leika þér með þetta verður þú að taka í sundur Bowflex stjórntölvuna, skrúfa af plast afturhúddið og setja það saman aftur í "beru formi".
+**Ekki reyna þetta, þar sem að leika með Android vélbúnað í Hleðslustillingu getur leitt til varanlega brotinnar tækis.**
+
+<Image src={ConsoleMounted} alt="Uppsett stjórntölva með fjarlægðu afturhúddi" format="webp" />
+
+Hér eru viðeigandi hlutar Android rásarplötunnar fyrir Rockchip dót:
+
+<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
+
+Þú getur haldið Android Tool Release forritinu opið allan tímann sem tilvísun til að athuga í hvaða stillingu stjórntölvan er.
+
+Með vélina kveikta í "venjulegri stillingu" og tengda við tölvu, þekkist hún sem `NFTM-LAR`:
+
+```
+NFTM-LAR:
+  Product ID: 0x0001
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 3.10
+  Speed: Up to 480 Mb/s
+  Manufacturer: Vanzo
+  Location ID: 0x14120000 / 9
+  Current Available (mA): 500
+  Current Required (mA): 500
+  Extra Operating Current (mA): 0
+```
+
+Með vélina slökkt, tengda í gegnum USB við tölvu, haldið niðri "Endurheimtahnappnum" og kveikt á henni, ætti hún að ræsa í "Hleðslustillingu." Vélin mun "hljóma," en skjárinn verður kyrr. _Þú getur slökkt, beðið í mínútu, kveikt aftur, og vélin mun ræsa eðlilega._
+
+_Android vélbúnaðurinn stjórnar ekki "hljóðinu" eftir að vélin er kveikt, heldur í gegnum aðrar Nautilus rásarplötur._
+
+Nú mun hún tilkynna á tölvunni sem `USB download gadget` (Raðnúmer falið):
+
+```
+USB download gadget:
+  Product ID: 0x330c
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 99.99
+  Serial Number: XXXXXXXXXXXXXXX
+  Manufacturer: Rockchip
+  Location ID: 0x14120000
+```
+
+Eftir að hafa keyrt rkDumper gegn stjórntölvunni, fáum við upplýsingar um skiptingarnar:
+
+```
+"EFI PART" merki fundið (RKFP FW dump)
+
+Skipting "EFI_part" (0x00004000) vistuð (snid: RockChip RKFP dump)
+Skipting "uboot_a" (0x00002000) vistuð (snid: Rockchip uboot image file)
+Skipting "uboot_b" (0x00002000) vistuð (snid: Rockchip uboot image file)
+Skipting "trust_a" (0x00002000) vistuð (snid: óþekkt)
+Skipting "trust_b" (0x00002000) vistuð (snid: óþekkt)
+Skipting "misc" (0x00002000) vistuð (snid: óþekkt)
+Skipting "resource" (0x00008000) vistuð (snid: óþekkt)
+Skipting "kernel" (0x00010000) vistuð (snid: óþekkt)
+Skipting "dtb" (0x00002000) vistuð (snid: óþekkt)
+Skipting "dtbo_a" (0x00002000) vistuð (snid: óþekkt)
+Skipting "dtbo_b" (0x00002000) vistuð (snid: óþekkt)
+Skipting "vbmeta_a" (0x00000800) vistuð (snid: óþekkt)
+Skipting "vbmeta_b" (0x00000800) vistuð (snid: óþekkt)
+Skipting "boot_a" (0x00020000) vistuð (snid: óþekkt)
+Skipting "boot_b" (0x00020000) vistuð (snid: óþekkt)
+Skipting "backup" (0x00038000) vistuð (snid: óþekkt)
+Skipting "security" (0x00002000) vistuð (snid: óþekkt)
+Skipting "cache" (0x00100000) vistuð (snid: óþekkt)
+Skipting "system_a" (0x00500000) vistuð (snid: óþekkt)
+Skipting "system_b" (0x00500000) vistuð (snid: óþekkt)
+Skipting "metadata" (0x00008000) vistuð (snid: óþekkt)
+Skipting "vendor_a" (0x00100000) vistuð (snid: óþekkt)
+Skipting "vendor_b" (0x00100000) vistuð (snid: óþekkt)
+Skipting "oem_a" (0x00100000) vistuð (snid: óþekkt)
+Skipting "oem_b" (0x00100000) vistuð (snid: óþekkt)
+Skipting "frp" (0x00000400) vistuð (snid: óþekkt)
+Skipting "sw_release" (0x00ed7000) vistuð (snid: óþekkt)
+Skipting "video" (0x0047e000) vistuð (snid: óþekkt)
+Skipting "userdata" (0x0169bbdf) vistuð (snid: óþekkt)
+```
+
+`uboot_a` og `uboot_b` voru vel dregnar út, en allar aðrar skiptingar merktar sem `(snid: óþekkt)` eru illa afritaðar, aðeins draga út hexadecimal `CC` gildi frá þeim.
+
+Svipað mál og mitt var skjalfest á [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), og eftir að [spyrja](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) rkDumper þróandann, [segir hann](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) að það verði að vera nýr RockChip hleðslustilling á staðnum. Að fylgja þessari aðferð virðist vera óframkvæmanleg í bili.
+
+### ADB
+
+Svipaðar upplýsingar má finna í gegnum adb, en það virðist ekki vera mögulegt að gera afrit þar sem við skortum rótarréttindi:
+
+```sh
+> ls -al /dev/block/platform/
+total 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+total 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### Aðrar hugmyndir
+
+Eitthvað sem við getum gert er að afhýða eMMC flöguna og lesa hana utanaðkomandi til að geta afritað allt innihald hennar. Það væri gott fyrir að búa til sérsniðið ROM, en ég mun ekki afhýða frá MINNI EINU stjórntölvu (það væri flott að hafa varatölvu).

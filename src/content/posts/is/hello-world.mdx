@@ -1,0 +1,24 @@
+---
+title: Halló heimur!
+description: Ég hef endurræst vefsíðuna, hún keyrir núna á Astro og er dreift á Edge!
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Astro merki
+translatedBy: gpt-4-1106-preview
+checksum: 5e24aecef29b64c13ea38c5e7cdca422d16bb5cbb27c25c66117f6c401f99b99
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+Ef þú hefur komið hér áður, þá hefur þessi vefsíða haft "hæ þar" skilaboðin í nokkur ár. En margt hefur breyst með tímanum!
+
+<Image src={OldWebsiteImage} alt="Skjámynd af því hvernig vefsíðan leit út áður" format="webp" />
+
+Aftur í 2016 var vefsíðan hýst á [DigitalOcean](https://digitalocean.com) droplet. Síðar ákvað ég að opna port í eigin neti og notaði [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) til að keyra vefsíðuna sem gám á [Unraid](https://unraid.net) þjóni mínum.
+
+Áður en ég skipti yfir í Edge útgáfur, notaði ég [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) til að draga úr breytilegri IP eðli ISP míns og til að styrkja "aðgengispunkta" míns staðarnets.
+
+Það sem þú ert að lesa núna er endurbygging á vefsíðunni þróuð með [Astro](https://astro.build). Getan til að útsetja á Edge (ég er núna að nota Cloudflare's [edge network](https://www.cloudflare.com/learning/cdn/glossary/edge-server/)) er mikil framför bæði út frá öryggissjónarmiði og þeirri frammistöðu sem endanotendur (þú!) upplifa.
+
+Leturgerðin sem ég valdi fyrir þessa vefsíðu er [Work Sans](https://fonts.google.com/specimen/Work+Sans).

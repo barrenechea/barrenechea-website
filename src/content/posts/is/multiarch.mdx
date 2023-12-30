@@ -1,0 +1,38 @@
+---
+title: Multi-arch Allt Saman
+description: Ferðalagið frá x86/64 heimi til alheims arkitektúra.
+pubDate: 2021-09-06T00:00:00Z
+img: ~/assets/images/arm-x86.svg
+imgAlt: Tveir flögur, annar merktur "x86" og hinn "ARM".
+translatedBy: gpt-4-1106-preview
+checksum: fa8c71668cd9e14e1349122d69ac1a0696e5a23dff0182b9145a50b33a68cbf6
+---
+
+Þegar við byrjuðum að leggja grunninn hjá [Finalis](https://www.finalis.com), man ég eftir því að hafa hugmyndina um að prófa AWS's Graviton.
+Það var ekki framkvæmanlegt árið 2018 án þess að byggja hlutina sjálfur. Fljótlega fram í tímann, það er 2022, og við (sem samfélag) eigum enn í erfiðleikum með að finna ARMv8 stuðning í Dockerhub myndum.
+
+En árið 2020 gerðist eitthvað stórt: Apple tilkynnti um skipti Macs yfir til Apple Silicon með 2 ára tímaramma.
+
+Hjá Finalis, við höldum okkur við Apple búnað fyrir hugbúnaðarþróun. Þú færð Unix-líkt stýrikerfi og frábæra skjá- og hljóðgæði fyrir að horfa á kvikmyndir eða hvað sem er 🍿.
+
+Árið 2020 hófst niðurtalning. Ef við vildum halda áfram að öðlast nýja Apple tæki í framtíðinni, þurfti Finalis að verða marg-arkitektúr.
+
+## Docker
+
+Þegar Apple gaf út M1, og við fengum einn, Docker var að byrja að "komast af" með það, en Docker á ARM átti í sumum vandamálum í eldri útgáfum einfaldlega vegna þess að vélin var verið að prófa (af okkur, frumkvöðlum þróunarinnar).
+
+Síðar virtist sem allt væri í lagi: þriðja aðila tól - flestar af nauðsynlegum myndum voru þegar í boði fyrir ARM64, en ekki allar. [browserless](https://github.com/browserless/chrome) var sú sem ég byrjaði að takast á við til að fá hana byggða á ARM64, og því sendi ég [pull request](https://github.com/browserless/chrome/pull/1847) með lágmarksbreytingarnar sem þurfti til að láta það virka.
+
+Með þriðja aðila tólum hulinn, það var bara spurning um að gera viss um að Docker byggði okkar eigin myndir fyrir ARM64. "Hæ, þú notar TypeScript; það ætti bara að virka!"... Jú, svo lengi sem háðleikar þínir þurfa ekki að hlaða niður tvíundum á meðan þú keyrir `npm install`.
+
+Aðalvandamálið? Engar tvíundir eru veittar fyrir ARM64, sem neyðir til að byggja tvíund á meðan þú keyrir `npm install` með `make` (eftir-uppsetningar handrit?). Frá stillingarsjónarhorni, smá ást í sumum af okkar `Dockerfile` skrám var allt sem þurfti og það leysti allt.
+
+## Pipelines
+
+Að vinna með GitHub Actions og takast á við marg-arkitektúr, þú hefur tvær valkosti: keyra tvo samhliða runners (einn byggir fyrir x86/64 og hinn fyrir arm64), eða keyra einn runner fyrir báðar arkitektúr.
+
+Ég valdi seinni kostinn til að tilraunast með, í gegnum [docker buildx](https://docs.docker.com/build/buildx/). Eftir uppsetningarleiðbeiningarnar fyrir [build-push-action](https://github.com/docker/build-push-action#path-context) geturðu fljótt fengið virkan pipeline.
+
+Að leyfa buildx að meðhöndla marg-arkitektúr byggingu leyfir þér að ýta á Dockerhub án þess að þurfa að takast á við mismunandi merki fyrir mismunandi arkitektúr. Öll þín merki VERÐA marg-arkitektúr samhæfð.
+
+Gallinn er byggingartíminn: að hafa tvo samhliða runners á viðeigandi arkitektúrum væri miklu hraðari, en pipeline myndi þurfa að meðhöndla sameiningu niðurstaðnanna í eitt merki. _Aðeins ef þú hefur áhyggjur af því að gera það auðveldara fyrir neytendur að finna rétta mynd._

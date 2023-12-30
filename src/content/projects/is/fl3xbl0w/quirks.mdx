@@ -1,0 +1,124 @@
+---
+title: Sérvitni Bowflex - fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /is/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: b579f6715ec7bbcf25b8db49cedec3e9eeeac50513672a0984304f94203d593a
+---
+
+import { Image } from 'astro:assets';
+import HomeAssistantSensor from '~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png';
+
+### Skráin `/sdcard/Pictures/nautilus`
+
+Þegar þú afkóðar `NautilusLauncher`, geturðu séð tilvísanir til þessarar tilteknu slóðar:
+
+```java
+// slóð: com/nautilus/nautiluslauncher/LauncherService.java
+public void run() {
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    LauncherService.access$000(LauncherService.this).disableAdbDebug();
+    LauncherService.access$000(LauncherService.this).enterKioskMode();
+    return;
+  }
+  LauncherService.access$000(LauncherService.this).enableAdbDebug();
+}
+```
+
+```java
+// slóð: com/nautilus/nautiluslauncher/MainActivity.java
+protected void onCreate(Bundle bundle) {
+  // ...
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    this.mPlatformControl.disableAdbDebug();
+    this.mPlatformControl.enterKioskMode();
+  } else {
+    this.mPlatformControl.enableAdbDebug();
+  }
+  // ...
+}
+```
+
+Áhrif þess að setja skrána á sinn stað er að `NautilusLauncher` mun virkja adb eftir hvern endurræsingu. Ef skráin er EKKI á sínum stað mun `NautilusLauncher` VIRKJA AÐ AÐGERÐA adb (ef það var áður virkjað).
+
+### Skráin `/sdcard/Nautilus/redbend/Credentials.txt`
+
+Það virðist sem [Red Bend Software](https://is.wikipedia.org/wiki/Red_Bend_Software) ([yfirtekið af Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), nú skil ég **af hverju** svo margar tilvísanir til KNOX) sé að veita OTA þjónustu fyrir Nautilus búnað. Ég fann nokkrar tilvísanir til þessarar skrár innan `com.redbend.client.apk`.
+
+```java
+package com.redbend.client;
+public class Ipl {
+  protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
+  // ...
+  public static int iplGetAutoSelfRegDomainInfo(Context context, String[] strArr) {
+    // ...
+    File file = new File("/sdcard/Nautilus/redbend/");
+    if (!file.exists()) {
+      file.mkdirs();
+    }
+    copyAssets(context, "Credentials.txt", file.getCanonicalPath());
+    bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
+    // ...
+  }
+  // ...
+}
+```
+
+Einnig í `com.redbend.client.ClientService` getum við fundið:
+
+```java
+// ...
+public class ClientService extends SmmService {
+  // ...
+  @Override // com.redbend.app.SmmService, android.app.Service
+  public void onCreate() {
+    // ...
+    if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
+      sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
+      }
+    // ...
+  }
+  // ...
+}
+```
+
+Með þessum upplýsingum getum við merkt efnið í skránni `/sdcard/Nautilus/redbend/Credentials.txt` sem:
+
+```
+Fyrsta lína: DOMAIN_NAME
+Önnur lína: DOMAIN_PIN
+```
+
+_`DOMAIN_PIN` virðist vera raunverulegur pin-kóði þar sem það er sex stafa tala._
+
+Það eru einhverjar auðkenningar innan "Red Bend Network" til að tengja vél við ákveðna vörumerki/vöru fyrir OTA uppfærslur. Ég vona að þessar auðkenningar séu EINS í öllum Nautilus búnaði. Skráin er innifalin í `com.redbend.client` APK og er dregin út við uppsetningu.
+
+Ég fann tilvísanir til `com.redbend.client` [hér](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), og mér fannst það frekar fyndið að sjá það hrynja í bíl. Ég vona að það bili ekki svona oft í vélum okkar líka.
+
+### Bluetooth Hjartsláttarmælir
+
+Þetta var nokkuð beint áfram að ráða í. Bluetooth nafnið birtist sem `CL831-xxxxxxx` _(númer falið)_ frá [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+
+Þegar skannað með [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile), var MAC heimilisfang tækisins og nokkur lykilgögn opinberuð:
+
+```
+Hjartsláttur:
+UUID: 0x180D
+Mæling hjartsláttar
+UUID: 0x2A37
+```
+
+Þetta virtist vera nokkuð staðlað, og [færsla](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) frá Home Assistant Community hafði þegar ráðið í þetta (ekki sama módelið, en það virðist sem Hjartsláttarmælirinn noti staðlað prótókoll). Ég hef búið til ESPHome stillingarskrá [hér](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) sem sannprófun á hugmynd:
+
+<Image
+  src={HomeAssistantSensor}
+  alt="Skjámynd af Home Assistant sem sýnir hjartsláttarskynjara"
+  format="webp"
+/>

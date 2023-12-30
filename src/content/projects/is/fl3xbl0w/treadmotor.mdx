@@ -1,0 +1,61 @@
+---
+title: Hlaupabretti Mótorstýring - fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /is/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import HlaupabrettiRafmagn from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import HlaupabrettiSamskipti from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_Þetta á aðallega við um Hlaupabretti 22 & Hlaupabretti 56._
+
+Rafstýringarborðið er framleitt af [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="B017D Rafstýringarborð Stjórnandi" format="webp" />
+
+Með [þjónustuhandbókinni](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) sem Nautilus Inc. veitir ([afrit á archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+
+<Image src={HlaupabrettiRafmagn} alt="Rafmagnsskema hlaupabrettis" format="webp" />
+
+Og með sérstakri áherslu á þennan hluta:
+
+<Image src={HlaupabrettiSamskipti} alt="Samskiptaleið hlaupabrettis" format="webp" />
+
+Við getum þekkt "samskiptakapalinn" sem tengir rafstýringuna sem 5-pinnakapal. Það er aðeins einn 5-pinnatengill.
+Ég hef merkt vírana með viðeigandi litum (gögn & rofi eru ljósbogaðskilin):
+
+| víralitur | merki |
+| --------- | ----- |
+| rauður    | GND   |
+| hvítur    | RXD   |
+| svartur   | TXD   |
+| gulur     | +12   |
+| grænn     | SW    |
+
+Borðið er ekki tengt beint við Android stjórnborðið.
+
+Eini 5-pinnatengillinn er frá Molex vörumerkinu. Google leit að "smáum Molex tengjum" leiddi mig að mynd af því sem þeir kalla `Molex Micro-Fit 3.0 Single Row (5-Pin)`, sem er notað til að tengja rafstýringarborðið:
+
+<Image src={Molex} alt="Molex Micro-Fit 3.0 Tengill" format="webp" />
+
+[AliExpress tengill](https://aliexpress.com/item/32902205579.html)
+
+Þegar skoðað er `NautilusLauncher.apk` í gegnum `jadx-gui`, sé ég að þeir eiga samskipti við Android spjaldtölvuna með þeirra "Universal Console" með Serial á 230400 Baud (nota `/dev/ttyS4`). Það er EKKI það sem við erum að greina hér. Það vísar til samskipta milli Android og "Universal Console". Við erum að rannsaka samskiptin milli "Universal Console" og "Rafstýringarborðsins".
+
+Tilraun til að tengja ESP32 eða CH340-baseruð serial brú beint við vírana á milli hlaupabrettisgrunnsins og Bowflex stjórnborðsins olli því að hlaupabrettisgrunnurinn initialíseraðist ekki rétt, svo ég fór að gruna að þeir væru að nota RS232.
+
+Athugið: Með því að tengjast aðeins við GND og RXD, getum við "séð" einhverja rusl heksadesímal upplýsingar á 9600 baud. Tenging við TXD veldur því að hlaupabrettisgrunnurinn initialíserast ekki.
+
+-- Að vera framhald, ég þarf smá tíma til að leika mér með nýja rökfræðigreinirinn minn --

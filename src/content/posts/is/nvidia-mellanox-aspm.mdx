@@ -1,0 +1,21 @@
+---
+title: Skortur á ASPM stuðningi í Mellanox kortum frá Nvidia
+description: Skoðun á skorti á ASPM stuðningi í Mellanox kortum frá Nvidia og áhrifum þess á orkunýtni í kerfum fyrir háafkastatölvunar (HPC).
+pubDate: 2023-01-02T12:00:00Z
+img: ~/assets/images/post-nvidia-mellanox.png
+imgAlt: 'Búið til í gegnum Midjourney með textanum: Grænt Nvidia gagnaver inni í glerlífríki sem gefur frá sér grátt gas, áhrifaríkt, litríkt, raunverulegt, Canon linsa, miklar smáatriði --v 4 --ar 3:2'
+translatedBy: gpt-4-1106-preview
+checksum: b1e34b15dbbd6f83541bbdf85e18490bfd8bf9eb64f5436fef6945d85dfd9b79
+---
+
+Mellanox kort frá Nvidia styðja ekki ASPM (Active State Power Management), orkustjórnunareiginleika sem hjálpar til við að draga úr orkunotkun PCI Express (PCIe) korta. Þetta er vandamál þar sem Mellanox kort eru notuð í mörgum kerfum fyrir háafkastatölvun (HPC), sem oft hafa fjölda PCIe tækja sem geta verulega aukið orkunotkun kerfisins.
+
+En af hverju skiptir þetta máli? Ein af aðalástæðunum er umhverfisáhrif orkunotkunar. HPC kerfi geta neytt mikils rafmagns, sem framleiðir gróðurhúsalofttegundir og veldur loftslagsbreytingum. Með því að bæta orkunýtni þessara kerfa getum við hjálpað til við að draga úr kolefnisspori þeirra og lagt okkar af mörkum til að vernda umhverfið.
+
+ASPM er verðmætt orkustjórnunareiginleiki sem getur verulega dregið úr orkunotkun kerfis með því að leyfa tækjum að fara í orkusparandi ástand þegar þau eru ekki í notkun. Ef Mellanox kort styddu ASPM gæti það bætt orkunýtni HPC kerfa og dregið úr kolefnislosun þeirra. Þetta væri tvívinningur: það myndi ekki aðeins hjálpa til við að draga úr áhrifum okkar á umhverfið heldur einnig spara peninga á rafmagnsreikningum og bæta frammistöðu HPC kerfa með því að draga úr orkutengdum flöskuhálsum.
+
+Því miður, þrátt fyrir beiðnir notenda, hefur Nvidia ekki veitt hugbúnaðaruppfærslur til að virkja ASPM stuðning á Mellanox kortum. Þetta er vonbrigði, þar sem það væri einföld og áhrifarík leið til að bæta orkunýtni HPC kerfa. Það er óljóst af hverju Nvidia hefur ekki veitt þessar uppfærslur, en framleiðandanum er nauðsynlegt að íhuga þetta mál og hugsa um að veita nauðsynlegar hugbúnaðaruppfærslur.
+
+Á meðan þurfum við að halda áfram að skoða leiðir til að bæta orkunýtni HPC kerfa og draga úr umhverfisáhrifum þeirra. Þetta gæti falið í sér notkun á orkunýtnari búnaði, hagræðingu hugbúnaðar og algríma, og innleiðingu annarra orkustjórnunartækni. Til dæmis nota sum HPC kerfi orkutakmörkun eða breytilega spennu og tíðni stýringu (DVFS) til að takmarka orkunotkun einstakra íhluta.
+
+Með því að einbeita okkur að orkunýtnum tækni og venjum getum við hjálpað til við að draga úr kolefnisspori HPC kerfa og haft jákvæð áhrif á heiminn.

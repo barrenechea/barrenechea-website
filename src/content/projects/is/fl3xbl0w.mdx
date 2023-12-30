@@ -1,0 +1,85 @@
+---
+title: fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 3c68be7b1aeedf296c2ef7e572afbb18bf245164c15815cf15fb013ab8703dc1
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="flexblow merki" format="webp" width={800} />
+
+Velkomin í skjölun mína um "Bowflex Stjórnborðið"! (sem Nautilus kallar Vantron).
+
+Vantron er grundvöllur flestra "snjalltækja" Nautilus Inc. Í grundvallaratriðum er þetta Android spjaldtölva sem keyrir sérsniðin hugbúnað. Auk nokkurra hluta tengdum vélbúnaði sem vöktu forvitni mína.
+
+Ég treysti töluvert á fyrri vinnu sem ég fann á [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (þakka þér [xasmx](https://www.reddit.com/user/xasmx/)!) til að öðlast dýpri skilning á hugbúnaði og vélbúnaði vélarinnar.
+
+## Samhæf Tæki (Android Jailbreak)
+
+Eftir að hafa leikið mér með <a href="/is/projects/fl3xbl0w/decompiling" target="_self">afþýdd forrit</a>, get ég sagt með vissu að eftirfarandi skjölun gæti verið yfirfærð á einn eða annan hátt til eftirfarandi Bowflex tækja:
+
+### Hlaupabretti
+
+- Treadmill 22 / Treadmill 56 (sama hlaupabretti. 56 hefur 220v AC inntak, 22 hefur 120v AC inntak)
+- Treadmill 10 / Treadmill 25 (sama hlaupabretti. 25 hefur 220v AC inntak, 10 hefur 120v AC inntak)
+
+### Hjól
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+Ég á ekki Max Trainer eða VeloCore, en það ætti að virka svo lengi sem þú hefur tiltækan USB tengi byggt á kóðafundum.
+
+Staðfest að virka með útgáfum af NautilusLauncher:
+
+- 5.0.0.350
+- 5.0.0.382
+
+**Jailbreak hefur þegar verið lagað af Nautilus.**
+
+## Skjölun
+
+### Almennar Upplýsingar
+
+- <a href="/is/projects/fl3xbl0w/jailbreak" target="_self">
+    Android Jailbreak
+  </a>
+- <a href="/is/projects/fl3xbl0w/backup" target="_self">
+    Afritaðu innihald tölvunnar þinnar
+  </a>
+- <a href="/is/projects/fl3xbl0w/decompiling" target="_self">
+    Afkóðun
+  </a>
+- <a href="/is/projects/fl3xbl0w/quirks" target="_self">
+    Sérvitni Bowflex
+  </a>
+
+### Í Vinnslu
+
+- <a href="/is/projects/fl3xbl0w/treadmotor" target="_self">
+    Hlaupabretti Mótorstýring
+  </a>
+- <a href="/is/projects/fl3xbl0w/romdump" target="_self">
+    ROM Dump
+  </a>
+
+## Lokamarkmið
+
+Að gera mögulegt eins marga framtíðaruppfærslur fyrir hlaupabretti mitt og mögulegt er.
+
+Nautilus, Inc. býður aðeins upp á 1 árs ábyrgð á rafhlutum, og um leið og ég sá að tæknin til að slökkva á vélinni (og þar með Android spjaldtölvunni) var í grundvallaratriðum "skera AC aflgjöfina í gegnum aftursveifina", þá hræddi það mig. Öll Linux-byggð tæki ættu að vera slökkt á öruggan hátt til að forðast stýrikerfisbilun, og þessi Android spjaldtölva er engin undantekning. Svo lengi sem hún er í gangi, af hverju ekki að hafa aðeins meira gaman af henni?
+
+Að lokum vil ég grípa, skilja og endurskapa samskiptin sem fara til mótorstýringarinnar á hlaupabrettinu mínu svo að ef spjaldtölvan deyr, þá á ég ennþá virkt tæki.

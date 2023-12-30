@@ -1,0 +1,135 @@
+---
+title: Android Jailbreak - fl3xbl0w
+description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /is/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w verkefnismerki
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
+---
+
+import { Image } from 'astro:assets';
+import LogiKeys from '~/assets/images/fl3xbl0w/logi-keys.png';
+import ConsoleUSB from '~/assets/images/fl3xbl0w/console-usb.png';
+import Console01 from '~/assets/images/fl3xbl0w/console-01.gif';
+import Console02 from '~/assets/images/fl3xbl0w/console-02.gif';
+import Console03 from '~/assets/images/fl3xbl0w/console-03.gif';
+import Console04 from '~/assets/images/fl3xbl0w/console-04.gif';
+import Console05 from '~/assets/images/fl3xbl0w/console-05.gif';
+import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
+import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
+import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
+
+Þessi aðferð byggir á því að Bowflex stjórntölvan er of hæg fyrir nútíma hugbúnað (hún hefur aðeins 2Gb af RAM á Android borðinu). Vegna þess, og ef við erum _hraðari en spjaldið_, getum við farið í gegnum fangelsi frá Nautilus's `AppMonitorService`.
+
+_Gæti þetta verið kallað árás með valdbeitingu?_
+
+Þú getur endurræst vélina hvenær sem er í ferlinu, og allt verður eins og það á að vera. Það er engin áhætta á hugbúnaðarhliðinni fyrir að gera það. Prófaðu það!
+
+## Kröfur
+
+- USB lyklaborð (með snúru eða þráðlaust með USB móttakara) með fjölmiðlahnöppum fyrir Heim, Aftur.
+- Fljótir fingur! (það "ákefðarparturinn" verður að gerast á um það bil sekúndu)
+- Tölva með [adb](https://developer.android.com/studio/command-line/adb) ([hlekkur til að sækja](https://developer.android.com/studio/releases/platform-tools))
+
+Ég notaði Logitech K600, en hvaða lyklaborð sem er með þessum hnöppum ætti að virka:
+
+<Image src={LogiKeys} alt="Logitech K600 lyklaborð" format="webp" />
+
+_Bluetooth lyklaborð virðast ófær um að tengjast í gegnum JRNY._
+
+## Ráð
+
+- Ekki reyna að "ná því rétt" strax. Það tekur nokkrar tilraunir að átta sig á "hvar hnapparnir birtast á skjánum" svo þú getir byggt upp vöðvaminni fyrir þreifingaraðgerðirnar.
+- EKKI SLÁÐU Á SKJÁINN OF HART! Að vera fljótur þýðir ekki að brjóta hann. Ég ber ekki ábyrgð á fólki sem slær of hart á skjái sína.
+
+## Leiðbeiningar
+
+Fyrst skulum við kveikja á vélinni og tengja USB lyklaborðið við Bowflex stjórntölvuna. Þú finnur hana á hægri hlið:
+
+<Image src={ConsoleUSB} alt="Bendir á hvar USB tengi stjórntölvunnar er staðsett" format="webp" />
+
+Látum okkur vita að lyklaborðið virki með því að ýta á "Heim" hnappinn á lyklaborðinu. Það ætti að valda því að JRNY forritið endurræsist.
+
+<Image src={Console01} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Android hefur flýtilykil til að loka núverandi forriti í gegnum "Aftur" hnappinn ef þú heldur honum niðri í sekúndu eða svo.
+Látum okkur leika aðeins með "Aftur" hnappinn - við ætlum að loka JRNY forritinu stöðugt um leið og það opnast aftur þar til nýr samræðugluggi byrjar að birtast:
+
+<Image src={Console02} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Allt í lagi, nú kemur skemmtilegi parturinn: Sá samræðugluggi tilheyrir Android's staðlaða "bilunarstaðfestingarkerfi". Við höfum "þvingað Android til að hugsa" að NautilusLauncher sé slæmt (gott!). Látum okkur nýta það í gegnum þann samræðuglugga.
+
+Um leið og hann birtist, smelltu á "App upplýsingar". Með því að smella á "App upplýsingar" ætlum við að opna Stillingar forritið (sem er á `AppMonitorService` bannaða listanum). Það mun loka á um það bil sekúndu, svo við verðum að vera fljót! Smelltu á "STÖÐVA NEYÐ" hnappinn, og síðan smelltu á "Í LAGI".
+
+<Image src={Console03} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Um leið og þú getur smellt á "Í LAGI", getur þú hvílt þig (góð æfing, ha?). Nú skulum við halda áfram með uppgötvanir á Reddit. Við ætlum að virkja adb með því að smella á "stækkunargler" tákn í efra hægra horninu og leita að "Þróunarvalkostir":
+
+<Image src={Console04} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Finndu IP-tölu stjórntölvunnar. Auðveldasta leiðin er í gegnum Wi-Fi Stillingar:
+
+<Image src={Console05} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Núna þegar adb er virkjað og við höfum IP-töluna, skulum við stökkva yfir á tölvu og tengjast með adb. Opnaðu terminal og keyrðu `adb connect <IP Address>` (í mínu tilfelli 10.0.0.205):
+
+```sh
+> adb connect 10.0.0.205
+connected to 10.0.0.205:5555
+```
+
+_Það mun biðja um staðfestingu á skjánum fyrsta skiptið sem þú tengist fjarlægt í gegnum adb._
+
+Látum okkur búa til tómt skjal inni í `/sdcard/Pictures/` sem heitir `nautilus`. Þú getur lesið meira um "af hverju" í [Sérvitni Bowflex](/is/projects/fl3xbl0w/quirks).
+
+```sh
+> adb shell touch /sdcard/Pictures/nautilus
+```
+
+Nú skulum við endurheimta nokkrar virknir. Sendu eftirfarandi skipanir í gegnum terminal þinn:
+
+```sh
+> adb shell settings put secure ntls_launcher_preference 0
+> adb shell settings put secure navigationbar_switch 1
+> adb shell settings put secure notification_switch 1
+> adb shell settings put secure statusbar_switch 1
+```
+
+Þú munt sjá notendaviðmótið birtast:
+
+<Image src={Console06} alt="stjórntölvu hreyfimynd" format="webp" />
+
+Það er einn lokaskref - að breyta sjálfgefna ræsiforritinu. Leitaðu að "Sjálfgefnar forrit" og stilltu Quickstep sem heimaforrit:
+
+<Image src={Console07} alt="stjórntölvu hreyfimynd" format="webp" />
+
+**Þú ert nú frjáls!**
+
+Þetta ástand mun viðhalda sér svo lengi sem NautilusLauncher er neyddur til að stöðva. Það varir í gegnum endurræsingar.
+
+Ef þú vilt fara aftur í "upprunalegt" opnaðu bara `NautilusLauncher` forritið (Ég mæli sterklega með að þú hafir búið til `/sdcard/Pictures/nautilus` skrána áður):
+
+<Image src={Console08} alt="stjórntölvu hreyfimynd" format="webp" />
+
+## Athugasemdir um "Lokunarkerfið"
+
+`NautilusLauncher` er sjálfgefið "Android ræsiforrit", sem þýðir að ef JRNY forritið lokast, mun það strax "opnast aftur".
+
+Það er einnig annar "öryggislás", forgrunnsþjónusta í `NautilusLauncher` apk, sem kallast `AppMonitorService`. Með því að afkóða apk-inn, getur þú séð þrjár áhugaverðar breytur:
+
+```java
+public static final int MonitorIntervalSeconds = 1;
+// Sumar fleiri breytur
+private static String[] TargtedAppsToKill = {"com.android.vending", "com.android.settings", "com.android.chrome", "com.google.android.gm", "com.google.android.youtube"};
+private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
+```
+
+Og svo er sú þjónusta "virkt að vernda" lokunina. Með hverri forritalokun (í gegnum það að halda "Aftur" hnappnum niðri), verður tilraun til að opna JRNY aftur. Með því að þvinga lokun þess, slökkvum við einnig á öllum forgrunnsþjónustum.
+
+_(allar stafsetningarvillur sem þú sérð í kóðaafritunum koma frá þróunaraðilum Nautilus, ekki mér)_

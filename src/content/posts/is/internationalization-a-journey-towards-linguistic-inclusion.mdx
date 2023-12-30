@@ -1,0 +1,96 @@
+---
+title: 'Alþjóðavæðing: Ferðalag í átt að tungumálaþátttöku'
+description: Vefsíða mín stekkur í átt að alþjóðavæðingu, brýtur niður tungumálaþröskulda til að faðma að sér fjölbreyttan áhorfendahóp.
+pubDate: 2023-12-27T12:00:00Z
+img: ~/assets/images/post-i18n.jpg
+imgAlt: 'Mynd búin til af Firefly Image 2 með textanum: verðlaunað listaverk, greinótt tré gert úr ljósgeislum og orku, dramatískt, áhrifamikið, litríkt, háskerpa, 4k uhd'
+translatedBy: gpt-4-1106-preview
+checksum: fd912ad7afc432dab6f20af7a9e4e64cc37991680e10f10f8095de4dd7a98dbb
+---
+
+import OldNavbar from '~/assets/images/post-i18n-old-navbar.png';
+import NewNavbar from '~/assets/images/post-i18n-new-navbar.png';
+import WrongEsTranslation from '~/assets/images/post-i18n-wrong-es-translation.png';
+import { Image } from 'astro:assets';
+
+Frá upphafi þessarar síðu valdi ég að nota ensku sem aðal tungumál, í þeirri trú að það væri mest notað á internetinu. Hins vegar heyrði ég nýlega að á meðal Meta og X netkerfa er annað mest notaða tungumálið spænska. Persónulega átti ég eftir að sýna efni mitt á móðurmáli mínu, og í dag er það veruleiki.
+
+Á síðustu dögum hef ég alþjóðavætt hvern krók síðunnar, úthlutað lykil/gildi snið gildum fyrir viðmótið og þýtt efni verkefna og færsla á sjálfvirkan hátt með LLMs (Large Language Models).
+
+## Hvar byrja ég, vinur minn?
+
+Það eru tvö aðalatriði sem þarf að íhuga: notendaviðmótið og efnið.
+
+Astro's [skjölun](https://docs.astro.build/en/recipes/i18n/) og þess [upprunakóði](https://github.com/withastro/docs/tree/main/src/i18n) voru mjög hjálpleg með grunnrökfræðina, hins vegar gerði ég nokkrar breytingar til að aðlaga það að mínum þörfum og halda kóðanum eins hreinum og mögulegt er.
+
+Þessi síða beinir aðallega athyglinni að efni færslanna og, hvað viðmót varðar, er hún frekar einföld. Mest magn af stöðugum texta var á forsíðunni, svo ég byrjaði að draga hvert gildi út í lykil/gildi hluti, sem leyfði skoðuninni að birtast á sama hátt.
+
+```typescript
+export const en = {
+  'author.name': 'Sebastian Barrenechea',
+
+  'nav.fork': 'Fork me on GitHub',
+  'nav.sr.open': 'Opna valmynd',
+  'nav.home': 'Heim',
+  'nav.projects': 'Verkefni',
+  'nav.posts': 'Færslur',
+  'nav.page': 'Síða',
+  'nav.language.select': 'Veldu tungumál',
+
+  'hero.greeting': 'Heey! Ég er',
+  // ...
+};
+```
+
+Leiðbeiningar um leiðslu eru mikilvægar til að bera kennsl á síðurnar sem þarf að byggja. Astro auðveldar þetta með leiðslukerfi sínu, sem gerir tungumálið aðgengilegt sem breytu:
+
+- Færa allar síður innan `src/pages` möppunnar í `src/pages/[lang]` möppuna.
+- Bæta við einhverju svona á hverri af síðunum sem þarf i18n meðhöndlun:
+  ```typescript
+  const { lang } = Astro.params;
+  ```
+
+Með ensku útgáfunni að virka, byrjaði ég að bæta við spænsku stuðningi. Hér mætti ég á þýðingarvanda:
+
+<Image
+  src={WrongEsTranslation}
+  alt="Skjámynd af forsíðunni með spænskum textum 'Últimos Publicaciones' og 'Ver todos los publicaciones', ranglega þýdd"
+  format="webp"
+/>
+
+Á ensku gat ég notað sömu gildin fyrir bæði verkefni og færslur, en ekki á spænsku.
+
+Í fullkomnum heimi myndi ég nota kynhlutlaust tungumál. Ég hefði getað valið "Proyectos recientes" og "Publicaciones recientes", sem myndi leyfa mér að endurnýta orðið. Hins vegar, til að viðhalda sjónrænni samræmi síðunnar, þurfti setninguna að enda á "proyectos" eða "publicaciones". Eftir nokkrar breytingar tókst mér að fá það fullþýtt í öllum skoðunum (index, leiðsíður og sniðmát sem nota efnið).
+
+Og það var vandamál með tungumálavalið sem ég notaði sem truflaði mig mikið. Þættinum var krafist `absolute` flokks til að staðsetja hluti fyrir neðan hann, sem olli því að hann hætti að virða spássíumörk síðunnar í tilfelli mjög langs texta:
+
+<div align="center">
+  <Image
+    src={OldNavbar}
+    alt="Skjámynd af fyrri leiðsagnarstikunni, með tungumálavali í efra hægra horninu sem fer yfir mörk spássíunnar"
+    format="webp"
+  />
+  <p class="italic">Mörk umrituð í rauðu til að undirstrika vandamálið</p>
+</div>
+
+Ég sótti þennan þátt frá [Starlight](https://starlight.astro.build) því hann virtist einfaldur og minimalistiskur, en að lokum skipti ég honum út fyrir einn frá [Flowbite](https://flowbite.com/docs/components/navbar/#language-dropdown) endurframkvæmdi samskipti með [Web Components API](https://web.dev/articles/custom-elements-v1). Nýi þátturinn krefst aukalegrar myndar fyrir hvert tungumál (fáninn, með notkun [@iconify-icons/circle-flags](https://icon-sets.iconify.design/circle-flags/)), en það er þess virði.
+
+<Image
+  src={NewNavbar}
+  alt="Skjámynd af núverandi leiðsagnarstiku, með tungumálavali í efra hægra horninu"
+  format="webp"
+/>
+
+## En það er ekkert efni til að sjá, ha?
+
+Þegar aðlagað var efni síðunnar (verkefni og færslur) að viðeigandi enskri leið, gat síðan ekki fundið efnið á spænsku, sem leiddi til síðu án fletjanlegs efnis. Fyrstu prófanirnar sem ég gerði voru handvirkt þýddar með OpenAI API, og síðan sjálfvirkni ég ferlið til að auðvelda hlutina.
+
+_Þú getur séð fleiri upplýsingar í væntanlegri færslu um notkun LLMs í framleiðslu._
+
+Eftir að hafa lokið við þýðingu verkefna og færsla á spænsku, gerði ég nokkrar breytingar á niðurstöðu þýðinganna. Ég setti spænsku sem staðalvísun fyrir sjálfvirka þýðingarferlið og, eftir nauðsynlegar breytingar, endurgerði ég efnið á ensku.
+
+## Hvað nú?
+
+Nú er það ótrúlega auðvelt að bæta við stuðningi fyrir fleiri tungumál! Það eru ákveðnar athuganir sem þarf að hafa í huga, svo sem að "ganga út frá" að tungumálið sé lesið frá vinstri til hægri, sem útilokar tungumál eins og arabísku eða hebresku. Tailwind, CSS rammi sem ég nota á þessari síðu, styður náttúrulega LTR (vinstri til hægri) og RTL (hægri til vinstri), en sumar smáatriði þarf að laga (til dæmis að nota `rtl:space-x-reverse` flokkinn þar sem þörf krefur).
+
+Með Þýskalandi í þriðja sæti fyrir gesti á síðunni minni, hef ég innleitt þýðinguna á þýsku án erfiðleika og mun fljótlega innleiða ítölsku, frönsku, einfaldaða kínversku og íslensku (I♥️Iceland). Þótt sjálfvirkni geri ferlið auðveldara, er mikilvægt að fara yfir þýðingarnar til að tryggja gæði þeirra, þar sem þær eru ekki alltaf fullkomnar. Í tilfelli ensku gat ég gert persónulega yfirferð; hins vegar, fyrir tungumál eins og þýsku, sem ég tala ekki, hef ég leitað til hjálpartækja eins og sjálfvirkrar þýðingar Google Chrome til að staðfesta samræmi. Markmið mitt er að vinna að lokum með móðurmálsmenn fyrir hvert tungumál til að hækka staðal þýðinganna sem boðið er upp á.

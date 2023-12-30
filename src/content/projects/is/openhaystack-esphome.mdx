@@ -1,0 +1,113 @@
+---
+title: OpenHaystack í ESPHome
+description: Port af OpenHaystack sem ESPHome þáttur. Samhæft við öll Espressif BLE tæki.
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ~/assets/images/project-openhaystack.png
+imgAlt: OpenHaystack og ESPHome merki
+tags:
+  - Hardware
+  - Embedded
+translatedBy: gpt-4-1106-preview
+checksum: 3d98279a41f3f41bf8b90d213cc20a02d8083438c29b65e9f8ae8d2d96d8a017
+---
+
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) er forrit sem gerir þér kleift að búa til þín eigin aukahluti sem eru rekjanlegir af Apple's [Find My network](https://developer.apple.com/find-my/). Þeir hafa endurhannað Apple's prótókoll og skjalfest það, mjög áhrifamikið verkefni.
+
+Ég vildi geta fylgst með rafskútunni minni ef hún yrði stolin. Þótt "opinbera" leiðin til að búa til þína aukahluti var "ásættanleg," reyndist hún vera nokkuð vandamál með ýmsum samhæfingarvandamálum á mismunandi Espressif borðum.
+
+Svo ég flutti það sem þátt af [ESPHome](https://esphome.io/), hugbúnaði sem ég nota nú þegar fyrir þarfir innbyggðra tækja minna.
+
+## Af hverju ESPHome? Er það ekki "fyrir heimilið"?
+
+Ég er _aðeins_ þráhyggjufullur með að halda IoT/Innbyggðum tækjum mínum eins uppfærðum og mögulegt er (og auðvitað utan skýja ef mögulegt er), svo ESPHome er aðlaðandi lausn til að halda tækjunum þínum uppfærðum með Arduino og Espressif grunnstoðum. Í gegnum ESPHome get ég "uppfært" skútuna mína hvenær sem ég vil.
+
+## Af hverju er þetta ekki opinber þáttur?
+
+Ég reyndi! Ég opnaði [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584), og þess [stuðnings skjölun](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html), en skiljanlega vildu þeir ekki sameina það.
+
+## ESPHome Dæmi - ESP32
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+
+esp32:
+  board: wemos_d1_mini32
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# Virkja annála
+logger:
+
+# Virkja Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # Hér fer OpenHaystack lykillinn kóðaður í Base64
+  # Ég mæli sterklega með að þú meðhöndlar það sem leyndarmál
+  key: !secret openhaystack_key
+```
+
+## ESPHome Dæmi - ESP32-C3
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: latest
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+      # Virkja WPA3 stuðning bara af því að við getum
+      CONFIG_WPA_SUITE_B_192: y
+      # Sértæk fyrir Bluetooth notkun
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      # Laga "Payload size error" - Auka Watchdog tímaútrás
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# Virkja annála
+logger:
+
+# Virkja Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # Hér fer OpenHaystack lykillinn kóðaður í Base64
+  # Ég mæli sterklega með að þú meðhöndlar það sem leyndarmál
+  key: !secret openhaystack_key
+```
