@@ -3,9 +3,9 @@ title: "Internationalisation : Un voyage vers l'inclusion linguistique"
 description: Mon site fait le grand saut vers l'internationalisation, éliminant les barrières linguistiques pour embrasser un public diversifié.
 pubDate: 2023-12-27T12:00:00Z
 img: ~/assets/images/post-i18n.jpg
-imgAlt: "Image générée par Firefly Image 2 avec le texte : art primé, un arbre ramifié fait de rayons de lumière et d'énergie, dramatique, impactant, coloré, haute définition, 4k uhd"
+imgAlt: 'Image générée par Firefly Image 2 avec le texte : award winning art, a branched tree made of light rays and energy, dramatic, impactful, colorful, high definition, 4k uhd'
 translatedBy: gpt-4-1106-preview
-checksum: 93206014fe06872f692c475a34b48c9edc8ae6468139dfd677805120c2ace267
+checksum: 5eb6bf7cf02cdd075a227472d709e54351d0b5962a40326c8126ea3c3f5d2613
 ---
 
 import OldNavbar from '~/assets/images/post-i18n-old-navbar.png';
@@ -15,7 +15,7 @@ import { Image } from 'astro:assets';
 
 Depuis les débuts de cette page, j'ai choisi d'utiliser l'anglais comme langue principale, en supposant qu'elle était la plus répandue sur Internet. Cependant, j'ai récemment appris que parmi les réseaux de Meta et X, la deuxième langue la plus utilisée est l'espagnol. Personnellement, j'avais une dette envers moi-même de présenter mon contenu dans ma langue maternelle et aujourd'hui, cela est devenu une réalité.
 
-Ces derniers jours, j'ai internationalisé chaque coin du site, en attribuant des valeurs dans un format clé/valeur pour l'interface, et en traduisant le contenu des projets et des publications de manière automatisée en utilisant des LLMs (Modèles de Langage de Grande Taille).
+Ces derniers jours, j'ai internationalisé chaque coin du site, en attribuant des valeurs dans un format clé/valeur pour l'interface, et en traduisant le contenu des projets et des articles de manière automatisée en utilisant des LLMs (Modèles de Langage de Grande Taille).
 
 ## Par où commencer, mon ami ?
 
@@ -23,7 +23,7 @@ Il y a deux aspects principaux à considérer : l'interface utilisateur et le co
 
 La [documentation](https://docs.astro.build/fr/recipes/i18n/) d'Astro et son [code source](https://github.com/withastro/docs/tree/main/src/i18n) m'ont beaucoup aidé avec la logique de base, cependant, j'ai fait plusieurs ajustements pour l'adapter à mes besoins et garder le code aussi propre que possible.
 
-Ce site se concentre principalement sur le contenu des publications et, en termes d'interface, est assez simple. La majorité du texte statique était sur la page d'accueil, donc j'ai commencé par extraire chaque valeur dans des objets clé/valeur, permettant à la vue de se rendre de la même manière.
+Ce site se concentre principalement sur le contenu des articles et, en termes d'interface, est assez simple. La majorité du texte statique était sur la page d'accueil, donc j'ai commencé par extraire chaque valeur dans des objets clé/valeur, permettant à la vue de se rendre de la même manière.
 
 ```typescript
 export const en = {
@@ -58,16 +58,16 @@ Avec la version anglaise fonctionnelle, j'ai commencé à ajouter le support en 
   format="webp"
 />
 
-En anglais, je pouvais utiliser les mêmes valeurs pour les projets et les publications, mais en espagnol non.
+En anglais, je pouvais utiliser les mêmes valeurs pour les projets et les articles, mais en espagnol non.
 
-Dans un monde idéal, j'utiliserais un langage neutre en termes de genre. J'aurais pu opter pour "Proyectos recientes" et "Publicaciones recientes", ce qui me permettrait de recycler le mot. Cependant, pour maintenir la cohérence visuelle de la page, j'avais besoin que la phrase se termine par "proyectos" ou "publicaciones". Après quelques ajustements, j'ai réussi à la traduire complètement dans toutes les vues (l'index, les pages de navigation et les modèles utilisant le contenu).
+Dans un monde idéal, j'utiliserais un langage neutre en termes de genre. J'aurais pu opter pour "Proyectos recientes" et "Publicaciones recientes", ce qui me permettrait de recycler le mot. Cependant, pour maintenir la cohérence visuelle de la page, j'avais besoin que la phrase se termine par "proyectos" ou "publicaciones". Après quelques ajustements, j'ai réussi à la traduire complètement dans toutes les vues (l'index, les pages de navigation et les modèles qui utilisent le contenu).
 
-Et il y avait un problème avec le composant de sélection de langue que j'avais utilisé qui me dérangeait beaucoup. Le composant nécessitait la classe `absolute` pour positionner des objets en dessous de lui, ce qui a causé le non-respect de la marge de la page en cas de texte très long :
+Et il y avait un problème avec le composant de sélection de langue que j'avais utilisé qui me dérangeait beaucoup. Le composant nécessitait la classe `absolute` pour positionner des objets en dessous de lui, ce qui a causé un non-respect de la marge de la page en cas de texte très long :
 
 <div align="center">
   <Image
     src={OldNavbar}
-    alt="Capture d'écran de l'ancienne barre de navigation, avec le sélecteur de langue dans le coin supérieur droit dépassant la limite de la marge"
+    alt="Capture d'écran de la barre de navigation précédente, avec le sélecteur de langue dans le coin supérieur droit dépassant la limite de la marge"
     format="webp"
   />
   <p class="italic">Marge tracée en rouge pour souligner le problème</p>
@@ -83,14 +83,14 @@ J'ai extrait ce composant de [Starlight](https://starlight.astro.build/fr/) car 
 
 ## Mais on ne voit aucun contenu, hein ?
 
-En ajustant le contenu du site (projets et publications) à son chemin correspondant en anglais, le site ne trouvait pas le contenu en espagnol, ce qui résultait en une page sans contenu navigable. Les premiers tests, je les ai faits en traduisant manuellement avec l'API d'OpenAI, puis j'ai automatisé le processus pour faciliter les choses.
+En ajustant le contenu du site (projets et articles) à son chemin correspondant en anglais, le site ne trouvait pas le contenu en espagnol, ce qui résultait en une page sans contenu navigable. Les premiers tests, je les ai faits en traduisant manuellement avec l'API d'OpenAI, puis j'ai automatisé le processus pour faciliter les choses.
 
-_Vous pourrez voir plus de détails dans une prochaine publication sur l'utilisation des LLMs en production._
+_Vous pourrez voir plus de détails dans un prochain article sur l'utilisation des LLMs en production._
 
-Après avoir fini de traduire les projets et les publications en espagnol, j'ai fait quelques ajustements aux traductions résultantes. J'ai établi l'espagnol comme standard de référence pour le processus de traduction automatisé et, après les ajustements nécessaires, j'ai régénéré le contenu en anglais.
+Après avoir fini de traduire les projets et les articles en espagnol, j'ai fait quelques ajustements aux traductions résultantes. J'ai établi l'espagnol comme standard de référence pour le processus de traduction automatisé et, après les ajustements nécessaires, j'ai régénéré le contenu en anglais.
 
 ## Et maintenant, quoi ?
 
 Maintenant, il est étonnamment simple d'ajouter le support pour d'autres langues ! Il y a certaines considérations à prendre en compte, comme "supposer" que la langue se lit de gauche à droite, ce qui exclut des langues comme l'arabe ou l'hébreu. Tailwind, le framework CSS que j'utilise sur ce site, supporte nativement LTR (left to right) et RTL (right to left), mais certains détails doivent être ajustés (par exemple, utiliser la classe `rtl:space-x-reverse` là où c'est nécessaire).
 
-Avec l'Allemagne à la troisième place des visiteurs de mon site, j'ai implémenté la traduction en allemand sans difficulté et bientôt j'inclurai l'italien, le français, le chinois traditionnel et l'islandais (I♥️Iceland). Bien que l'automatisation facilite le processus, il est essentiel de réviser les traductions pour assurer leur qualité, car elles ne sont pas toujours parfaites. Dans le cas de l'anglais, j'ai pu faire une révision personnelle ; cependant, pour des langues comme l'allemand, que je ne maîtrise pas, j'ai eu recours à l'aide d'outils comme la traduction automatique de Google Chrome pour vérifier la cohérence. Mon objectif est de collaborer éventuellement avec des locuteurs natifs pour chaque langue afin d'élever le standard des traductions proposées.
+Avec l'Allemagne à la troisième place des visiteurs de mon site, j'ai implémenté la traduction en allemand sans difficulté et bientôt j'inclurai l'italien, le français, le chinois simplifié et l'islandais (I♥️Iceland). Bien que l'automatisation facilite le processus, il est essentiel de réviser les traductions pour assurer leur qualité, car elles ne sont pas toujours parfaites. Dans le cas de l'anglais, j'ai pu faire une révision personnelle ; cependant, pour des langues comme l'allemand, que je ne maîtrise pas, j'ai eu recours à l'aide d'outils comme la traduction automatique de Google Chrome pour vérifier la cohérence. Mon objectif est de collaborer éventuellement avec des locuteurs natifs pour chaque langue afin d'élever le standard des traductions proposées.

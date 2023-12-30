@@ -13,7 +13,7 @@ import { Image } from 'astro:assets';
 
 Desde los inicios de esta página, opté por utilizar el inglés como idioma principal, asumiendo que era el más prevalente en internet. Sin embargo, recientemente escuché que entre las redes de Meta y X, el segundo idioma más utilizado es el español. Personalmente, tenía una deuda pendiente de mostrar mi contenido en mi lengua materna y hoy en día eso ya es una realidad.
 
-En estos últimos días internacionalicé cada rincón del sitio, asignando valores en formato clave/valor para la interfaz, y traduciendo el contenido de proyectos y publicaciones de manera automatizada utilizando LLMs (Modelos Grandes de Lenguaje).
+En estos últimos días internacionalicé cada rincón del sitio, asignando valores en formato clave/valor para la interfaz, y traduciendo el contenido de proyectos y posteos de manera automatizada utilizando LLMs (Modelos Grandes de Lenguaje).
 
 ## ¿Por dónde empiezo, amigo?
 
@@ -21,7 +21,7 @@ Hay dos aspectos principales a considerar: la interfaz de usuario y el contenido
 
 La [documentación](https://docs.astro.build/es/recipes/i18n/) de Astro y su [código fuente](https://github.com/withastro/docs/tree/main/src/i18n) me ayudaron bastante con la lógica base, sin embargo, realicé varios ajustes para adaptarlo a mis necesidades y mantener el código lo más limpio posible.
 
-Este sitio se centra principalmente en el contenido de las publicaciones y, en términos de interfaz, es bastante sencillo. La mayor cantidad de texto estático estaba en la página de inicio, por lo que comencé a extraer cada valor en objetos clave/valor, permitiendo que la vista se renderizara de la misma forma.
+Este sitio se centra principalmente en el contenido de los posteos y, en términos de interfaz, es bastante sencillo. La mayor cantidad de texto estático estaba en la página de inicio, por lo que comencé a extraer cada valor en objetos clave/valor, permitiendo que la vista se renderizara de la misma forma.
 
 ```typescript
 export const en = {
@@ -56,7 +56,7 @@ Con la versión en inglés funcionando, empecé a agregar soporte en español. A
   format="webp"
 />
 
-En inglés podía utilizar los mismos valores para tanto proyectos como publicaciones, pero en español no.
+En inglés podía utilizar los mismos valores para tanto proyectos como posteos, pero en español no.
 
 En un mundo ideal, usaría lenguaje de género neutro. Podría haber optado por "Proyectos recientes" y "Publicaciones recientes", lo que me permitiría reciclar la palabra. Sin embargo, para mantener la coherencia visual de la página, necesitaba que la frase terminara en "proyectos" o "publicaciones". Después de algunos ajustes, logré que quedara completamente traducida en todas las vistas (el índice, las páginas de navegación y las plantillas que utilizan el contenido).
 
@@ -81,14 +81,14 @@ Extraje ese componente desde [Starlight](https://starlight.astro.build/es/) ya q
 
 ## Pero no se ve ningún contenido po'
 
-Al ajustar el contenido del sitio (proyectos y publicaciones) a su ruta correspondiente en inglés, el sitio no encontraba el contenido en español, lo que resultaba en una página sin contenido navegable. Las primeras pruebas las hice traduciendo manualmente con la API de OpenAI, y luego automatice el proceso para facilitar las cosas.
+Al ajustar el contenido del sitio (proyectos y posteos) a su ruta correspondiente en inglés, el sitio no encontraba el contenido en español, lo que resultaba en una página sin contenido navegable. Las primeras pruebas las hice traduciendo manualmente con la API de OpenAI, y luego automatice el proceso para facilitar las cosas.
 
-_Puedes ver más detalles en una próxima publicación sobre el uso de LLMs en producción._
+_Puedes ver más detalles en un próximo post sobre el uso de LLMs en producción._
 
-Después de finalizar la traducción de proyectos y publicaciones al español, hice algunos ajustes a las traducciones resultantes. Establecí el español como estándar de referencia para el proceso de traducción automatizado y, tras los ajustes necesarios, regeneré el contenido en inglés.
+Después de finalizar la traducción de proyectos y posteos al español, hice algunos ajustes a las traducciones resultantes. Establecí el español como estándar de referencia para el proceso de traducción automatizado y, tras los ajustes necesarios, regeneré el contenido en inglés.
 
 ## ¿Y ahora qué?
 
 ¡Ahora es sorprendentemente sencillo agregar soporte para más idiomas! Hay ciertas consideraciones a tener en cuenta, como "asumir" que el idioma se lee de izquierda a derecha, lo que excluye idiomas como el árabe o el hebreo. Tailwind, el framework CSS que uso en este sitio, soporta nativamente LTR (left to right) y RTL (right to left), pero algunos detalles deben ajustarse (por ejemplo, usar la clase `rtl:space-x-reverse` donde sea necesario).
 
-Con Alemania en el tercer puesto de visitantes a mi sitio, he implementado la traducción al alemán sin dificultades y próximamente incluiré italiano, francés, chino tradicional e islandés (I♥️Iceland). Aunque la automatización facilita el proceso, es imprescindible revisar las traducciones para asegurar su calidad, ya que no siempre son perfectas. En el caso del inglés, pude hacer una revisión personal; sin embargo, para idiomas como el alemán, que no domino, he recurrido a la ayuda de herramientas como la traducción automática de Google Chrome para verificar la coherencia. Mi objetivo es colaborar eventualmente con hablantes nativos para cada idioma y así elevar el estándar de las traducciones ofrecidas.
+Con Alemania en el tercer puesto de visitantes a mi sitio, he implementado la traducción al alemán sin dificultades y próximamente incluiré italiano, francés, chino simplificado e islandés (I♥️Iceland). Aunque la automatización facilita el proceso, es imprescindible revisar las traducciones para asegurar su calidad, ya que no siempre son perfectas. En el caso del inglés, pude hacer una revisión personal; sin embargo, para idiomas como el alemán, que no domino, he recurrido a la ayuda de herramientas como la traducción automática de Google Chrome para verificar la coherencia. Mi objetivo es colaborar eventualmente con hablantes nativos para cada idioma y así elevar el estándar de las traducciones ofrecidas.
