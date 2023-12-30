@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: f2f14b75007016337dd4c4ce48c6b0ed72b4b2d681c098500a38654f47bce39e
+checksum: 47c38ec10ed660d31c2e416404fd6fdfe99938121ca854da78555e3e32ba5f32
 ---
 
 import { Image } from 'astro:assets';
@@ -35,14 +35,15 @@ public void run() {
 ```java
 // percorso: com/nautilus/nautiluslauncher/MainActivity.java
 protected void onCreate(Bundle bundle) {
-  // codice precedente
+  // ...
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     this.mPlatformControl.disableAdbDebug();
     this.mPlatformControl.enterKioskMode();
   } else {
     this.mPlatformControl.enableAdbDebug();
   }
-  // altro codice
+  // ...
+}
 ```
 
 L'effetto di posizionare il file nel posto giusto è che `NautilusLauncher` attiverà adb dopo ogni riavvio. Se il file NON è presente, `NautilusLauncher` DISATTIVERÀ attivamente adb (se era stato abilitato in precedenza).
@@ -53,7 +54,6 @@ A quanto pare, [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Softwa
 
 ```java
 package com.redbend.client;
-// Ometterò un po' di codice intermedio per chiarezza
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -65,7 +65,10 @@ public class Ipl {
     }
     copyAssets(context, "Credentials.txt", file.getCanonicalPath());
     bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
-
+    // ...
+  }
+  // ...
+}
 ```
 
 Anche in `com.redbend.client.ClientService` possiamo trovare:
@@ -80,6 +83,10 @@ public class ClientService extends SmmService {
     if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
       sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
       }
+    // ...
+  }
+  // ...
+}
 ```
 
 Dati questi elementi, possiamo etichettare il contenuto nel file `/sdcard/Nautilus/redbend/Credentials.txt` come:
@@ -112,6 +119,6 @@ Sembrava abbastanza standard, e un [post](https://community.home-assistant.io/t/
 
 <Image
   src={HomeAssistantSensor}
-  alt="Screenshot di HomeAssistant che mostra un sensore di frequenza cardiaca"
+  alt="Screenshot di Home Assistant che mostra un sensore di frequenza cardiaca"
   format="webp"
 />

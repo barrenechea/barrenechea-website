@@ -33,14 +33,15 @@ public void run() {
 ```java
 // ruta: com/nautilus/nautiluslauncher/MainActivity.java
 protected void onCreate(Bundle bundle) {
-  // código anterior
+  // ...
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     this.mPlatformControl.disableAdbDebug();
     this.mPlatformControl.enterKioskMode();
   } else {
     this.mPlatformControl.enableAdbDebug();
   }
-  // más código
+  // ...
+}
 ```
 
 El efecto de colocar el archivo en su lugar es que `NautilusLauncher` activará adb después de cada reinicio. Si el archivo NO está en su lugar, `NautilusLauncher` DESACTIVARÁ activamente adb (si estaba habilitado anteriormente).
@@ -51,7 +52,6 @@ Por lo que parece, [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_So
 
 ```java
 package com.redbend.client;
-// Omitiré algo de código intermedio para mayor claridad
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -63,7 +63,10 @@ public class Ipl {
     }
     copyAssets(context, "Credentials.txt", file.getCanonicalPath());
     bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
-
+    // ...
+  }
+  // ...
+}
 ```
 
 También en `com.redbend.client.ClientService` podemos encontrar:
@@ -78,6 +81,10 @@ public class ClientService extends SmmService {
     if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
       sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
       }
+    // ...
+  }
+  // ...
+}
 ```
 
 Dada esa información, podemos etiquetar el contenido en el archivo `/sdcard/Nautilus/redbend/Credentials.txt` como:
@@ -110,6 +117,6 @@ Parecía bastante estándar, y un [post](https://community.home-assistant.io/t/b
 
 <Image
   src={HomeAssistantSensor}
-  alt="Captura de pantalla de HomeAssistant mostrando un sensor de ritmo cardíaco"
+  alt="Captura de pantalla de Home Assistant mostrando un sensor de ritmo cardíaco"
   format="webp"
 />

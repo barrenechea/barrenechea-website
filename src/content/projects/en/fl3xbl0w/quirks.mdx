@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: f2f14b75007016337dd4c4ce48c6b0ed72b4b2d681c098500a38654f47bce39e
+checksum: 47c38ec10ed660d31c2e416404fd6fdfe99938121ca854da78555e3e32ba5f32
 ---
 
 import { Image } from 'astro:assets';
@@ -35,14 +35,15 @@ public void run() {
 ```java
 // path: com/nautilus/nautiluslauncher/MainActivity.java
 protected void onCreate(Bundle bundle) {
-  // previous code
+  // ...
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     this.mPlatformControl.disableAdbDebug();
     this.mPlatformControl.enterKioskMode();
   } else {
     this.mPlatformControl.enableAdbDebug();
   }
-  // more code
+  // ...
+}
 ```
 
 The effect of placing the file in its place is that `NautilusLauncher` will activate adb after each restart. If the file is NOT in place, `NautilusLauncher` will ACTIVELY DISABLE adb (if it was previously enabled).
@@ -53,7 +54,6 @@ It seems that [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Softwar
 
 ```java
 package com.redbend.client;
-// I will omit some intermediate code for clarity
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -65,7 +65,10 @@ public class Ipl {
     }
     copyAssets(context, "Credentials.txt", file.getCanonicalPath());
     bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
-
+    // ...
+  }
+  // ...
+}
 ```
 
 Also in `com.redbend.client.ClientService` we can find:
@@ -80,6 +83,10 @@ public class ClientService extends SmmService {
     if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
       sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
       }
+    // ...
+  }
+  // ...
+}
 ```
 
 Given that information, we can label the content in the file `/sdcard/Nautilus/redbend/Credentials.txt` as:
@@ -112,6 +119,6 @@ It seemed pretty standard, and a [post](https://community.home-assistant.io/t/bl
 
 <Image
   src={HomeAssistantSensor}
-  alt="HomeAssistant screenshot showing a heart rate sensor"
+  alt="Screenshot of Home Assistant showing a heart rate sensor"
   format="webp"
 />

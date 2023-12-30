@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: gpt-4-1106-preview
-checksum: eea7be6d13445de5c573ce8abd5e7035be2ef4f10f797392cb4891c9eca8e708
+checksum: b579f6715ec7bbcf25b8db49cedec3e9eeeac50513672a0984304f94203d593a
 ---
 
 import { Image } from 'astro:assets';
@@ -35,14 +35,15 @@ public void run() {
 ```java
 // Pfad: com/nautilus/nautiluslauncher/MainActivity.java
 protected void onCreate(Bundle bundle) {
-  // vorheriger Code
+  // ...
   if (!new File("/sdcard/Pictures/nautilus").exists()) {
     this.mPlatformControl.disableAdbDebug();
     this.mPlatformControl.enterKioskMode();
   } else {
     this.mPlatformControl.enableAdbDebug();
   }
-  // weiterer Code
+  // ...
+}
 ```
 
 Die Wirkung des Platzierens der Datei an ihrem Platz ist, dass `NautilusLauncher` adb nach jedem Neustart aktivieren wird. Wenn die Datei NICHT vorhanden ist, wird `NautilusLauncher` adb AKTIV DEAKTIVIEREN (falls es zuvor aktiviert war).
@@ -53,7 +54,6 @@ Es scheint, dass [Red Bend Software](https://de.wikipedia.org/wiki/Red_Bend_Soft
 
 ```java
 package com.redbend.client;
-// Ich werde einige Zwischencodes für die Klarheit auslassen
 public class Ipl {
   protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
   // ...
@@ -65,7 +65,10 @@ public class Ipl {
     }
     copyAssets(context, "Credentials.txt", file.getCanonicalPath());
     bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
-
+    // ...
+  }
+  // ...
+}
 ```
 
 Auch in `com.redbend.client.ClientService` können wir finden:
@@ -80,6 +83,10 @@ public class ClientService extends SmmService {
     if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
       sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
       }
+    // ...
+  }
+  // ...
+}
 ```
 
 Angesichts dieser Informationen können wir den Inhalt in der Datei `/sdcard/Nautilus/redbend/Credentials.txt` als:
@@ -112,6 +119,6 @@ Es schien ziemlich standardmäßig zu sein, und ein [Beitrag](https://community.
 
 <Image
   src={HomeAssistantSensor}
-  alt="HomeAssistant Screenshot, der einen Herzfrequenzsensor zeigt"
+  alt="Home Assistant Screenshot, der einen Herzfrequenzsensor zeigt"
   format="webp"
 />
