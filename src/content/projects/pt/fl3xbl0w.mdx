@@ -1,0 +1,85 @@
+---
+title: fl3xbl0w
+description: Projeto de engenharia reversa. Começou com a esteira Bowflex Treadmill 22, mas acabou se generalizando para qualquer máquina com Android vendida pela Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo do projeto fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: c0130a435f67cbcb19ac8072c88354c5f3e181e9f644a9e82f19d85517a20d2f
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="logo fl3xbl0w" format="webp" width={800} />
+
+Bem-vindos à minha documentação da "Console Bowflex"! (o que a Nautilus chama de Vantron).
+
+Vantron é a base da maioria dos "dispositivos inteligentes" da Nautilus Inc. Basicamente, um tablet Android rodando software proprietário. Além de algumas coisas relacionadas ao hardware que despertaram minha curiosidade.
+
+Apoiei-me bastante em um trabalho anterior que encontrei no [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (obrigado [xasmx](https://www.reddit.com/user/xasmx/)!) para alcançar uma compreensão mais profunda do software e hardware da máquina.
+
+## Dispositivos compatíveis (Jailbreak de Android)
+
+Depois de brincar com as <a href="/pt/projects/fl3xbl0w/decompiling" target="_self">aplicações decompiladas</a>, posso dizer com certeza que a seguinte documentação poderia ser extrapolada de uma forma ou outra para os seguintes dispositivos Bowflex:
+
+### Esteiras
+
+- Treadmill 22 / Treadmill 56 (mesma esteira. A 56 tem entrada de 220v AC, a 22 tem entrada de 120v AC)
+- Treadmill 10 / Treadmill 25 (mesma esteira. A 25 tem entrada de 220v AC, a 10 tem entrada de 120v AC)
+
+### Bicicletas
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+Não tenho um Max Trainer nem um VeloCore, mas deveria funcionar desde que você tenha uma porta USB disponível baseado nas descobertas do código.
+
+Confirmado que funciona com as versões do NautilusLauncher:
+
+- 5.0.0.350
+- 5.0.0.382
+
+**O jailbreak já foi corrigido pela Nautilus.**
+
+## Documentação
+
+### Informações gerais
+
+- <a href="/pt/projects/fl3xbl0w/jailbreak" target="_self">
+    Jailbreak de Android
+  </a>
+- <a href="/pt/projects/fl3xbl0w/backup" target="_self">
+    Fazer backup dos conteúdos da sua Console
+  </a>
+- <a href="/pt/projects/fl3xbl0w/decompiling" target="_self">
+    Decompilando
+  </a>
+- <a href="/pt/projects/fl3xbl0w/quirks" target="_self">
+    Curiosidades sobre Bowflex
+  </a>
+
+### Trabalhos em andamento
+
+- <a href="/pt/projects/fl3xbl0w/treadmotor" target="_self">
+    Controlador do Motor da Esteira
+  </a>
+- <a href="/pt/projects/fl3xbl0w/romdump" target="_self">
+    Dump da ROM
+  </a>
+
+## Objetivo final
+
+Habilitar o maior número possível de atualizações futuras para minha esteira.
+
+A Nautilus, Inc. oferece apenas uma garantia de 1 ano na parte eletrônica, e quando vi que o mecanismo para desligar a máquina (e, por consequência, o tablet Android) era basicamente "cortar a energia AC através do interruptor traseiro", isso me preocupou. Todo dispositivo baseado em Linux deve ser desligado de maneira segura para evitar a corrupção do sistema operacional, e este tablet Android não é exceção. Então, enquanto estiver funcionando, por que não se divertir um pouco mais com ele?
+
+No final, quero interceptar, entender e recriar a comunicação que vai para o controlador do motor na minha esteira para que, se o tablet morrer, eu ainda tenha um dispositivo funcionando.

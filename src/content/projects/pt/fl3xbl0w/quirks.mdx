@@ -1,0 +1,124 @@
+---
+title: Curiosidades sobre Bowflex - fl3xbl0w
+description: Projeto de engenharia reversa. Começou com a esteira Bowflex Treadmill 22, mas acabou se generalizando para qualquer máquina com Android vendida pela Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /pt/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo do projeto fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 47c38ec10ed660d31c2e416404fd6fdfe99938121ca854da78555e3e32ba5f32
+---
+
+import { Image } from 'astro:assets';
+import HomeAssistantSensor from '~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png';
+
+### O arquivo `/sdcard/Pictures/nautilus`
+
+Ao descompilar `NautilusLauncher`, você pode ver referências a esse caminho específico:
+
+```java
+// caminho: com/nautilus/nautiluslauncher/LauncherService.java
+public void run() {
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    LauncherService.access$000(LauncherService.this).disableAdbDebug();
+    LauncherService.access$000(LauncherService.this).enterKioskMode();
+    return;
+  }
+  LauncherService.access$000(LauncherService.this).enableAdbDebug();
+}
+```
+
+```java
+// caminho: com/nautilus/nautiluslauncher/MainActivity.java
+protected void onCreate(Bundle bundle) {
+  // ...
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    this.mPlatformControl.disableAdbDebug();
+    this.mPlatformControl.enterKioskMode();
+  } else {
+    this.mPlatformControl.enableAdbDebug();
+  }
+  // ...
+}
+```
+
+O efeito de colocar o arquivo em seu lugar é que o `NautilusLauncher` ativará o adb após cada reinicialização. Se o arquivo NÃO estiver em seu lugar, o `NautilusLauncher` DESATIVARÁ ativamente o adb (se estiver habilitado anteriormente).
+
+### O arquivo `/sdcard/Nautilus/redbend/Credentials.txt`
+
+Pelo que parece, a [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([adquirida pela Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend), agora entendo **por que** tantas referências ao KNOX) está fornecendo serviços OTA para o hardware da Nautilus. Encontrei algumas referências a esse arquivo dentro de `com.redbend.client.apk`.
+
+```java
+package com.redbend.client;
+public class Ipl {
+  protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
+  // ...
+  public static int iplGetAutoSelfRegDomainInfo(Context context, String[] strArr) {
+    // ...
+    File file = new File("/sdcard/Nautilus/redbend/");
+    if (!file.exists()) {
+      file.mkdirs();
+    }
+    copyAssets(context, "Credentials.txt", file.getCanonicalPath());
+    bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
+    // ...
+  }
+  // ...
+}
+```
+
+Também em `com.redbend.client.ClientService` podemos encontrar:
+
+```java
+// ...
+public class ClientService extends SmmService {
+  // ...
+  @Override // com.redbend.app.SmmService, android.app.Service
+  public void onCreate() {
+    // ...
+    if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
+      sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
+      }
+    // ...
+  }
+  // ...
+}
+```
+
+Com essa informação, podemos etiquetar o conteúdo no arquivo `/sdcard/Nautilus/redbend/Credentials.txt` como:
+
+```
+Primeira linha: DOMAIN_NAME
+Segunda linha: DOMAIN_PIN
+```
+
+_`DOMAIN_PIN` parece ser um código PIN real, já que é um número de seis dígitos._
+
+Há algumas credenciais dentro da "Rede Red Bend" para associar uma máquina a uma marca/produto específicos para atualizações OTA. Espero que essas credenciais sejam IDÊNTICAS em todo o hardware da Nautilus. O arquivo vem incluído dentro do APK `com.redbend.client` e é extraído durante a instalação.
+
+Encontrei referências de `com.redbend.client` [aqui](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/), e achei bastante engraçado ver que estava travando em um carro. Espero que não falhe tão frequentemente em nossas máquinas também.
+
+### Monitor de Frequência Cardíaca Bluetooth
+
+Este foi bastante fácil de decifrar. O nome Bluetooth aparece como `CL831-xxxxxxx` _(número oculto)_ da [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+
+Ao escanear através do [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile), a direção MAC do dispositivo e alguns dados chave foram expostos:
+
+```
+Frequência Cardíaca:
+UUID: 0x180D
+Medição da Frequência Cardíaca
+UUID: 0x2A37
+```
+
+Parecia bastante padrão, e um [post](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) da Comunidade do Home Assistant já havia descoberto isso (não o mesmo modelo, mas parece que o Monitor de Frequência Cardíaca usa um protocolo padrão). Criei um arquivo de configuração do ESPHome [aqui](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) como prova de conceito:
+
+<Image
+  src={HomeAssistantSensor}
+  alt="Captura de tela do Home Assistant mostrando um sensor de frequência cardíaca"
+  format="webp"
+/>

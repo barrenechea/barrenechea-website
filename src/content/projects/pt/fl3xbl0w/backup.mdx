@@ -1,0 +1,240 @@
+---
+title: Fazer backup dos conteúdos da sua Console - fl3xbl0w
+description: Projeto de engenharia reversa. Começou com a esteira Bowflex Treadmill 22, mas acabou se generalizando para qualquer máquina com Android vendida pela Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /pt/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo do projeto fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 3d9a41a7fed58bbf851e9c505c9291eed097cb534da1052eb6faa022c6afb876
+---
+
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
+
+Depois de ser liberado do `AppMonitorService` (ou após receber qualquer atualização OTA), a primeira coisa a fazer é fazer backup da maior quantidade de dados possível.
+
+Certifique-se de já estar conectado ao console:
+
+```sh
+> adb connect <Endereço IP do Console>
+```
+
+## Backup do conteúdo de /sdcard
+
+Pode conter alguns arquivos necessários para o funcionamento correto da máquina após um reset de fábrica (principalmente nas pastas `/sdcard/Android` e `/sdcard/Nautilus`). Faremos backup de tudo com:
+
+```sh
+> adb pull /sdcard/ .
+```
+
+## Backup de APKs
+
+Primeiro, obtenha a lista de todos os pacotes instalados no Console (apenas para ter uma referência):
+
+```sh
+> adb shell pm list packages -f
+```
+
+Eles aparecerão no seguinte formato: `package:<localização do APK>=<nome do pacote>`
+
+Você terá que encontrar os aplicativos que deseja fazer backup. NEM TODOS OS APLICATIVOS SÃO NECESSÁRIOS, a maioria são aplicativos padrão do Android, então vamos procurar apenas "aplicativos não padrão" usando alguns filtros:
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+```
+
+Você verá registros de aplicativos de `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` e talvez alguns outros no futuro. Queremos fazer backup de tudo o que vemos nessa lista (IDs únicos ocultos, use seus próprios resultados):
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
+package:/data/app/com.redbend.client-XXXXXXXXXXXXXXXX/base.apk=com.redbend.client
+package:/data/app/com.nautilus.nlssbcsystemsettings-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nlssbcsystemsettings
+package:/system/priv-app/RBDualPartService/RBDualPartService.apk=com.redbend.dualpart.service.app
+package:/data/app/com.netflix.mediaclient-XXXXXXXXXXXXXXXX/base.apk=com.netflix.mediaclient
+package:/data/app/com.nautilus.nautiluslauncher-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nautiluslauncher
+package:/data/app/com.amazon.avod.thirdpartyclient-XXXXXXXXXXXXXXXX/base.apk=com.amazon.avod.thirdpartyclient
+package:/data/app/com.nautilus.sbc_demo_app-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbc_demo_app
+package:/data/app/com.nautilus.UtilityApp-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.UtilityApp
+package:/data/app/com.nautilus.g4assetmanager-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.g4assetmanager
+package:/data/app/com.nautilus.platform_hardwaretest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.platform_hardwaretest
+package:/data/app/com.nautilus.webviewer-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.webviewer
+package:/data/app/com.nautilus.bowflex.usb-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.bowflex.usb
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+> NOTA: `com.redbend.dualpart.service.app` vem de `/system/priv-app/`, o que significa que permanecerá instalado mesmo após um reset de fábrica. Podemos fazer backup mesmo assim se você estiver interessado na engenharia reversa dos aplicativos.
+
+Vamos tomar o Disney Plus como exemplo (ID único oculto)
+
+```
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+Essa linha, com base no formato que mencionei, seria:
+
+```
+Localização do pacote: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
+Nome do pacote: com.disney.disneyplus
+```
+
+Vamos verificar qual versão do aplicativo temos com essa informação. Use o Nome do pacote que acabamos de identificar e execute:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+```
+
+No meu caso, recebi:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+    versionName=2.4.2-rc2
+```
+
+Agora, para criar um backup para o pacote Disney Plus, o procedimento seria:
+
+```sh
+> adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
+```
+
+Imediatamente após terminar, vá para o seu Explorador de Arquivos e renomeie o arquivo `base.apk` recém-backupado para `com.disney.disneyplus-2.4.2-rc2.apk`.
+
+O formato que sugiro para os APKs, dado esse exemplo, é: `<Nome do pacote>-<versão>.apk`
+
+Agora repita o processo para o restante dos aplicativos.
+
+## Backup de AppData
+
+Parece ser capaz de fazer backup de _alguns (não tenho certeza se todos)_ os dados dos aplicativos.
+
+_Tenha em mente que nem todos os aplicativos instalados geram dados de aplicativos, ou nós, como o usuário `shell`, podemos não ter permissões para fazer backup de tudo._
+
+Crie um backup completo de todos os aplicativos instalados pelo usuário:
+
+```sh
+> adb backup -f appdata.adb -all -noapk -nosystem
+```
+
+Alternativamente, você pode obter o mesmo resultado de um comando alternativo:
+
+```sh
+> adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
+```
+
+Ambos os comandos solicitarão uma "confirmação na tela" de que você deseja fazer um backup. Toque em "**BACK UP MY DATA**":
+
+<Image src={DialogBackupConfirm} alt="tela de confirmação de backup" format="webp" />
+
+Se você quiser extrair os conteúdos (em Linux, macOS), precisará do `zlib-flate` do [qpdf](https://command-not-found.com/qpdf) e executar:
+
+```sh
+> dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
+```
+
+Há alguns dados fascinantes para `com.nautilus.bowflex.usb`.
+Há informações pessoais identificáveis (PII) dentro, então **certifique-se de verificar bem quais arquivos você compartilha**.
+
+_Estes métodos de backup e extração vêm de [este Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Eu só testei os métodos de backup listados lá, que são seguros para brincar. **Se você brincar com a Restauração do Gist, você está por sua conta e risco**. Avise-nos se funcionar!_
+
+## Script
+
+Desenvolvi um script rápido e sujo em Python para fazer backup de alguns conteúdos (por enquanto não inclui AppData).
+**Testado apenas no macOS com android-platform-tools instalado via brew**.
+Leia o script e certifique-se de que faz sentido para você antes de executá-lo.
+
+```python
+import sys
+import os
+import subprocess
+from datetime import datetime
+
+# verificar se um argumento foi fornecido
+if len(sys.argv) != 2:
+    print("Uso: python3 dump.py <Endereço IP do Console>")
+    sys.exit(1)
+
+ipaddr = sys.argv[1]
+
+# verificar se adb está disponível para shell
+adb_path = subprocess.check_output(["which", "adb"]).decode("utf-8").strip()
+if not os.path.exists(adb_path):
+    print("adb não encontrado")
+    exit()
+
+# configurar pasta de backup com data e hora atuais
+dump_folder = os.path.join(
+    os.environ["HOME"],
+    "Desktop",
+    "nautilus_dump",
+    "{}".format(datetime.now().strftime("%Y-%m-%d_%H-%M-%S")),
+)
+if not os.path.exists(dump_folder):
+    os.makedirs(dump_folder)
+
+# conectar adb
+print("Conectando a {}...".format(ipaddr))
+subprocess.call(["adb connect {}".format(ipaddr)], shell=True)
+
+# fazer backup do conteúdo de /sdcard
+print("Fazendo backup do conteúdo de /sdcard...")
+subprocess.call(["adb pull /sdcard/ {}".format(dump_folder)], shell=True)
+
+# obter informações de APK
+print("Fazendo backup dos APKs...")
+packages = (
+    subprocess.check_output(["adb shell pm list packages -f"], shell=True)
+    .decode("utf-8")
+    .split("\n")
+)
+
+# filtrar linhas vazias
+packages = [x for x in packages if x.strip()]
+
+# filtrar linhas que contêm "com.android", "com.google", "framework-res"
+packages = [package for package in packages if package.find("com.android") == -1]
+packages = [package for package in packages if package.find("com.google") == -1]
+packages = [package for package in packages if package.find("framework-res") == -1]
+
+print("Encontrados {} APKs".format(len(packages)))
+
+for package in packages:
+    package_name = package.split("=")
+    package_name = package_name[len(package_name) - 1].strip()
+    package_version = (
+        subprocess.check_output(
+            ["adb shell dumpsys package {} | grep versionName".format(package_name)],
+            shell=True,
+        )
+        .decode("utf-8")
+        .split("=")[1]
+        .strip()
+    )
+
+    package_path = package.split(":")[1].split(".apk=")[0].strip()
+    package_path = "{}.apk".format(package_path)
+    print("Fazendo backup de {} v{}...".format(package_name, package_version))
+
+    subprocess.call(["adb pull {} {}".format(package_path, dump_folder)], shell=True)
+
+    os.rename(
+        os.path.join(dump_folder, os.path.basename(package_path)),
+        os.path.join(dump_folder, "{}-{}.apk".format(package_name, package_version)),
+    )
+
+# fazer backup de appdata
+print("Fazendo backup de appdata.adb ...")
+print('TOQUE NO BOTÃO "BACK UP MY DATA" NA TELA AGORA !!!')
+subprocess.call(
+    ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
+    shell=True,
+)
+
+# desconectar adb
+print("Desconectando...")
+subprocess.check_output(["adb disconnect"], shell=True)
+```

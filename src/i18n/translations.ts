@@ -1,3 +1,4 @@
+import brIcon from '@iconify-icons/circle-flags/br.js';
 import clIcon from '@iconify-icons/circle-flags/cl.js';
 import deIcon from '@iconify-icons/circle-flags/de.js';
 import frIcon from '@iconify-icons/circle-flags/fr.js';
@@ -12,6 +13,7 @@ import { es, type Translations } from './es.ts';
 import { frWithFallback } from './fr.ts';
 import { isWithFallback } from './is.ts';
 import { itWithFallback } from './it.ts';
+import { ptWithFallback } from './pt.ts';
 import { zhWithFallback } from './zh.ts';
 
 export const languages = {
@@ -23,6 +25,11 @@ export const languages = {
   en: {
     label: 'English (US)',
     icon: usIcon,
+    translateFrom: 'es',
+  },
+  pt: {
+    label: 'Português (BR)',
+    icon: brIcon,
     translateFrom: 'es',
   },
   de: {
@@ -57,6 +64,7 @@ export type LanguageKey = keyof typeof languages;
 const langData = {
   es,
   en: enWithFallback,
+  pt: ptWithFallback,
   de: deWithFallback,
   zh: zhWithFallback,
   fr: frWithFallback,

@@ -1,0 +1,61 @@
+---
+title: Controlador do Motor da Esteira - fl3xbl0w
+description: Projeto de engenharia reversa. Começou com a esteira Bowflex Treadmill 22, mas acabou se generalizando para qualquer máquina com Android vendida pela Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /pt/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: Logo do projeto fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_Isso se aplica principalmente à Treadmill 22 & Treadmill 56._
+
+A placa de controle do motor é fabricada pela [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="Controlador da Placa de Controle do Motor B017D" format="webp" />
+
+Dado o [manual de serviço](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornecido pela Nautilus Inc. ([backup no archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+
+<Image src={TreadmillElectrical} alt="Diagrama elétrico da esteira" format="webp" />
+
+E focando especificamente nesta parte:
+
+<Image src={TreadmillComm} alt="Caminho de comunicação da esteira" format="webp" />
+
+Podemos identificar o "cabo de comunicação" que conecta o controlador do motor como um de 5 pinos. Há apenas um conector de 5 pinos.
+Eu etiquetei os cabos com suas cores correspondentes (os dados & interruptor estão optoacoplados):
+
+| cor do cabo | etiqueta |
+| ----------- | -------- |
+| vermelho    | GND      |
+| branco      | RXD      |
+| preto       | TXD      |
+| amarelo     | +12      |
+| verde       | SW       |
+
+A placa não está conectada diretamente ao console Android.
+
+O único conector de 5 pinos é da marca Molex. Uma busca no Google por "conectores Molex pequenos" me levou a uma imagem do que chamam de `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que é usado para conectar a placa controladora do motor:
+
+<Image src={Molex} alt="Conector Molex Micro-Fit 3.0" format="webp" />
+
+[Link do AliExpress](https://aliexpress.com/item/32902205579.html)
+
+Ao dar uma olhada no `NautilusLauncher.apk` através do `jadx-gui`, posso ver que eles se comunicam com o tablet Android com sua "Console Universal" usando Série a 230400 Baud (usando `/dev/ttyS4`). Isso NÃO é o que estamos analisando aqui. Isso se refere à comunicação entre o Android e a "Console Universal". Estamos investigando as comms entre a "Console Universal" e a "Placa de Controle do Motor".
+
+Tentar conectar um ESP32 ou uma ponte serial baseada em CH340 diretamente aos cabos entre a base da esteira e a placa controladora Bowflex fez com que a base da esteira não inicializasse corretamente, então comecei a suspeitar que estão usando RS232.
+
+Nota: Conectando apenas ao GND e RXD, podemos "ver" algumas informações hexadecimais aparentemente sem sentido a 9600 baud. Conectar ao TXD faz com que a base da esteira não inicialize.
+
+-- Continua, preciso de algum tempo para brincar com meu novo analisador lógico --
