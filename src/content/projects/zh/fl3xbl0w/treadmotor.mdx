@@ -1,0 +1,61 @@
+---
+title: 跑步机电机控制器 - fl3xbl0w
+description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+pubDate: 2022-05-28T10:28:00Z
+link: /zh/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w项目标志
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import 跑步机电气 from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import 跑步机通信 from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_这主要适用于跑步机22和跑步机56。_
+
+电机控制板由[Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html)制造。
+
+<Image src={B017D} alt="B017D电机控制板控制器" format="webp" />
+
+根据Nautilus Inc.提供的[服务手册](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)（[archive.org上的备份](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)）：
+
+<Image src={跑步机电气} alt="跑步机电气图" format="webp" />
+
+特别关注这部分：
+
+<Image src={跑步机通信} alt="跑步机通信路径" format="webp" />
+
+我们可以识别连接电机控制器的“通信电缆”为5针的。只有一个5针连接器。
+我已经用相应的颜色标记了电线（数据和开关是光隔离的）：
+
+| 电线颜色 | 标签 |
+| -------- | ---- |
+| 红色     | GND  |
+| 白色     | RXD  |
+| 黑色     | TXD  |
+| 黄色     | +12  |
+| 绿色     | SW   |
+
+该板不直接连接到安卓控制台。
+
+唯一的5针连接器是Molex品牌的。谷歌搜索“小型Molex连接器”让我找到了他们所谓的`Molex Micro-Fit 3.0单排（5针）`的图片，用于连接电机控制板：
+
+<Image src={Molex} alt="Molex Micro-Fit 3.0连接器" format="webp" />
+
+[AliExpress链接](https://aliexpress.com/item/32902205579.html)
+
+通过`jadx-gui`查看`NautilusLauncher.apk`，我可以看到他们使用230400波特的串行（使用`/dev/ttyS4`）与安卓平板通信，这是他们的“通用控制台”。这不是我们在这里分析的内容。那是指安卓和“通用控制台”之间的通信。我们正在调查的是“通用控制台”和“电机控制板”之间的通信。
+
+尝试将ESP32或基于CH340的串行桥直接连接到跑步机底座和Bowflex控制板之间的电线，导致跑步机底座无法正确初始化，所以我开始怀疑他们使用的是RS232。
+
+注意：仅连接GND和RXD，我们可以在9600波特下“看到”一些看似垃圾的十六进制信息。连接TXD会导致跑步机底座无法初始化。
+
+-- 待续，我需要一些时间来玩我的新逻辑分析仪 --

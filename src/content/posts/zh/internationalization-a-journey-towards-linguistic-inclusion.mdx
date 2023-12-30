@@ -1,0 +1,88 @@
+---
+title: '国际化：走向语言包容的旅程'
+description: '我的网站迈向国际化，打破语言障碍，拥抱多元化的观众群体。'
+pubDate: 2023-12-27T12:00:00Z
+img: ~/assets/images/post-i18n.jpg
+imgAlt: '由萤火虫图像2生成的图片，文字内容为：award winning art, a branched tree made of light rays and energy, dramatic, impactful, colorful, high definition, 4k uhd'
+translatedBy: gpt-4-1106-preview
+checksum: fd912ad7afc432dab6f20af7a9e4e64cc37991680e10f10f8095de4dd7a98dbb
+---
+
+import OldNavbar from '~/assets/images/post-i18n-old-navbar.png';
+import NewNavbar from '~/assets/images/post-i18n-new-navbar.png';
+import WrongEsTranslation from '~/assets/images/post-i18n-wrong-es-translation.png';
+import { Image } from 'astro:assets';
+
+自从这个页面成立之初，我选择使用英语作为主要语言，假设它是互联网上最普遍的语言。然而，我最近听说在Meta和X网络中，第二大使用语言是西班牙语。就个人而言，我有一个悬而未决的债务，那就是用我的母语展示我的内容，今天这已成为现实。
+
+近日来，我已将网站的每一个角落国际化，为界面分配键/值格式的值，并使用LLMs（大型语言模型）以自动化的方式翻译项目和帖子的内容。
+
+## 我从哪里开始，我的朋友？
+
+有两个主要方面需要考虑：用户界面和内容。
+
+Astro的[文档](https://docs.astro.build/zh-cn/recipes/i18n/)和它的[源代码](https://github.com/withastro/docs/tree/main/src/i18n)在基础逻辑上提供了很大帮助，然而，我做了几处调整以适应我的需求，并保持代码尽可能简洁。
+
+这个网站主要关注帖子的内容，在界面方面相当简单。最多的静态文本在首页上，所以我开始将每个值提取到键/值对象中，允许视图以相同的方式渲染。
+
+```typescript
+export const en = {
+  'author.name': 'Sebastian Barrenechea',
+
+  'nav.fork': 'Fork me on GitHub',
+  'nav.sr.open': 'Open navigation menu',
+  'nav.home': 'Home',
+  'nav.projects': 'Projects',
+  'nav.posts': 'Posts',
+  'nav.page': 'Page',
+  'nav.language.select': 'Select language',
+
+  'hero.greeting': "Heey! I'm",
+  // ...
+};
+```
+
+路由处理对于识别要构建的页面至关重要。Astro通过其路由系统简化了这一点，允许将语言作为参数提供：
+
+- 将`src/pages`目录中的所有页面移动到`src/pages/[lang]`目录。
+- 在每个需要i18n处理的页面上添加类似这样的内容：
+  ```typescript
+  const { lang } = Astro.params;
+  ```
+
+英文版本工作正常后，我开始添加西班牙语支持。在这里我遇到了一个翻译难题：
+
+<Image
+  src={WrongEsTranslation}
+  alt="首页截图，西班牙语文本'Últimos Publicaciones'和'Ver todos los publicaciones'翻译错误"
+  format="webp"
+/>
+
+在英语中，我可以对项目和帖子使用相同的值，但在西班牙语中不行。
+
+在理想的世界里，我会使用中性语言。我本可以选择"Proyectos recientes"和"Publicaciones recientes"，这将允许我回收这个词。然而，为了保持页面的视觉一致性，我需要短语以"proyectos"或"publicaciones"结尾。经过一些调整，我设法在所有视图中（索引、导航页面和使用内容的模板）完全翻译。
+
+而且我使用的语言选择组件有一个问题，让我非常困扰。该组件需要`absolute`类来定位其下方的对象，这导致它在文本非常长的情况下不再尊重页面边距：
+
+<div align="center">
+  <Image src={OldNavbar} alt="先前导航栏的截图，语言选择器在右上角超出了边距限制" format="webp" />
+  <p class="italic">用红色标出边距以突出问题</p>
+</div>
+
+我从[Starlight](https://starlight.astro.build/zh-cn/)中提取了那个组件，因为它看起来简单且极简，但最终我用[Flowbite](https://flowbite.com/docs/components/navbar/#language-dropdown)中的一个替换了它，并使用[Web Components API](https://web.dev/articles/custom-elements-v1)重新实现了交互性。新组件需要为每种语言添加额外的图形（旗帜，使用[@iconify-icons/circle-flags](https://icon-sets.iconify.design/circle-flags/)），但这是值得的。
+
+<Image src={NewNavbar} alt="当前导航栏的截图，语言选择器位于右上角" format="webp" />
+
+## 但是，没有内容可见，对吧？
+
+当调整网站内容（项目和帖子）以适应其相应的英文路由时，网站找不到西班牙语的内容，导致页面没有可导航的内容。我做的第一次测试是手动使用OpenAI API翻译，然后我自动化了这个过程以简化事情。
+
+_在即将发布的关于在生产中使用LLMs的帖子中，您可以看到更多细节。_
+
+在将项目和帖子翻译成西班牙语后，我对结果翻译进行了一些调整。我将西班牙语设为自动翻译过程的标准参考，并在必要的调整后，重新生成了英文内容。
+
+## 现在怎么办？
+
+现在，添加对更多语言的支持出奇的简单！有一些需要考虑的事项，例如“假设”语言是从左到右阅读的，这排除了阿拉伯语或希伯来语等语言。我在这个网站上使用的CSS框架Tailwind，原生支持LTR（从左到右）和RTL（从右到左），但需要调整一些细节（例如，在必要时使用`rtl:space-x-reverse`类）。
+
+随着德国在访问我的网站的用户中排名第三，我已经毫无困难地实现了德语翻译，并将很快包括意大利语、法语、简体中文和冰岛语（我♥️冰岛）。尽管自动化使得过程更加容易，但检查翻译以确保其质量是必要的，因为它们并不总是完美的。在英语的情况下，我能够进行个人审查；然而，对于我不会说的语言，如德语，我求助于谷歌Chrome的自动翻译来验证一致性。我的目标是最终与每种语言的母语者合作，提高所提供翻译的标准。

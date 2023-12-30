@@ -1,0 +1,151 @@
+---
+title: 我因为一种果汁黑进了数百台游戏机
+ogOverride: 由于一种果汁 - 我黑进了数百台游戏机
+description: 我年轻时不参加派对而做的事情
+pubDate: 2022-08-23T23:13:00Z
+img: ~/assets/images/project-ades-wii-x360.png
+imgAlt: AdeS果汁被Bill Gates在魔多玩吉他英雄游戏后被pwned的合成图
+translatedBy: gpt-4-1106-preview
+checksum: fc24ef4e7a229ef942a8e6354fb03a773e1387e6bea654249883badf276bcc46
+---
+
+import Puzzle from '~/assets/images/puzzle.png';
+import PuzzleNumbered from '~/assets/images/puzzle-numbered.png';
+import X360PowerSupply from '~/assets/images/x360-dvd-power-supply.jpg';
+import X360Linux from '~/assets/images/x360-linux.jpg';
+import KamikazeLocation from '~/assets/images/kamikaze-location.jpg';
+import WinbondExploitLines from '~/assets/images/winbond-exploit-lines.jpg';
+import XboxRRoD from '~/assets/images/xbox-rrod.jpg';
+import { Image } from 'astro:assets';
+import { YouTube } from '@astro-community/astro-embed-youtube';
+
+2010年，AdeS（一家后来在2016年被可口可乐公司收购的阿根廷果汁品牌）在Facebook上举办了一个比赛。
+这是一个4x4拼图游戏，你可以赢得一台任天堂Wii。赢得奖品的条件是：
+
+- 在尽可能短的时间内完成，以及
+- 用尽可能少的移动次数完成
+
+我不会说我特别擅长4x4拼图，但这似乎是一个值得尝试的挑战。
+
+游戏的前几秒钟会显示解决方案（完整的图像），然后它被打乱。
+
+我没有原始图片，但这里有一个库存照片供参考：
+
+<Image src={Puzzle} alt="两个拼图并排，左边是解决方案，右边是打乱的版本" format="webp" />
+
+然而，游戏有一个特别之处：计时器在你做出第一步移动后才开始计时，给了你在开始玩之前“思考”的机会。
+
+看了图片后，我制作了一个“辅助图片”来玩，用数字替换了打乱的图像。
+这样，弄清楚“如何从1到15排序”就容易多了：
+
+<Image
+  src={PuzzleNumbered}
+  alt="两个拼图并排，左边是解决方案，右边是打乱的版本，上面叠加了数字"
+  format="webp"
+/>
+
+我的大脑更喜欢这样... 但是，我不想在这上面花太多时间，所以我找了一个拼图解决器。几个小时后，我找到了
+一个通过暴力破解工作的解决器，需要相当长的时间才能给你更好的解决方案。过了一会儿，它会给你几个数字序列
+来跟随，然后你就可以解决拼图了。
+
+我花了很多时间寻找一个“好的打乱拼图”，因为我希望如果可能的话，能在20步以内解决它。
+几天后，经过Facebook游戏的几次重新开始，**我找到了一个16步的解决方案**。
+
+此后，我因为拼图的两个限制而使事情变得复杂：移动次数**和**时间。我使用了一个自动点击应用程序，在其中我用截图捕获了
+打乱的拼图，然后按照最佳数字序列“解决”拼图。
+
+一切准备就绪，可以开始了。
+
+我在自动点击应用程序内点击“开始”。
+
+自动点击在拼图中途失败了 💀
+
+我搞砸了，因为我让自动点击太快了，游戏中没有注册一个点击。我迅速介入，修复了一些误点击的瓷砖，并手动完成了
+序列。我的最终成绩是**21步，用时15秒**。
+
+截止日期前几天，我检查了排行榜，第二名玩家大约用了300步和20分钟解决它。
+那时，这甚至不算竞争。
+
+几天后，我通过Facebook被通知我赢了。太好了！🎉
+
+官方的AdeS帖子是[这个](https://web.archive.org/web/20101028002731/http://www.ades.cl/blog/2010/06/ya-tenemos-los-ganadores-de-puzzle-ades/)。
+这是我领取游戏机时现场拍摄的视频：
+
+<YouTube id="Uf5JHxDxNRw" />
+
+## 从Wii到Xbox 360
+
+我非常渴望玩[Alan Wake](https://zh.wikipedia.org/wiki/Alan_Wake)！所以我从没想过要保留Wii，所以我很快就在
+一个在线论坛上发布了它（安息吧，CHW 🪦），我可以卖掉它，买一个Xbox 360，或者立即交换它。
+
+然后有个家伙写信给我，想用他刚收到的360换一台Wii！有时候这个世界不是很美好吗？
+
+事实证明，他在玩在线扑克时赢得了他的Xbox 360。这是一台PAL机（我们在智利是NTSC），所以这是一个问题，但
+我还是进行了交换。毕竟，我想解锁它以便能够玩备份副本。PAL游戏只是一个种子下载之遥。
+
+_对不起，盗版游戏是我当时能玩新游戏的方式。谢谢，微软！_
+
+## 解锁它，直冲月球 🚀
+
+我在同一个论坛中找到了一个帖子，有人在解锁Xbox 360（他的用户名是darcito）。我去了他的家（那是他工作的地方）
+并从几米远的地方观看了解锁过程。
+
+“你在开玩笑吗？他只是通过SATA将DVD驱动器连接到他的电脑上并点击一些按钮！我自己就能做那💩！”
+
+### 光驱
+
+于是，在接下来的几个月里，我在互联网上学习了解锁过程的工作原理。Xbox 360有各种各样的
+光驱供应商，不同的固件版本，对于每一个，你都有一个独特的解锁方法，但它都围绕着备份
+控制台的独特DVD密钥和用c4eva开发的自定义固件刷新驱动器。
+
+到年底，我复制了darcito的策略，在论坛内开了我的帖子，在我自己的家中解锁游戏机。
+几个Xbox改装者用同一台游戏机为DVD驱动器供电，但社区认为微软可能会检测到如果游戏机开着
+没有连接DVD驱动器，你的游戏机就会被“标记”（我不确定这是否正确）。
+
+无论如何，我想保护我的客户的游戏机不被标记，所以我开发了一个带开关的自定义电源供应器，
+用于特定电压线（解锁某些光驱所需）：
+
+<Image src={X360PowerSupply} alt="Xbox 360 DVD驱动器的自定义电源供应器" format="webp" />
+
+当然，过了一段时间，对于改装者来说，有了更好的销售选择，所以最终，我从Team Xecuter那里得到了一个X360 USB Pro v2。
+
+#### 钻孔芯片（神风方法）
+
+这种光驱解锁方法很疯狂；我不会撒谎！对于带有锁定的LiteOn DG-16D4S和Winbond芯片的Xbox 360 Slim
+（有带MXIC芯片的LiteOn驱动器不需要这样做），你必须在DVD驱动器内部的一个芯片上钻一个孔。
+
+<Image src={KamikazeLocation} alt="一个芯片" format="webp" />
+
+我们试图通过神风达到的目的是接触一个微小的线路并将其接地，允许你在驱动器上刷新自定义固件：
+
+<Image src={WinbondExploitLines} alt="一个去胶封的芯片" format="webp" />
+
+我猜微软没想到会有这种疯狂的方式来玩备份副本。永远不要低估黑客的力量。
+我在Twitter上找到的一个有趣消息是：
+
+> 微软：好吧，如果我们从封装内部用键合线连接写保护，他们就不能简单地切断一个引脚或轨道了
+
+> 改装者：等着我，拿我的芯片钻孔定位夹具
+
+### 重置故障黑客
+
+2011年8月28日，GliGli和Tiros（在cOz的帮助下）发布了Xbox 360的重置故障黑客（或RGH）。这是一个硬件漏洞，无法修补
+以运行未签名的代码。几天后，Xbox 360场景慢慢为改装者制作工具。不过你需要
+擅长使用烙铁。
+
+在早期为自己找到兼容的芯片很困难，但我找到了一些有效的。
+如今，即使是RGH 3.0，你也不再需要芯片。
+
+这是我启动Linux的照片（你在那里看到的沙发是我的客户常常等待的地方）：
+
+<Image src={X360Linux} alt="一个运行Linux的Xbox 360" format="webp" />
+
+我真的相信我是智利最早提供RGH服务的人之一。我为全国各地的客户提供了光驱解锁和RGH服务。长时间以来，每周走到邮局带着Xbox 360已经成为常规。疯狂而有趣的时光。
+
+我服务的反馈副本仍然存活在[这里](https://www.capa9.net/temas/feedback-de-sbarrenechea.899146/)。
+我遇到了很多非常好的人，并且仍然与他们保持联系。所有这些都要感谢AdeS果汁。
+
+<p align="center">
+  <Image src={XboxRRoD} alt="我看着一个坏掉的Xbox 360" format="webp" />
+  <h4 align="center">我看着一个RRoD（死机）的Xbox 360</h4>
+</p>

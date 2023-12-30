@@ -10,6 +10,7 @@ const descriptions = {
   de: 'Willkommen auf der offiziellen Website von Sebastian Barrenechea. Entdecken Sie meine vielfältige Palette an persönlichen Projekten und tauchen Sie ein in nachdenkliche Blog-Beiträge.',
   fr: 'Bienvenue sur le site officiel de Sebastián Barrenechea. Découvrez ma gamme diversifiée de projets personnels et plongez dans des articles de blog qui invitent à la réflexion.',
   it: 'Benvenuti sul sito ufficiale di Sebastián Barrenechea. Scopri la mia vasta gamma di progetti personali e immergiti in post di blog che invitano alla riflessione.',
+  zh: '欢迎来到Sebastian Barrenechea的官方网站。发现我各种各样的个人项目，并深入思考引人深思的博客文章。',
 } as { [lang: string]: string };
 
 /** An object mapping file paths to file metadata. */

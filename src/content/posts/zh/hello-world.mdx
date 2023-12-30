@@ -1,0 +1,24 @@
+---
+title: 你好世界！
+description: 我已经重启了网站，现在它运行在Astro上，并且在Edge上分发！
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Astro标志
+translatedBy: gpt-4-1106-preview
+checksum: 5e24aecef29b64c13ea38c5e7cdca422d16bb5cbb27c25c66117f6c401f99b99
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+如果你之前来过这里，这个网站已经有几年的“嗨，你好”信息了。但是随着时间的推移，很多事情都发生了变化！
+
+<Image src={OldWebsiteImage} alt="网站之前的样子截图" format="webp" />
+
+回到2016年，网站托管在[DigitalOcean](https://digitalocean.com)的一个droplet上。后来，我决定在我自己的网络内打开端口，并使用[DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website)在我的[Unraid](https://unraid.net/zh)服务器上运行网站容器。
+
+在切换到Edge部署之前，我使用了[Cloudflare Tunnel](https://www.cloudflare.com/zh-cn/products/tunnel/)来缓解我ISP动态IP的性质，并加强我本地网络的“可访问点”。
+
+你现在阅读的是使用[Astro](https://astro.build/zh-cn/)开发的网站重建。它能够在Edge上部署（我目前使用的是Cloudflare的[边缘网络](https://www.cloudflare.com/zh-cn/learning/cdn/glossary/edge-server/)）是从安全角度和最终用户（你！）的性能结果来看的巨大改进。
+
+我为这个网站选择的字体是[Work Sans](https://fonts.google.com/specimen/Work+Sans)。

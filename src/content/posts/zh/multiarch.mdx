@@ -1,0 +1,38 @@
+---
+title: 多架构万物
+description: 从一个x86/64世界到一个架构宇宙的旅程。
+pubDate: 2021-09-06T00:00:00Z
+img: ~/assets/images/arm-x86.svg
+imgAlt: 两个芯片，一个标记为“x86”，另一个标记为“ARM”。
+translatedBy: gpt-4-1106-preview
+checksum: fa8c71668cd9e14e1349122d69ac1a0696e5a23dff0182b9145a50b33a68cbf6
+---
+
+当我们在 [Finalis](https://www.finalis.com) 开始奠定我们的初步基础时，我记得有一个想法要测试AWS的Graviton。
+在2018年这是不可行的，除非你自己构建东西。快进到2022年，我们（作为一个社区）仍然在努力在Dockerhub镜像中找到ARMv8支持。
+
+但在2020年，发生了一件大事：苹果宣布将在2年的时间表内将Macs过渡到Apple Silicon。
+
+在Finalis，我们坚持使用苹果硬件进行软件开发。你得到一个类Unix操作系统，以及观看电影或其他什么时出色的屏幕和音频质量🍿。
+
+在2020年，倒计时开始了。如果我们想在未来继续获取新的苹果设备，Finalis需要变成多架构的。
+
+## Docker
+
+当苹果发布了M1，我们得到了一个，Docker开始与它“相处”，但是Docker在ARM上在早期版本中有一些问题，仅仅因为引擎正在被测试（由我们，先驱开发者）。
+
+后来似乎一切都好了：第三方工具 - 大多数所需的镜像已经可用于ARM64，但并非全部。[browserless](https://github.com/browserless/chrome) 是我开始尝试构建在ARM64上的，所以我发送了一个 [pull request](https://github.com/browserless/chrome/pull/1847) 用最少的更改来使它工作。
+
+有了第三方工具的覆盖，只是确保Docker为ARM64构建了我们自己的镜像的问题。"嘿，你使用TypeScript; 它应该只是工作！"... 好吧，只要你的依赖项在运行 `npm install` 时不需要下载二进制文件。
+
+主要问题？没有为ARM64提供二进制文件，强制在你运行 `npm install` 时构建二进制文件，使用 `make`（安装后脚本？）。从配置的角度来看，我们的一些 `Dockerfile` 文件中的一点爱就是我们所需要的，它解决了一切。
+
+## Pipelines
+
+在处理GitHub Actions和多架构时，你有两个选择：运行两个并行的runners（一个为x86/64构建，另一个为arm64构建），或者为两种架构运行一个runner。
+
+我选择了第二个选项进行实验，通过 [docker buildx](https://docs.docker.com/build/buildx/)。按照 [build-push-action](https://github.com/docker/build-push-action#path-context) 的设置说明，你可以快速获得一个运行中的pipeline。
+
+让buildx处理多架构构建，允许你推送到Dockerhub而不必处理不同架构的不同标签。你的所有标签都将是多架构兼容的。
+
+缺点是构建时间：在它们各自的架构上有两个并行的runners会快得多，但是pipeline将需要管理将结果合并到一个标签的过程。_只有当你关心让消费者更容易找到正确的镜像时。_

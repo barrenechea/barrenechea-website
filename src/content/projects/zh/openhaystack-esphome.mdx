@@ -1,0 +1,113 @@
+---
+title: OpenHaystack 在 ESPHome 中的应用
+description: 将 OpenHaystack 移植为 ESPHome 组件。兼容所有 Espressif BLE 设备。
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ~/assets/images/project-openhaystack.png
+imgAlt: OpenHaystack 和 ESPHome 标志
+tags:
+  - Hardware
+  - Embedded
+translatedBy: gpt-4-1106-preview
+checksum: 3d98279a41f3f41bf8b90d213cc20a02d8083438c29b65e9f8ae8d2d96d8a017
+---
+
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) 是一个应用程序，允许您创建自己的配件，这些配件可以通过苹果的 [Find My network](https://developer.apple.com/find-my/) 进行跟踪。他们已经逆向工程了苹果的协议并对其进行了记录，这是一个相当令人印象深刻的项目。
+
+我想要跟踪我的电动滑板车，以防它被盗。虽然构建你的配件的“官方”方式是“可以接受的”，但事实证明，对于不同的 Espressif 板，存在着几个兼容性问题。
+
+因此，我将其作为 [ESPHome](https://esphome.io/) 的一个组件进行了移植，ESPHome 是我已经用于我的嵌入式设备需求的软件。
+
+## 为什么选择 ESPHome？它不是“为家庭”而设计的吗？
+
+我*有点*痴迷于尽可能地保持我的物联网/嵌入式设备更新（当然，如果可能的话，远离任何云服务），所以 ESPHome 是一个吸引人的解决方案，可以使用 Arduino 和 Espressif 框架保持设备的更新。通过 ESPHome，我可以随时“更新”我的滑板车。
+
+## 为什么这不是一个官方组件？
+
+我尝试过！我开了一个 [Add support for OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584) 的请求，并提供了其[支持文档](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html)，但可以理解的是，他们不想合并它。
+
+## ESPHome 示例 - ESP32
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+
+esp32:
+  board: wemos_d1_mini32
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# 启用日志
+logger:
+
+# 启用 Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # 这里是以 Base64 编码的 OpenHaystack 密钥
+  # 我强烈建议你将其作为一个秘密处理
+  key: !secret openhaystack_key
+```
+
+## ESPHome 示例 - ESP32-C3
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: latest
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+      # 启用 WPA3 支持，因为我们可以
+      CONFIG_WPA_SUITE_B_192: y
+      # 特定于蓝牙使用
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      # 修复“有效载荷大小错误” - 延长看门狗超时
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# 启用日志
+logger:
+
+# 启用 Home Assistant API
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # 这里是以 Base64 编码的 OpenHaystack 密钥
+  # 我强烈建议你将其作为一个秘密处理
+  key: !secret openhaystack_key
+```

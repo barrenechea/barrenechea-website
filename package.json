@@ -13,7 +13,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "lint": "astro check",
-    "format": "prettier --write .",
+    "format": "prettier --log-level warn --write .",
     "prepare": "husky install",
     "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts en && npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
   },

@@ -1,0 +1,120 @@
+---
+title: Bowflex 奇趣 - fl3xbl0w
+description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+pubDate: 2022-05-28T10:28:00Z
+link: /zh/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w项目标志
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: b579f6715ec7bbcf25b8db49cedec3e9eeeac50513672a0984304f94203d593a
+---
+
+import { Image } from 'astro:assets';
+import HomeAssistantSensor from '~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png';
+
+### `/sdcard/Pictures/nautilus` 文件
+
+当反编译 `NautilusLauncher` 时，你可以看到对那个特定路径的引用：
+
+```java
+// 路径: com/nautilus/nautiluslauncher/LauncherService.java
+public void run() {
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    LauncherService.access$000(LauncherService.this).disableAdbDebug();
+    LauncherService.access$000(LauncherService.this).enterKioskMode();
+    return;
+  }
+  LauncherService.access$000(LauncherService.this).enableAdbDebug();
+}
+```
+
+```java
+// 路径: com/nautilus/nautiluslauncher/MainActivity.java
+protected void onCreate(Bundle bundle) {
+  // ...
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    this.mPlatformControl.disableAdbDebug();
+    this.mPlatformControl.enterKioskMode();
+  } else {
+    this.mPlatformControl.enableAdbDebug();
+  }
+  // ...
+}
+```
+
+将文件放在其位置的效果是 `NautilusLauncher` 将在每次重启后激活 adb。如果文件不在位，`NautilusLauncher` 将主动禁用 adb（如果之前已启用）。
+
+### `/sdcard/Nautilus/redbend/Credentials.txt` 文件
+
+看来 [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software)（[被 Harman 收购](https://news.harman.com/releases/harman-completes-acquisition-of-redbend)，现在我明白**为什么**有这么多关于 KNOX 的引用）为 Nautilus 硬件提供 OTA 服务。我在 `com.redbend.client.apk` 中找到了对该文件的一些引用。
+
+```java
+package com.redbend.client;
+public class Ipl {
+  protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
+  // ...
+  public static int iplGetAutoSelfRegDomainInfo(Context context, String[] strArr) {
+    // ...
+    File file = new File("/sdcard/Nautilus/redbend/");
+    if (!file.exists()) {
+      file.mkdirs();
+    }
+    copyAssets(context, "Credentials.txt", file.getCanonicalPath());
+    bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
+    // ...
+  }
+  // ...
+}
+```
+
+还在 `com.redbend.client.ClientService` 中可以找到：
+
+```java
+// ...
+public class ClientService extends SmmService {
+  // ...
+  @Override // com.redbend.app.SmmService, android.app.Service
+  public void onCreate() {
+    // ...
+    if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
+      sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
+      }
+    // ...
+  }
+  // ...
+}
+```
+
+根据这些信息，我们可以将 `/sdcard/Nautilus/redbend/Credentials.txt` 文件中的内容标记为：
+
+```
+第一行：DOMAIN_NAME
+第二行：DOMAIN_PIN
+```
+
+_`DOMAIN_PIN` 似乎是一个真实的 PIN 码，因为它是一个六位数的数字。_
+
+在 "Red Bend Network" 中有一些凭据，用于将机器与特定品牌/产品关联以进行 OTA 更新。我希望这些凭据在所有 Nautilus 硬件中都是相同的。该文件包含在 `com.redbend.client` APK 中，并在安装时提取。
+
+我在 [这里](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/) 找到了对 `com.redbend.client` 的引用，看到它在一辆车中崩溃，我觉得相当有趣。我希望它在我们的机器上不会那么频繁地失败。
+
+### 蓝牙心率监测器
+
+这个问题相当直接。蓝牙名称显示为 `CL831-xxxxxxx` _(数字隐藏)_ 来自 [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/)。
+
+通过 [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile) 扫描时，设备的 MAC 地址和一些关键数据被暴露：
+
+```
+心率：
+UUID: 0x180D
+心率测量
+UUID: 0x2A37
+```
+
+这似乎相当标准，而且 Home Assistant 社区的一个[帖子](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39)已经弄清楚了这一点（不是同一型号，但看起来心率监测器使用标准协议）。我在[这里](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml)创建了一个 ESPHome 配置文件作为概念验证：
+
+<Image src={HomeAssistantSensor} alt="Home Assistant 显示心率传感器的截图" format="webp" />

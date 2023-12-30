@@ -1,0 +1,163 @@
+---
+title: ROM转储 - fl3xbl0w
+description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+pubDate: 2022-05-28T10:28:00Z
+link: /zh/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w项目标志
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### Rockchip加载模式
+
+安卓硬件由RK3399处理器提供动力。Rockchip处理器带有标准的“加载模式”。
+
+我使用的工具包括：
+
+- 来自[ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)的Rockchip驱动助手v4.5
+- 来自[这个XDA帖子](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)的rkDumper 1.09测试版
+- 来自[ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)的Android工具发布v2.69
+
+_有一个更新版本的驱动程序可供下载，但已知它与rkDumper不兼容。_
+
+要使用这个，你必须拆卸Bowflex控制台，拧下塑料背盖，然后以“裸露形式”重新组装。
+**不要尝试这样做，因为在加载模式下玩弄安卓硬件可能导致设备永久损坏。**
+
+<Image src={ConsoleMounted} alt="拆掉背盖的安装控制台" format="webp" />
+
+这里是安卓逻辑板上与Rockchip相关的重要部分：
+
+<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
+
+你可以一直保持Android工具发布应用程序打开，作为参考检查控制台处于什么模式。
+
+当机器以“正常模式”开启并连接到电脑时，它被识别为`NFTM-LAR`：
+
+```
+NFTM-LAR:
+  产品ID: 0x0001
+  供应商ID: 0x2207 (福州瑞芯微电子有限公司)
+  版本: 3.10
+  速度: 最高480 Mb/s
+  制造商: Vanzo
+  位置ID: 0x14120000 / 9
+  当前可用(mA): 500
+  当前所需(mA): 500
+  额外运行电流(mA): 0
+```
+
+当机器关闭，通过USB连接到电脑，按住“恢复按钮”并开机时，它应该启动进入“加载模式”。机器会“发声”，但屏幕保持静止。_你可以关闭，等待一分钟，开机，机器将正常启动。_
+
+_安卓硬件不是在开机后处理“声音”，而是通过其他Nautilus PCBs处理。_
+
+现在它会在电脑上报告为`USB下载小工具`（序列号隐藏）：
+
+```
+USB下载小工具:
+  产品ID: 0x330c
+  供应商ID: 0x2207 (福州瑞芯微电子有限公司)
+  版本: 99.99
+  序列号: XXXXXXXXXXXXXXX
+  制造商: Rockchip
+  位置ID: 0x14120000
+```
+
+运行rkDumper针对控制台后，我们得到了关于分区的信息：
+
+```
+发现"EFI PART"标志（RKFP固件转储）
+
+分区"EFI_part" (0x00004000)已保存（格式：RockChip RKFP转储）
+分区"uboot_a" (0x00002000)已保存（格式：Rockchip uboot镜像文件）
+分区"uboot_b" (0x00002000)已保存（格式：Rockchip uboot镜像文件）
+分区"trust_a" (0x00002000)已保存（格式：未知）
+分区"trust_b" (0x00002000)已保存（格式：未知）
+分区"misc" (0x00002000)已保存（格式：未知）
+分区"resource" (0x00008000)已保存（格式：未知）
+分区"kernel" (0x00010000)已保存（格式：未知）
+分区"dtb" (0x00002000)已保存（格式：未知）
+分区"dtbo_a" (0x00002000)已保存（格式：未知）
+分区"dtbo_b" (0x00002000)已保存（格式：未知）
+分区"vbmeta_a" (0x00000800)已保存（格式：未知）
+分区"vbmeta_b" (0x00000800)已保存（格式：未知）
+分区"boot_a" (0x00020000)已保存（格式：未知）
+分区"boot_b" (0x00020000)已保存（格式：未知）
+分区"backup" (0x00038000)已保存（格式：未知）
+分区"security" (0x00002000)已保存（格式：未知）
+分区"cache" (0x00100000)已保存（格式：未知）
+分区"system_a" (0x00500000)已保存（格式：未知）
+分区"system_b" (0x00500000)已保存（格式：未知）
+分区"metadata" (0x00008000)已保存（格式：未知）
+分区"vendor_a" (0x00100000)已保存（格式：未知）
+分区"vendor_b" (0x00100000)已保存（格式：未知）
+分区"oem_a" (0x00100000)已保存（格式：未知）
+分区"oem_b" (0x00100000)已保存（格式：未知）
+分区"frp" (0x00000400)已保存（格式：未知）
+分区"sw_release" (0x00ed7000)已保存（格式：未知）
+分区"video" (0x0047e000)已保存（格式：未知）
+分区"userdata" (0x0169bbdf)已保存（格式：未知）
+```
+
+`uboot_a`和`uboot_b`已成功提取，但所有标记为`(格式：未知)`的其他分区备份得不好，只从它们中提取了十六进制`CC`值。
+
+我的一个类似案例在[4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)上有记录，而且在[询问](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625)rkDumper开发者后，[他说](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085)必须有一个新的RockChip加载器到位。目前看来，按照这种方法似乎是不可行的。
+
+### ADB
+
+通过adb可以找到一些类似的数据，但似乎不可能进行备份，因为我们缺乏root权限：
+
+```sh
+> ls -al /dev/block/platform/
+总计 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+总计 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### 其他想法
+
+我们可以做的一件事是脱焊eMMC芯片并外部读取，以便能够备份其所有内容。这对于创建自定义ROM来说是好的，但我不会从我唯一的控制台上脱焊（如果有一个备用的就酷了）。

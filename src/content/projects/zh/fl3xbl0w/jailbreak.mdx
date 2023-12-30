@@ -1,0 +1,135 @@
+---
+title: 安卓越狱 - fl3xbl0w
+description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+pubDate: 2022-05-28T10:28:00Z
+link: /zh/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0w项目标志
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
+---
+
+import { Image } from 'astro:assets';
+import LogiKeys from '~/assets/images/fl3xbl0w/logi-keys.png';
+import ConsoleUSB from '~/assets/images/fl3xbl0w/console-usb.png';
+import Console01 from '~/assets/images/fl3xbl0w/console-01.gif';
+import Console02 from '~/assets/images/fl3xbl0w/console-02.gif';
+import Console03 from '~/assets/images/fl3xbl0w/console-03.gif';
+import Console04 from '~/assets/images/fl3xbl0w/console-04.gif';
+import Console05 from '~/assets/images/fl3xbl0w/console-05.gif';
+import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
+import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
+import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
+
+这种方法依赖于Bowflex控制台的规格对于当今的软件来说太慢了（安卓板上只有2Gb的RAM）。因此，如果我们的速度比平板电脑快，我们就可以从Nautilus的`AppMonitorService`中越狱。
+
+_这可以称为蛮力攻击吗？_
+
+在这个过程中，你可以随时重启机器，一切都会恢复原样。因此，这样做在软件方面没有风险。试一试吧！
+
+## 要求
+
+- 一个带有主页、返回媒体按钮的USB键盘（有线或通过USB接收器无线）
+- 快速的手指！（“紧张部分”必须在大约一秒钟内完成）
+- 一台安装了[adb](https://developer.android.com/studio/command-line/adb)的电脑（[下载链接](https://developer.android.com/studio/releases/platform-tools)）
+
+我使用的是罗技K600，但任何带有这些按键的键盘都应该可以工作：
+
+<Image src={LogiKeys} alt="罗技K600键盘" format="webp" />
+
+_蓝牙键盘似乎无法通过JRNY配对。_
+
+## 提示
+
+- 不要试图一开始就“做对”。需要尝试几次才能弄清楚“按钮在屏幕上出现的位置”，这样你就可以为敲击动作建立一些肌肉记忆。
+- 不要用力敲击屏幕！快速并不意味着要破坏它。对于人们用力敲击屏幕，我不负责任。
+
+## 指南
+
+首先，让我们打开机器并将USB键盘连接到Bowflex控制台。你可以在右侧找到它：
+
+<Image src={ConsoleUSB} alt="指示控制台USB端口位置" format="webp" />
+
+让我们通过按键盘上的“主页”按钮来确保键盘工作。它应该会导致JRNY应用重新启动。
+
+<Image src={Console01} alt="控制台动画" format="webp" />
+
+安卓有一个通过“返回”按钮关闭当前应用的快捷方式，如果你按住它一秒钟左右。
+让我们稍微玩一下“返回”按钮 - 我们将不断关闭JRNY应用，直到新的对话框开始出现：
+
+<Image src={Console02} alt="控制台动画" format="webp" />
+
+好的，现在有趣的部分：那个对话框属于安卓原生的“故障验证系统”。我们刚刚“迫使安卓认为”NautilusLauncher是不好的（好！）。让我们通过那个对话框来利用。
+
+一旦它出现，点击“应用信息”。通过点击“应用信息”，我们将打开设置应用（它在`AppMonitorService`拒绝列表上）。它将在大约一秒钟内关闭，所以我们必须快！点击“强制停止”按钮，然后点击“确定”。
+
+<Image src={Console03} alt="控制台动画" format="webp" />
+
+一旦你可以点击“确定”，你就可以休息了（好锻炼，是吧？）。现在让我们继续在Reddit上的发现。我们将通过点击右上角的“放大镜”图标并搜索“开发者选项”来启用adb：
+
+<Image src={Console04} alt="控制台动画" format="webp" />
+
+找到控制台的IP地址。最简单的方法是通过Wi-Fi设置：
+
+<Image src={Console05} alt="控制台动画" format="webp" />
+
+现在adb已启用并且我们有了IP地址，让我们跳到电脑上并通过adb连接。打开终端并运行`adb connect <IP地址>`（在我的例子中是10.0.0.205）：
+
+```sh
+> adb connect 10.0.0.205
+connected to 10.0.0.205:5555
+```
+
+_第一次通过adb远程连接时，它会在屏幕上要求确认。_
+
+让我们在`/sdcard/Pictures/`内创建一个名为`nautilus`的空文件。你可以在[Bowflex怪癖](/zh/projects/fl3xbl0w/quirks)中阅读更多关于“为什么”的信息。
+
+```sh
+> adb shell touch /sdcard/Pictures/nautilus
+```
+
+现在让我们恢复一些功能。通过你的终端发送以下命令：
+
+```sh
+> adb shell settings put secure ntls_launcher_preference 0
+> adb shell settings put secure navigationbar_switch 1
+> adb shell settings put secure notification_switch 1
+> adb shell settings put secure statusbar_switch 1
+```
+
+你会看到UI出现：
+
+<Image src={Console06} alt="控制台动画" format="webp" />
+
+还有最后一步 - 更改默认启动器。搜索“默认应用”并将Quickstep设置为主应用：
+
+<Image src={Console07} alt="控制台动画" format="webp" />
+
+**你现在自由了！**
+
+只要NautilusLauncher被强制停止，这种状态就会保持。它可以通过重启保持。
+
+如果你想回到“原厂设置”，只需打开`NautilusLauncher`应用（我强烈建议你事先创建了`/sdcard/Pictures/nautilus`文件）：
+
+<Image src={Console08} alt="控制台动画" format="webp" />
+
+## 关于“锁定系统”的注释
+
+`NautilusLauncher`是默认的“安卓启动器”，这意味着如果JRNY应用关闭，它将立即“重新打开”。
+
+还有另一个“安全锁”，一个在`NautilusLauncher` apk中的前台服务，称为`AppMonitorService`。通过反编译apk，你可以看到三个有趣的变量：
+
+```java
+public static final int MonitorIntervalSeconds = 1;
+// 一些更多的变量
+private static String[] TargtedAppsToKill = {"com.android.vending", "com.android.settings", "com.android.chrome", "com.google.android.gm", "com.google.android.youtube"};
+private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
+```
+
+因此，该服务正在“积极保护”锁定。每次应用关闭（通过按住“返回”按钮），都会尝试重新打开JRNY。通过强制其关闭，我们也停用了所有前台服务。
+
+_(你在代码备份中看到的任何拼写错误都来自Nautilus自己的开发者，不是我的)_
