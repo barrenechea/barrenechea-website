@@ -5,7 +5,7 @@ export const fr: OptionalTranslations = {
   'nav.sr.open': 'Ouvrir le menu de navigation',
   'nav.home': 'Accueil',
   'nav.projects': 'Projets',
-  'nav.posts': 'Publications',
+  'nav.posts': 'Articles',
   'nav.page': 'Page',
   'nav.language.select': 'Sélectionner la langue',
 
@@ -20,8 +20,8 @@ export const fr: OptionalTranslations = {
 
   'home.recentProjects': 'Derniers',
   'home.recentProjects.viewAll': 'Voir tous les projets',
-  'home.recentPosts': 'Récentes',
-  'home.recentPosts.viewAll': 'Voir toutes les publications',
+  'home.recentPosts': 'Récents',
+  'home.recentPosts.viewAll': 'Voir toutes les articles',
 
   'blog.translatedBy': 'Contenu traduit par',
 
@@ -29,8 +29,8 @@ export const fr: OptionalTranslations = {
     'Résultat de certains processus de vidage de cerveau que je fais de temps en temps',
   'posts.by': 'Par',
   'posts.on': 'le',
-  'posts.pagination.older': 'Publications précédentes',
-  'posts.pagination.newer': 'Publications plus récentes',
+  'posts.pagination.older': 'Articles précédentes',
+  'posts.pagination.newer': 'Articles plus récentes',
 
   'projects.paginationDescription':
     'Pas nécessairement tout ce que j’ai fait, mais ce que je peux partager légalement 😄',
