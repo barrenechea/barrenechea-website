@@ -1,6 +1,9 @@
 import { OGImageRoute } from 'astro-og-canvas';
 
 import { allPages } from '~/content';
+import { type LanguageKey, useTranslations } from '~/i18n/translations';
+
+type OGImageOptions = Awaited<ReturnType<Parameters<typeof OGImageRoute>[0]['getImageOptions']>>;
 
 const title = 'Barrenechea';
 
@@ -20,7 +23,7 @@ const descriptions = {
 const pages = Object.fromEntries(
   allPages.map(({ collection, slug, data }) => {
     const [lang, ...slugParts] = slug.split('/');
-    return [`${lang}/${collection}/${slugParts.join('/')}`, { data }];
+    return [`${lang}/${collection}/${slugParts.join('/')}`, { data, lang }];
   })
 );
 
@@ -39,39 +42,79 @@ uniqueLanguages.forEach((lang) => {
       title,
       description: descriptions[lang],
     },
+    lang,
   };
 });
 
 export const { getStaticPaths, GET } = OGImageRoute({
   param: 'path',
   pages,
-  getImageOptions: (_, { data }: (typeof pages)[string]) => ({
-    title: data.title,
-    description: data.description,
-    logo: {
-      path: './src/assets/og-image.png',
-      size: [200],
-    },
-    border: { color: [251, 191, 36], width: 20, side: 'inline-start' },
-    bgGradient: [
-      [24, 24, 27],
-      [39, 39, 42],
-    ],
-    font: {
-      title: {
-        size: 50,
-        families: ['Work Sans'],
-        weight: 'SemiBold',
+  getImageOptions: async (_, { data, lang }: (typeof pages)[string]): Promise<OGImageOptions> => {
+    const dir = useTranslations(lang as LanguageKey)('language.direction') as 'ltr' | 'rtl';
+
+    return {
+      title: data.title,
+      description: data.description,
+      dir,
+      logo: {
+        path: './src/assets/og-image.png',
+        size: [200],
       },
-      description: {
-        size: 38,
-        families: ['Work Sans'],
-        weight: 'Normal',
+      border: { color: [251, 191, 36], width: 20, side: 'inline-start' },
+      bgGradient: [
+        [24, 24, 27],
+        [39, 39, 42],
+      ],
+      font: {
+        title: {
+          size: 50,
+          families: [
+            'Work Sans',
+            'Noto Sans',
+            'Noto Sans Arabic',
+            'Noto Sans SC',
+            'Noto Sans TC',
+            'Noto Sans JP',
+            'Noto Sans KR',
+          ],
+          weight: 'SemiBold',
+        },
+        description: {
+          size: 38,
+          families: [
+            'Work Sans',
+            'Noto Sans',
+            'Noto Sans Arabic',
+            'Noto Sans SC',
+            'Noto Sans TC',
+            'Noto Sans JP',
+            'Noto Sans KR',
+          ],
+          weight: 'Normal',
+        },
       },
-    },
-    fonts: [
-      './src/pages/open-graph/_fonts/work-sans/latin-400-normal.ttf',
-      './src/pages/open-graph/_fonts/work-sans/latin-800-normal.ttf',
-    ],
-  }),
+      fonts: [
+        './src/pages/open-graph/_fonts/work-sans/latin-400-normal.ttf',
+        './src/pages/open-graph/_fonts/work-sans/latin-800-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/noto-400-normal.ttf',
+        './src/pages/open-graph/_fonts/noto-sans/noto-500-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/chinese-simplified-400-normal.otf',
+        './src/pages/open-graph/_fonts/noto-sans/chinese-simplified-500-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/chinese-traditional-400-normal.otf',
+        './src/pages/open-graph/_fonts/noto-sans/chinese-traditional-500-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/japanese-400-normal.ttf',
+        './src/pages/open-graph/_fonts/noto-sans/japanese-500-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/arabic-400-normal.ttf',
+        './src/pages/open-graph/_fonts/noto-sans/arabic-500-normal.ttf',
+
+        './src/pages/open-graph/_fonts/noto-sans/korean-400-normal.otf',
+        './src/pages/open-graph/_fonts/noto-sans/korean-500-normal.ttf',
+      ],
+    };
+  },
 });
