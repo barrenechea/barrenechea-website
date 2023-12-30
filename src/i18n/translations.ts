@@ -4,9 +4,11 @@ import deIcon from '@iconify-icons/circle-flags/de.js';
 import frIcon from '@iconify-icons/circle-flags/fr.js';
 import isIcon from '@iconify-icons/circle-flags/is.js';
 import itIcon from '@iconify-icons/circle-flags/it.js';
+import saIcon from '@iconify-icons/circle-flags/sa.js';
 import usIcon from '@iconify-icons/circle-flags/us.js';
 import zhIcon from '@iconify-icons/circle-flags/zh.js';
 
+import { arWithFallback } from './ar.ts';
 import { deWithFallback } from './de.ts';
 import { enWithFallback } from './en.ts';
 import { es, type Translations } from './es.ts';
@@ -42,6 +44,11 @@ export const languages = {
     icon: zhIcon,
     translateFrom: 'en',
   },
+  ar: {
+    label: 'العربية',
+    icon: saIcon,
+    translateFrom: 'en',
+  },
   fr: {
     label: 'Français',
     icon: frIcon,
@@ -67,6 +74,7 @@ const langData = {
   pt: ptWithFallback,
   de: deWithFallback,
   zh: zhWithFallback,
+  ar: arWithFallback,
   fr: frWithFallback,
   it: itWithFallback,
   is: isWithFallback,

@@ -1,0 +1,113 @@
+---
+title: OpenHaystack في ESPHome
+description: نقل OpenHaystack كمكون في ESPHome. متوافق مع جميع أجهزة Espressif BLE.
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ~/assets/images/project-openhaystack.png
+imgAlt: شعارات OpenHaystack و ESPHome
+tags:
+  - Hardware
+  - Embedded
+translatedBy: gpt-4-1106-preview
+checksum: 3d98279a41f3f41bf8b90d213cc20a02d8083438c29b65e9f8ae8d2d96d8a017
+---
+
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) هو تطبيق يتيح لك إنشاء إكسسواراتك الخاصة التي يتم تتبعها بواسطة شبكة [Find My](https://developer.apple.com/find-my/) من Apple. لقد قاموا بعكس هندسة بروتوكول Apple وتوثيقه، وهو مشروع مثير للإعجاب.
+
+أردت تتبع سكوتر الكهربائي الخاص بي في حالة سرقته. على الرغم من أن الطريقة "الرسمية" لبناء الإكسسوارات كانت "مقبولة"، إلا أنها تبين أنها مشكلة مع العديد من مشاكل التوافق على لوحات Espressif المختلفة.
+
+لذا قمت بنقله كمكون من [ESPHome](https://esphome.io/)، وهو برنامج أستخدمه بالفعل لاحتياجات أجهزتي المضمنة.
+
+## لماذا ESPHome؟ أليس "للمنزل"؟
+
+أنا _قليلاً_ مهووس بالحفاظ على أجهزة إنترنت الأشياء/المضمنة الخاصة بي محدثة قدر الإمكان (وبالطبع، بعيدًا عن أي سحابة إذا أمكن)، لذا فإن ESPHome هو حل جذاب للحفاظ على تحديث أجهزتك مع إطارات عمل Arduino و Espressif. من خلال ESPHome، يمكنني "تحديث" سكوتري متى أردت.
+
+## لماذا ليس هذا مكونًا رسميًا؟
+
+حاولت! فتحت [إضافة دعم لـ OpenHaystack #3584](https://github.com/esphome/esphome/pull/3584)، و[وثائق الدعم الخاصة به](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html)، ولكن من المفهوم أنهم لم يرغبوا في دمجه.
+
+## مثال ESPHome - ESP32
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+
+esp32:
+  board: wemos_d1_mini32
+
+wifi:
+  ssid: <اسم-شبكة-الواي-فاي-الخاصة-بك>
+  password: <كلمة-سر-الواي-فاي-الخاصة-بك>
+
+# تفعيل السجلات
+logger:
+
+# تفعيل واجهة برمجة تطبيقات Home Assistant
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # هنا يأتي مفتاح OpenHaystack المشفر بتنسيق Base64
+  # أقترح بشدة التعامل معه كسر
+  key: !secret openhaystack_key
+```
+
+## مثال ESPHome - ESP32-C3
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: latest
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+      # تفعيل دعم WPA3 لأننا نستطيع
+      CONFIG_WPA_SUITE_B_192: y
+      # خاص بالاستخدام البلوتوث
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      # إصلاح "خطأ حجم الحمولة" - تمديد مهلة Watchdog
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
+
+wifi:
+  ssid: <اسم-شبكة-الواي-فاي-الخاصة-بك>
+  password: <كلمة-سر-الواي-فاي-الخاصة-بك>
+
+# تفعيل السجلات
+logger:
+
+# تفعيل واجهة برمجة تطبيقات Home Assistant
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # هنا يأتي مفتاح OpenHaystack المشفر بتنسيق Base64
+  # أقترح بشدة التعامل معه كسر
+  key: !secret openhaystack_key
+```

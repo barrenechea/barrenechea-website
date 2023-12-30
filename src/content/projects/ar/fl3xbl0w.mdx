@@ -1,0 +1,85 @@
+---
+title: fl3xbl0w
+description: مشروع هندسة عكسية. بدأ مع جهاز المشي Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 3c68be7b1aeedf296c2ef7e572afbb18bf245164c15815cf15fb013ab8703dc1
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="شعار flexblow" format="webp" width={800} />
+
+مرحبًا بكم في توثيقي لـ "وحدة التحكم Bowflex"! (التي تسميها Nautilus بـ Vantron).
+
+Vantron هو الأساس لمعظم "الأجهزة الذكية" التي تنتجها شركة Nautilus Inc. وهو عبارة عن جهاز لوحي أندرويد يعمل ببرمجيات ملكية. بالإضافة إلى بعض الأمور المتعلقة بالعتاد التي أثارت فضولي.
+
+اعتمدت كثيرًا على الأعمال السابقة التي وجدتها على [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (شكرًا [xasmx](https://www.reddit.com/user/xasmx/)!) للحصول على فهم أعمق لبرمجيات وعتاد الجهاز.
+
+## الأجهزة المتوافقة (كسر حماية أندرويد)
+
+بعد اللعب مع <a href="/ar/projects/fl3xbl0w/decompiling" target="_self">التطبيقات المفككة</a>، يمكنني القول بثقة أن الوثائق التالية يمكن استقرائها بطريقة أو بأخرى للأجهزة Bowflex التالية:
+
+### أجهزة المشي
+
+- Treadmill 22 / Treadmill 56 (نفس جهاز المشي. الـ 56 يحتوي على مدخل تيار متردد 220 فولت، الـ 22 يحتوي على مدخل تيار متردد 120 فولت)
+- Treadmill 10 / Treadmill 25 (نفس جهاز المشي. الـ 25 يحتوي على مدخل تيار متردد 220 فولت، الـ 10 يحتوي على مدخل تيار متردد 120 فولت)
+
+### الدراجات
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+ليس لدي Max Trainer أو VeloCore، ولكن يجب أن يعمل طالما لديك منفذ USB متاح بناءً على ما وجدته في الكود.
+
+تم التأكيد على العمل مع إصدارات NautilusLauncher:
+
+- 5.0.0.350
+- 5.0.0.382
+
+**لقد تم بالفعل إصلاح كسر الحماية من قبل Nautilus.**
+
+## التوثيق
+
+### معلومات عامة
+
+- <a href="/ar/projects/fl3xbl0w/jailbreak" target="_self">
+    كسر حماية أندرويد
+  </a>
+- <a href="/ar/projects/fl3xbl0w/backup" target="_self">
+    نسخ احتياطي لمحتويات وحدة التحكم الخاصة بك
+  </a>
+- <a href="/ar/projects/fl3xbl0w/decompiling" target="_self">
+    فك تجميع البرنامج
+  </a>
+- <a href="/ar/projects/fl3xbl0w/quirks" target="_self">
+    غرائب Bowflex
+  </a>
+
+### العمل قيد التقدم
+
+- <a href="/ar/projects/fl3xbl0w/treadmotor" target="_self">
+    تحكم بمحرك جهاز المشي
+  </a>
+- <a href="/ar/projects/fl3xbl0w/romdump" target="_self">
+    تفريغ الروم
+  </a>
+
+## الهدف النهائي
+
+تمكين أكبر عدد ممكن من الترقيات المستقبلية لجهاز المشي الخاص بي.
+
+تقدم شركة Nautilus, Inc. ضمانًا لمدة عام واحد فقط على الأجزاء الإلكترونية، وما أن رأيت أن آلية إيقاف تشغيل الجهاز (وبالتالي، الجهاز اللوحي أندرويد) كانت ببساطة "قطع التيار الكهربائي المتردد من خلال المفتاح الخلفي"، شعرت بالقلق. يجب إيقاف تشغيل كل جهاز يعتمد على نظام لينكس بشكل آمن لتجنب تلف نظام التشغيل، وهذا الجهاز اللوحي أندرويد ليس استثناءً. لذا، طالما أنه يعمل، لماذا لا نستمتع به قليلاً أكثر؟
+
+في النهاية، أريد أن أعترض وأفهم وأعيد إنشاء الاتصال الذي يذهب إلى تحكم محرك جهاز المشي الخاص بي حتى إذا توقف الجهاز اللوحي عن العمل، لا يزال لدي جهاز يعمل.

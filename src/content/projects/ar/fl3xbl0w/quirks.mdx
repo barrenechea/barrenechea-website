@@ -1,0 +1,124 @@
+---
+title: غرائب Bowflex - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ بجهاز الجري Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ar/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: b579f6715ec7bbcf25b8db49cedec3e9eeeac50513672a0984304f94203d593a
+---
+
+import { Image } from 'astro:assets';
+import HomeAssistantSensor from '~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png';
+
+### ملف `/sdcard/Pictures/nautilus`
+
+عند فك تجميع `NautilusLauncher`، يمكنك رؤية إشارات إلى هذا المسار المحدد:
+
+```java
+// المسار: com/nautilus/nautiluslauncher/LauncherService.java
+public void run() {
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    LauncherService.access$000(LauncherService.this).disableAdbDebug();
+    LauncherService.access$000(LauncherService.this).enterKioskMode();
+    return;
+  }
+  LauncherService.access$000(LauncherService.this).enableAdbDebug();
+}
+```
+
+```java
+// المسار: com/nautilus/nautiluslauncher/MainActivity.java
+protected void onCreate(Bundle bundle) {
+  // ...
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    this.mPlatformControl.disableAdbDebug();
+    this.mPlatformControl.enterKioskMode();
+  } else {
+    this.mPlatformControl.enableAdbDebug();
+  }
+  // ...
+}
+```
+
+تأثير وضع الملف في مكانه هو أن `NautilusLauncher` سيفعل adb بعد كل إعادة تشغيل. إذا لم يكن الملف في مكانه، `NautilusLauncher` سيعطل adb بنشاط (إذا كان قد تم تفعيله مسبقًا).
+
+### ملف `/sdcard/Nautilus/redbend/Credentials.txt`
+
+يبدو أن [Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software) ([التي استحوذت عليها شركة Harman](https://news.harman.com/releases/harman-completes-acquisition-of-redbend)، الآن أفهم **لماذا** العديد من الإشارات إلى KNOX) تقدم خدمات OTA لأجهزة Nautilus. وجدت بعض الإشارات إلى ذلك الملف داخل `com.redbend.client.apk`.
+
+```java
+package com.redbend.client;
+public class Ipl {
+  protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
+  // ...
+  public static int iplGetAutoSelfRegDomainInfo(Context context, String[] strArr) {
+    // ...
+    File file = new File("/sdcard/Nautilus/redbend/");
+    if (!file.exists()) {
+      file.mkdirs();
+    }
+    copyAssets(context, "Credentials.txt", file.getCanonicalPath());
+    bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
+    // ...
+  }
+  // ...
+}
+```
+
+أيضًا في `com.redbend.client.ClientService` يمكننا أن نجد:
+
+```java
+// ...
+public class ClientService extends SmmService {
+  // ...
+  @Override // com.redbend.app.SmmService, android.app.Service
+  public void onCreate() {
+    // ...
+    if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
+      sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
+      }
+    // ...
+  }
+  // ...
+}
+```
+
+بناءً على تلك المعلومات، يمكننا تصنيف المحتوى في الملف `/sdcard/Nautilus/redbend/Credentials.txt` كالتالي:
+
+```
+السطر الأول: DOMAIN_NAME
+السطر الثاني: DOMAIN_PIN
+```
+
+_`DOMAIN_PIN` يبدو أنه رمز PIN حقيقي حيث أنه عبارة عن رقم مكون من ستة أرقام._
+
+هناك بعض بيانات الاعتماد داخل "شبكة Red Bend" لربط جهاز بعلامة تجارية/منتج معين للتحديثات OTA. أتمنى أن تكون تلك البيانات متطابقة عبر كل أجهزة Nautilus. يتم تضمين الملف ضمن حزمة `com.redbend.client` APK ويتم استخراجه عند التثبيت.
+
+وجدت إشارات إلى `com.redbend.client` [هنا](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/)، وكان من المضحك جدًا رؤيته يتعطل في سيارة. أتمنى ألا يفشل بهذا القدر في أجهزتنا كذلك.
+
+### جهاز مراقبة معدل ضربات القلب عبر البلوتوث
+
+كان هذا واضحًا جدًا للفك. يظهر اسم البلوتوث كـ `CL831-xxxxxxx` _(الرقم مخفي)_ من [CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/).
+
+عند الفحص من خلال [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile)، تم الكشف عن عنوان MAC للجهاز وبعض البيانات الرئيسية:
+
+```
+معدل ضربات القلب:
+UUID: 0x180D
+قياس معدل ضربات القلب
+UUID: 0x2A37
+```
+
+بدا الأمر قياسيًا جدًا، وكان [منشور](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39) من مجتمع Home Assistant قد أدرك ذلك بالفعل (ليس نفس الطراز، ولكن يبدو أن جهاز مراقبة معدل ضربات القلب يستخدم بروتوكول قياسي). لقد أنشأت ملف تكوين ESPHome [هنا](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml) كدليل على المفهوم:
+
+<Image
+  src={HomeAssistantSensor}
+  alt="لقطة شاشة لـ Home Assistant تعرض جهاز استشعار معدل ضربات القلب"
+  format="webp"
+/>

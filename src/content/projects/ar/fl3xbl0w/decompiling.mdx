@@ -1,0 +1,57 @@
+---
+title: فك تجميع البرنامج - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ بجهاز المشي Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ar/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 8518d35224686427ed3a8679df5ba6f327c9f9e515bc86c0648d6f0ef5c44c0d
+---
+
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
+
+يفترض هذا أن لديك بالفعل [APKs الخاصة بك](/ar/projects/fl3xbl0w/backup). تذكر أنه، على الرغم من أنني أحدد هذا لتطبيقات Nautilus، فإن هذا ينطبق على أي تطبيق أندرويد تريد "إلقاء نظرة خاطفة تحت الغطاء".
+
+## تحويل التطبيقات إلى كود جافا
+
+تهدف التعليمات التالية إلى الحصول على "كود قابل للقراءة"، ولكن من غير المحتمل أن تتمكن من تجميعها مرة أخرى إلى APK. أنا أستخدم هذا كمرجع لفهم مطوري Nautilus. إذا كنت تريد تعديل قاعدة الكود وإعادة تغليفها، انتقل إلى [تحويل التطبيقات إلى كود Smali](#تحويل-التطبيقات-إلى-كود-smali).
+
+### المتطلبات
+
+- [jadx](https://github.com/skylot/jadx)
+
+### دعونا نفتح بعض الأشياء!
+
+بعد تثبيت `jadx`، يجب أن تكون قادرًا على فتح `jadx-gui`. اذهب إلى File -> Open files...
+
+<Image src={JadxGUIScreen} alt="شاشة jadx-gui" format="webp" />
+
+ابحث عن APK الذي تريده وانقر على "Open file":
+
+<Image src={JadxGUISelect} alt="jadx-gui يختار apk" format="webp" />
+
+ومن هناك، يمكنك البدء في التنقيب:
+
+<Image src={JadxGUIOpened} alt="jadx-gui يقوم بإلغاء تجميع NautilusLauncher" format="webp" />
+
+إذا كنت تريد حفظ المشروع كملفات جافا، اذهب إلى File -> Save as gradle project:
+
+<Image src={JadxGUISave} alt="jadx-gui يحفظ المشروع" format="webp" />
+
+إذا كان مفيدًا، إليك تفضيلاتي في `jadx-gui`:
+
+<Image src={JadxGUIPrefs} alt="تفضيلات jadx-gui" format="webp" />
+
+## تحويل التطبيقات إلى كود Smali
+
+قامت المجتمع بتجربة [هذا](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) لتطبيق بعض التصحيحات على APKs الخاصة بنا. سيعمل ذلك فقط للتطبيقات غير النظامية، حيث بدون مفتاح التوقيع المناسب، لن يكون للتطبيق إمكانية الوصول إلى موارد النظام (مثل منفذ Serial).

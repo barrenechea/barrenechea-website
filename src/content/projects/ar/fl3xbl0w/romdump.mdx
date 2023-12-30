@@ -1,0 +1,150 @@
+---
+title: تفريغ الروم - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ بجهاز الجري Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ar/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### وضع التحميل لشريحة Rockchip
+
+يتم تشغيل العتاد الأندرويد بواسطة معالج RK3399. تأتي معالجات Rockchip مع وضع "loader mode" قياسي.
+
+الأدوات التي استخدمتها هي:
+
+- Rockchip Driver Assistant v4.5 من [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 test من [هذا المنشور في XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 من [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+
+_يوجد نسخة أحدث من البرنامج المساعد متاحة للتحميل، ولكنها معروفة بعدم التوافق مع rkDumper._
+
+للعب مع هذا، سيتعين عليك تفكيك وحدة التحكم Bowflex، فك الغطاء الخلفي البلاستيكي، وإعادة تجميعها بشكل "عاري".
+**لا تحاول هذا، حيث أن العبث بعتاد الأندرويد في وضع Loader يمكن أن يؤدي إلى جهاز معطل بشكل دائم.**
+
+<Image src={ConsoleMounted} alt="وحدة التحكم مع إزالة الغطاء الخلفي" format="webp" />
+
+إليك الأجزاء ذات الصلة من لوحة الدوائر الأندرويد لأمور Rockchip:
+
+<Image src={VantronPCB} alt="لوحة الدوائر Vantron" format="webp" />
+
+يمكنك الاحتفاظ بتطبيق Android Tool Release مفتوحًا طوال الوقت كمرجع للتحقق من الوضع الذي تكون فيه الوحدة التحكم.
+
+مع تشغيل الجهاز في "الوضع العادي" وتوصيله بجهاز كمبيوتر، يتم التعرف عليه كـ `NFTM-LAR`:
+
+```
+NFTM-LAR:
+  معرف المنتج: 0x0001
+  معرف البائع: 0x2207 (شركة Fuzhou Rockchip Electronics Co., Ltd.)
+  الإصدار: 3.10
+  السرعة: حتى 480 ميغابت/ثانية
+  الصانع: Vanzo
+  معرف الموقع: 0x14120000 / 9
+  التيار المتاح الحالي (مللي أمبير): 500
+  التيار المطلوب الحالي (مللي أمبير): 500
+  التيار الإضافي التشغيلي (مللي أمبير): 0
+```
+
+مع إيقاف تشغيل الجهاز، وتوصيله عبر USB بجهاز كمبيوتر، والضغط على زر "الاسترداد" وتشغيله، يجب أن يقلع في "وضع التحميل". سيصدر الجهاز "صوتًا"، ولكن الشاشة ستظل ثابتة. _يمكنك إيقاف التشغيل، والانتظار دقيقة، وتشغيل الجهاز، وسيقلع بشكل طبيعي._
+
+_العتاد الأندرويد لا يتعامل مع "الصوت" بعد تشغيل الجهاز، ولكن من خلال لوحات الدوائر الأخرى لشركة Nautilus._
+
+الآن سيتم الإبلاغ عنه على الكمبيوتر كـ `USB download gadget` (رقم التسلسل مخفي):
+
+```
+USB download gadget:
+  معرف المنتج: 0x330c
+  معرف البائع: 0x2207 (شركة Fuzhou Rockchip Electronics Co., Ltd.)
+  الإصدار: 99.99
+  رقم التسلسل: XXXXXXXXXXXXXXX
+  الصانع: Rockchip
+  معرف الموقع: 0x14120000
+```
+
+بعد تشغيل rkDumper ضد وحدة التحكم، نحصل على معلومات حول الأقسام:
+
+```
+تم العثور على علامة "EFI PART" (نسخة طبق الأصل من ذاكرة الفلاش لـ RKFP)
+
+تم حفظ القسم "EFI_part" (0x00004000) (التنسيق: نسخة طبق الأصل من ذاكرة الفلاش لـ RockChip RKFP)
+تم حفظ القسم "uboot_a" (0x00002000) (التنسيق: ملف صورة uboot لـ Rockchip)
+تم حفظ القسم "uboot_b" (0x00002000) (التنسيق: ملف صورة uboot لـ Rockchip)
+تم حفظ القسم "trust_a" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "trust_b" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "misc" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "resource" (0x00008000) (التنسيق: غير معروف)
+تم حفظ القسم "kernel" (0x00010000) (التنسيق: غير معروف)
+تم حفظ القسم "dtb" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "dtbo_a" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "dtbo_b" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "vbmeta_a" (0x00000800) (التنسيق: غير معروف)
+تم حفظ القسم "vbmeta_b" (0x00000800) (التنسيق: غير معروف)
+تم حفظ القسم "boot_a" (0x00020000) (التنسيق: غير معروف)
+تم حفظ القسم "boot_b" (0x00020000) (التنسيق: غير معروف)
+تم حفظ القسم "backup" (0x00038000) (التنسيق: غير معروف)
+تم حفظ القسم "security" (0x00002000) (التنسيق: غير معروف)
+تم حفظ القسم "cache" (0x00100000) (التنسيق: غير معروف)
+تم حفظ القسم "system_a" (0x00500000) (التنسيق: غير معروف)
+تم حفظ القسم "system_b" (0x00500000) (التنسيق: غير معروف)
+تم حفظ القسم "metadata" (0x00008000) (التنسيق: غير معروف)
+تم حفظ القسم "vendor_a" (0x00100000) (التنسيق: غير معروف)
+تم حفظ القسم "vendor_b" (0x00100000) (التنسيق: غير معروف)
+تم حفظ القسم "oem_a" (0x00100000) (التنسيق: غير معروف)
+تم حفظ القسم "oem_b" (0x00100000) (التنسيق: غير معروف)
+تم حفظ القسم "frp" (0x00000400) (التنسيق: غير معروف)
+تم حفظ القسم "sw_release" (0x00ed7000) (التنسيق: غير معروف)
+تم حفظ القسم "video" (0x0047e000) (التنسيق: غير معروف)
+تم حفظ القسم "userdata" (0x0169bbdf) (التنسيق: غير معروف)
+```
+
+تم استخراج `uboot_a` و `uboot_b` بنجاح، ولكن جميع الأقسام الأخرى المعلمة بـ `(التنسيق: غير معروف)` تم نسخها بشكل سيئ، حيث تم استخراج قيم عشرية سداسية `CC` منها فقط.
+
+تم توثيق حالة مشابهة لحالتي على [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)، وبعد [السؤال](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) مطور rkDumper، [يقول](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) أنه يجب أن يكون هناك محمل RockChip جديد في المكان. يبدو أن اتباع هذه الطريقة غير قابل للتطبيق في الوقت الحالي.
+
+### ADB
+
+يمكن العثور على بعض البيانات المماثلة من خلال adb، ولكن لا يبدو أنه من الممكن عمل نسخة احتياطية حيث نفتقر إلى أذونات الجذر:
+
+```sh
+> ls -al /dev/block/platform/
+مجموع 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+مجموع 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0
+```

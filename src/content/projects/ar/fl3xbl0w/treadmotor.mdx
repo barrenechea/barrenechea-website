@@ -1,0 +1,61 @@
+---
+title: تحكم بمحرك جهاز المشي - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ مع جهاز السير الرياضي Bowflex 22 ولكن تم تعميمه لأي جهاز يعمل بنظام أندرويد ويباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ar/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_هذا ينطبق بشكل رئيسي على السير الرياضي 22 والسير الرياضي 56._
+
+تم تصنيع لوحة التحكم بالمحرك من قبل [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="لوحة تحكم محرك B017D" format="webp" />
+
+بالنظر إلى [دليل الخدمة](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) المقدم من Nautilus Inc. ([نسخة احتياطية على archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+
+<Image src={TreadmillElectrical} alt="مخطط كهربائي للسير الرياضي" format="webp" />
+
+والتركيز بشكل خاص على هذا الجزء:
+
+<Image src={TreadmillComm} alt="مسار اتصال السير الرياضي" format="webp" />
+
+يمكننا تحديد "كابل الاتصال" الذي يربط وحدة التحكم بالمحرك ككابل ذو 5 أطراف. يوجد موصل واحد فقط بـ 5 أطراف.
+لقد قمت بتسمية الأسلاك بألوانها المقابلة (البيانات والمفتاح معزولان بالضوئي):
+
+| لون السلك | التسمية |
+| --------- | ------- |
+| أحمر      | GND     |
+| أبيض      | RXD     |
+| أسود      | TXD     |
+| أصفر      | +12     |
+| أخضر      | SW      |
+
+اللوحة ليست متصلة مباشرة بوحدة التحكم أندرويد.
+
+الموصل ذو الـ 5 أطراف الوحيد هو من علامة Molex التجارية. بحث في Google عن "موصلات Molex الصغيرة" أدى بي إلى صورة لما يسمونه `Molex Micro-Fit 3.0 Single Row (5-Pin)`، والذي يستخدم لربط لوحة تحكم المحرك:
+
+<Image src={Molex} alt="موصل Molex Micro-Fit 3.0" format="webp" />
+
+[رابط AliExpress](https://aliexpress.com/item/32902205579.html)
+
+عند النظر في `NautilusLauncher.apk` من خلال `jadx-gui`، يمكنني أن أرى أنهم يتواصلون مع الجهاز اللوحي أندرويد باستخدام "وحدة التحكم العالمية" عبر السيريال بسرعة 230400 باود (باستخدام `/dev/ttyS4`). هذا ليس ما نحلله هنا. هذا يشير إلى الاتصال بين أندرويد و"وحدة التحكم العالمية". نحن نحقق في الاتصالات بين "وحدة التحكم العالمية" و"لوحة تحكم المحرك".
+
+محاولة الاتصال بـ ESP32 أو جسر سيريال يعتمد على CH340 مباشرة إلى الأسلاك بين قاعدة السير الرياضي ولوحة تحكم Bowflex تسببت في عدم تهيئة قاعدة السير الرياضي بشكل صحيح، لذا بدأت أشك في أنهم يستخدمون RS232.
+
+ملاحظة: عن طريق الاتصال بـ GND و RXD فقط، يمكننا "رؤية" بعض المعلومات الست عشرية التي تبدو غير مفهومة عند سرعة 9600 باود. الاتصال بـ TXD يتسبب في عدم تهيئة قاعدة السير الرياضي.
+
+-- يتبع، أحتاج بعض الوقت للعب بمحلل المنطق الجديد --

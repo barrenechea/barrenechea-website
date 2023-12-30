@@ -1,0 +1,135 @@
+---
+title: كسر حماية أندرويد - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ بجهاز المشي Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد تبيعه شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ar/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: شعار مشروع fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
+---
+
+import { Image } from 'astro:assets';
+import LogiKeys from '~/assets/images/fl3xbl0w/logi-keys.png';
+import ConsoleUSB from '~/assets/images/fl3xbl0w/console-usb.png';
+import Console01 from '~/assets/images/fl3xbl0w/console-01.gif';
+import Console02 from '~/assets/images/fl3xbl0w/console-02.gif';
+import Console03 from '~/assets/images/fl3xbl0w/console-03.gif';
+import Console04 from '~/assets/images/fl3xbl0w/console-04.gif';
+import Console05 from '~/assets/images/fl3xbl0w/console-05.gif';
+import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
+import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
+import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
+
+تعتمد هذه الطريقة على أن مواصفات وحدة التحكم Bowflex بطيئة جدًا بالنسبة لبرامج اليوم (فهي تحتوي فقط على 2 جيجابايت من ذاكرة الوصول العشوائي على لوحة أندرويد). وبسبب ذلك، وإذا كنا _أسرع من الجهاز اللوحي_، يمكننا فك تشفير الجهاز من خدمة `AppMonitorService` التابعة لشركة Nautilus.
+
+_هل يمكن اعتباره هجومًا بالقوة الغاشمة؟_
+
+يمكنك إعادة تشغيل الجهاز في أي وقت خلال العملية، وسيكون كل شيء كما يجب أن يكون. لا يوجد خطر على البرنامج من القيام بذلك. جربها!
+
+## المتطلبات
+
+- لوحة مفاتيح USB (سلكية أو لاسلكية عبر جهاز دونجل USB) مع أزرار وسائط للصفحة الرئيسية، الرجوع.
+- أصابع سريعة! (يجب أن يحدث "الجزء المكثف" في حوالي ثانية)
+- كمبيوتر مع [adb](https://developer.android.com/studio/command-line/adb) ([رابط التحميل](https://developer.android.com/studio/releases/platform-tools))
+
+لقد استخدمت لوحة مفاتيح Logitech K600، ولكن أي لوحة مفاتيح مع تلك المفاتيح يجب أن تعمل:
+
+<Image src={LogiKeys} alt="لوحة مفاتيح Logitech K600" format="webp" />
+
+_يبدو أن لوحات المفاتيح البلوتوث غير قادرة على الإقران من خلال JRNY._
+
+## نصائح
+
+- لا تحاول "الحصول عليها بشكل صحيح" من البداية. يستغرق الأمر بضع محاولات لمعرفة "أين تظهر الأزرار على الشاشة" حتى تتمكن من بناء بعض الذاكرة العضلية لإجراءات النقر.
+- لا تضرب الشاشة بقوة! السرعة لا تعني كسرها. أنا لست مسؤولاً عن الأشخاص الذين يضربون شاشاتهم بقوة.
+
+## التعليمات
+
+أولاً، دعونا نقوم بتشغيل الجهاز ونوصل لوحة المفاتيح USB بوحدة التحكم Bowflex. يمكنك العثور عليها على الجانب الأيمن:
+
+<Image src={ConsoleUSB} alt="يشير إلى موقع منفذ USB لوحدة التحكم" format="webp" />
+
+دعونا نتأكد من أن لوحة المفاتيح تعمل بالضغط على زر "الصفحة الرئيسية" على لوحة المفاتيح. يجب أن يؤدي ذلك إلى إعادة تشغيل تطبيق JRNY.
+
+<Image src={Console01} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+لدى أندرويد اختصار لإغلاق التطبيق الحالي من خلال زر "الرجوع" إذا ضغطت عليه لثانية أو نحو ذلك.
+لنلعب قليلاً مع زر "الرجوع" - سنستمر في إغلاق تطبيق JRNY بمجرد إعادة فتحه حتى يبدأ ظهور حوار جديد:
+
+<Image src={Console02} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+حسنًا، الآن الجزء الممتع: هذا الحوار ينتمي إلى "نظام التحقق من الأخطاء" القياسي في أندرويد. لقد "أجبرنا أندرويد على التفكير" بأن NautilusLauncher سيء (جيد!). دعونا نستغل ذلك من خلال هذا الحوار.
+
+بمجرد ظهوره، انقر على "معلومات التطبيق". بالنقر على "معلومات التطبيق" سنفتح تطبيق الإعدادات (الذي يوجد في قائمة الرفض لخدمة `AppMonitorService`). سيغلق في حوالي ثانية، لذا يجب أن نكون سريعين! انقر على زر "إيقاف القوة"، ثم انقر على "موافق".
+
+<Image src={Console03} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+بمجرد أن تتمكن من النقر على "موافق"، يمكنك الراحة (تمرين جيد، أليس كذلك؟). الآن دعونا نتابع مع الاكتشافات على Reddit. سنقوم بتفعيل adb بالنقر على أيقونة "العدسة المكبرة" في الزاوية العلوية اليمنى والبحث عن "خيارات المطور":
+
+<Image src={Console04} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+ابحث عن عنوان IP لوحدة التحكم. أسهل طريقة هي من خلال إعدادات الواي فاي:
+
+<Image src={Console05} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+الآن بعد أن تم تفعيل adb ولدينا عنوان IP، دعونا ننتقل إلى كمبيوتر ونتصل بـ adb. افتح نافذة الأوامر وشغّل `adb connect <عنوان IP>` (في حالتي 10.0.0.205):
+
+```sh
+> adb connect 10.0.0.205
+connected to 10.0.0.205:5555
+```
+
+_سيطلب التأكيد على الشاشة في المرة الأولى التي تتصل فيها عن بعد من خلال adb._
+
+دعونا ننشئ ملفًا فارغًا داخل `/sdcard/Pictures/` يسمى `nautilus`. يمكنك قراءة المزيد عن "السبب" في [غرائب Bowflex](/ar/projects/fl3xbl0w/quirks).
+
+```sh
+> adb shell touch /sdcard/Pictures/nautilus
+```
+
+الآن دعونا نستعيد بعض الوظائف. أرسل الأوامر التالية من خلال نافذة الأوامر الخاصة بك:
+
+```sh
+> adb shell settings put secure ntls_launcher_preference 0
+> adb shell settings put secure navigationbar_switch 1
+> adb shell settings put secure notification_switch 1
+> adb shell settings put secure statusbar_switch 1
+```
+
+سترى واجهة المستخدم تظهر:
+
+<Image src={Console06} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+هناك خطوة أخيرة - تغيير واجهة الإطلاق الافتراضية. ابحث عن "التطبيقات الافتراضية" واضبط Quickstep كتطبيق الصفحة الرئيسية:
+
+<Image src={Console07} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+**أنت الآن حر!**
+
+سيظل هذا الحال كما هو طالما تم إيقاف NautilusLauncher بالقوة. يستمر من خلال إعادة التشغيل.
+
+إذا أردت العودة إلى "المخزون" فقط افتح تطبيق `NautilusLauncher` (أقترح بشدة أن تكون قد أنشأت ملف `/sdcard/Pictures/nautilus` مسبقًا):
+
+<Image src={Console08} alt="رسوم متحركة لوحدة التحكم" format="webp" />
+
+## ملاحظات حول "نظام الإغلاق"
+
+`NautilusLauncher` هو "مشغل أندرويد" الافتراضي، مما يعني أنه إذا أغلق تطبيق JRNY، فسوف "يعيد الفتح" على الفور.
+
+هناك أيضًا "قفل أمان" آخر، خدمة في المقدمة في ملف apk الخاص بـ `NautilusLauncher`، يسمى `AppMonitorService`. من خلال فك تجميع ملف apk، يمكنك رؤية ثلاث متغيرات مثيرة للاهتمام:
+
+```java
+public static final int MonitorIntervalSeconds = 1;
+// بعض المتغيرات الأخرى
+private static String[] TargtedAppsToKill = {"com.android.vending", "com.android.settings", "com.android.chrome", "com.google.android.gm", "com.google.android.youtube"};
+private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
+```
+
+وبالتالي فإن تلك الخدمة "تحمي بنشاط" الإغلاق. مع كل إغلاق للتطبيق (من خلال الضغط المستمر على زر "الرجوع")، سيكون هناك محاولة لإعادة فتح JRNY. من خلال إجباره على الإغلاق، نقوم أيضًا بتعطيل جميع الخدمات الأمامية.
+
+_(أي أخطاء إملائية قد تراها في نسخ الكود تأتي من مطوري Nautilus الخاصين، وليس مني)_
