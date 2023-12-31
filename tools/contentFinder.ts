@@ -9,8 +9,8 @@ import { languages } from '../src/i18n/translations.ts';
 const { defaultLang } = AppConfig;
 
 // Derive the directory name from the current file's URL
-const __dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
-const contentDir = path.join(__dirname, 'src', 'content');
+const dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
+const contentDir = path.join(dirname, 'src', 'content');
 
 async function getFilesInDirectory(dir: string, ext: string = '.mdx'): Promise<string[]> {
   let files: string[] = [];

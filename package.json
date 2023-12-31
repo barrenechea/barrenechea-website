@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "author": "Sebastian Barrenechea (https://github.com/barrenechea)",
   "license": "ISC",
-  "type": "module",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=8.0.0"

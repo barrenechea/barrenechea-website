@@ -13,8 +13,8 @@ import { model } from './llm.ts';
 import { translate } from './translator.ts';
 
 // Derive the directory name from the current file's URL
-const __dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
-const contentDir = path.join(__dirname, 'src', 'content');
+const dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
+const contentDir = path.join(dirname, 'src', 'content');
 
 /**
  * Helper function to translate a file
