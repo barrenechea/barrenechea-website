@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "author": "Sebastian Barrenechea (https://github.com/barrenechea)",
   "license": "ISC",
-  "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=8.0.0"
-  },
   "type": "module",
   "scripts": {
     "start": "astro dev",
@@ -65,12 +61,5 @@
       "astro lint"
     ]
   },
-  "packageManager": "pnpm@8.2.0",
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "vite"
-      ]
-    }
-  }
+  "packageManager": "pnpm@8.13.1"
 }
