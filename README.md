@@ -38,7 +38,7 @@ Ensure you have [Node.js](https://nodejs.org/) >=20 installed on your machine.
 2. Install project dependencies:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 ### Development Server
@@ -46,7 +46,7 @@ Ensure you have [Node.js](https://nodejs.org/) >=20 installed on your machine.
 To start the local development server:
 
 ```bash
-npm start
+pnpm start
 ```
 
 Visit `http://localhost:3000` in your browser to view the site.
@@ -62,7 +62,7 @@ Alternatively, launch a ready-to-code dev environment with Gitpod:
 For detecting and translating content automatically:
 
 ```bash
-npm run i18n:generate
+pnpm i18n:generate
 ```
 
 Before running the command, set the `OPENAI_API_KEY` environment variable with your OpenAI API key for translation services.

@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "npm start",
+      "command": "pnpm start",
       "name": "Development server",
       "request": "launch",
       "type": "node-terminal"
