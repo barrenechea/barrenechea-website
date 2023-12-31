@@ -62,14 +62,38 @@ const currentLanguage = languages[lang as LanguageKey] ?? languages[AppConfig.de
 
 <script>
   class LanguageSelector extends HTMLElement {
+    toggleButton: Element | null;
+    dropdownMenu: Element | null;
+    boundClickListener: (event: MouseEvent) => void;
+
     constructor() {
       super();
-      const toggleButton = this.querySelector('#language-toggle');
-      const dropdownMenu = this.querySelector('#language-dropdown-menu');
+      this.toggleButton = this.querySelector('#language-toggle');
+      this.dropdownMenu = this.querySelector('#language-dropdown-menu');
 
-      toggleButton?.addEventListener('click', () => {
-        dropdownMenu?.classList.toggle('hidden');
+      this.toggleButton?.addEventListener('click', (event) => {
+        this.dropdownMenu?.classList.toggle('hidden');
+        event.stopPropagation(); // Prevent the document click handler from running
       });
+
+      this.boundClickListener = this.handleDocumentClick.bind(this);
+    }
+
+    connectedCallback() {
+      // Add event listener when the element is added to the document
+      document.addEventListener('click', this.boundClickListener);
+    }
+
+    disconnectedCallback() {
+      // Remove event listener when the element is removed from the document
+      document.removeEventListener('click', this.boundClickListener);
+    }
+
+    handleDocumentClick(event: MouseEvent) {
+      // Check if the click is outside the toggleButton
+      if (event.target && !this.contains(event.target as Node)) {
+        this.dropdownMenu?.classList.add('hidden');
+      }
     }
   }
 
