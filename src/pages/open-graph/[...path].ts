@@ -17,7 +17,7 @@ const descriptions = {
   fr: 'Bienvenue sur le site officiel de Sebastián Barrenechea. Découvrez ma gamme diversifiée de projets personnels et plongez dans des articles de blog qui invitent à la réflexion.',
   it: 'Benvenuti sul sito ufficiale di Sebastián Barrenechea. Scopri la mia vasta gamma di progetti personali e immergiti in post di blog che invitano alla riflessione.',
   is: 'Velkomin á opinbera vefsíðu Sebastián Barrenechea. Upptäkið fjölbreytta úrval persónulegra verkefna minna og dýfið í hugleiðingarvottorðandi blogg færslur.',
-} as { [lang: string]: string };
+} as Record<string, string>;
 
 /** An object mapping file paths to file metadata. */
 const pages = Object.fromEntries(

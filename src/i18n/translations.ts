@@ -80,7 +80,7 @@ const langData = {
   is: isWithFallback,
 } as const;
 
-export function useTranslations(lang: string = 'es'): (key: keyof Translations) => string {
+export function useTranslations(lang = 'es'): (key: keyof Translations) => string {
   return function t(key: keyof Translations): string {
     return langData[lang as LanguageKey][key] || es[key];
   };

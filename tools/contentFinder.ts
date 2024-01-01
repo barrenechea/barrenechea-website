@@ -12,7 +12,7 @@ const { defaultLang } = AppConfig;
 const dirname = path.dirname(fileURLToPath(`${import.meta.url}/../`));
 const contentDir = path.join(dirname, 'src', 'content');
 
-async function getFilesInDirectory(dir: string, ext: string = '.mdx'): Promise<string[]> {
+async function getFilesInDirectory(dir: string, ext = '.mdx'): Promise<string[]> {
   let files: string[] = [];
   const items = await fsp.readdir(dir, { withFileTypes: true });
   for (const item of items) {
@@ -32,10 +32,7 @@ async function getFilesInDirectory(dir: string, ext: string = '.mdx'): Promise<s
  * @param algorithm algorithm to use for the checksum (default: sha256)
  * @returns checksum of the file's content
  */
-export const computeChecksum = async (
-  filePath: string,
-  algorithm: string = 'sha256'
-): Promise<string> => {
+export const computeChecksum = async (filePath: string, algorithm = 'sha256'): Promise<string> => {
   const content = await fsp.readFile(filePath, 'utf8');
   return createHash(algorithm).update(content).digest('hex');
 };

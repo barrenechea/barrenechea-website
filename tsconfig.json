@@ -1,5 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "include": ["**/*.*", ".eslintrc.cjs"],
   "exclude": ["dist"],
   "compilerOptions": {
     "baseUrl": ".",

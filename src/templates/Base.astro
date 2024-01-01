@@ -31,11 +31,11 @@ const langDirection = t('language.direction');
 const canonicalURL = new URL(Astro.url.pathname.replace(/([^/])$/, '$1/'), Astro.site);
 
 const ogImageUrl =
-  getOgImageUrl(canonicalURL.pathname) || `/open-graph/${lang}/default-og-image.png`;
+  getOgImageUrl(canonicalURL.pathname) ?? `/open-graph/${lang}/default-og-image.png`;
 const canonicalImageSrc = new URL(ogImageUrl, Astro.site);
 
 // remove " - Barrenechea" from the title
-const filteredTitle = ogOverride || title.replace(' - Barrenechea', '');
+const filteredTitle = ogOverride ?? title.replace(' - Barrenechea', '');
 ---
 
 <html lang={lang} dir={langDirection}>

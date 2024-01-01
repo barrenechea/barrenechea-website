@@ -4,17 +4,17 @@ interface Props {
   value: string;
   icon: string;
   width?: string;
-  options: Array<{
+  options: {
     label: string;
     value: string;
     selected: boolean;
-  }>;
+  }[];
 }
 ---
 
 <label
   class="relative flex items-center gap-1"
-  style={{ width: Astro.props.width || 'auto', height: '1.5em' }}
+  style={{ width: Astro.props.width ?? 'auto', height: '1.5em' }}
   for="select"
 >
   <p class="absolute inset-0 -z-10 mt-1" aria-hidden="true">

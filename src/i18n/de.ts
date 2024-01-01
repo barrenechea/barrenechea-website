@@ -72,5 +72,5 @@ export const de: OptionalTranslations = {
 
 // Default to Spanish translations if a key is missing
 export const deWithFallback: { [Key in keyof typeof es]: string } = new Proxy(de, {
-  get: (target, name: keyof typeof es) => target[name] || es[name],
+  get: (target, name: keyof typeof es) => target[name] ?? es[name],
 }) as { [Key in keyof typeof es]: string };

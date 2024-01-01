@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "author": "Sebastian Barrenechea (https://github.com/barrenechea)",
   "license": "ISC",
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=8.0.0"
-  },
   "type": "module",
   "scripts": {
     "start": "astro dev",
@@ -16,6 +12,13 @@
     "format": "prettier --log-level warn --write .",
     "prepare": "husky install",
     "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts en && npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,mdx,astro}": [
+      "eslint .",
+      "astro check",
+      "astro lint"
+    ]
   },
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.4.3",
@@ -55,11 +58,5 @@
     "tailwindcss": "^3.4.0",
     "ts-node": "^10.9.2"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,astro}": [
-      "eslint .",
-      "astro check",
-      "astro lint"
-    ]
-  }
+  "packageManager": "npm@10.2.5"
 }

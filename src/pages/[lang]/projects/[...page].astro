@@ -12,9 +12,9 @@ import PaginationHeader from '~/partials/astro-components/PaginationHeader.astro
 import Section from '~/partials/astro-components/Section.astro';
 import Base from '~/templates/Base.astro';
 
-type GetStaticPaths = {
+interface GetStaticPaths {
   paginate: PaginateFunction;
-};
+}
 
 export async function getStaticPaths({ paginate }: GetStaticPaths) {
   const allProjects = projectPages.filter((item) => item.slug.split('/').length === 2);
