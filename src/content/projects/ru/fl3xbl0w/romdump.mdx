@@ -1,0 +1,163 @@
+---
+title: дамп ROM - fl3xbl0w
+description: Проект по реверс-инжинирингу. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любого Android устройства, продаваемого компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ru/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### Режим загрузчика Rockchip
+
+Аппаратное обеспечение Android работает на процессоре RK3399. Процессоры Rockchip имеют стандартный "режим загрузчика".
+
+Инструментарий, который я использовал:
+
+- Rockchip Driver Assistant v4.5 от [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 test из [этого поста на XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 от [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+
+_Существует более новая версия драйвера для скачивания, но она известна своей несовместимостью с rkDumper._
+
+Чтобы поиграть с этим, вам придется разобрать консоль Bowflex, открутить пластиковую заднюю крышку и собрать ее в "голом виде".
+**Не пытайтесь этого делать, так как работа с аппаратным обеспечением Android в режиме загрузчика может привести к необратимому повреждению устройства.**
+
+<Image src={ConsoleMounted} alt="Консоль с снятой задней крышкой" format="webp" />
+
+Вот соответствующие части платы логики Android для вещей Rockchip:
+
+<Image src={VantronPCB} alt="Печатная плата Vantron" format="webp" />
+
+Вы можете держать приложение Android Tool Release открытым все время, чтобы использовать его в качестве справки и проверять, в каком режиме находится консоль.
+
+Когда машина включена в "нормальном режиме" и подключена к компьютеру, она идентифицируется как `NFTM-LAR`:
+
+```
+NFTM-LAR:
+  Product ID: 0x0001
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 3.10
+  Speed: до 480 Мб/с
+  Manufacturer: Vanzo
+  Location ID: 0x14120000 / 9
+  Current Available (mA): 500
+  Current Required (mA): 500
+  Extra Operating Current (mA): 0
+```
+
+Когда машина выключена, подключена через USB к компьютеру, удерживается кнопка "Восстановление" и включается, она должна загрузиться в "режим загрузчика". Машина "издаст звук", но экран останется статичным. _Вы можете выключить, подождать минуту, включить, и машина загрузится нормально._
+
+_Аппаратное обеспечение Android не обрабатывает "звук" после включения машины, но через другие платы Nautilus._
+
+Теперь она будет отображаться на компьютере как `USB download gadget` (серийный номер скрыт):
+
+```
+USB download gadget:
+  Product ID: 0x330c
+  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Version: 99.99
+  Serial Number: XXXXXXXXXXXXXXX
+  Manufacturer: Rockchip
+  Location ID: 0x14120000
+```
+
+После запуска rkDumper против консоли мы получаем информацию о разделах:
+
+```
+"EFI PART" sign found (RKFP FW dump)
+
+Partition "EFI_part" (0x00004000) saved (format: RockChip RKFP dump)
+Partition "uboot_a" (0x00002000) saved (format: Rockchip uboot image file)
+Partition "uboot_b" (0x00002000) saved (format: Rockchip uboot image file)
+Partition "trust_a" (0x00002000) saved (format: unknown)
+Partition "trust_b" (0x00002000) saved (format: unknown)
+Partition "misc" (0x00002000) saved (format: unknown)
+Partition "resource" (0x00008000) saved (format: unknown)
+Partition "kernel" (0x00010000) saved (format: unknown)
+Partition "dtb" (0x00002000) saved (format: unknown)
+Partition "dtbo_a" (0x00002000) saved (format: unknown)
+Partition "dtbo_b" (0x00002000) saved (format: unknown)
+Partition "vbmeta_a" (0x00000800) saved (format: unknown)
+Partition "vbmeta_b" (0x00000800) saved (format: unknown)
+Partition "boot_a" (0x00020000) saved (format: unknown)
+Partition "boot_b" (0x00020000) saved (format: unknown)
+Partition "backup" (0x00038000) saved (format: unknown)
+Partition "security" (0x00002000) saved (format: unknown)
+Partition "cache" (0x00100000) saved (format: unknown)
+Partition "system_a" (0x00500000) saved (format: unknown)
+Partition "system_b" (0x00500000) saved (format: unknown)
+Partition "metadata" (0x00008000) saved (format: unknown)
+Partition "vendor_a" (0x00100000) saved (format: unknown)
+Partition "vendor_b" (0x00100000) saved (format: unknown)
+Partition "oem_a" (0x00100000) saved (format: unknown)
+Partition "oem_b" (0x00100000) saved (format: unknown)
+Partition "frp" (0x00000400) saved (format: unknown)
+Partition "sw_release" (0x00ed7000) saved (format: unknown)
+Partition "video" (0x0047e000) saved (format: unknown)
+Partition "userdata" (0x0169bbdf) saved (format: unknown)
+```
+
+`uboot_a` и `uboot_b` были успешно извлечены, но все остальные разделы, помеченные как `(format: unknown)`, плохо скопированы, из них извлечены только шестнадцатеричные значения `CC`.
+
+Похожий случай, как у меня, был задокументирован на [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), и после [вопроса](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) разработчику rkDumper, [он говорит](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), что должен быть установлен новый загрузчик RockChip. Следование этому методу пока кажется невозможным.
+
+### ADB
+
+Некоторые похожие данные можно найти через adb, но кажется невозможным сделать резервную копию, так как у нас нет прав root:
+
+```sh
+> ls -al /dev/block/platform/
+total 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+total 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### Другие идеи
+
+То, что мы можем сделать, это выпаять чип eMMC и прочитать его внешне, чтобы иметь возможность резервного копирования всего его содержимого. Это было бы хорошо для создания пользовательской прошивки, но я не буду выпаивать из моей ЕДИНСТВЕННОЙ консоли (было бы здорово иметь запасную).

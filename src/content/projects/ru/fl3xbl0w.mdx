@@ -1,0 +1,85 @@
+---
+title: fl3xbl0w
+description: Проект по реверс-инжинирингу. Начался с беговой дорожки Bowflex Treadmill 22, но в итоге был обобщен для любого Android-устройства, продаваемого компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 3c68be7b1aeedf296c2ef7e572afbb18bf245164c15815cf15fb013ab8703dc1
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="логотип flexblow" format="webp" width={800} />
+
+Добро пожаловать в мою документацию по "Консоли Bowflex"! (как её называет Nautilus).
+
+Vantron является основой для большинства "умных устройств" компании Nautilus Inc. По сути, это планшет на Android с проприетарным программным обеспечением. Кроме того, меня заинтересовали некоторые аппаратные особенности.
+
+Я многое узнал благодаря предыдущим работам, которые нашел на [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (спасибо [xasmx](https://www.reddit.com/user/xasmx/)!), что позволило мне глубже понять программное и аппаратное обеспечение машины.
+
+## Совместимые устройства (Android Jailbreak)
+
+После экспериментов с <a href="/ru/projects/fl3xbl0w/decompiling" target="_self">декомпилированными приложениями</a>, я могу с уверенностью сказать, что следующая документация может быть экстраполирована тем или иным способом на следующие устройства Bowflex:
+
+### Беговые дорожки
+
+- Treadmill 22 / Treadmill 56 (одна и та же беговая дорожка. 56 имеет вход AC 220v, 22 имеет вход AC 120v)
+- Treadmill 10 / Treadmill 25 (одна и та же беговая дорожка. 25 имеет вход AC 220v, 10 имеет вход AC 120v)
+
+### Велотренажеры
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+У меня нет Max Trainer или VeloCore, но это должно работать, если у вас есть доступный USB-порт, исходя из результатов кода.
+
+Подтверждено работоспособность с версиями NautilusLauncher:
+
+- 5.0.0.350
+- 5.0.0.382
+
+**Jailbreak уже был исправлен Nautilus.**
+
+## Документация
+
+### Общая информация
+
+- <a href="/ru/projects/fl3xbl0w/jailbreak" target="_self">
+    Android Jailbreak
+  </a>
+- <a href="/ru/projects/fl3xbl0w/backup" target="_self">
+    Создание резервной копии содержимого вашей консоли
+  </a>
+- <a href="/ru/projects/fl3xbl0w/decompiling" target="_self">
+    Декомпиляция
+  </a>
+- <a href="/ru/projects/fl3xbl0w/quirks" target="_self">
+    Особенности Bowflex
+  </a>
+
+### В процессе работы
+
+- <a href="/ru/projects/fl3xbl0w/treadmotor" target="_self">
+    Контроллер двигателя беговой дорожки
+  </a>
+- <a href="/ru/projects/fl3xbl0w/romdump" target="_self">
+    дамп ROM
+  </a>
+
+## Конечная цель
+
+Обеспечить максимальное количество будущих обновлений для моей беговой дорожки.
+
+Компания Nautilus, Inc. предлагает только 1-годичную гарантию на электронные компоненты, и когда я увидел, что механизм выключения машины (и, следовательно, планшета Android) заключается просто в "отключении переменного тока через задний переключатель", это меня напугало. Каждое устройство на базе Linux должно быть корректно выключено, чтобы избежать повреждения операционной системы, и этот планшет на Android не исключение. Так что, пока он работает, почему бы не получить от этого немного больше удовольствия?
+
+В конце концов, я хочу перехватить, понять и воссоздать коммуникацию, идущую к контроллеру двигателя на моей беговой дорожке, чтобы, если планшет выйдет из строя, у меня все равно осталось работающее устройство.

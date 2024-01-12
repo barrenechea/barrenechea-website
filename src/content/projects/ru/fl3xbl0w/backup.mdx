@@ -1,0 +1,240 @@
+---
+title: Создание резервной копии содержимого вашей консоли - fl3xbl0w
+description: Проект по реверс-инжинирингу. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любой Android-машины, продаваемой компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ru/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 65ec4f05ff473ccae32695390fa759ddf2c4115337bf3223d577b481cd053ea0
+---
+
+import { Image } from 'astro:assets';
+import DialogBackupConfirm from '~/assets/images/fl3xbl0w/dialog-backup-confirm.png';
+
+После освобождения из `AppMonitorService` (или после получения любого обновления OTA) первое, что нужно сделать, это создать резервную копию как можно большего количества данных.
+
+Убедитесь, что вы уже подключены к консоли:
+
+```sh
+> adb connect <IP-адрес консоли>
+```
+
+## Резервное копирование содержимого /sdcard
+
+Там могут содержаться некоторые файлы, необходимые для нормальной работы машины после сброса настроек (в основном в папках `/sdcard/Android` и `/sdcard/Nautilus`). Мы сделаем резервную копию всего с помощью:
+
+```sh
+> adb pull /sdcard/ .
+```
+
+## Резервное копирование APK
+
+Сначала получите список всех установленных на консоли пакетов (чтобы у вас была ссылка):
+
+```sh
+> adb shell pm list packages -f
+```
+
+Они будут отображаться в следующем формате: `package:<расположение APK>=<имя пакета>`
+
+Вам нужно будет найти приложения, которые вы хотите резервировать. НЕ ВСЕ ПРИЛОЖЕНИЯ НЕОБХОДИМЫ, большинство из них - стандартные приложения Android, поэтому мы будем искать только "нестандартные приложения", используя некоторые фильтры:
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+```
+
+Вы увидите записи приложений от `com.nautilus`, `com.redbend`, `com.netflix`, `com.amazon`, `com.disney` и, возможно, еще некоторых в будущем. Мы захотим резервировать все, что видим в этом списке (скрытые уникальные идентификаторы, используйте свои результаты):
+
+```sh
+> adb shell pm list packages -f | grep -wviE 'com.android|com.google|framework-res|/vendor/overlay'
+package:/data/app/com.nautilus.sbctest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbctest
+package:/data/app/com.redbend.client-XXXXXXXXXXXXXXXX/base.apk=com.redbend.client
+package:/data/app/com.nautilus.nlssbcsystemsettings-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nlssbcsystemsettings
+package:/system/priv-app/RBDualPartService/RBDualPartService.apk=com.redbend.dualpart.service.app
+package:/data/app/com.netflix.mediaclient-XXXXXXXXXXXXXXXX/base.apk=com.netflix.mediaclient
+package:/data/app/com.nautilus.nautiluslauncher-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.nautiluslauncher
+package:/data/app/com.amazon.avod.thirdpartyclient-XXXXXXXXXXXXXXXX/base.apk=com.amazon.avod.thirdpartyclient
+package:/data/app/com.nautilus.sbc_demo_app-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.sbc_demo_app
+package:/data/app/com.nautilus.UtilityApp-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.UtilityApp
+package:/data/app/com.nautilus.g4assetmanager-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.g4assetmanager
+package:/data/app/com.nautilus.platform_hardwaretest-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.platform_hardwaretest
+package:/data/app/com.nautilus.webviewer-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.webviewer
+package:/data/app/com.nautilus.bowflex.usb-XXXXXXXXXXXXXXXX/base.apk=com.nautilus.bowflex.usb
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+> ПРИМЕЧАНИЕ: `com.redbend.dualpart.service.app` исходит из `/system/priv-app/`, что означает, что оно останется установленным даже после сброса настроек. Мы можем резервировать его в любом случае, если вас интересует реверс-инжиниринг приложений.
+
+Давайте возьмем Disney Plus в качестве примера (скрытый уникальный идентификатор)
+
+```
+package:/data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk=com.disney.disneyplus
+```
+
+Эта строка, исходя из упомянутого мной формата, будет:
+
+```
+Расположение пакета: /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk
+Имя пакета: com.disney.disneyplus
+```
+
+Мы будем искать, какую версию приложения у нас есть с этой информацией. Давайте используем только что идентифицированное имя пакета и запустим:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+```
+
+В моем случае я получил:
+
+```sh
+> adb shell dumpsys package com.disney.disneyplus | grep versionName
+    versionName=2.4.2-rc2
+```
+
+Теперь, чтобы создать резервную копию пакета Disney Plus, процедура будет следующей:
+
+```sh
+> adb pull /data/app/com.disney.disneyplus-XXXXXXXXXXXXXXXX/base.apk .
+```
+
+Сразу после завершения перейдите в свой файловый менеджер и переименуйте только что созданный резервный файл `base.apk` в `com.disney.disneyplus-2.4.2-rc2.apk`.
+
+Формат, который я предлагаю для APK, учитывая этот пример, это: `<Имя пакета>-<версия>.apk`
+
+Теперь повторите процесс для остальных приложений.
+
+## Резервное копирование AppData
+
+Кажется, что можно резервировать _некоторые (не уверен, что все)_ данные приложений.
+
+_Имейте в виду, что не все установленные приложения генерируют данные приложений, или мы, как пользователь `shell`, можем не иметь разрешений на резервное копирование всего._
+
+Создайте полную резервную копию всех установленных пользователем приложений:
+
+```sh
+> adb backup -f appdata.adb -all -noapk -nosystem
+```
+
+В качестве альтернативы вы можете получить тот же результат с помощью альтернативной команды:
+
+```sh
+> adb shell 'bu backup -all -noapk -nosystem' > appdata.adb
+```
+
+Обе команды запросят "подтверждение на экране" о том, что вы хотите сделать резервную копию. Нажмите на "**РЕЗЕРВИРОВАТЬ МОИ ДАННЫЕ**":
+
+<Image src={DialogBackupConfirm} alt="экран подтверждения резервного копирования" format="webp" />
+
+Если вы хотите извлечь содержимое (на Linux, macOS), вам понадобится `zlib-flate` из [qpdf](https://command-not-found.com/qpdf) и выполните:
+
+```sh
+> dd if=appdata.adb bs=24 skip=1 | zlib-flate -uncompress | tar xf -
+```
+
+Есть некоторые интересные данные для `com.nautilus.bowflex.usb`.
+Там есть личная информация (PII), поэтому **убедитесь, что хорошо проверили, какие файлы вы делитесь**.
+
+_Эти методы резервного копирования и извлечения взяты из [этого Gist](https://gist.github.com/AnatomicJC/e773dd55ae60ab0b2d6dd2351eb977c1). Я проверил только перечисленные там методы резервного копирования, которые безопасны для использования. **Если вы будете играть с восстановлением из Gist, вы на свой страх и риск**. Сообщите нам, если это работает!_
+
+## Скрипт
+
+Я разработал быстрый и грязный скрипт на Python для резервного копирования некоторых содержимого (пока что без AppData).
+**Проверено только на macOS с установленными android-platform-tools через brew**.
+Прочитайте скрипт и убедитесь, что он имеет смысл для вас, прежде чем запускать его.
+
+```python
+import sys
+import os
+import subprocess
+from datetime import datetime
+
+# проверка наличия аргумента
+if len(sys.argv) != 2:
+    print("Использование: python3 dump.py <IP-адрес консоли>")
+    sys.exit(1)
+
+ipaddr = sys.argv[1]
+
+# проверка доступности adb для shell
+adb_path = subprocess.check_output(["which", "adb"]).decode("utf-8").strip()
+if not os.path.exists(adb_path):
+    print("adb не найден")
+    exit()
+
+# настройка папки для резервного копирования с текущей датой и временем
+dump_folder = os.path.join(
+    os.environ["HOME"],
+    "Desktop",
+    "nautilus_dump",
+    "{}".format(datetime.now().strftime("%Y-%m-%d_%H-%M-%S")),
+)
+if not os.path.exists(dump_folder):
+    os.makedirs(dump_folder)
+
+# подключение adb
+print("Подключение к {}...".format(ipaddr))
+subprocess.call(["adb connect {}".format(ipaddr)], shell=True)
+
+# резервное копирование содержимого /sdcard
+print("Резервное копирование содержимого /sdcard...")
+subprocess.call(["adb pull /sdcard/ {}".format(dump_folder)], shell=True)
+
+# получение информации о APK
+print("Резервное копирование APK...")
+packages = (
+    subprocess.check_output(["adb shell pm list packages -f"], shell=True)
+    .decode("utf-8")
+    .split("\n")
+)
+
+# фильтрация пустых строк
+packages = [x for x in packages if x.strip()]
+
+# фильтрация строк, содержащих "com.android", "com.google", "framework-res"
+packages = [package for package in packages if package.find("com.android") == -1]
+packages = [package for package in packages if package.find("com.google") == -1]
+packages = [package for package in packages if package.find("framework-res") == -1]
+
+print("Найдено {} APK".format(len(packages)))
+
+for package in packages:
+    package_name = package.split("=")
+    package_name = package_name[len(package_name) - 1].strip()
+    package_version = (
+        subprocess.check_output(
+            ["adb shell dumpsys package {} | grep versionName".format(package_name)],
+            shell=True,
+        )
+        .decode("utf-8")
+        .split("=")[1]
+        .strip()
+    )
+
+    package_path = package.split(":")[1].split(".apk=")[0].strip()
+    package_path = "{}.apk".format(package_path)
+    print("Резервное копирование {} v{}...".format(package_name, package_version))
+
+    subprocess.call(["adb pull {} {}".format(package_path, dump_folder)], shell=True)
+
+    os.rename(
+        os.path.join(dump_folder, os.path.basename(package_path)),
+        os.path.join(dump_folder, "{}-{}.apk".format(package_name, package_version)),
+    )
+
+# резервное копирование appdata
+print("Резервное копирование appdata.adb ...")
+print('НАЖМИТЕ КНОПКУ "РЕЗЕРВИРОВАТЬ МОИ ДАННЫЕ" НА ЭКРАНЕ СЕЙЧАС !!!')
+subprocess.call(
+    ["adb backup -f {}/appdata.adb -all -noapk -nosystem".format(dump_folder)],
+    shell=True,
+)
+
+# отключение adb
+print("Отключение...")
+subprocess.check_output(["adb disconnect"], shell=True)
+```

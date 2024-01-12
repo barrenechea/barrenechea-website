@@ -1,0 +1,135 @@
+---
+title: Android Jailbreak - fl3xbl0w
+description: Проект обратной инженерии. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любого Android-устройства, продаваемого компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ru/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
+---
+
+import { Image } from 'astro:assets';
+import LogiKeys from '~/assets/images/fl3xbl0w/logi-keys.png';
+import ConsoleUSB from '~/assets/images/fl3xbl0w/console-usb.png';
+import Console01 from '~/assets/images/fl3xbl0w/console-01.gif';
+import Console02 from '~/assets/images/fl3xbl0w/console-02.gif';
+import Console03 from '~/assets/images/fl3xbl0w/console-03.gif';
+import Console04 from '~/assets/images/fl3xbl0w/console-04.gif';
+import Console05 from '~/assets/images/fl3xbl0w/console-05.gif';
+import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
+import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
+import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
+
+Этот метод основан на том, что характеристики консоли Bowflex слишком слабы для современного программного обеспечения (на борту Android всего 2 Гб оперативной памяти). Именно поэтому, если мы действуем _быстрее планшета_, мы можем сделать jailbreak через `AppMonitorService` от Nautilus.
+
+_Можно ли это назвать атакой методом грубой силы?_
+
+Вы можете перезагрузить машину в любой момент процесса, и все будет так, как должно быть. Нет риска для программного обеспечения при таких действиях. Попробуйте!
+
+## Требования
+
+- USB-клавиатура (проводная или беспроводная через USB-адаптер) с мультимедийными кнопками Home, Back.
+- Быстрые пальцы! («интенсивная часть» должна произойти примерно за секунду)
+- Компьютер с [adb](https://developer.android.com/studio/command-line/adb) ([ссылка для скачивания](https://developer.android.com/studio/releases/platform-tools))
+
+Я использовал Logitech K600, но подойдет любая клавиатура с такими клавишами:
+
+<Image src={LogiKeys} alt="клавиатура Logitech K600" format="webp" />
+
+_Клавиатуры Bluetooth, кажется, не могут подключаться через JRNY._
+
+## Советы
+
+- Не пытайтесь «сделать все правильно» с первого раза. Нужно несколько попыток, чтобы понять «где кнопки появляются на экране», чтобы выработать мышечную память для действий по нажатию.
+- НЕ БЕЙТЕ ПО ЭКРАНУ СИЛЬНО! Быстрота не означает разрушение. Я не несу ответственности за людей, слишком сильно ударяющих свои экраны.
+
+## Инструкции
+
+Сначала включим машину и подключим USB-клавиатуру к консоли Bowflex. Вы найдете ее с правой стороны:
+
+<Image src={ConsoleUSB} alt="Указывает местоположение USB-порта консоли" format="webp" />
+
+Убедимся, что клавиатура работает, нажав кнопку "Home" на клавиатуре. Это должно вызвать перезапуск приложения JRNY.
+
+<Image src={Console01} alt="анимация консоли" format="webp" />
+
+В Android есть сочетание клавиш для закрытия текущего приложения через кнопку "Back", если удерживать ее в течение секунды или около того.
+Поиграем немного с кнопкой "Back" - мы будем непрерывно закрывать приложение JRNY, как только оно снова откроется, пока не начнет появляться новый диалог:
+
+<Image src={Console02} alt="анимация консоли" format="webp" />
+
+Хорошо, теперь веселая часть: Этот диалог принадлежит стандартной системе "проверки ошибок" Android. Мы просто "заставили Android думать", что NautilusLauncher плох (хорошо!). Давайте воспользуемся этим диалогом.
+
+Как только он появится, нажмите на "Информация о приложении". Нажав на "Информация о приложении", мы откроем приложение Настройки (которое находится в списке запрещенных `AppMonitorService`). Оно закроется примерно через секунду, поэтому нужно действовать быстро! Нажмите на кнопку "ОСТАНОВИТЬ ПРИНУДИТЕЛЬНО", а затем нажмите "ОК".
+
+<Image src={Console03} alt="анимация консоли" format="webp" />
+
+Как только вы сможете нажать "ОК", вы можете отдохнуть (хорошая тренировка, правда?). Теперь давайте продолжим с открытиями на Reddit. Мы собираемся включить adb, нажав на значок "лупы" в правом верхнем углу и искать "Опции разработчика":
+
+<Image src={Console04} alt="анимация консоли" format="webp" />
+
+Найдите IP-адрес консоли. Самый простой способ - через настройки Wi-Fi:
+
+<Image src={Console05} alt="анимация консоли" format="webp" />
+
+Теперь, когда adb включен и у нас есть IP-адрес, перейдем к компьютеру и подключимся через adb. Откройте терминал и выполните `adb connect <IP Address>` (в моем случае 10.0.0.205):
+
+```sh
+> adb connect 10.0.0.205
+connected to 10.0.0.205:5555
+```
+
+_При первом удаленном подключении через adb на экране будет запрошено подтверждение._
+
+Давайте создадим пустой файл внутри `/sdcard/Pictures/` с именем `nautilus`. Вы можете узнать больше о "почему" в [Bowflex Quirks](/ru/projects/fl3xbl0w/quirks).
+
+```sh
+> adb shell touch /sdcard/Pictures/nautilus
+```
+
+Теперь восстановим некоторые функции. Отправьте следующие команды через терминал:
+
+```sh
+> adb shell settings put secure ntls_launcher_preference 0
+> adb shell settings put secure navigationbar_switch 1
+> adb shell settings put secure notification_switch 1
+> adb shell settings put secure statusbar_switch 1
+```
+
+Вы увидите появление пользовательского интерфейса:
+
+<Image src={Console06} alt="анимация консоли" format="webp" />
+
+Остался последний шаг - изменение стандартного лаунчера. Ищите "Приложения по умолчанию" и установите Quickstep как домашнее приложение:
+
+<Image src={Console07} alt="анимация консоли" format="webp" />
+
+**Теперь вы свободны!**
+
+Это состояние сохранится до тех пор, пока NautilusLauncher будет принудительно остановлен. Оно сохраняется после перезагрузок.
+
+Если вы хотите вернуться к "стоковой" версии, просто откройте приложение `NautilusLauncher` (настоятельно рекомендую создать файл `/sdcard/Pictures/nautilus` заранее):
+
+<Image src={Console08} alt="анимация консоли" format="webp" />
+
+## Заметки о "Системе Блокировки"
+
+`NautilusLauncher` является стандартным "Android лаунчером", что означает, что если приложение JRNY закрывается, оно немедленно "переоткроется".
+
+Есть еще один "замок безопасности", фоновый сервис в apk `NautilusLauncher`, называемый `AppMonitorService`. Декомпилируя apk, можно увидеть три интересные переменные:
+
+```java
+public static final int MonitorIntervalSeconds = 1;
+// Некоторые другие переменные
+private static String[] TargtedAppsToKill = {"com.android.vending", "com.android.settings", "com.android.chrome", "com.google.android.gm", "com.google.android.youtube"};
+private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
+```
+
+И таким образом, этот сервис "активно защищает" блокировку. С каждым закрытием приложения (через удержание кнопки "Back") будет попытка переоткрыть JRNY. Принудительно закрыв его, мы также деактивируем все фоновые сервисы.
+
+_(любые опечатки, которые вы можете видеть в резервных копиях кода, исходят от самих разработчиков Nautilus, а не от меня)_

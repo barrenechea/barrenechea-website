@@ -4,6 +4,7 @@ import deIcon from '@iconify-icons/circle-flags/de.js';
 import frIcon from '@iconify-icons/circle-flags/fr.js';
 import isIcon from '@iconify-icons/circle-flags/is.js';
 import itIcon from '@iconify-icons/circle-flags/it.js';
+import ruIcon from '@iconify-icons/circle-flags/ru.js';
 import saIcon from '@iconify-icons/circle-flags/sa.js';
 import usIcon from '@iconify-icons/circle-flags/us.js';
 import zhIcon from '@iconify-icons/circle-flags/zh.js';
@@ -16,6 +17,7 @@ import { frWithFallback } from './fr.ts';
 import { isWithFallback } from './is.ts';
 import { itWithFallback } from './it.ts';
 import { ptWithFallback } from './pt.ts';
+import { ruWithFallback } from './ru.ts';
 import { zhWithFallback } from './zh.ts';
 
 export const languages = {
@@ -37,6 +39,11 @@ export const languages = {
   de: {
     label: 'Deutsch',
     icon: deIcon,
+    translateFrom: 'en',
+  },
+  ru: {
+    label: 'Русский',
+    icon: ruIcon,
     translateFrom: 'en',
   },
   zh: {
@@ -73,6 +80,7 @@ const langData = {
   en: enWithFallback,
   pt: ptWithFallback,
   de: deWithFallback,
+  ru: ruWithFallback,
   zh: zhWithFallback,
   ar: arWithFallback,
   fr: frWithFallback,

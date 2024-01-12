@@ -1,0 +1,24 @@
+---
+title: Привет, мир!
+description: Я перезапустил веб-сайт, теперь он работает на Astro и распространяется по Edge!
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Логотип Astro
+translatedBy: gpt-4-1106-preview
+checksum: a61036e479b20fce7a56b7ec975fdc96d0a34e855200ce32a1b5510ea0a35f45
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+Если вы уже были здесь раньше, на этом веб-сайте несколько лет висело приветственное сообщение "привет". Но за это время многое изменилось!
+
+<Image src={OldWebsiteImage} alt="Скриншот того, как выглядел веб-сайт раньше" format="webp" />
+
+В 2016 году веб-сайт был размещен на виртуальном сервере [DigitalOcean](https://digitalocean.com). Позже я решил открыть порты в своей собственной сети и использовал [DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website) для запуска веб-сайта в виде контейнера на моем сервере [Unraid](https://unraid.net).
+
+Перед переходом на размещение на Edge я использовал [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/), чтобы уменьшить проблемы с динамическим IP, предоставляемым моим интернет-провайдером, и усилить "точки доступа" моей локальной сети.
+
+То, что вы сейчас читаете, это перестроенный веб-сайт, разработанный с помощью [Astro](https://astro.build). Возможность развертывания на Edge (в настоящее время я использую сеть [edge network](https://www.cloudflare.com/learning/cdn/glossary/edge-server/) от Cloudflare) является огромным улучшением как с точки зрения безопасности, так и с точки зрения производительности для конечных пользователей (то есть для вас!).
+
+Шрифт, который я выбрал для этого веб-сайта, - [Work Sans](https://fonts.google.com/specimen/Work+Sans).

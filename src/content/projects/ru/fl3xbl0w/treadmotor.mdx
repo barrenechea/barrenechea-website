@@ -1,0 +1,61 @@
+---
+title: Контроллер двигателя беговой дорожки - fl3xbl0w
+description: Проект обратной разработки. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любой Android-машины, продаваемой компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ru/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_Это в основном относится к Treadmill 22 & Treadmill 56._
+
+Плата управления двигателем производится компанией [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+
+<Image src={B017D} alt="Контроллер платы управления двигателем B017D" format="webp" />
+
+Исходя из [руководства по обслуживанию](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf), предоставленного компанией Nautilus Inc. ([резервная копия на archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+
+<Image src={TreadmillElectrical} alt="Электрическая схема беговой дорожки" format="webp" />
+
+И сосредоточив внимание конкретно на этой части:
+
+<Image src={TreadmillComm} alt="Путь коммуникации беговой дорожки" format="webp" />
+
+Мы можем идентифицировать "кабель связи", который соединяет контроллер двигателя, как 5-контактный. Есть только один 5-контактный разъем.
+Я пометил провода их соответствующими цветами (данные и переключатель оптоизолированы):
+
+| цвет провода | метка |
+| ------------ | ----- |
+| красный      | GND   |
+| белый        | RXD   |
+| черный       | TXD   |
+| желтый       | +12   |
+| зеленый      | SW    |
+
+Плата не подключена напрямую к Android-консоли.
+
+Единственный 5-контактный разъем - это разъем бренда Molex. Поиск в Google "маленькие разъемы Molex" привел меня к изображению того, что они называют `Molex Micro-Fit 3.0 Single Row (5-Pin)`, который используется для подключения платы контроллера двигателя:
+
+<Image src={Molex} alt="Разъем Molex Micro-Fit 3.0" format="webp" />
+
+[Ссылка на AliExpress](https://aliexpress.com/item/32902205579.html)
+
+Рассматривая `NautilusLauncher.apk` через `jadx-gui`, я вижу, что они общаются с Android-планшетом с помощью их "Универсальной консоли" используя Serial на 230400 Baud (используя `/dev/ttyS4`). Но это НЕ то, что мы анализируем здесь. Это относится к коммуникации между Android и "Универсальной консолью". Мы исследуем связь между "Универсальной консолью" и "Платой управления двигателем".
+
+Попытка подключить ESP32 или серийный мост на базе CH340 напрямую к проводам между основанием беговой дорожки и платой контроллера Bowflex привела к тому, что основание беговой дорожки не инициализировалось правильно, поэтому я начал подозревать, что они используют RS232.
+
+Примечание: Подключившись только к GND и RXD, мы можем "увидеть" некоторую кажущуюся мусорной шестнадцатеричную информацию на скорости 9600 бод. Подключение к TXD приводит к тому, что основание беговой дорожки не инициализируется.
+
+-- Продолжение следует, мне нужно немного времени, чтобы поиграть с моим новым логическим анализатором --

@@ -1,0 +1,57 @@
+---
+title: Декомпиляция - fl3xbl0w
+description: Проект по реверс-инжинирингу. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любого Android-устройства, продаваемого компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+pubDate: 2022-05-28T10:28:00Z
+link: /ru/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: логотип проекта fl3xbl0w
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: gpt-4-1106-preview
+checksum: 8518d35224686427ed3a8679df5ba6f327c9f9e515bc86c0648d6f0ef5c44c0d
+---
+
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
+
+Это предполагает, что у вас уже [есть свои собственные APK](/ru/projects/fl3xbl0w/backup). Имейте в виду, что, хотя я уточняю это для приложений Nautilus, это относится практически к любому Android-приложению, в которое вы хотите "заглянуть под капот".
+
+## Преобразование приложений в Java-код
+
+Следующие инструкции направлены на получение "читаемого кода", но вряд ли вы сможете скомпилировать их обратно в APK. Я использую это в качестве справки, чтобы понять разработчиков Nautilus. Если вы хотите изменить кодовую базу и переупаковать ее, перейдите к [Преобразованию приложений в Smali-код](#преобразование-приложений-в-smali-код).
+
+### Требования
+
+- [jadx](https://github.com/skylot/jadx)
+
+### Давайте откроем что-нибудь!
+
+После установки `jadx`, вы должны быть в состоянии открыть `jadx-gui`. Перейдите в Файл -> Открыть файлы...
+
+<Image src={JadxGUIScreen} alt="экран jadx-gui" format="webp" />
+
+Найдите APK, который вы хотите, и нажмите на "Открыть файл":
+
+<Image src={JadxGUISelect} alt="jadx-gui выбор apk" format="webp" />
+
+И оттуда вы можете начать исследование:
+
+<Image src={JadxGUIOpened} alt="jadx-gui декомпиляция NautilusLauncher" format="webp" />
+
+Если вы хотите сохранить проект как Java-файлы, перейдите в Файл -> Сохранить как gradle-проект:
+
+<Image src={JadxGUISave} alt="jadx-gui сохранение проекта" format="webp" />
+
+Если это полезно, вот мои настройки `jadx-gui`:
+
+<Image src={JadxGUIPrefs} alt="настройки jadx-gui" format="webp" />
+
+## Преобразование приложений в Smali-код
+
+Сообщество проверило [это](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) для применения некоторых патчей к нашим APK. Это будет работать только для несистемных приложений, так как без соответствующего ключа подписи приложение не будет иметь доступа к системным ресурсам (например, к последовательному порту).

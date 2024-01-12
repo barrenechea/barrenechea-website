@@ -12,6 +12,7 @@ const descriptions = {
   en: 'Welcome to the official website of Sebastian Barrenechea. Discover my diverse range of personal projects and delve into thought-provoking blog posts.',
   pt: 'Bem-vindo ao site oficial de Sebastián Barrenechea. Descubra minha ampla gama de projetos pessoais e mergulhe em postagens de blog que convidam à reflexão.',
   de: 'Willkommen auf der offiziellen Website von Sebastian Barrenechea. Entdecken Sie meine vielfältige Palette an persönlichen Projekten und tauchen Sie ein in nachdenkliche Blog-Beiträge.',
+  ru: 'Добро пожаловать на официальный сайт Себастьян Барренечеа. Ознакомьтесь с моим разнообразным спектром личных проектов и погрузитесь в размышления, которые призывают к размышлению.',
   zh: '欢迎来到Sebastian Barrenechea的官方网站。发现我各种各样的个人项目，并深入思考引人深思的博客文章。',
   ar: 'مرحبًا بكم في الموقع الرسمي لسيباستيان بارينيشيا. استكشفوا مجموعتي المتنوعة من المشاريع الشخصية واستمتعوا بقراءة التدوينات التي تحفز التفكير.',
   fr: 'Bienvenue sur le site officiel de Sebastián Barrenechea. Découvrez ma gamme diversifiée de projets personnels et plongez dans des articles de blog qui invitent à la réflexion.',

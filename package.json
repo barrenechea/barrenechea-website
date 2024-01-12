@@ -14,7 +14,7 @@
     "i18n:generate": "npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts en && npm run format && node --loader ts-node/esm/transpile-only --no-warnings tools/translateContent.ts && npm run format"
   },
   "lint-staged": {
-    "*.{js,cjs,mjs,ts,mdx,astro}": [
+    "*.{js,cjs,mjs,ts,astro}": [
       "eslint .",
       "astro check",
       "astro lint"
