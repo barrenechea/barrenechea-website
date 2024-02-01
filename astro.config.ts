@@ -14,6 +14,9 @@ export default defineConfig({
       theme: 'github-dark-dimmed',
     },
   },
+  build: {
+    format: 'directory',
+  },
   integrations: [
     mdx(),
     partytown({
