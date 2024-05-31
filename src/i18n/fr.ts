@@ -10,7 +10,8 @@ export const fr: OptionalTranslations = {
   'nav.language.select': 'Sélectionner la langue',
 
   'hero.greeting': 'Salut ! Je suis',
-  'hero.description': 'Un ingénieur logiciel situé au Chili 🇨🇱',
+  'hero.description':
+    'Un ingénieur logiciel et contributeur au logiciel open source situé au Chili 🇨🇱',
   'hero.doing':
     'Vous pouvez me trouver en train de jouer avec des preuves de concept, de nouvelles technologies et d’explorer le monde fascinant des modèles de Machine Learning.',
   'hero.currentEmployment': 'Je travaille actuellement chez',

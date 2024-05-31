@@ -10,7 +10,8 @@ export const is: OptionalTranslations = {
   'nav.language.select': 'Veldu tungumál',
 
   'hero.greeting': 'Halló! Ég heiti',
-  'hero.description': 'Ég er hugbúnaðarverkfræðingur staðsettur í Chile 🇨🇱',
+  'hero.description':
+    'Ég er hugbúnaðarverkfræðingur og þátttakandi í opnum hugbúnaði staðsettur í Chile 🇨🇱',
   'hero.doing':
     'Þú getur fundið mig að leika mér með hugtakaprófanir, nýjar tækni og könnun á heillandi heimi vélrænnar námslíkana.',
   'hero.currentEmployment': 'Ég starfa núna hjá',

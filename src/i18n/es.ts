@@ -11,7 +11,8 @@ export const es = {
   'nav.language.select': 'Seleccionar idioma',
 
   'hero.greeting': 'Holaa! Soy',
-  'hero.description': 'Un Ingeniero de Software ubicado en Chile 🇨🇱',
+  'hero.description':
+    'Un Ingeniero de Software y colaborador de software de código abierto ubicado en Chile 🇨🇱',
   'hero.doing':
     'Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías y explorando el fascinante mundo de los modelos de Machine Learning.',
   'hero.currentEmployment': 'Actualmente trabajo en',

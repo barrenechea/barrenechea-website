@@ -12,7 +12,7 @@ export const en: OptionalTranslations = {
   'nav.language.select': 'Select language',
 
   'hero.greeting': "Heey! I'm",
-  'hero.description': 'A Software Engineer located in Chile 🇨🇱',
+  'hero.description': 'A Software Engineer and OSS contributor located in Chile 🇨🇱',
   'hero.doing':
     'You can find me playing with proofs-of-concept, blazingly fast new technologies, and exploring the fascinating realm of Machine Learning models.',
   'hero.currentEmployment': "I'm currently working at",

@@ -12,7 +12,7 @@ export const zh: OptionalTranslations = {
   'nav.language.select': '选择语言',
 
   'hero.greeting': '嘿！我是',
-  'hero.description': '一位位于智利的软件工程师 🇨🇱',
+  'hero.description': '一位位于智利的软件工程师和开源软件贡献者 🇨🇱',
   'hero.doing': '你可以找到我在玩概念验证，快速的新技术，以及探索机器学习模型的迷人领域。',
   'hero.currentEmployment': '我目前在',
   'hero.currentTeam': '与 DevOps 团队一起工作',

@@ -10,7 +10,8 @@ export const it: OptionalTranslations = {
   'nav.language.select': 'Seleziona lingua',
 
   'hero.greeting': 'Ciao! Sono',
-  'hero.description': 'Un Ingegnere del Software situato in Cile 🇨🇱',
+  'hero.description':
+    'Un Ingegnere del Software e contributore di software open source situato in Cile 🇨🇱',
   'hero.doing':
     'Puoi trovarmi sperimentare con proof of concept, nuove tecnologie ed esplorare il mondo affascinante dei modelli di Machine Learning.',
   'hero.currentEmployment': 'Attualmente lavoro presso',
