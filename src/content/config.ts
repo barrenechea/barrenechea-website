@@ -13,7 +13,27 @@ const postsSchema = blogBaseSchema.extend({
 });
 const projectsSchema = blogBaseSchema.extend({
   link: z.string().optional(),
-  tags: z.array(z.string()),
+  tags: z.array(
+    z.enum([
+      'CSharp',
+      'DotNet6',
+      'Xcode',
+      'Containers',
+      'Architecture',
+      'Pipelines',
+      'TailwindCSS',
+      'TypeScript',
+      'WebScraping',
+      'Blog',
+      'JavaScript',
+      'AstroJS',
+      'React',
+      'ReverseEngineering',
+      'Hardware',
+      'Android',
+      'Embedded',
+    ])
+  ),
 });
 
 const postsCollection = defineCollection({

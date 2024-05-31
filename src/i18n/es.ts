@@ -53,6 +53,7 @@ export const es = {
   'tags.Blog': 'Blog',
   'tags.JavaScript': 'JavaScript',
   'tags.AstroJS': 'Astro.js',
+  'tags.React': 'React',
   'tags.ReverseEngineering': 'Ingeniería Inversa',
   'tags.Hardware': 'Hardware',
   'tags.Android': 'Android',
