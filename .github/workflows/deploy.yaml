@@ -13,9 +13,6 @@ jobs:
   deploy:
     name: Cloudflare Pages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
 
     steps:
       - name: Checkout
@@ -33,13 +30,9 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish
-        uses: cloudflare/pages-action@1
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: barrenechea-website
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          # Enable Wrangler v3
-          wranglerVersion: "3"
+          command: pages deploy dist --project-name=barrenechea-website
