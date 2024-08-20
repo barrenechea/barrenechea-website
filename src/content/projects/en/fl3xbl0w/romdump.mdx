@@ -1,6 +1,6 @@
 ---
 title: ROM Dump - fl3xbl0w
-description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,19 +9,60 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: b18c469c50acb988210796ef5e4b6cecf18ddf9245ad33a9ee1bbf0633c1c4ca
+translatedBy: chatgpt-4o-latest
+checksum: 724bc0f398059453b0cfb71456619e1f5047a1728d830f99cdc4854335c03197
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
+### 2024 Update
+
+We have achieved a significant milestone in the project thanks to the community's collaboration! A contributor, [alphab0ing](https://github.com/alphab0ing), has been working on creating a custom ROM for the Bowflex Vantron RK3399 board. You can see more in [this GitHub issue](https://github.com/barrenechea/barrenechea-website/issues/20).
+
+It's been over a year since my console received a system update via OTA. I quickly connected via ADB to back up the files (if I could find them), and fortunately, I was successful!
+
+The update was stored in the typical Nautilus working directory, `/sdcard/Nautilus/redbend/`. The extracted files are as follows:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+The file `1_delta.rdp` was particularly large, so I assumed that’s where the magic was. After inspecting the file a bit, I came to this:
+
+```
+1_delta.rdp: Java archive data (JAR): Unzip as a .zip
+	- payload.bin: Extract with https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, kernel (0x10008000), ramdisk (0x11000000), second stage (0x10f00000), page size: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: data
+		- oem.img: Linux rev 1.0 ext2 filesystem data, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, volume name "oem" (extents) (large files) (huge files)
+		- system.img: Linux rev 1.0 ext2 filesystem data, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (large files) (huge files)
+		- trust.img: data
+		- uboot.img: data
+		- vbmeta.img: data
+		- vendor.img: Linux rev 1.0 ext2 filesystem data, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, volume name "vendor" (extents) (large files) (huge files)
+```
+
+The OTA update files (HP-22_T56_EEA Android OS Image 3.10 release-keys) have been shared on [Internet Archive](https://archive.org/download/HP-22_T56_EEA).
+
+With these files, [alphab0ing](https://github.com/alphab0ing) was able to obtain the original DTS (Device Tree Source) of the device ([download](/HP-22_T56_EEA.dts)). This is crucial for custom ROM development and for better understanding the hardware. Let's see how this progresses!
+
 ### Rockchip Loader Mode
 
-An RK3399 processor powers the Android hardware. Rockchip processors come with a standard "loader mode."
+An RK3399 processor powers the Android hardware. Rockchip processors come with a "loader mode" as a standard feature.
 
-The toolkit I have used is:
+The toolset I’ve used is:
 
 - Rockchip Driver Assistant v4.5 from [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
 - rkDumper 1.09 test from [this XDA post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
@@ -29,18 +70,18 @@ The toolkit I have used is:
 
 _There is a newer version of the driver available for download, but it is known to be incompatible with rkDumper._
 
-To play with this, you will have to disassemble the Bowflex Console, unscrew the plastic back cover, and reassemble it in a "bare form."
+To play with this, you’ll need to disassemble the Bowflex Console, unscrew the plastic back cover, and reassemble it in a "bare form."
 **Do not attempt this, as playing with Android hardware in Loader Mode can lead to a permanently broken device.**
 
-<Image src={ConsoleMounted} alt="Mounted console with the back cover removed" format="webp" />
+<Image src={ConsoleMounted} alt="Console mounted with the back cover removed" format="webp" />
 
 Here are the relevant parts of the Android logic board for Rockchip stuff:
 
 <Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
-You can keep the Android Tool Release application open all the time as a reference to check what mode the console is in.
+You can keep the Android Tool Release application open at all times as a reference to check what mode the console is in.
 
-With the machine turned on in "normal mode" and connected to a computer, it identifies as `NFTM-LAR`:
+With the machine powered on in "normal mode" and connected to a computer, it identifies as `NFTM-LAR`:
 
 ```
 NFTM-LAR:
@@ -55,11 +96,11 @@ NFTM-LAR:
   Extra Operating Current (mA): 0
 ```
 
-With the machine turned off, connected via USB to a computer, holding down the "Recovery button" and turning it on, it should boot into "Loader mode." The machine will "sound," but the screen will remain static. _You can turn off, wait a minute, turn on, and the machine will boot normally._
+With the machine powered off, connected via USB to a computer, holding down the "Recovery button" and powering it on, it should boot into "Loader mode." The machine will "beep," but the screen will remain static. _You can power off, wait a minute, power on, and the machine will boot normally._
 
-_The Android hardware does not handle the "sound" after turning on the machine, but through the other Nautilus PCBs._
+_The Android hardware does not handle the "beep" after powering on the machine, but through the other Nautilus PCBs._
 
-Now it will report on the computer as `USB download gadget` (Serial Number hidden):
+It will now report to the computer as `USB download gadget` (Serial Number hidden):
 
 ```
 USB download gadget:
@@ -107,13 +148,13 @@ Partition "video" (0x0047e000) saved (format: unknown)
 Partition "userdata" (0x0169bbdf) saved (format: unknown)
 ```
 
-`uboot_a` and `uboot_b` were successfully extracted, but all other partitions marked as `(format: unknown)` are poorly backed up, only extracting hexadecimal `CC` values from them.
+`uboot_a` and `uboot_b` were successfully extracted, but all other partitions marked as `(format: unknown)` are poorly backed up, only extracting `CC` hexadecimal values from them.
 
-A similar case to mine was documented on [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), and after [asking](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) the rkDumper developer, [he says](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) that there must be a new RockChip loader in place. Following this method seems to be unviable for now.
+A case similar to mine was documented on [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), and after [asking](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) the rkDumper developer, [he says](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) there must be a new RockChip loader in place. Following this method seems unfeasible for now.
 
 ### ADB
 
-Some similar data can be found through adb, but it does not seem possible to make a backup as we lack root permissions:
+Some similar data can be found through adb, but it doesn’t seem possible to back up since we lack root permissions:
 
 ```sh
 > ls -al /dev/block/platform/
@@ -160,4 +201,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### Other Ideas
 
-Something we can do is desolder the eMMC chip and read it externally to be able to back up all its content. It would be good for creating a custom ROM, but I will not desolder from my ONLY Console (it would be cool to have a spare one).
+One thing we can do is desolder the eMMC chip and read it externally to back up all its contents. It would be good for creating a custom ROM, but I won’t desolder the one from my ONLY Console (it would be cool to have a spare).

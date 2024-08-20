@@ -1,6 +1,6 @@
 ---
-title: تفريغ الروم - fl3xbl0w
-description: مشروع هندسة عكسية. بدأ بجهاز الجري Bowflex Treadmill 22 ولكن تم تعميمه لأي جهاز أندرويد يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: تفريغ ROM - fl3xbl0w
+description: مشروع هندسة عكسية. بدأ مع جهاز المشي Bowflex Treadmill 22 ولكنه انتهى بأن يكون عامًا لأي جهاز يعمل بنظام Android يباع من قبل شركة Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /ar/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,76 +9,117 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
-### وضع التحميل لشريحة Rockchip
+### تحديث 2024
 
-يتم تشغيل العتاد الأندرويد بواسطة معالج RK3399. تأتي معالجات Rockchip مع وضع "loader mode" قياسي.
+لقد حققنا إنجازًا كبيرًا في المشروع بفضل تعاون المجتمع! أحد المساهمين، [alphab0ing](https://github.com/alphab0ing)، كان يعمل على إنشاء ROM مخصص للوحة Bowflex Vantron RK3399. يمكنك رؤية المزيد في [هذه المشكلة على GitHub](https://github.com/barrenechea/barrenechea-website/issues/20).
 
-الأدوات التي استخدمتها هي:
+لقد مر أكثر من عام منذ أن تلقت وحدة التحكم الخاصة بي تحديثًا للنظام عبر OTA. قمت بسرعة بالاتصال عبر ADB لنسخ الملفات احتياطيًا (إذا تمكنت من العثور عليها)، ولحسن الحظ، كنت ناجحًا!
+
+تم تخزين التحديث في الدليل المعتاد للعمل لشركة Nautilus، `/sdcard/Nautilus/redbend/`. الملفات المستخرجة هي كما يلي:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+كان الملف `1_delta.rdp` كبيرًا بشكل خاص، لذا افترضت أن هذا هو المكان الذي يحدث فيه السحر. بعد فحص الملف قليلاً، توصلت إلى ما يلي:
+
+```
+1_delta.rdp: بيانات أرشيف Java (JAR): فك الضغط كملف .zip
+	- payload.bin: استخراج باستخدام https://github.com/ssut/payload-dumper-go
+		- boot.img: صورة إقلاع أندرويد، kernel (0x10008000)، ramdisk (0x11000000)، المرحلة الثانية (0x10f00000)، حجم الصفحة: 2048، cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: بيانات
+		- oem.img: بيانات نظام ملفات ext2 rev 1.0، UUID=b886e36e-ac40-5948-86dd-27c114bd225e، اسم الحجم "oem" (امتدادات) (ملفات كبيرة) (ملفات ضخمة)
+		- system.img: بيانات نظام ملفات ext2 rev 1.0، UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (امتدادات) (ملفات كبيرة) (ملفات ضخمة)
+		- trust.img: بيانات
+		- uboot.img: بيانات
+		- vbmeta.img: بيانات
+		- vendor.img: بيانات نظام ملفات ext2 rev 1.0، UUID=67531afd-7aed-52f3-9196-b1cdad9fd724، اسم الحجم "vendor" (امتدادات) (ملفات كبيرة) (ملفات ضخمة)
+```
+
+تمت مشاركة ملفات تحديث OTA (HP-22_T56_EEA صورة نظام أندرويد 3.10 release-keys) على [أرشيف الإنترنت](https://archive.org/download/HP-22_T56_EEA).
+
+بفضل هذه الملفات، تمكن [alphab0ing](https://github.com/alphab0ing) من الحصول على DTS (مصدر شجرة الجهاز) الأصلي للجهاز ([تحميل](/HP-22_T56_EEA.dts)). هذا أمر حاسم لتطوير ROM مخصص ولتحسين فهم الأجهزة. دعونا نرى كيف يتقدم هذا!
+
+### وضع محمل Rockchip
+
+يعمل معالج RK3399 على تشغيل أجهزة أندرويد. تأتي معالجات Rockchip مع "وضع المحمل" كميزة قياسية.
+
+مجموعة الأدوات التي استخدمتها هي:
 
 - Rockchip Driver Assistant v4.5 من [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 test من [هذا المنشور في XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- rkDumper 1.09 test من [هذا المنشور على XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 من [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-_يوجد نسخة أحدث من البرنامج المساعد متاحة للتحميل، ولكنها معروفة بعدم التوافق مع rkDumper._
+_هناك إصدار أحدث من برنامج التشغيل متاح للتنزيل، ولكنه معروف بأنه غير متوافق مع rkDumper._
 
-للعب مع هذا، سيتعين عليك تفكيك وحدة التحكم Bowflex، فك الغطاء الخلفي البلاستيكي، وإعادة تجميعها بشكل "عاري".
-**لا تحاول هذا، حيث أن العبث بعتاد الأندرويد في وضع Loader يمكن أن يؤدي إلى جهاز معطل بشكل دائم.**
+للعب بهذا، ستحتاج إلى تفكيك وحدة التحكم Bowflex، وفك الغطاء الخلفي البلاستيكي، وإعادة تجميعها في "شكل عاري".
+**لا تحاول هذا، لأن اللعب مع أجهزة أندرويد في وضع المحمل يمكن أن يؤدي إلى تلف دائم للجهاز.**
 
-<Image src={ConsoleMounted} alt="وحدة التحكم مع إزالة الغطاء الخلفي" format="webp" />
+<Image src={ConsoleMounted} alt="وحدة التحكم مثبتة مع إزالة الغطاء الخلفي" format="webp" />
 
-إليك الأجزاء ذات الصلة من لوحة الدوائر الأندرويد لأمور Rockchip:
+إليك الأجزاء ذات الصلة من لوحة المنطق الخاصة بأندرويد لأشياء Rockchip:
 
-<Image src={VantronPCB} alt="لوحة الدوائر Vantron" format="webp" />
+<Image src={VantronPCB} alt="لوحة Vantron PCB" format="webp" />
 
-يمكنك الاحتفاظ بتطبيق Android Tool Release مفتوحًا طوال الوقت كمرجع للتحقق من الوضع الذي تكون فيه الوحدة التحكم.
+يمكنك إبقاء تطبيق Android Tool Release مفتوحًا في جميع الأوقات كمرجع للتحقق من الوضع الذي تكون فيه وحدة التحكم.
 
-مع تشغيل الجهاز في "الوضع العادي" وتوصيله بجهاز كمبيوتر، يتم التعرف عليه كـ `NFTM-LAR`:
+عند تشغيل الجهاز في "الوضع العادي" وتوصيله بجهاز كمبيوتر، يتعرف عليه كـ `NFTM-LAR`:
 
 ```
 NFTM-LAR:
   معرف المنتج: 0x0001
-  معرف البائع: 0x2207 (شركة Fuzhou Rockchip Electronics Co., Ltd.)
+  معرف البائع: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   الإصدار: 3.10
-  السرعة: حتى 480 ميغابت/ثانية
-  الصانع: Vanzo
+  السرعة: تصل إلى 480 ميجابت/ثانية
+  الشركة المصنعة: Vanzo
   معرف الموقع: 0x14120000 / 9
-  التيار المتاح الحالي (مللي أمبير): 500
-  التيار المطلوب الحالي (مللي أمبير): 500
-  التيار الإضافي التشغيلي (مللي أمبير): 0
+  التيار المتاح حاليًا (mA): 500
+  التيار المطلوب (mA): 500
+  التيار التشغيلي الإضافي (mA): 0
 ```
 
-مع إيقاف تشغيل الجهاز، وتوصيله عبر USB بجهاز كمبيوتر، والضغط على زر "الاسترداد" وتشغيله، يجب أن يقلع في "وضع التحميل". سيصدر الجهاز "صوتًا"، ولكن الشاشة ستظل ثابتة. _يمكنك إيقاف التشغيل، والانتظار دقيقة، وتشغيل الجهاز، وسيقلع بشكل طبيعي._
+عند إيقاف تشغيل الجهاز، وتوصيله عبر USB بجهاز كمبيوتر، والضغط على زر "الاسترداد" وتشغيله، يجب أن يتم التمهيد في "وضع المحمل". سيصدر الجهاز "صفيرًا"، لكن الشاشة ستظل ثابتة. _يمكنك إيقاف التشغيل، والانتظار دقيقة، وتشغيل الجهاز، وسيتم التمهيد بشكل طبيعي._
 
-_العتاد الأندرويد لا يتعامل مع "الصوت" بعد تشغيل الجهاز، ولكن من خلال لوحات الدوائر الأخرى لشركة Nautilus._
+_لا تتعامل أجهزة أندرويد مع "الصفير" بعد تشغيل الجهاز، ولكن من خلال لوحات PCBs الأخرى من Nautilus._
 
-الآن سيتم الإبلاغ عنه على الكمبيوتر كـ `USB download gadget` (رقم التسلسل مخفي):
+سيتم الآن الإبلاغ عن الجهاز إلى الكمبيوتر كـ `USB download gadget` (الرقم التسلسلي مخفي):
 
 ```
 USB download gadget:
   معرف المنتج: 0x330c
-  معرف البائع: 0x2207 (شركة Fuzhou Rockchip Electronics Co., Ltd.)
+  معرف البائع: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   الإصدار: 99.99
-  رقم التسلسل: XXXXXXXXXXXXXXX
-  الصانع: Rockchip
+  الرقم التسلسلي: XXXXXXXXXXXXXXX
+  الشركة المصنعة: Rockchip
   معرف الموقع: 0x14120000
 ```
 
 بعد تشغيل rkDumper ضد وحدة التحكم، نحصل على معلومات حول الأقسام:
 
 ```
-تم العثور على علامة "EFI PART" (نسخة طبق الأصل من ذاكرة الفلاش لـ RKFP)
+تم العثور على علامة "EFI PART" (تفريغ RKFP FW)
 
-تم حفظ القسم "EFI_part" (0x00004000) (التنسيق: نسخة طبق الأصل من ذاكرة الفلاش لـ RockChip RKFP)
-تم حفظ القسم "uboot_a" (0x00002000) (التنسيق: ملف صورة uboot لـ Rockchip)
-تم حفظ القسم "uboot_b" (0x00002000) (التنسيق: ملف صورة uboot لـ Rockchip)
+تم حفظ القسم "EFI_part" (0x00004000) (التنسيق: تفريغ RockChip RKFP)
+تم حفظ القسم "uboot_a" (0x00002000) (التنسيق: ملف صورة Rockchip uboot)
+تم حفظ القسم "uboot_b" (0x00002000) (التنسيق: ملف صورة Rockchip uboot)
 تم حفظ القسم "trust_a" (0x00002000) (التنسيق: غير معروف)
 تم حفظ القسم "trust_b" (0x00002000) (التنسيق: غير معروف)
 تم حفظ القسم "misc" (0x00002000) (التنسيق: غير معروف)
@@ -107,17 +148,17 @@ USB download gadget:
 تم حفظ القسم "userdata" (0x0169bbdf) (التنسيق: غير معروف)
 ```
 
-تم استخراج `uboot_a` و `uboot_b` بنجاح، ولكن جميع الأقسام الأخرى المعلمة بـ `(التنسيق: غير معروف)` تم نسخها بشكل سيئ، حيث تم استخراج قيم عشرية سداسية `CC` منها فقط.
+تم استخراج `uboot_a` و `uboot_b` بنجاح، ولكن جميع الأقسام الأخرى التي تم وضع علامة عليها كـ `(التنسيق: غير معروف)` تم نسخها احتياطيًا بشكل سيء، حيث تم استخراج قيم `CC` السداسية فقط منها.
 
-تم توثيق حالة مشابهة لحالتي على [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)، وبعد [السؤال](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) مطور rkDumper، [يقول](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) أنه يجب أن يكون هناك محمل RockChip جديد في المكان. يبدو أن اتباع هذه الطريقة غير قابل للتطبيق في الوقت الحالي.
+تم توثيق حالة مشابهة لحالتي على [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)، وبعد [السؤال](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) لمطور rkDumper، [قال](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) أنه يجب أن يكون هناك محمل RockChip جديد في المكان. يبدو أن اتباع هذه الطريقة غير ممكن في الوقت الحالي.
 
 ### ADB
 
-يمكن العثور على بعض البيانات المماثلة من خلال adb، ولكن لا يبدو أنه من الممكن عمل نسخة احتياطية حيث نفتقر إلى أذونات الجذر:
+يمكن العثور على بعض البيانات المشابهة من خلال adb، ولكن لا يبدو أنه من الممكن نسخها احتياطيًا نظرًا لعدم وجود أذونات الجذر:
 
 ```sh
 > ls -al /dev/block/platform/
-مجموع 0
+total 0
 drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
 drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
 drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
@@ -125,7 +166,7 @@ drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
 
 ```sh
 > ls -al /dev/block/platform/fe330000.sdhci/by-name/
-مجموع 0
+total 0
 drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
 drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
@@ -146,5 +187,18 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
-lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 ```
+
+### أفكار أخرى
+
+أحد الأشياء التي يمكننا القيام بها هو فك لحام شريحة eMMC وقراءتها خارجيًا لنسخ جميع محتوياتها احتياطيًا. سيكون ذلك جيدًا لإنشاء ROM مخصص، لكنني لن أفك لحام الشريحة من وحدة التحكم الوحيدة لدي (سيكون من الرائع أن يكون لدي واحدة احتياطية).

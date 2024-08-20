@@ -1,6 +1,6 @@
 ---
 title: ROM-Dump - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-Maschine.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Treadmill 22, wurde aber schließlich für jede Maschine mit Android, die von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkauft wird, verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,43 +9,84 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
+### Update 2024
+
+Wir haben dank der Zusammenarbeit der Community einen bedeutenden Meilenstein im Projekt erreicht! Ein Mitwirkender, [alphab0ing](https://github.com/alphab0ing), arbeitet an der Erstellung einer benutzerdefinierten ROM für das Bowflex Vantron RK3399-Board. Mehr dazu findest du in [diesem GitHub-Issue](https://github.com/barrenechea/barrenechea-website/issues/20).
+
+Es ist über ein Jahr her, seit meine Konsole ein Systemupdate über OTA erhalten hat. Ich habe mich schnell über ADB verbunden, um die Dateien zu sichern (falls ich sie finden könnte), und glücklicherweise war ich erfolgreich!
+
+Das Update wurde im typischen Nautilus-Arbeitsverzeichnis `/sdcard/Nautilus/redbend/` gespeichert. Die extrahierten Dateien sind wie folgt:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+Die Datei `1_delta.rdp` war besonders groß, also nahm ich an, dass dort die Magie passiert. Nach einer kurzen Inspektion der Datei kam ich zu folgendem Ergebnis:
+
+```
+1_delta.rdp: Java-Archivdaten (JAR): Entpacken als .zip
+	- payload.bin: Extrahieren mit https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, Kernel (0x10008000), Ramdisk (0x11000000), zweite Stufe (0x10f00000), Seitengröße: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: Daten
+		- oem.img: Linux rev 1.0 ext2 Dateisystemdaten, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, Volumenname "oem" (Extents) (große Dateien) (riesige Dateien)
+		- system.img: Linux rev 1.0 ext2 Dateisystemdaten, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (Extents) (große Dateien) (riesige Dateien)
+		- trust.img: Daten
+		- uboot.img: Daten
+		- vbmeta.img: Daten
+		- vendor.img: Linux rev 1.0 ext2 Dateisystemdaten, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, Volumenname "vendor" (Extents) (große Dateien) (riesige Dateien)
+```
+
+Die OTA-Update-Dateien (HP-22_T56_EEA Android OS Image 3.10 release-keys) wurden auf [Internet Archive](https://archive.org/download/HP-22_T56_EEA) geteilt.
+
+Mit diesen Dateien konnte [alphab0ing](https://github.com/alphab0ing) die originale DTS (Device Tree Source) des Geräts erhalten ([download](/HP-22_T56_EEA.dts)). Dies ist entscheidend für die Entwicklung einer benutzerdefinierten ROM und für ein besseres Verständnis der Hardware. Mal sehen, wie sich das entwickelt!
+
 ### Rockchip Loader-Modus
 
-Ein RK3399-Prozessor betreibt die Android-Hardware. Rockchip-Prozessoren verfügen über einen standardmäßigen "Loader-Modus".
+Ein RK3399-Prozessor treibt die Android-Hardware an. Rockchip-Prozessoren verfügen standardmäßig über einen "Loader-Modus".
 
-Das Toolkit, das ich verwendet habe, ist:
+Das Toolset, das ich verwendet habe, ist:
 
 - Rockchip Driver Assistant v4.5 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 Test von [diesem XDA-Beitrag](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- rkDumper 1.09 Test von [diesem XDA-Post](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 von [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
 _Es gibt eine neuere Version des Treibers zum Download, aber es ist bekannt, dass sie mit rkDumper nicht kompatibel ist._
 
-Um damit zu spielen, müssen Sie die Bowflex-Konsole zerlegen, die Kunststoffrückabdeckung abschrauben und sie in einer "nackten Form" wieder zusammenbauen.
-**Versuchen Sie dies nicht, da das Spielen mit Android-Hardware im Loader-Modus zu einem dauerhaft defekten Gerät führen kann.**
+Um damit zu spielen, musst du die Bowflex-Konsole zerlegen, die Plastik-Rückabdeckung abschrauben und sie in einer "nackten Form" wieder zusammenbauen.
+**Versuche dies nicht, da das Spielen mit Android-Hardware im Loader-Modus zu einem dauerhaft defekten Gerät führen kann.**
 
-<Image src={ConsoleMounted} alt="Montierte Konsole mit entfernter Rückabdeckung" format="webp" />
+<Image src={ConsoleMounted} alt="Konsole montiert mit abgenommener Rückabdeckung" format="webp" />
 
 Hier sind die relevanten Teile der Android-Logikplatine für Rockchip-Sachen:
 
 <Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
-Sie können die Android Tool Release-Anwendung die ganze Zeit geöffnet halten, um als Referenz zu überprüfen, in welchem Modus sich die Konsole befindet.
+Du kannst die Android Tool Release-Anwendung jederzeit geöffnet lassen, um als Referenz zu überprüfen, in welchem Modus sich die Konsole befindet.
 
-Mit eingeschalteter Maschine im "normalen Modus" und verbunden mit einem Computer, identifiziert sie sich als `NFTM-LAR`:
+Wenn die Maschine im "Normalmodus" eingeschaltet und mit einem Computer verbunden ist, wird sie als `NFTM-LAR` erkannt:
 
 ```
 NFTM-LAR:
-  Product ID: 0x0001
-  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Produkt-ID: 0x0001
+  Hersteller-ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 3.10
   Geschwindigkeit: Bis zu 480 Mb/s
   Hersteller: Vanzo
@@ -55,16 +96,16 @@ NFTM-LAR:
   Zusätzlicher Betriebsstrom (mA): 0
 ```
 
-Mit ausgeschalteter Maschine, verbunden über USB mit einem Computer, halten Sie den "Recovery-Button" gedrückt und schalten Sie ihn ein, sollte sie in den "Loader-Modus" booten. Die Maschine wird "klingen", aber der Bildschirm bleibt statisch. _Sie können ausschalten, eine Minute warten, einschalten und die Maschine wird normal booten._
+Wenn die Maschine ausgeschaltet ist, über USB mit einem Computer verbunden ist, die "Recovery-Taste" gedrückt hält und sie einschaltet, sollte sie in den "Loader-Modus" booten. Die Maschine wird "piepen", aber der Bildschirm bleibt statisch. _Du kannst ausschalten, eine Minute warten, einschalten, und die Maschine wird normal booten._
 
-_Die Android-Hardware behandelt das "Klingen" nach dem Einschalten der Maschine nicht, sondern über die anderen Nautilus-PCBs._
+_Die Android-Hardware verarbeitet das "Piepen" nach dem Einschalten der Maschine nicht, sondern über die anderen Nautilus-PCBs._
 
-Nun wird sie am Computer als `USB download gadget` gemeldet (Seriennummer versteckt):
+Sie wird nun dem Computer als `USB download gadget` (Seriennummer verborgen) gemeldet:
 
 ```
 USB download gadget:
-  Product ID: 0x330c
-  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Produkt-ID: 0x330c
+  Hersteller-ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 99.99
   Seriennummer: XXXXXXXXXXXXXXX
   Hersteller: Rockchip
@@ -107,17 +148,17 @@ Partition "video" (0x0047e000) gespeichert (Format: unbekannt)
 Partition "userdata" (0x0169bbdf) gespeichert (Format: unbekannt)
 ```
 
-`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen als `(Format: unbekannt)` markierten Partitionen sind schlecht gesichert, es werden nur hexadezimale `CC`-Werte daraus extrahiert.
+`uboot_a` und `uboot_b` wurden erfolgreich extrahiert, aber alle anderen Partitionen, die als `(Format: unbekannt)` markiert sind, wurden schlecht gesichert, wobei nur `CC`-Hexadezimalwerte aus ihnen extrahiert wurden.
 
-Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nachdem ich den rkDumper-Entwickler [gefragt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) habe, [sagt er](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss. Diese Methode scheint vorerst nicht praktikabel zu sein.
+Ein ähnlicher Fall wie meiner wurde auf [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) dokumentiert, und nach [Anfrage](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) beim rkDumper-Entwickler, [sagt er](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), dass es einen neuen RockChip-Loader geben muss. Diese Methode scheint vorerst nicht machbar zu sein.
 
 ### ADB
 
-Einige ähnliche Daten können über adb gefunden werden, aber es scheint nicht möglich zu sein, ein Backup zu erstellen, da uns Root-Berechtigungen fehlen:
+Ähnliche Daten können über adb gefunden werden, aber es scheint nicht möglich zu sein, sie zu sichern, da uns Root-Berechtigungen fehlen:
 
 ```sh
 > ls -al /dev/block/platform/
-insgesamt 0
+total 0
 drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
 drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
 drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
@@ -125,7 +166,7 @@ drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
 
 ```sh
 > ls -al /dev/block/platform/fe330000.sdhci/by-name/
-insgesamt 0
+total 0
 drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
 drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
@@ -160,4 +201,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### Weitere Ideen
 
-Etwas, was wir tun können, ist den eMMC-Chip auszulöten und ihn extern zu lesen, um all seine Inhalte sichern zu können. Das wäre gut für die Erstellung eines benutzerdefinierten ROMs, aber ich werde nicht von meiner EINZIGEN Konsole auslöten (es wäre cool, eine Ersatzkonsole zu haben).
+Eine Möglichkeit wäre, den eMMC-Chip auszulöten und extern auszulesen, um alle Inhalte zu sichern. Das wäre gut für die Erstellung einer benutzerdefinierten ROM, aber ich werde den von meiner EINZIGEN Konsole nicht auslöten (es wäre cool, ein Ersatzteil zu haben).

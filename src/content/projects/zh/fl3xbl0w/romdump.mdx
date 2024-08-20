@@ -1,123 +1,164 @@
 ---
-title: ROM转储 - fl3xbl0w
-description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+title: ROM 转储 - fl3xbl0w
+description: 逆向工程项目。最初是针对 Bowflex Treadmill 22 的，但最终被推广到任何由 Nautilus Inc.（Nautilus, Bowflex, Schwinn）销售的 Android 设备。
 pubDate: 2022-05-28T10:28:00Z
 link: /zh/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: fl3xbl0w项目标志
+imgAlt: fl3xbl0w 项目标志
 tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
-### Rockchip加载模式
+### 2024 更新
 
-安卓硬件由RK3399处理器提供动力。Rockchip处理器带有标准的“加载模式”。
+感谢社区的合作，我们在项目中取得了重要的里程碑！一位贡献者 [alphab0ing](https://github.com/alphab0ing) 正在为 Bowflex Vantron RK3399 板创建自定义 ROM。你可以在[这个 GitHub 问题](https://github.com/barrenechea/barrenechea-website/issues/20)中查看更多信息。
 
-我使用的工具包括：
+自从我的控制台通过 OTA 收到系统更新已经一年多了。我迅速通过 ADB 连接以备份文件（如果我能找到它们），幸运的是，我成功了！
 
-- 来自[ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)的Rockchip驱动助手v4.5
-- 来自[这个XDA帖子](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)的rkDumper 1.09测试版
-- 来自[ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)的Android工具发布v2.69
+更新存储在典型的 Nautilus 工作目录中，路径为 `/sdcard/Nautilus/redbend/`。提取的文件如下：
 
-_有一个更新版本的驱动程序可供下载，但已知它与rkDumper不兼容。_
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
 
-要使用这个，你必须拆卸Bowflex控制台，拧下塑料背盖，然后以“裸露形式”重新组装。
-**不要尝试这样做，因为在加载模式下玩弄安卓硬件可能导致设备永久损坏。**
+文件 `1_delta.rdp` 特别大，所以我猜测那就是关键所在。经过一番检查，我得出了以下结论：
 
-<Image src={ConsoleMounted} alt="拆掉背盖的安装控制台" format="webp" />
+```
+1_delta.rdp: Java archive data (JAR): 解压为 .zip
+	- payload.bin: 使用 https://github.com/ssut/payload-dumper-go 提取
+		- boot.img: Android bootimg, kernel (0x10008000), ramdisk (0x11000000), second stage (0x10f00000), page size: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: 数据
+		- oem.img: Linux rev 1.0 ext2 文件系统数据, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, 卷名 "oem" (extents) (大文件) (超大文件)
+		- system.img: Linux rev 1.0 ext2 文件系统数据, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (大文件) (超大文件)
+		- trust.img: 数据
+		- uboot.img: 数据
+		- vbmeta.img: 数据
+		- vendor.img: Linux rev 1.0 ext2 文件系统数据, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, 卷名 "vendor" (extents) (大文件) (超大文件)
+```
 
-这里是安卓逻辑板上与Rockchip相关的重要部分：
+OTA 更新文件（HP-22_T56_EEA Android OS Image 3.10 release-keys）已在[互联网档案馆](https://archive.org/download/HP-22_T56_EEA)上共享。
+
+有了这些文件，[alphab0ing](https://github.com/alphab0ing) 能够获取设备的原始 DTS（设备树源文件）（[下载](/HP-22_T56_EEA.dts)）。这对于自定义 ROM 开发和更好地理解硬件至关重要。让我们看看接下来会如何发展！
+
+### Rockchip 加载模式
+
+Android 硬件由 RK3399 处理器驱动。Rockchip 处理器标配有“加载模式”。
+
+我使用的工具集是：
+
+- 从 [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant) 下载的 Rockchip Driver Assistant v4.5
+- 从[这个 XDA 帖子](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)下载的 rkDumper 1.09 测试版
+- 从 [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release) 下载的 Android Tool Release v2.69
+
+_有一个更新版本的驱动程序可供下载，但已知与 rkDumper 不兼容。_
+
+要玩这个，你需要拆开 Bowflex 控制台，拧开塑料后盖，并以“裸机”形式重新组装。
+**不要尝试这样做，因为在加载模式下玩 Android 硬件可能会导致设备永久损坏。**
+
+<Image src={ConsoleMounted} alt="拆掉后盖的控制台" format="webp" />
+
+以下是与 Rockchip 相关的 Android 逻辑板的相关部分：
 
 <Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
-你可以一直保持Android工具发布应用程序打开，作为参考检查控制台处于什么模式。
+你可以随时打开 Android Tool Release 应用程序作为参考，以检查控制台处于什么模式。
 
-当机器以“正常模式”开启并连接到电脑时，它被识别为`NFTM-LAR`：
+在机器以“正常模式”开机并连接到计算机时，它会识别为 `NFTM-LAR`：
 
 ```
 NFTM-LAR:
-  产品ID: 0x0001
-  供应商ID: 0x2207 (福州瑞芯微电子有限公司)
+  产品 ID: 0x0001
+  供应商 ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   版本: 3.10
-  速度: 最高480 Mb/s
+  速度: 高达 480 Mb/s
   制造商: Vanzo
-  位置ID: 0x14120000 / 9
-  当前可用(mA): 500
-  当前所需(mA): 500
-  额外运行电流(mA): 0
+  位置 ID: 0x14120000 / 9
+  当前可用电流 (mA): 500
+  当前所需电流 (mA): 500
+  额外操作电流 (mA): 0
 ```
 
-当机器关闭，通过USB连接到电脑，按住“恢复按钮”并开机时，它应该启动进入“加载模式”。机器会“发声”，但屏幕保持静止。_你可以关闭，等待一分钟，开机，机器将正常启动。_
+在机器关机、通过 USB 连接到计算机、按住“恢复按钮”并开机时，它应启动到“加载模式”。机器会“嘟嘟”一声，但屏幕会保持静止。_你可以关机，等待一分钟，再次开机，机器将正常启动。_
 
-_安卓硬件不是在开机后处理“声音”，而是通过其他Nautilus PCBs处理。_
+_Android 硬件在开机后不会处理“嘟嘟”声，而是通过其他 Nautilus PCB 处理。_
 
-现在它会在电脑上报告为`USB下载小工具`（序列号隐藏）：
+它现在会向计算机报告为 `USB download gadget`（序列号隐藏）：
 
 ```
-USB下载小工具:
-  产品ID: 0x330c
-  供应商ID: 0x2207 (福州瑞芯微电子有限公司)
+USB download gadget:
+  产品 ID: 0x330c
+  供应商 ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   版本: 99.99
   序列号: XXXXXXXXXXXXXXX
   制造商: Rockchip
-  位置ID: 0x14120000
+  位置 ID: 0x14120000
 ```
 
-运行rkDumper针对控制台后，我们得到了关于分区的信息：
+在对控制台运行 rkDumper 后，我们得到了关于分区的信息：
 
 ```
-发现"EFI PART"标志（RKFP固件转储）
+"EFI PART" 标志已找到 (RKFP FW 转储)
 
-分区"EFI_part" (0x00004000)已保存（格式：RockChip RKFP转储）
-分区"uboot_a" (0x00002000)已保存（格式：Rockchip uboot镜像文件）
-分区"uboot_b" (0x00002000)已保存（格式：Rockchip uboot镜像文件）
-分区"trust_a" (0x00002000)已保存（格式：未知）
-分区"trust_b" (0x00002000)已保存（格式：未知）
-分区"misc" (0x00002000)已保存（格式：未知）
-分区"resource" (0x00008000)已保存（格式：未知）
-分区"kernel" (0x00010000)已保存（格式：未知）
-分区"dtb" (0x00002000)已保存（格式：未知）
-分区"dtbo_a" (0x00002000)已保存（格式：未知）
-分区"dtbo_b" (0x00002000)已保存（格式：未知）
-分区"vbmeta_a" (0x00000800)已保存（格式：未知）
-分区"vbmeta_b" (0x00000800)已保存（格式：未知）
-分区"boot_a" (0x00020000)已保存（格式：未知）
-分区"boot_b" (0x00020000)已保存（格式：未知）
-分区"backup" (0x00038000)已保存（格式：未知）
-分区"security" (0x00002000)已保存（格式：未知）
-分区"cache" (0x00100000)已保存（格式：未知）
-分区"system_a" (0x00500000)已保存（格式：未知）
-分区"system_b" (0x00500000)已保存（格式：未知）
-分区"metadata" (0x00008000)已保存（格式：未知）
-分区"vendor_a" (0x00100000)已保存（格式：未知）
-分区"vendor_b" (0x00100000)已保存（格式：未知）
-分区"oem_a" (0x00100000)已保存（格式：未知）
-分区"oem_b" (0x00100000)已保存（格式：未知）
-分区"frp" (0x00000400)已保存（格式：未知）
-分区"sw_release" (0x00ed7000)已保存（格式：未知）
-分区"video" (0x0047e000)已保存（格式：未知）
-分区"userdata" (0x0169bbdf)已保存（格式：未知）
+分区 "EFI_part" (0x00004000) 已保存 (格式: RockChip RKFP 转储)
+分区 "uboot_a" (0x00002000) 已保存 (格式: Rockchip uboot 镜像文件)
+分区 "uboot_b" (0x00002000) 已保存 (格式: Rockchip uboot 镜像文件)
+分区 "trust_a" (0x00002000) 已保存 (格式: 未知)
+分区 "trust_b" (0x00002000) 已保存 (格式: 未知)
+分区 "misc" (0x00002000) 已保存 (格式: 未知)
+分区 "resource" (0x00008000) 已保存 (格式: 未知)
+分区 "kernel" (0x00010000) 已保存 (格式: 未知)
+分区 "dtb" (0x00002000) 已保存 (格式: 未知)
+分区 "dtbo_a" (0x00002000) 已保存 (格式: 未知)
+分区 "dtbo_b" (0x00002000) 已保存 (格式: 未知)
+分区 "vbmeta_a" (0x00000800) 已保存 (格式: 未知)
+分区 "vbmeta_b" (0x00000800) 已保存 (格式: 未知)
+分区 "boot_a" (0x00020000) 已保存 (格式: 未知)
+分区 "boot_b" (0x00020000) 已保存 (格式: 未知)
+分区 "backup" (0x00038000) 已保存 (格式: 未知)
+分区 "security" (0x00002000) 已保存 (格式: 未知)
+分区 "cache" (0x00100000) 已保存 (格式: 未知)
+分区 "system_a" (0x00500000) 已保存 (格式: 未知)
+分区 "system_b" (0x00500000) 已保存 (格式: 未知)
+分区 "metadata" (0x00008000) 已保存 (格式: 未知)
+分区 "vendor_a" (0x00100000) 已保存 (格式: 未知)
+分区 "vendor_b" (0x00100000) 已保存 (格式: 未知)
+分区 "oem_a" (0x00100000) 已保存 (格式: 未知)
+分区 "oem_b" (0x00100000) 已保存 (格式: 未知)
+分区 "frp" (0x00000400) 已保存 (格式: 未知)
+分区 "sw_release" (0x00ed7000) 已保存 (格式: 未知)
+分区 "video" (0x0047e000) 已保存 (格式: 未知)
+分区 "userdata" (0x0169bbdf) 已保存 (格式: 未知)
 ```
 
-`uboot_a`和`uboot_b`已成功提取，但所有标记为`(格式：未知)`的其他分区备份得不好，只从它们中提取了十六进制`CC`值。
+`uboot_a` 和 `uboot_b` 成功提取，但所有标记为 `(格式: 未知)` 的分区备份不佳，只从中提取了 `CC` 十六进制值。
 
-我的一个类似案例在[4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)上有记录，而且在[询问](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625)rkDumper开发者后，[他说](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085)必须有一个新的RockChip加载器到位。目前看来，按照这种方法似乎是不可行的。
+类似的案例在 [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030) 上有记录，在[询问](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) rkDumper 开发者后，[他表示](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) 可能有一个新的 RockChip 加载器在起作用。按照这种方法目前似乎不可行。
 
 ### ADB
 
-通过adb可以找到一些类似的数据，但似乎不可能进行备份，因为我们缺乏root权限：
+通过 adb 可以找到一些类似的数据，但由于我们缺乏 root 权限，似乎无法备份：
 
 ```sh
 > ls -al /dev/block/platform/
-总计 0
+total 0
 drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
 drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
 drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
@@ -125,7 +166,7 @@ drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
 
 ```sh
 > ls -al /dev/block/platform/fe330000.sdhci/by-name/
-总计 0
+total 0
 drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
 drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
@@ -160,4 +201,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### 其他想法
 
-我们可以做的一件事是脱焊eMMC芯片并外部读取，以便能够备份其所有内容。这对于创建自定义ROM来说是好的，但我不会从我唯一的控制台上脱焊（如果有一个备用的就酷了）。
+我们可以做的一件事是拆下 eMMC 芯片并在外部读取它以备份其所有内容。这对于创建自定义 ROM 很有用，但我不会拆下我唯一的控制台上的芯片（如果有备用的，那就太好了）。

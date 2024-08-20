@@ -1,6 +1,6 @@
 ---
 title: fl3xbl0w
-description: Progetto di ingegneria inversa. È iniziato con il tapis roulant Bowflex Treadmill 22 ma si è poi generalizzato per qualsiasi macchina con Android venduta da Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Progetto di ingegneria inversa. Iniziato con il tapis roulant Bowflex Treadmill 22 ma poi generalizzato per qualsiasi macchina con Android venduta da Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 img: ~/assets/images/project-fl3xbl0w.svg
 imgAlt: Logo del progetto fl3xbl0w
@@ -8,24 +8,24 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c0130a435f67cbcb19ac8072c88354c5f3e181e9f644a9e82f19d85517a20d2f
+translatedBy: chatgpt-4o-latest
+checksum: 0f9d89bb08f15978264b57bc4b63ac5e89bae404d34a1f19c48f9d3673ca12ec
 ---
 
 import { Image } from 'astro:assets';
 import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
-<Image src={HeaderImage} alt="logo di fl3xbl0w" format="webp" width={800} />
+<Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
 
 Benvenuti alla mia documentazione della "Console Bowflex"! (quello che Nautilus chiama Vantron).
 
-Vantron è la base per la maggior parte dei "dispositivi intelligenti" di Nautilus Inc. Fondamentalmente, un tablet Android che esegue software proprietario. Oltre ad alcune cose relative all'hardware che hanno suscitato la mia curiosità.
+Vantron è la base della maggior parte dei "dispositivi intelligenti" di Nautilus Inc. Fondamentalmente, un tablet Android che esegue software proprietario. Oltre a qualche aspetto legato all'hardware che ha suscitato la mia curiosità.
 
-Mi sono molto appoggiato a un lavoro precedente che ho trovato su [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (grazie [xasmx](https://www.reddit.com/user/xasmx/)!) per ottenere una comprensione più profonda del software e dell'hardware della macchina.
+Mi sono basato molto su un lavoro precedente che ho trovato su [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (grazie [xasmx](https://www.reddit.com/user/xasmx/)!) per ottenere una comprensione più profonda del software e dell'hardware della macchina.
 
 ## Dispositivi compatibili (Jailbreak di Android)
 
-Dopo aver giocato con le <a href="/it/projects/fl3xbl0w/decompiling" target="_self">applicazioni decompilate</a>, posso dire con certezza che la seguente documentazione potrebbe essere estesa in un modo o nell'altro ai seguenti dispositivi Bowflex:
+Dopo aver giocato con le <a href="/it/projects/fl3xbl0w/decompiling" target="_self">applicazioni decompilate</a>, posso dire con certezza che la seguente documentazione potrebbe essere estrapolata in un modo o nell'altro ai seguenti dispositivi Bowflex:
 
 ### Tapis roulant
 
@@ -41,14 +41,14 @@ Dopo aver giocato con le <a href="/it/projects/fl3xbl0w/decompiling" target="_se
 - Max Total 16
 - Max Trainer M9
 
-Non possiedo un Max Trainer né un VeloCore, ma dovrebbe funzionare a patto che tu abbia una porta USB disponibile basata sui ritrovamenti del codice.
+Non ho un Max Trainer né un VeloCore, ma dovrebbe funzionare fintanto che hai una porta USB disponibile basata sui risultati del codice.
 
 Confermato che funziona con le versioni di NautilusLauncher:
 
 - 5.0.0.350
 - 5.0.0.382
 
-**Il jailbreak è stato già corretto da Nautilus.**
+**Il jailbreak è già stato patchato da Nautilus.**
 
 ## Documentazione
 
@@ -66,20 +66,20 @@ Confermato che funziona con le versioni di NautilusLauncher:
 - <a href="/it/projects/fl3xbl0w/quirks" target="_self">
     Curiosità di Bowflex
   </a>
+- <a href="/it/projects/fl3xbl0w/romdump" target="_self">
+    Dump della ROM (aggiornato 2024!)
+  </a>
 
 ### Lavori in corso
 
 - <a href="/it/projects/fl3xbl0w/treadmotor" target="_self">
-    Controllo del Motore del Tapis Roulant
-  </a>
-- <a href="/it/projects/fl3xbl0w/romdump" target="_self">
-    Dump della ROM
+    Controllore del Motore del Tapis Roulant
   </a>
 
 ## Obiettivo finale
 
-Abilitare il maggior numero di aggiornamenti futuri per il mio tapis roulant quanto possibile.
+Abilitare il maggior numero possibile di aggiornamenti futuri per il mio tapis roulant.
 
-Nautilus, Inc. offre solo una garanzia di 1 anno sulla parte elettronica, e quando ho visto che il meccanismo per spegnere la macchina (e quindi il tablet Android) era essenzialmente "interrompere l'alimentazione AC tramite l'interruttore posteriore", questo mi ha spaventato. Ogni dispositivo basato su Linux dovrebbe essere spento in modo sicuro per evitare la corruzione del sistema operativo, e questo tablet Android non fa eccezione. Quindi, finché è in funzione, perché non divertirsi un po' di più con esso?
+Nautilus, Inc. offre solo una garanzia di 1 anno sulla parte elettronica, e quando ho visto che il meccanismo per spegnere la macchina (e quindi il tablet Android) era fondamentalmente "tagliare l'alimentazione AC tramite l'interruttore posteriore", mi sono spaventato. Ogni dispositivo basato su Linux dovrebbe essere spento in modo sicuro per evitare la corruzione del sistema operativo, e questo tablet Android non fa eccezione. Quindi, finché funziona, perché non divertirsi un po' di più con esso?
 
-Alla fine, voglio intercettare, comprendere e ricreare la comunicazione che va verso il controller del motore nel mio tapis roulant in modo che, se il tablet muore, io abbia ancora un dispositivo funzionante.
+Alla fine, voglio intercettare, comprendere e ricreare la comunicazione che va verso il controllore del motore nel mio tapis roulant in modo che, se il tablet muore, abbia ancora un dispositivo funzionante.

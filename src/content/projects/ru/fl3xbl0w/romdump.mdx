@@ -1,6 +1,6 @@
 ---
-title: дамп ROM - fl3xbl0w
-description: Проект по реверс-инжинирингу. Началось все с беговой дорожки Bowflex Treadmill 22, но в итоге было обобщено для любого Android устройства, продаваемого компанией Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: Снятие дампа ПЗУ - fl3xbl0w
+description: Проект по обратной разработке. Начался с беговой дорожки Bowflex Treadmill 22, но в итоге был обобщен для любой машины с Android, продаваемой Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /ru/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,111 +9,152 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
+### Обновление 2024
+
+Мы достигли значительного этапа в проекте благодаря сотрудничеству сообщества! Один из участников, [alphab0ing](https://github.com/alphab0ing), работает над созданием кастомной прошивки для платы Bowflex Vantron RK3399. Подробнее можно узнать в [этом обсуждении на GitHub](https://github.com/barrenechea/barrenechea-website/issues/20).
+
+Прошел уже более года с тех пор, как моя консоль получила обновление системы через OTA. Я быстро подключился через ADB, чтобы сделать резервную копию файлов (если смогу их найти), и, к счастью, мне это удалось!
+
+Обновление было сохранено в типичном рабочем каталоге Nautilus, `/sdcard/Nautilus/redbend/`. Извлеченные файлы следующие:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+Файл `1_delta.rdp` был особенно большим, поэтому я предположил, что именно в нем содержится основная информация. После некоторого анализа файла я пришел к следующему:
+
+```
+1_delta.rdp: Данные архива Java (JAR): Распакуйте как .zip
+	- payload.bin: Извлеките с помощью https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, ядро (0x10008000), ramdisk (0x11000000), второй этап (0x10f00000), размер страницы: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: данные
+		- oem.img: Данные файловой системы Linux rev 1.0 ext2, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, имя тома "oem" (extents) (большие файлы) (огромные файлы)
+		- system.img: Данные файловой системы Linux rev 1.0 ext2, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (большие файлы) (огромные файлы)
+		- trust.img: данные
+		- uboot.img: данные
+		- vbmeta.img: данные
+		- vendor.img: Данные файловой системы Linux rev 1.0 ext2, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, имя тома "vendor" (extents) (большие файлы) (огромные файлы)
+```
+
+Файлы обновления OTA (HP-22_T56_EEA Android OS Image 3.10 release-keys) были загружены на [Internet Archive](https://archive.org/download/HP-22_T56_EEA).
+
+С этими файлами [alphab0ing](https://github.com/alphab0ing) смог получить оригинальный DTS (Device Tree Source) устройства ([скачать](/HP-22_T56_EEA.dts)). Это важно для разработки кастомной прошивки и лучшего понимания аппаратного обеспечения. Посмотрим, как это будет развиваться!
+
 ### Режим загрузчика Rockchip
 
-Аппаратное обеспечение Android работает на процессоре RK3399. Процессоры Rockchip имеют стандартный "режим загрузчика".
+Процессор RK3399 управляет аппаратным обеспечением Android. Процессоры Rockchip имеют стандартную функцию "режим загрузчика".
 
-Инструментарий, который я использовал:
+Инструменты, которые я использовал:
 
-- Rockchip Driver Assistant v4.5 от [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 test из [этого поста на XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
-- Android Tool Release v2.69 от [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
+- Rockchip Driver Assistant v4.5 с [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
+- rkDumper 1.09 test с [этого поста на XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- Android Tool Release v2.69 с [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-_Существует более новая версия драйвера для скачивания, но она известна своей несовместимостью с rkDumper._
+_Существует более новая версия драйвера для загрузки, но известно, что она несовместима с rkDumper._
 
-Чтобы поиграть с этим, вам придется разобрать консоль Bowflex, открутить пластиковую заднюю крышку и собрать ее в "голом виде".
-**Не пытайтесь этого делать, так как работа с аппаратным обеспечением Android в режиме загрузчика может привести к необратимому повреждению устройства.**
+Чтобы поиграть с этим, вам нужно будет разобрать консоль Bowflex, открутить пластиковую заднюю крышку и собрать ее в "голом виде".
+**Не пытайтесь это сделать, так как игра с аппаратным обеспечением Android в режиме загрузчика может привести к постоянной поломке устройства.**
 
-<Image src={ConsoleMounted} alt="Консоль с снятой задней крышкой" format="webp" />
+<Image src={ConsoleMounted} alt="Консоль установлена с удаленной задней крышкой" format="webp" />
 
-Вот соответствующие части платы логики Android для вещей Rockchip:
+Вот соответствующие части логической платы Android для работы с Rockchip:
 
 <Image src={VantronPCB} alt="Печатная плата Vantron" format="webp" />
 
-Вы можете держать приложение Android Tool Release открытым все время, чтобы использовать его в качестве справки и проверять, в каком режиме находится консоль.
+Вы можете держать приложение Android Tool Release открытым все время как справочник для проверки, в каком режиме находится консоль.
 
-Когда машина включена в "нормальном режиме" и подключена к компьютеру, она идентифицируется как `NFTM-LAR`:
+Когда машина включена в "нормальном режиме" и подключена к компьютеру, она определяется как `NFTM-LAR`:
 
 ```
 NFTM-LAR:
   Product ID: 0x0001
   Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 3.10
-  Speed: до 480 Мб/с
-  Manufacturer: Vanzo
+  Скорость: до 480 Мбит/с
+  Производитель: Vanzo
   Location ID: 0x14120000 / 9
-  Current Available (mA): 500
-  Current Required (mA): 500
-  Extra Operating Current (mA): 0
+  Текущий доступный ток (мА): 500
+  Текущий требуемый ток (мА): 500
+  Дополнительный рабочий ток (мА): 0
 ```
 
-Когда машина выключена, подключена через USB к компьютеру, удерживается кнопка "Восстановление" и включается, она должна загрузиться в "режим загрузчика". Машина "издаст звук", но экран останется статичным. _Вы можете выключить, подождать минуту, включить, и машина загрузится нормально._
+Когда машина выключена, подключена через USB к компьютеру, удерживая кнопку "Recovery" и включая ее, она должна загрузиться в "режим загрузчика". Машина "пикнет", но экран останется статичным. _Вы можете выключить, подождать минуту, включить, и машина загрузится нормально._
 
-_Аппаратное обеспечение Android не обрабатывает "звук" после включения машины, но через другие платы Nautilus._
+_Аппаратное обеспечение Android не обрабатывает "пик" после включения машины, но через другие платы Nautilus._
 
-Теперь она будет отображаться на компьютере как `USB download gadget` (серийный номер скрыт):
+Теперь она будет сообщать компьютеру как `USB download gadget` (серийный номер скрыт):
 
 ```
 USB download gadget:
   Product ID: 0x330c
   Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
   Version: 99.99
-  Serial Number: XXXXXXXXXXXXXXX
-  Manufacturer: Rockchip
+  Серийный номер: XXXXXXXXXXXXXXX
+  Производитель: Rockchip
   Location ID: 0x14120000
 ```
 
 После запуска rkDumper против консоли мы получаем информацию о разделах:
 
 ```
-"EFI PART" sign found (RKFP FW dump)
+Найден знак "EFI PART" (дамп RKFP FW)
 
-Partition "EFI_part" (0x00004000) saved (format: RockChip RKFP dump)
-Partition "uboot_a" (0x00002000) saved (format: Rockchip uboot image file)
-Partition "uboot_b" (0x00002000) saved (format: Rockchip uboot image file)
-Partition "trust_a" (0x00002000) saved (format: unknown)
-Partition "trust_b" (0x00002000) saved (format: unknown)
-Partition "misc" (0x00002000) saved (format: unknown)
-Partition "resource" (0x00008000) saved (format: unknown)
-Partition "kernel" (0x00010000) saved (format: unknown)
-Partition "dtb" (0x00002000) saved (format: unknown)
-Partition "dtbo_a" (0x00002000) saved (format: unknown)
-Partition "dtbo_b" (0x00002000) saved (format: unknown)
-Partition "vbmeta_a" (0x00000800) saved (format: unknown)
-Partition "vbmeta_b" (0x00000800) saved (format: unknown)
-Partition "boot_a" (0x00020000) saved (format: unknown)
-Partition "boot_b" (0x00020000) saved (format: unknown)
-Partition "backup" (0x00038000) saved (format: unknown)
-Partition "security" (0x00002000) saved (format: unknown)
-Partition "cache" (0x00100000) saved (format: unknown)
-Partition "system_a" (0x00500000) saved (format: unknown)
-Partition "system_b" (0x00500000) saved (format: unknown)
-Partition "metadata" (0x00008000) saved (format: unknown)
-Partition "vendor_a" (0x00100000) saved (format: unknown)
-Partition "vendor_b" (0x00100000) saved (format: unknown)
-Partition "oem_a" (0x00100000) saved (format: unknown)
-Partition "oem_b" (0x00100000) saved (format: unknown)
-Partition "frp" (0x00000400) saved (format: unknown)
-Partition "sw_release" (0x00ed7000) saved (format: unknown)
-Partition "video" (0x0047e000) saved (format: unknown)
-Partition "userdata" (0x0169bbdf) saved (format: unknown)
+Раздел "EFI_part" (0x00004000) сохранен (формат: дамп RockChip RKFP)
+Раздел "uboot_a" (0x00002000) сохранен (формат: образ uboot Rockchip)
+Раздел "uboot_b" (0x00002000) сохранен (формат: образ uboot Rockchip)
+Раздел "trust_a" (0x00002000) сохранен (формат: неизвестный)
+Раздел "trust_b" (0x00002000) сохранен (формат: неизвестный)
+Раздел "misc" (0x00002000) сохранен (формат: неизвестный)
+Раздел "resource" (0x00008000) сохранен (формат: неизвестный)
+Раздел "kernel" (0x00010000) сохранен (формат: неизвестный)
+Раздел "dtb" (0x00002000) сохранен (формат: неизвестный)
+Раздел "dtbo_a" (0x00002000) сохранен (формат: неизвестный)
+Раздел "dtbo_b" (0x00002000) сохранен (формат: неизвестный)
+Раздел "vbmeta_a" (0x00000800) сохранен (формат: неизвестный)
+Раздел "vbmeta_b" (0x00000800) сохранен (формат: неизвестный)
+Раздел "boot_a" (0x00020000) сохранен (формат: неизвестный)
+Раздел "boot_b" (0x00020000) сохранен (формат: неизвестный)
+Раздел "backup" (0x00038000) сохранен (формат: неизвестный)
+Раздел "security" (0x00002000) сохранен (формат: неизвестный)
+Раздел "cache" (0x00100000) сохранен (формат: неизвестный)
+Раздел "system_a" (0x00500000) сохранен (формат: неизвестный)
+Раздел "system_b" (0x00500000) сохранен (формат: неизвестный)
+Раздел "metadata" (0x00008000) сохранен (формат: неизвестный)
+Раздел "vendor_a" (0x00100000) сохранен (формат: неизвестный)
+Раздел "vendor_b" (0x00100000) сохранен (формат: неизвестный)
+Раздел "oem_a" (0x00100000) сохранен (формат: неизвестный)
+Раздел "oem_b" (0x00100000) сохранен (формат: неизвестный)
+Раздел "frp" (0x00000400) сохранен (формат: неизвестный)
+Раздел "sw_release" (0x00ed7000) сохранен (формат: неизвестный)
+Раздел "video" (0x0047e000) сохранен (формат: неизвестный)
+Раздел "userdata" (0x0169bbdf) сохранен (формат: неизвестный)
 ```
 
-`uboot_a` и `uboot_b` были успешно извлечены, но все остальные разделы, помеченные как `(format: unknown)`, плохо скопированы, из них извлечены только шестнадцатеричные значения `CC`.
+`uboot_a` и `uboot_b` были успешно извлечены, но все остальные разделы, помеченные как `(формат: неизвестный)`, плохо резервируются, извлекая из них только значения `CC` в шестнадцатеричном формате.
 
-Похожий случай, как у меня, был задокументирован на [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), и после [вопроса](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) разработчику rkDumper, [он говорит](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), что должен быть установлен новый загрузчик RockChip. Следование этому методу пока кажется невозможным.
+Случай, похожий на мой, был задокументирован на [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), и после [вопроса](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) разработчику rkDumper, [он сказал](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085), что, вероятно, используется новый загрузчик RockChip. Следование этому методу пока кажется неосуществимым.
 
 ### ADB
 
-Некоторые похожие данные можно найти через adb, но кажется невозможным сделать резервную копию, так как у нас нет прав root:
+Некоторые аналогичные данные можно найти через adb, но, похоже, их невозможно сохранить, так как у нас нет root-доступа:
 
 ```sh
 > ls -al /dev/block/platform/
@@ -160,4 +201,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### Другие идеи
 
-То, что мы можем сделать, это выпаять чип eMMC и прочитать его внешне, чтобы иметь возможность резервного копирования всего его содержимого. Это было бы хорошо для создания пользовательской прошивки, но я не буду выпаивать из моей ЕДИНСТВЕННОЙ консоли (было бы здорово иметь запасную).
+Одним из вариантов является выпаивание чипа eMMC и чтение его содержимого внешним образом для создания резервной копии всех данных. Это было бы полезно для создания кастомной прошивки, но я не буду выпаивать чип из своей ЕДИНСТВЕННОЙ консоли (было бы здорово иметь запасную).

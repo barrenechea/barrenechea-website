@@ -1,6 +1,6 @@
 ---
 title: fl3xbl0w
-description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up generalizing for any machine with Android sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 img: ~/assets/images/project-fl3xbl0w.svg
 imgAlt: fl3xbl0w project logo
@@ -8,8 +8,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c0130a435f67cbcb19ac8072c88354c5f3e181e9f644a9e82f19d85517a20d2f
+translatedBy: chatgpt-4o-latest
+checksum: 0f9d89bb08f15978264b57bc4b63ac5e89bae404d34a1f19c48f9d3673ca12ec
 ---
 
 import { Image } from 'astro:assets';
@@ -19,13 +19,13 @@ import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
 Welcome to my documentation of the "Bowflex Console"! (what Nautilus calls Vantron).
 
-Vantron is the basis for most of Nautilus Inc.'s "smart devices". Essentially, an Android tablet running proprietary software. In addition to some hardware-related things that piqued my curiosity.
+Vantron is the base of most of Nautilus Inc.'s "smart devices." Basically, an Android tablet running proprietary software. Additionally, there are some hardware-related things that piqued my curiosity.
 
-I relied quite a bit on previous work I found on [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (thanks [xasmx](https://www.reddit.com/user/xasmx/)!) to gain a deeper understanding of the machine's software and hardware.
+I relied heavily on previous work I found on [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (thanks [xasmx](https://www.reddit.com/user/xasmx/)!) to gain a deeper understanding of the machine's software and hardware.
 
 ## Compatible Devices (Android Jailbreak)
 
-After playing with the <a href="/en/projects/fl3xbl0w/decompiling" target="_self">decompiled applications</a>, I can say with certainty that the following documentation could be extrapolated in one way or another to the following Bowflex devices:
+After playing with the <a href="/en/projects/fl3xbl0w/decompiling" target="_self">decompiled applications</a>, I can confidently say that the following documentation could be extrapolated in one way or another to the following Bowflex devices:
 
 ### Treadmills
 
@@ -41,9 +41,9 @@ After playing with the <a href="/en/projects/fl3xbl0w/decompiling" target="_self
 - Max Total 16
 - Max Trainer M9
 
-I don't have a Max Trainer or a VeloCore, but it should work as long as you have an available USB port based on the code findings.
+I don't have a Max Trainer or a VeloCore, but it should work as long as you have a USB port available based on the code findings.
 
-Confirmed to work with NautilusLauncher versions:
+Confirmed to work with the following versions of NautilusLauncher:
 
 - 5.0.0.350
 - 5.0.0.382
@@ -66,20 +66,20 @@ Confirmed to work with NautilusLauncher versions:
 - <a href="/en/projects/fl3xbl0w/quirks" target="_self">
     Bowflex Quirks
   </a>
+- <a href="/en/projects/fl3xbl0w/romdump" target="_self">
+    ROM Dump (updated 2024!)
+  </a>
 
 ### Work in Progress
 
 - <a href="/en/projects/fl3xbl0w/treadmotor" target="_self">
     Treadmill Motor Controller
   </a>
-- <a href="/en/projects/fl3xbl0w/romdump" target="_self">
-    ROM Dump
-  </a>
 
-## Ultimate Goal
+## Final Goal
 
-To enable as many future upgrades for my treadmill as possible.
+Enable as many future updates for my treadmill as possible.
 
-Nautilus, Inc. only offers a 1-year warranty on the electronic parts, and as soon as I saw that the mechanism to turn off the machine (and therefore, the Android tablet) was basically "cut the AC power through the rear switch", that scared me. Every Linux-based device should be shut down safely to avoid operating system corruption, and this Android tablet is no exception. So as long as it's running, why not have a little more fun with it?
+Nautilus, Inc. only offers a 1-year warranty on the electronics, and as soon as I saw that the mechanism to turn off the machine (and therefore the Android tablet) was basically "cutting the AC power via the rear switch," it scared me. Every Linux-based device should be safely shut down to avoid OS corruption, and this Android tablet is no exception. So while it's still working, why not have a little more fun with it?
 
-In the end, I want to intercept, understand, and recreate the communication going to the motor controller on my treadmill so that if the tablet dies, I still have a functioning device.
+In the end, I want to intercept, understand, and recreate the communication that goes to the motor controller in my treadmill so that if the tablet dies, I still have a functioning device.

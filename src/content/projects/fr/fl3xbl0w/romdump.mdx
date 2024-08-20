@@ -1,6 +1,6 @@
 ---
 title: Dump de la ROM - fl3xbl0w
-description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Projet de rétro-ingénierie. Il a commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour toute machine Android vendue par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /fr/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,32 +9,73 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: b18c469c50acb988210796ef5e4b6cecf18ddf9245ad33a9ee1bbf0633c1c4ca
+translatedBy: chatgpt-4o-latest
+checksum: 724bc0f398059453b0cfb71456619e1f5047a1728d830f99cdc4854335c03197
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
+### Mise à jour 2024
+
+Nous avons atteint une étape importante dans le projet grâce à la collaboration de la communauté ! Un collaborateur, [alphab0ing](https://github.com/alphab0ing), a travaillé sur la création d'une ROM personnalisée pour la carte Vantron RK3399 de Bowflex. Vous pouvez en savoir plus dans [ce fil GitHub](https://github.com/barrenechea/barrenechea-website/issues/20).
+
+Il y a plus d'un an, ma console a reçu une mise à jour système via OTA. Je me suis rapidement connecté via ADB pour faire une sauvegarde des fichiers (si je pouvais les trouver) et heureusement, j'ai réussi !
+
+Cette mise à jour a été stockée dans le répertoire de travail typique de Nautilus, `/sdcard/Nautilus/redbend/`. Les fichiers extraits sont les suivants :
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+Le fichier `1_delta.rdp` était particulièrement volumineux, donc j'ai supposé que la magie s'y trouvait. Après avoir inspecté un peu le fichier, j'en suis arrivé à ceci :
+
+```
+1_delta.rdp: Java archive data (JAR): Décompresser comme un .zip
+	- payload.bin: Extraire avec https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, kernel (0x10008000), ramdisk (0x11000000), second stage (0x10f00000), page size: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: data
+		- oem.img: Linux rev 1.0 ext2 filesystem data, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, volume name "oem" (extents) (large files) (huge files)
+		- system.img: Linux rev 1.0 ext2 filesystem data, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (large files) (huge files)
+		- trust.img: data
+		- uboot.img: data
+		- vbmeta.img: data
+		- vendor.img: Linux rev 1.0 ext2 filesystem data, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, volume name "vendor" (extents) (large files) (huge files)
+```
+
+Les fichiers de la mise à jour OTA (HP-22_T56_EEA Android OS Image 3.10 release-keys) ont été partagés sur [Internet Archive](https://archive.org/download/HP-22_T56_EEA).
+
+Avec ces fichiers, [alphab0ing](https://github.com/alphab0ing) a pu obtenir le DTS (Device Tree Source) original de l'appareil ([télécharger](/HP-22_T56_EEA.dts)). C'est crucial pour le développement de ROMs personnalisées et pour mieux comprendre le matériel. Nous verrons comment cela évolue !
+
 ### Mode de Chargement Rockchip
 
-Un processeur RK3399 alimente le matériel Android. Les processeurs Rockchip sont équipés d'un "mode de chargement" en tant que fonctionnalité standard.
+Un processeur RK3399 alimente le matériel Android. Les processeurs Rockchip sont livrés avec un "loader mode" en tant que fonctionnalité standard.
 
-La suite d'outils que j'ai utilisée est :
+L'ensemble d'outils que j'ai utilisé est :
 
 - Rockchip Driver Assistant v4.5 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
 - rkDumper 1.09 test de [ce post sur XDA](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 de [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-_Il existe une version plus récente du pilote disponible au téléchargement, mais elle est connue pour être incompatible avec rkDumper._
+_Il existe une version plus récente du pilote disponible en téléchargement, mais elle est connue pour être incompatible avec rkDumper._
 
-Pour jouer avec cela, vous devrez démonter la console Bowflex, dévisser le couvercle arrière en plastique et la remonter dans une "forme nue".
-**N'essayez pas cela, car manipuler le matériel Android en mode Loader peut entraîner un appareil irrémédiablement cassé.**
+Pour jouer avec cela, vous devrez démonter la Console Bowflex, dévisser le couvercle arrière en plastique et la remonter dans une "forme nue".
+**Ne tentez pas cela, car jouer avec le matériel Android en mode Loader peut entraîner un appareil définitivement endommagé.**
 
-<Image src={ConsoleMounted} alt="Console montée avec le couvercle arrière enlevé" format="webp" />
+<Image src={ConsoleMounted} alt="Console montée avec le couvercle arrière retiré" format="webp" />
 
-Voici les parties pertinentes de la carte logique Android pour les choses Rockchip :
+Voici les parties pertinentes de la carte logique Android pour les choses de Rockchip :
 
 <Image src={VantronPCB} alt="PCB de Vantron" format="webp" />
 
@@ -49,17 +90,17 @@ NFTM-LAR:
   Version: 3.10
   Vitesse: Jusqu'à 480 Mb/s
   Fabricant: Vanzo
-  Emplacement ID: 0x14120000 / 9
-  Courant Disponible (mA): 500
-  Courant Requis (mA): 500
-  Courant Supplémentaire en Fonctionnement (mA): 0
+  ID de l'emplacement: 0x14120000 / 9
+  Courant disponible (mA): 500
+  Courant requis (mA): 500
+  Courant supplémentaire de fonctionnement (mA): 0
 ```
 
-Avec la machine éteinte, connectée via USB à un ordinateur, en maintenant le bouton "Recovery" enfoncé et en l'allumant, elle devrait démarrer en "mode Loader". La machine "sonnera", mais l'écran restera statique. _Vous pouvez éteindre, attendre une minute, allumer et la machine démarrera normalement._
+Avec la machine éteinte, connectée via USB à un ordinateur, en maintenant le "Recovery button" enfoncé et en l'allumant, elle devrait démarrer en "Loader mode". La machine "sonnera", mais l'écran restera statique. _Vous pouvez éteindre, attendre une minute, rallumer et la machine démarrera normalement._
 
-_Le matériel Android ne gère pas le "son" après l'allumage de la machine, mais à travers les autres PCB de Nautilus._
+_Le matériel Android ne gère pas le "son" après avoir allumé la machine, mais via les autres PCB de Nautilus._
 
-Elle sera maintenant signalée sur l'ordinateur comme `USB download gadget` (Numéro de Série caché) :
+Elle sera maintenant signalée à l'ordinateur comme `USB download gadget` (Numéro de Série caché) :
 
 ```
 USB download gadget:
@@ -68,7 +109,7 @@ USB download gadget:
   Version: 99.99
   Numéro de Série: XXXXXXXXXXXXXXX
   Fabricant: Rockchip
-  Emplacement ID: 0x14120000
+  ID de l'emplacement: 0x14120000
 ```
 
 Après avoir exécuté rkDumper contre la console, nous obtenons des informations sur les partitions :
@@ -107,13 +148,13 @@ Partition "video" (0x0047e000) saved (format: inconnu)
 Partition "userdata" (0x0169bbdf) saved (format: inconnu)
 ```
 
-`uboot_a` et `uboot_b` ont été extraits avec succès, mais toutes les autres partitions marquées comme `(format: inconnu)` sont mal sauvegardées, extrayant seulement des valeurs hexadécimales `CC` d'elles.
+`uboot_a` et `uboot_b` ont été extraits avec succès, mais toutes les autres partitions marquées comme `(format: inconnu)` sont mal sauvegardées, ne faisant qu'extraire des valeurs hexadécimales `CC` d'elles.
 
-Un cas similaire au mien a été documenté sur [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), et après [avoir demandé](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) au développeur de rkDumper, [il dit](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) qu'il doit y avoir un nouveau chargeur RockChip en place. Suivre cette méthode semble être inviable pour le moment.
+Un cas similaire au mien a été documenté sur [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), et après avoir [demandé](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) au développeur de rkDumper, [il dit](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) qu'il doit y avoir un nouveau loader de RockChip en place. Suivre cette méthode semble être inviable pour le moment.
 
 ### ADB
 
-Des données similaires peuvent être trouvées via adb, mais il ne semble pas possible de faire une sauvegarde car nous manquons de permissions root :
+Quelques données similaires peuvent être trouvées via adb, mais il ne semble pas possible de faire une sauvegarde car nous manquons des permissions root :
 
 ```sh
 > ls -al /dev/block/platform/
@@ -160,4 +201,4 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 
 ### Autres idées
 
-Une chose que nous pourrions faire est de dessouder la puce eMMC et de la lire de manière externe pour pouvoir sauvegarder tout son contenu. Cela serait utile pour créer une ROM personnalisée (Custom ROM), mais je ne vais pas dessouder celle de ma SEULE Console (ce serait génial d'en avoir une de rechange).
+Une chose que nous pouvons faire est de dessouder la puce eMMC et de la lire en externe pour pouvoir sauvegarder tout son contenu. Ce serait bien pour créer une ROM personnalisée (Custom ROM), mais je ne dessouderai pas celle de ma SEULE Console (ce serait cool d'en avoir une de rechange).

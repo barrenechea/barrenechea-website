@@ -1,6 +1,6 @@
 ---
-title: ROM Dump - fl3xbl0w
-description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: ROM Afrit - fl3xbl0w
+description: Afturverkfræðiverkefni. Það byrjaði með Bowflex Treadmill 22 en endaði með því að vera alhæft fyrir hvaða vél sem er með Android sem er seld af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /is/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,111 +9,152 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 6a0c1a15841526a3a7105047f409e1344aaceeb86d8e0b9446035f4ce1114c35
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
 ---
 
 import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
-### Rockchip Hleðslustilling
+### Uppfærsla 2024
 
-RK3399 örgjörvi knýr Android vélbúnaðinn. Rockchip örgjörvar koma með staðlaða "hleðslustillingu".
+Við höfum náð stórum áfanga í verkefninu þökk sé samstarfi samfélagsins! Framlagandi, [alphab0ing](https://github.com/alphab0ing), hefur verið að vinna að því að búa til sérsniðna ROM fyrir Bowflex Vantron RK3399 borðið. Þú getur séð meira í [þessari GitHub málefni](https://github.com/barrenechea/barrenechea-website/issues/20).
 
-Verkfærasettið sem ég notaði er:
+Það er meira en ár síðan ég fékk uppfærslu á kerfið mitt í gegnum OTA. Ég tengdist fljótt í gegnum ADB til að taka afrit af skránum (ef ég gæti fundið þær), og sem betur fer tókst það!
+
+Uppfærslan var geymd í venjulegu Nautilus vinnuskráarsafni, `/sdcard/Nautilus/redbend/`. Útdregnar skrár eru sem hér segir:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+Skráin `1_delta.rdp` var sérstaklega stór, svo ég gerði ráð fyrir að þar væri galdurinn. Eftir að hafa skoðað skrána aðeins, komst ég að þessu:
+
+```
+1_delta.rdp: Java skjalasafnsgögn (JAR): Afþjappa sem .zip
+	- payload.bin: Útdráttur með https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, kjarni (0x10008000), ramdisk (0x11000000), annað stig (0x10f00000), blaðsíðustærð: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: gögn
+		- oem.img: Linux rev 1.0 ext2 skráarkerfisgögn, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, bindiheiti "oem" (extents) (stórar skrár) (risastórar skrár)
+		- system.img: Linux rev 1.0 ext2 skráarkerfisgögn, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (stórar skrár) (risastórar skrár)
+		- trust.img: gögn
+		- uboot.img: gögn
+		- vbmeta.img: gögn
+		- vendor.img: Linux rev 1.0 ext2 skráarkerfisgögn, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, bindiheiti "vendor" (extents) (stórar skrár) (risastórar skrár)
+```
+
+OTA uppfærsluskrárnar (HP-22_T56_EEA Android OS Image 3.10 release-keys) hafa verið deilt á [Internet Archive](https://archive.org/download/HP-22_T56_EEA).
+
+Með þessum skrám gat [alphab0ing](https://github.com/alphab0ing) fengið upprunalega DTS (Device Tree Source) tækisins ([sækja](/HP-22_T56_EEA.dts)). Þetta er mikilvægt fyrir þróun sérsniðinna ROM og til að skilja vélbúnaðinn betur. Sjáum hvernig þetta þróast!
+
+### Rockchip Hleðsluhamur
+
+RK3399 örgjörvi knýr Android vélbúnaðinn. Rockchip örgjörvar koma með "hleðsluham" sem staðalbúnað.
+
+Verkfærasettið sem ég hef notað er:
 
 - Rockchip Driver Assistant v4.5 frá [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)
-- rkDumper 1.09 prófun frá [þessari XDA færslu](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
+- rkDumper 1.09 próf frá [þessari XDA færslu](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)
 - Android Tool Release v2.69 frá [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)
 
-_Það er til nýrri útgáfa af ökumanni til niðurhals, en þekkt er að hún sé ósamhæf við rkDumper._
+_Það er til nýrri útgáfa af drifinu til niðurhals, en hún er þekkt fyrir að vera ósamhæf við rkDumper._
 
-Til að leika þér með þetta verður þú að taka í sundur Bowflex stjórntölvuna, skrúfa af plast afturhúddið og setja það saman aftur í "beru formi".
-**Ekki reyna þetta, þar sem að leika með Android vélbúnað í Hleðslustillingu getur leitt til varanlega brotinnar tækis.**
+Til að leika sér með þetta þarftu að taka Bowflex stjórnborðið í sundur, skrúfa af plastbakhlífina og setja það saman aftur í "beru formi."
+**Ekki reyna þetta, þar sem að leika sér með Android vélbúnað í Hleðsluham getur leitt til varanlega brotins tækis.**
 
-<Image src={ConsoleMounted} alt="Uppsett stjórntölva með fjarlægðu afturhúddi" format="webp" />
+<Image src={ConsoleMounted} alt="Stjórnborð sett upp með bakhlíf fjarlægð" format="webp" />
 
-Hér eru viðeigandi hlutar Android rásarplötunnar fyrir Rockchip dót:
+Hér eru viðeigandi hlutar Android rökborðsins fyrir Rockchip efni:
 
 <Image src={VantronPCB} alt="Vantron PCB" format="webp" />
 
-Þú getur haldið Android Tool Release forritinu opið allan tímann sem tilvísun til að athuga í hvaða stillingu stjórntölvan er.
+Þú getur haft Android Tool Release forritið opið allan tímann sem viðmið til að athuga hvaða ham stjórnborðið er í.
 
-Með vélina kveikta í "venjulegri stillingu" og tengda við tölvu, þekkist hún sem `NFTM-LAR`:
+Með vélinni kveikt í "venjulegum ham" og tengdri við tölvu, auðkennir hún sig sem `NFTM-LAR`:
 
 ```
 NFTM-LAR:
-  Product ID: 0x0001
-  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
-  Version: 3.10
-  Speed: Up to 480 Mb/s
-  Manufacturer: Vanzo
-  Location ID: 0x14120000 / 9
-  Current Available (mA): 500
-  Current Required (mA): 500
-  Extra Operating Current (mA): 0
+  Vörunúmer: 0x0001
+  Framleiðandaauðkenni: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Útgáfa: 3.10
+  Hraði: Allt að 480 Mb/s
+  Framleiðandi: Vanzo
+  Staðsetningarnúmer: 0x14120000 / 9
+  Núverandi tiltækt (mA): 500
+  Núverandi krafist (mA): 500
+  Auka rekstrarstraumur (mA): 0
 ```
 
-Með vélina slökkt, tengda í gegnum USB við tölvu, haldið niðri "Endurheimtahnappnum" og kveikt á henni, ætti hún að ræsa í "Hleðslustillingu." Vélin mun "hljóma," en skjárinn verður kyrr. _Þú getur slökkt, beðið í mínútu, kveikt aftur, og vélin mun ræsa eðlilega._
+Með vélinni slökkt, tengdri í gegnum USB við tölvu, haldandi niðri "Endurheimtuhnappnum" og kveikjandi á henni, ætti hún að ræsa í "Hleðsluham." Vélin mun "pípa," en skjárinn mun vera kyrr. _Þú getur slökkt, beðið í eina mínútu, kveikt á henni og vélin mun ræsa venjulega._
 
-_Android vélbúnaðurinn stjórnar ekki "hljóðinu" eftir að vélin er kveikt, heldur í gegnum aðrar Nautilus rásarplötur._
+_Android vélbúnaðurinn sér ekki um "píp" eftir að kveikt er á vélinni, heldur í gegnum aðra Nautilus PCB._
 
-Nú mun hún tilkynna á tölvunni sem `USB download gadget` (Raðnúmer falið):
+Hún mun nú tilkynna tölvunni sem `USB download gadget` (raðnúmer falið):
 
 ```
 USB download gadget:
-  Product ID: 0x330c
-  Vendor ID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
-  Version: 99.99
-  Serial Number: XXXXXXXXXXXXXXX
-  Manufacturer: Rockchip
-  Location ID: 0x14120000
+  Vörunúmer: 0x330c
+  Framleiðandaauðkenni: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  Útgáfa: 99.99
+  Raðnúmer: XXXXXXXXXXXXXXX
+  Framleiðandi: Rockchip
+  Staðsetningarnúmer: 0x14120000
 ```
 
-Eftir að hafa keyrt rkDumper gegn stjórntölvunni, fáum við upplýsingar um skiptingarnar:
+Eftir að hafa keyrt rkDumper á móti stjórnborðinu, fáum við upplýsingar um skiptingarnar:
 
 ```
-"EFI PART" merki fundið (RKFP FW dump)
+"EFI PART" merki fannst (RKFP FW afrit)
 
-Skipting "EFI_part" (0x00004000) vistuð (snid: RockChip RKFP dump)
-Skipting "uboot_a" (0x00002000) vistuð (snid: Rockchip uboot image file)
-Skipting "uboot_b" (0x00002000) vistuð (snid: Rockchip uboot image file)
-Skipting "trust_a" (0x00002000) vistuð (snid: óþekkt)
-Skipting "trust_b" (0x00002000) vistuð (snid: óþekkt)
-Skipting "misc" (0x00002000) vistuð (snid: óþekkt)
-Skipting "resource" (0x00008000) vistuð (snid: óþekkt)
-Skipting "kernel" (0x00010000) vistuð (snid: óþekkt)
-Skipting "dtb" (0x00002000) vistuð (snid: óþekkt)
-Skipting "dtbo_a" (0x00002000) vistuð (snid: óþekkt)
-Skipting "dtbo_b" (0x00002000) vistuð (snid: óþekkt)
-Skipting "vbmeta_a" (0x00000800) vistuð (snid: óþekkt)
-Skipting "vbmeta_b" (0x00000800) vistuð (snid: óþekkt)
-Skipting "boot_a" (0x00020000) vistuð (snid: óþekkt)
-Skipting "boot_b" (0x00020000) vistuð (snid: óþekkt)
-Skipting "backup" (0x00038000) vistuð (snid: óþekkt)
-Skipting "security" (0x00002000) vistuð (snid: óþekkt)
-Skipting "cache" (0x00100000) vistuð (snid: óþekkt)
-Skipting "system_a" (0x00500000) vistuð (snid: óþekkt)
-Skipting "system_b" (0x00500000) vistuð (snid: óþekkt)
-Skipting "metadata" (0x00008000) vistuð (snid: óþekkt)
-Skipting "vendor_a" (0x00100000) vistuð (snid: óþekkt)
-Skipting "vendor_b" (0x00100000) vistuð (snid: óþekkt)
-Skipting "oem_a" (0x00100000) vistuð (snid: óþekkt)
-Skipting "oem_b" (0x00100000) vistuð (snid: óþekkt)
-Skipting "frp" (0x00000400) vistuð (snid: óþekkt)
-Skipting "sw_release" (0x00ed7000) vistuð (snid: óþekkt)
-Skipting "video" (0x0047e000) vistuð (snid: óþekkt)
-Skipting "userdata" (0x0169bbdf) vistuð (snid: óþekkt)
+Skipting "EFI_part" (0x00004000) vistuð (snið: RockChip RKFP afrit)
+Skipting "uboot_a" (0x00002000) vistuð (snið: Rockchip uboot myndskrá)
+Skipting "uboot_b" (0x00002000) vistuð (snið: Rockchip uboot myndskrá)
+Skipting "trust_a" (0x00002000) vistuð (snið: óþekkt)
+Skipting "trust_b" (0x00002000) vistuð (snið: óþekkt)
+Skipting "misc" (0x00002000) vistuð (snið: óþekkt)
+Skipting "resource" (0x00008000) vistuð (snið: óþekkt)
+Skipting "kernel" (0x00010000) vistuð (snið: óþekkt)
+Skipting "dtb" (0x00002000) vistuð (snið: óþekkt)
+Skipting "dtbo_a" (0x00002000) vistuð (snið: óþekkt)
+Skipting "dtbo_b" (0x00002000) vistuð (snið: óþekkt)
+Skipting "vbmeta_a" (0x00000800) vistuð (snið: óþekkt)
+Skipting "vbmeta_b" (0x00000800) vistuð (snið: óþekkt)
+Skipting "boot_a" (0x00020000) vistuð (snið: óþekkt)
+Skipting "boot_b" (0x00020000) vistuð (snið: óþekkt)
+Skipting "backup" (0x00038000) vistuð (snið: óþekkt)
+Skipting "security" (0x00002000) vistuð (snið: óþekkt)
+Skipting "cache" (0x00100000) vistuð (snið: óþekkt)
+Skipting "system_a" (0x00500000) vistuð (snið: óþekkt)
+Skipting "system_b" (0x00500000) vistuð (snið: óþekkt)
+Skipting "metadata" (0x00008000) vistuð (snið: óþekkt)
+Skipting "vendor_a" (0x00100000) vistuð (snið: óþekkt)
+Skipting "vendor_b" (0x00100000) vistuð (snið: óþekkt)
+Skipting "oem_a" (0x00100000) vistuð (snið: óþekkt)
+Skipting "oem_b" (0x00100000) vistuð (snið: óþekkt)
+Skipting "frp" (0x00000400) vistuð (snið: óþekkt)
+Skipting "sw_release" (0x00ed7000) vistuð (snið: óþekkt)
+Skipting "video" (0x0047e000) vistuð (snið: óþekkt)
+Skipting "userdata" (0x0169bbdf) vistuð (snið: óþekkt)
 ```
 
-`uboot_a` og `uboot_b` voru vel dregnar út, en allar aðrar skiptingar merktar sem `(snid: óþekkt)` eru illa afritaðar, aðeins draga út hexadecimal `CC` gildi frá þeim.
+`uboot_a` og `uboot_b` voru á árangursríkan hátt útdregnar, en allar aðrar skiptingar merktar sem `(snið: óþekkt)` eru illa afritaðar, aðeins útdráttur `CC` sextánda gildi úr þeim.
 
-Svipað mál og mitt var skjalfest á [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), og eftir að [spyrja](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) rkDumper þróandann, [segir hann](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) að það verði að vera nýr RockChip hleðslustilling á staðnum. Að fylgja þessari aðferð virðist vera óframkvæmanleg í bili.
+Svipað mál og mitt var skjalfest á [4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030), og eftir að hafa [spurt](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625) rkDumper þróunaraðilann, [segir hann](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085) að það hljóti að vera nýr RockChip hleðsluhamur í notkun. Að fylgja þessari aðferð virðist óframkvæmanlegt eins og er.
 
 ### ADB
 
-Svipaðar upplýsingar má finna í gegnum adb, en það virðist ekki vera mögulegt að gera afrit þar sem við skortum rótarréttindi:
+Sum svipuð gögn er hægt að finna í gegnum adb, en það virðist ekki vera hægt að taka afrit þar sem við höfum ekki rótaraðgang:
 
 ```sh
 > ls -al /dev/block/platform/
@@ -158,6 +199,6 @@ lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
 lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
 ```
 
-### Aðrar hugmyndir
+### Aðrar Hugmyndir
 
-Eitthvað sem við getum gert er að afhýða eMMC flöguna og lesa hana utanaðkomandi til að geta afritað allt innihald hennar. Það væri gott fyrir að búa til sérsniðið ROM, en ég mun ekki afhýða frá MINNI EINU stjórntölvu (það væri flott að hafa varatölvu).
+Eitt sem við getum gert er að aflóðmála eMMC flöguna og lesa hana utan frá til að taka afrit af öllum innihaldi hennar. Það væri gott til að búa til sérsniðna ROM, en ég mun ekki aflóðmála eina frá MINU EINU stjórnborði (það væri flott að hafa varahlut).

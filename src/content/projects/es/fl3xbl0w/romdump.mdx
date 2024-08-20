@@ -15,6 +15,47 @@ import { Image } from 'astro:assets';
 import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
 import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
 
+### Actualización 2024
+
+Hemos logrado un hito importante en el proyecto gracias a la colaboración de la comunidad! Un colaborador, [alphab0ing](https://github.com/alphab0ing), ha estado trabajando en crear una ROM personalizada para la placa Vantron RK3399 de Bowflex. Puedes ver más en [este hilo de GitHub](https://github.com/barrenechea/barrenechea-website/issues/20).
+
+Hace ya más de un año que mi consola recibió una actualización de sistema vía OTA. Rápidamente me conecté vía ADB para hacer un respaldo de los archivos (si es que los encontraba) y afortunadamente tuve éxito!
+
+Dicha actualización se alojó en el típico directorio de trabajo de Nautilus, `/sdcard/Nautilus/redbend/`. Los archivos extraídos son los siguientes:
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+El archivo `1_delta.rdp` era particularmente grande, por lo que asumí que allí se encontraba la magia. Luego de inspeccionar un poco el archivo, llegué a esto:
+
+```
+1_delta.rdp: Java archive data (JAR): Descomprimir como un .zip
+	- payload.bin: Extraer con https://github.com/ssut/payload-dumper-go
+		- boot.img: Android bootimg, kernel (0x10008000), ramdisk (0x11000000), second stage (0x10f00000), page size: 2048, cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: data
+		- oem.img: Linux rev 1.0 ext2 filesystem data, UUID=b886e36e-ac40-5948-86dd-27c114bd225e, volume name "oem" (extents) (large files) (huge files)
+		- system.img: Linux rev 1.0 ext2 filesystem data, UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca (extents) (large files) (huge files)
+		- trust.img: data
+		- uboot.img: data
+		- vbmeta.img: data
+		- vendor.img: Linux rev 1.0 ext2 filesystem data, UUID=67531afd-7aed-52f3-9196-b1cdad9fd724, volume name "vendor" (extents) (large files) (huge files)
+```
+
+Los archivos de la actualización OTA (HP-22_T56_EEA Android OS Image 3.10 release-keys) han sido compartidos en [Internet Archive](https://archive.org/download/HP-22_T56_EEA).
+
+Con dichos archivos, [alphab0ing](https://github.com/alphab0ing) pudo obtener el DTS (Device Tree Source) original del dispositivo ([descargar](/HP-22_T56_EEA.dts)). Esto es crucial para el desarrollo de ROMs personalizadas y para comprender mejor el hardware. Veremos como avanza esto!
+
 ### Modo de Carga Rockchip
 
 Un procesador RK3399 alimenta el hardware de Android. Los procesadores Rockchip vienen con un "loader mode" como característica estándar.
