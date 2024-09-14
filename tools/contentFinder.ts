@@ -72,7 +72,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
 
   // Find missing files based on the default language
   const missingFiles: MissingFile[] = [];
-  const defaultLangFiles = contentFiles[defaultLang] || [];
+  const defaultLangFiles = contentFiles[defaultLang] ?? [];
 
   for (const [langCode, langData] of Object.entries(languages)) {
     if (!langData.translateFrom) continue;
@@ -81,7 +81,7 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
       file.replace(`/${defaultLang}/`, `/${langCode}/`)
     );
 
-    const existingFiles = contentFiles[langCode] || [];
+    const existingFiles = contentFiles[langCode] ?? [];
     const missingLangFiles = expectedFiles.filter((file) => !existingFiles.includes(file));
 
     missingFiles.push(
@@ -120,14 +120,14 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
 
     // for each file in the default language, get their checksum as a record
     const defaultLangChecksums: Record<string, string> = {};
-    const defaultLangFiles = contentFiles[langData.translateFrom] || [];
+    const defaultLangFiles = contentFiles[langData.translateFrom] ?? [];
     for (const file of defaultLangFiles) {
       const checksum = await computeChecksum(path.join(contentDir, file));
       defaultLangChecksums[file] = checksum;
     }
 
     // check if the existing files have the same checksum as the default language using hasChecksumLine, if not, push to missingFiles
-    const existingFiles = contentFiles[langCode] || [];
+    const existingFiles = contentFiles[langCode] ?? [];
     for (const file of existingFiles) {
       const defaultLangFile = file.replace(`/${langCode}/`, `/${langData.translateFrom}/`);
       const checksum = defaultLangChecksums[defaultLangFile];

@@ -1,0 +1,135 @@
+---
+title: Android ジェイルブレイク - fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）によって販売されているすべてのAndroidマシンに一般化されました。
+pubDate: 2022-05-28T10:28:00Z
+link: /ja/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトのロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: a77618521679b34a89354e6f2569cc84db8ffcb936c86608cc572c8cee531cc5
+---
+
+import { Image } from 'astro:assets';
+import LogiKeys from '~/assets/images/fl3xbl0w/logi-keys.png';
+import ConsoleUSB from '~/assets/images/fl3xbl0w/console-usb.png';
+import Console01 from '~/assets/images/fl3xbl0w/console-01.gif';
+import Console02 from '~/assets/images/fl3xbl0w/console-02.gif';
+import Console03 from '~/assets/images/fl3xbl0w/console-03.gif';
+import Console04 from '~/assets/images/fl3xbl0w/console-04.gif';
+import Console05 from '~/assets/images/fl3xbl0w/console-05.gif';
+import Console06 from '~/assets/images/fl3xbl0w/console-06.gif';
+import Console07 from '~/assets/images/fl3xbl0w/console-07.gif';
+import Console08 from '~/assets/images/fl3xbl0w/console-08.gif';
+
+この方法は、Bowflexコンソールのスペックが今日のソフトウェアに対して遅すぎることに依存しています（Androidボードには2GBのRAMしかありません）。そのため、*タブレットよりも速く*操作できれば、Nautilusの`AppMonitorService`からジェイルブレイクが可能です。
+
+_これはブルートフォース攻撃と呼べるでしょうか？_
+
+プロセスの途中でいつでもマシンを再起動できますが、すべてが元通りになります。ソフトウェア側でリスクはありません。試してみてください！
+
+## 必要なもの
+
+- メディアボタン（ホーム、バック）付きのUSBキーボード（有線またはUSBドングル経由のワイヤレス）
+- 速い指！（「激しい部分」は約1秒以内に行う必要があります）
+- [adb](https://developer.android.com/studio/command-line/adb)をインストールしたコンピュータ（[ダウンロードリンク](https://developer.android.com/studio/releases/platform-tools)）
+
+私はLogitech K600を使用しましたが、これらのキーがあるキーボードならどれでも動作するはずです：
+
+<Image src={LogiKeys} alt="Logitech K600キーボード" format="webp" />
+
+_BluetoothキーボードはJRNYを通じてペアリングできないようです。_
+
+## ヒント
+
+- 最初から「完璧にやろう」としないでください。画面上でボタンがどこに表示されるかを把握するのに数回の試行が必要です。タップアクションのために筋肉の記憶を作りましょう。
+- 画面を強く叩かないでください！速く操作することは、壊すことを意味しません。画面を強く叩きすぎた場合の責任は負いません。
+
+## 手順
+
+まず、マシンをオンにして、USBキーボードをBowflexコンソールに接続しましょう。右側にあります：
+
+<Image src={ConsoleUSB} alt="コンソールのUSBポートの位置を示す" format="webp" />
+
+キーボードが動作するか確認するために、キーボードの「ホーム」ボタンを押してみましょう。これにより、JRNYアプリが再起動するはずです。
+
+<Image src={Console01} alt="コンソールのアニメーション" format="webp" />
+
+Androidには、現在のアプリを閉じるショートカットがあり、「バック」ボタンを1秒ほど押し続けると動作します。
+「バック」ボタンを使って遊んでみましょう。JRNYアプリが再起動するたびにすぐに閉じる操作を繰り返し、新しいダイアログが表示されるまで続けます：
+
+<Image src={Console02} alt="コンソールのアニメーション" format="webp" />
+
+さて、ここからが楽しい部分です：そのダイアログはAndroidの標準的な「フォールト検証システム」に属しています。私たちはNautilusLauncherが悪い（良い！）とAndroidに「思わせる」ことに成功しました。このダイアログを利用してエクスプロイトします。
+
+ダイアログが表示されたらすぐに「アプリ情報」をタップします。「アプリ情報」をクリックすると、設定アプリが開きます（これは`AppMonitorService`の拒否リストにあります）。約1秒で閉じるので、素早く操作する必要があります！「強制停止」ボタンをタップし、その後「OK」をタップします。
+
+<Image src={Console03} alt="コンソールのアニメーション" format="webp" />
+
+「OK」をクリックできたら、少し休憩できます（良い運動ですね）。次にRedditで見つけた情報に進みます。右上の「虫眼鏡」アイコンをクリックして「開発者オプション」を検索し、adbを有効にします：
+
+<Image src={Console04} alt="コンソールのアニメーション" format="webp" />
+
+コンソールのIPアドレスを見つけます。最も簡単な方法はWi-Fi設定からです：
+
+<Image src={Console05} alt="コンソールのアニメーション" format="webp" />
+
+adbが有効になり、IPアドレスがわかったら、コンピュータに移動してadbで接続します。ターミナルを開いて`adb connect <IPアドレス>`を実行します（私の場合は10.0.0.205）：
+
+```sh
+> adb connect 10.0.0.205
+connected to 10.0.0.205:5555
+```
+
+_リモートでadbに初めて接続する際には、画面上で確認を求められます。_
+
+次に、`/sdcard/Pictures/`内に`nautilus`という空のファイルを作成します。「なぜ」については[Bowflexの癖](/ja/projects/fl3xbl0w/quirks)で詳しく説明しています。
+
+```sh
+> adb shell touch /sdcard/Pictures/nautilus
+```
+
+次に、いくつかの機能を復元します。ターミナルで次のコマンドを送信します：
+
+```sh
+> adb shell settings put secure ntls_launcher_preference 0
+> adb shell settings put secure navigationbar_switch 1
+> adb shell settings put secure notification_switch 1
+> adb shell settings put secure statusbar_switch 1
+```
+
+UIが表示されます：
+
+<Image src={Console06} alt="コンソールのアニメーション" format="webp" />
+
+最後のステップは、デフォルトのランチャーを変更することです。「デフォルトアプリ」を検索し、Quickstepをホームアプリとして設定します：
+
+<Image src={Console07} alt="コンソールのアニメーション" format="webp" />
+
+**これで自由になりました！**
+
+この状態は、NautilusLauncherが強制停止されている限り維持されます。再起動しても持続します。
+
+「元の状態」に戻したい場合は、`NautilusLauncher`アプリを開くだけです（事前に`/sdcard/Pictures/nautilus`ファイルを作成しておくことを強くお勧めします）：
+
+<Image src={Console08} alt="コンソールのアニメーション" format="webp" />
+
+## 「ロックダウンシステム」に関する注意事項
+
+`NautilusLauncher`はデフォルトの「Androidランチャー」であり、JRNYアプリが閉じるとすぐに「再起動」します。
+
+また、`NautilusLauncher` apk内には`AppMonitorService`というフォアグラウンドサービスがあり、これが「セキュリティロック」として機能しています。apkを逆コンパイルすると、次のような興味深い変数が見つかります：
+
+```java
+public static final int MonitorIntervalSeconds = 1;
+// その他の変数
+private static String[] TargtedAppsToKill = {"com.android.vending", "com.android.settings", "com.android.chrome", "com.google.android.gm", "com.google.android.youtube"};
+private static String[] TargtedAppsToBackground = {"com.google.android.googlequicksearchbox:interactor", "com.google.android.googlequicksearchbox:search", "com.google.android.googlequicksearchbox", "com.android.launcher3", "com.google.android.inputmethod.latin"};
+```
+
+このサービスは「ロックダウンを積極的に保護」しています。各アプリの終了（「バック」ボタンを押し続けることで）ごとに、JRNYを再起動しようとします。強制終了することで、すべてのフォアグラウンドサービスも無効化されます。
+
+_（コードバックアップに見られる誤字は、Nautilusの開発者によるものであり、私のものではありません）_

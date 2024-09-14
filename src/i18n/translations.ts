@@ -4,6 +4,7 @@ import deIcon from '@iconify-icons/circle-flags/de.js';
 import frIcon from '@iconify-icons/circle-flags/fr.js';
 import isIcon from '@iconify-icons/circle-flags/is.js';
 import itIcon from '@iconify-icons/circle-flags/it.js';
+import jpIcon from '@iconify-icons/circle-flags/jp.js';
 import ruIcon from '@iconify-icons/circle-flags/ru.js';
 import saIcon from '@iconify-icons/circle-flags/sa.js';
 import usIcon from '@iconify-icons/circle-flags/us.js';
@@ -16,6 +17,7 @@ import { es, type Translations } from './es.ts';
 import { frWithFallback } from './fr.ts';
 import { isWithFallback } from './is.ts';
 import { itWithFallback } from './it.ts';
+import { jaWithFallback } from './ja.ts';
 import { ptWithFallback } from './pt.ts';
 import { ruWithFallback } from './ru.ts';
 import { zhWithFallback } from './zh.ts';
@@ -49,6 +51,11 @@ export const languages = {
   zh: {
     label: '简体中文',
     icon: zhIcon,
+    translateFrom: 'en',
+  },
+  ja: {
+    label: '日本語',
+    icon: jpIcon,
     translateFrom: 'en',
   },
   ar: {
@@ -86,10 +93,11 @@ const langData = {
   fr: frWithFallback,
   it: itWithFallback,
   is: isWithFallback,
+  ja: jaWithFallback,
 } as const;
 
 export function useTranslations(lang = 'es'): (key: keyof Translations) => string {
   return function t(key: keyof Translations): string {
-    return langData[lang as LanguageKey][key] || es[key];
+    return langData[lang as LanguageKey][key] ?? es[key];
   };
 }

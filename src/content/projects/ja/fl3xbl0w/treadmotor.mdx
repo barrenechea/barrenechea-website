@@ -1,0 +1,61 @@
+---
+title: トレッドミルモーターコントローラー - fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）によって販売されているすべてのAndroidマシンに汎用化されました。
+pubDate: 2022-05-28T10:28:00Z
+link: /ja/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+---
+
+import { Image } from 'astro:assets';
+import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+
+_これは主にTreadmill 22およびTreadmill 56に適用されます。_
+
+モーター制御基板は[Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html)によって製造されています。
+
+<Image src={B017D} alt="B017Dモーター制御基板コントローラー" format="webp" />
+
+Nautilus Inc.が提供する[サービスマニュアル](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)（[archive.orgのバックアップ](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)）を参照すると：
+
+<Image src={TreadmillElectrical} alt="トレッドミルの電気配線図" format="webp" />
+
+特にこの部分に焦点を当てると：
+
+<Image src={TreadmillComm} alt="トレッドミルの通信経路" format="webp" />
+
+モーターコントローラーに接続する「通信ケーブル」は5ピンのものであることがわかります。5ピンコネクタは1つしかありません。
+私はワイヤーに対応する色をラベル付けしました（データとスイッチは光アイソレーションされています）：
+
+| ワイヤーの色 | ラベル |
+| ------------ | ------ |
+| 赤           | GND    |
+| 白           | RXD    |
+| 黒           | TXD    |
+| 黄           | +12    |
+| 緑           | SW     |
+
+基板はAndroidコンソールに直接接続されていません。
+
+唯一の5ピンコネクタはMolexブランドのものです。「小型Molexコネクタ」をGoogleで検索すると、`Molex Micro-Fit 3.0 Single Row (5-Pin)`と呼ばれるものの画像が見つかり、これはモーターコントローラーボードに接続するために使用されます：
+
+<Image src={Molex} alt="Molex Micro-Fit 3.0コネクタ" format="webp" />
+
+[AliExpressリンク](https://aliexpress.com/item/32902205579.html)
+
+`NautilusLauncher.apk`を`jadx-gui`で確認すると、彼らが「ユニバーサルコンソール」を使用してAndroidタブレットとシリアル通信（230400ボー）で通信していることがわかります（`/dev/ttyS4`を使用）。これはここで分析しているものではありません。これはAndroidと「ユニバーサルコンソール」の間の通信を指しています。私たちは「ユニバーサルコンソール」と「モーターコントロールボード」の間の通信を調査しています。
+
+ESP32またはCH340ベースのシリアルブリッジをトレッドミルのベースとBowflexコントローラーボードの間のワイヤーに直接接続しようとすると、トレッドミルのベースが正しく初期化されなかったため、RS232を使用しているのではないかと疑い始めました。
+
+注：GNDとRXDのみに接続すると、9600ボーで一見ゴミのような16進情報が「見える」ことがあります。TXDに接続すると、トレッドミルのベースが初期化されません。
+
+-- 続く、今は新しいロジックアナライザーで遊ぶ時間が必要です --

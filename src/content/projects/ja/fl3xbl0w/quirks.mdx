@@ -1,0 +1,124 @@
+---
+title: Bowflexの好奇心 - fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）が販売するすべてのAndroidマシンに一般化されました。
+pubDate: 2022-05-28T10:28:00Z
+link: /ja/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトのロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: b579f6715ec7bbcf25b8db49cedec3e9eeeac50513672a0984304f94203d593a
+---
+
+import { Image } from 'astro:assets';
+import HomeAssistantSensor from '~/assets/images/fl3xbl0w/homeassistant-hr-sensor.png';
+
+### `/sdcard/Pictures/nautilus` ファイル
+
+`NautilusLauncher`を逆コンパイルすると、その特定のパスへの参照が見られます：
+
+```java
+// path: com/nautilus/nautiluslauncher/LauncherService.java
+public void run() {
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    LauncherService.access$000(LauncherService.this).disableAdbDebug();
+    LauncherService.access$000(LauncherService.this).enterKioskMode();
+    return;
+  }
+  LauncherService.access$000(LauncherService.this).enableAdbDebug();
+}
+```
+
+```java
+// path: com/nautilus/nautiluslauncher/MainActivity.java
+protected void onCreate(Bundle bundle) {
+  // ...
+  if (!new File("/sdcard/Pictures/nautilus").exists()) {
+    this.mPlatformControl.disableAdbDebug();
+    this.mPlatformControl.enterKioskMode();
+  } else {
+    this.mPlatformControl.enableAdbDebug();
+  }
+  // ...
+}
+```
+
+このファイルを所定の場所に配置すると、`NautilusLauncher`は再起動後にadbを有効にします。ファイルが存在しない場合、`NautilusLauncher`はadbを積極的に無効にします（以前に有効化されていた場合でも）。
+
+### `/sdcard/Nautilus/redbend/Credentials.txt` ファイル
+
+[Red Bend Software](https://en.wikipedia.org/wiki/Red_Bend_Software)（[Harmanに買収](https://news.harman.com/releases/harman-completes-acquisition-of-redbend)されました。これでKNOXへの多くの参照が理解できました）が、Nautilusハードウェア向けにOTAサービスを提供しているようです。このファイルへの参照が`com.redbend.client.apk`内に見つかりました。
+
+```java
+package com.redbend.client;
+public class Ipl {
+  protected static final String AUTO_SELF_REG_FILE_PATH = "Credentials.txt";
+  // ...
+  public static int iplGetAutoSelfRegDomainInfo(Context context, String[] strArr) {
+    // ...
+    File file = new File("/sdcard/Nautilus/redbend/");
+    if (!file.exists()) {
+      file.mkdirs();
+    }
+    copyAssets(context, "Credentials.txt", file.getCanonicalPath());
+    bufferedReader = new BufferedReader(new FileReader(new File(file.getAbsoluteFile(), "Credentials.txt")));
+    // ...
+  }
+  // ...
+}
+```
+
+また、`com.redbend.client.ClientService`内にも以下のような記述があります：
+
+```java
+// ...
+public class ClientService extends SmmService {
+  // ...
+  @Override // com.redbend.app.SmmService, android.app.Service
+  public void onCreate() {
+    // ...
+    if (Ipl.iplGetAutoSelfRegDomainInfo(this, strArr) == 0) {
+      sendEvent(new Event("D2B_AUTO_SELF_REG_INFO").addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_NAME", strArr[0])).addVar(new EventVar("DMA_VAR_AUTO_SELF_REG_DOMAIN_PIN", strArr[1])));
+      }
+    // ...
+  }
+  // ...
+}
+```
+
+この情報に基づいて、ファイル `/sdcard/Nautilus/redbend/Credentials.txt` の内容は次のようにラベル付けできます：
+
+```
+1行目: DOMAIN_NAME
+2行目: DOMAIN_PIN
+```
+
+_`DOMAIN_PIN`は実際のピンコードで、6桁の数字です。_
+
+「Red Bend Network」内のいくつかの資格情報が、特定のブランド/製品とマシンをOTAアップデート用に関連付けるために使用されているようです。この資格情報がすべてのNautilusハードウェアで同一であることを願っています。このファイルは`com.redbend.client` APK内に含まれており、インストール時に抽出されます。
+
+`com.redbend.client`に関する参照を[こちら](https://www.mdxers.org/threads/com-redbend-clent-has-stopped.175897/)で見つけましたが、車でクラッシュしているのを見て少し面白かったです。私たちのマシンでも頻繁にクラッシュしないことを願っています。
+
+### Bluetooth心拍数モニター
+
+これは比較的簡単に解読できました。Bluetooth名は`CL831-xxxxxxx`（番号は非公開）として表示され、[CHILEAF](https://www.chileaf.com/copy-cl830-health-monitor-armband-heart-rate-monitor-product/)製です。
+
+[nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-mobile)でスキャンすると、デバイスのMACアドレスといくつかの重要なデータが公開されました：
+
+```
+心拍数:
+UUID: 0x180D
+心拍数測定
+UUID: 0x2A37
+```
+
+これはかなり標準的なもので、[Home Assistant Communityの投稿](https://community.home-assistant.io/t/ble-heartrate-monitor/300354/39)ですでに解明されていました（同じモデルではありませんが、心拍数モニターは標準プロトコルを使用しているようです）。私は概念実証として、ESPHomeの設定ファイルを[こちら](https://github.com/barrenechea/esphome-config-files/blob/master/bowflex-hr-monitor.yaml)に作成しました：
+
+<Image
+  src={HomeAssistantSensor}
+  alt="Home Assistantで心拍数センサーを表示しているスクリーンショット"
+  format="webp"
+/>

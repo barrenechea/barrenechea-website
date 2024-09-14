@@ -1,0 +1,28 @@
+---
+title: AutoDice
+description: 複数のサイトと接続して「Dice」ゲームで暗号通貨のベッティングを行うデスクトップアプリケーション。
+pubDate: 2015-07-27T01:46:14Z
+link: https://github.com/barrenechea/AutoDice
+img: ~/assets/images/project-autodice.png
+imgAlt: AutoDiceプロジェクトのロゴ
+tags:
+  - CSharp
+  - DotNet6
+translatedBy: chatgpt-4o-latest
+checksum: fe21a6f3a7ebc51da8cda273d79ba8ec1ce39668a8f9b475c0e2f7868f0dd221
+---
+
+import { Image } from 'astro:assets';
+import FooterImage from '~/assets/images/autodice-infographic.png';
+
+このプロジェクトは、私がコンピュータサイエンスを学んでいたときに始まり、当時関わっていたことに関連する何か有用なものを作ろうとした最初の試みでした。
+
+私はJava GUI（ひどい）からC#に移行しており、これにより[MahApps.Metro](https://mahapps.com/)に関わることができました。2015年当時、デフォルトのWinFormsと比べてこれがクールだと思っていました。
+
+2015年にこのプロジェクトを[Bitcointalk](https://bitcointalk.org/index.php?topic=1135816.0)と[Github](https://github.com/barrenechea/AutoDice)で公開しました。このアプリの特徴は、ユーザーインターフェースと戦略ハブであり、ユーザーが自分の戦略をアップロードして他の人と共有できる点でした。詳細については、Bitcointalkのスレッドを確認してください。
+
+2022年には、メンテナンスの一環として（および.NETの最新バージョンに追いつくために）、.NET Framework 4.5から.NET 6.0に[プロジェクトを更新しました](https://github.com/barrenechea/AutoDice/commit/194cb75cbf924faa50528c8da1b259b2f51213f1)。また、[Costura](https://github.com/Fody/Costura)を削除しました。.NET 6.0ではこれがパッケージングの方法ではないためです。
+
+こちらは、当時Bitcointalkの投稿用に作成した「インフォグラフィック」のコピーです：
+
+<Image src={FooterImage} alt="AutoDiceインフォグラフィック" width={800} format="webp" />

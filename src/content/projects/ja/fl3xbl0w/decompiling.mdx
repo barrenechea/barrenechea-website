@@ -1,0 +1,57 @@
+---
+title: デコンパイル - fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）が販売するすべてのAndroidマシンに汎用化されました。
+pubDate: 2022-05-28T10:28:00Z
+link: /ja/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: 8518d35224686427ed3a8679df5ba6f327c9f9e515bc86c0648d6f0ef5c44c0d
+---
+
+import { Image } from 'astro:assets';
+import JadxGUIScreen from '~/assets/images/fl3xbl0w/screen-jadx-init.png';
+import JadxGUISelect from '~/assets/images/fl3xbl0w/screen-jadx-open.png';
+import JadxGUIOpened from '~/assets/images/fl3xbl0w/screen-jadx-opened.png';
+import JadxGUISave from '~/assets/images/fl3xbl0w/screen-jadx-save.png';
+import JadxGUIPrefs from '~/assets/images/fl3xbl0w/screen-jadx-preferences.png';
+
+これは、すでに[自分のAPKを持っている](/ja/projects/fl3xbl0w/backup)ことを前提としています。Nautilusのアプリに特化して説明していますが、実際には「内部を覗きたい」任意のAndroidアプリに適用できます。
+
+## アプリをJavaコードに変換する
+
+以下の手順は「読みやすいコード」を取得することを目的としていますが、これを再度APKにコンパイルできる可能性は低いです。私はNautilusの開発者を理解するための参考としてこれを使用しています。コードベースを変更して再パッケージ化したい場合は、[アプリをSmaliコードに変換する](#converting-apps-into-smali-code)に進んでください。
+
+### 必要条件
+
+- [jadx](https://github.com/skylot/jadx)
+
+### さあ、いくつかのファイルを開いてみましょう！
+
+`jadx`をインストールした後、`jadx-gui`を開けるはずです。ファイル -> ファイルを開く... に進みます。
+
+<Image src={JadxGUIScreen} alt="jadx-gui画面" format="webp" />
+
+開きたいAPKを探して、「ファイルを開く」をクリックします：
+
+<Image src={JadxGUISelect} alt="jadx-guiでapkを選択" format="webp" />
+
+そこから、いろいろと調べ始めることができます：
+
+<Image src={JadxGUIOpened} alt="jadx-guiでNautilusLauncherをデコンパイル" format="webp" />
+
+プロジェクトをJavaファイルとして保存したい場合は、ファイル -> Gradleプロジェクトとして保存に進みます：
+
+<Image src={JadxGUISave} alt="jadx-guiでプロジェクトを保存" format="webp" />
+
+参考までに、私の`jadx-gui`の設定はこちらです：
+
+<Image src={JadxGUIPrefs} alt="jadx-guiの設定" format="webp" />
+
+## アプリをSmaliコードに変換する
+
+コミュニティは、APKにパッチを適用するために[これ](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/)をテストしました。これはシステムアプリ以外にのみ機能します。適切な署名キーがないと、アプリはシステムリソース（シリアルポートなど）にアクセスできないためです。

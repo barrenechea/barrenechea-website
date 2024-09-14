@@ -1,0 +1,88 @@
+---
+title: fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）が販売するAndroid搭載のすべてのマシンに一般化されました。
+pubDate: 2022-05-28T10:28:00Z
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: 0ff65f68cf2e838ce7f46de75c2c5cc835977da86ecb52ba48aeb4555a6a3562
+---
+
+import { Image } from 'astro:assets';
+import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
+
+<Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
+
+「Bowflexコンソール」（NautilusがVantronと呼ぶもの）のドキュメントへようこそ！
+
+Vantronは、Nautilus Inc.の「スマートデバイス」のほとんどのベースとなっています。基本的には、独自のソフトウェアを実行するAndroidタブレットです。さらに、いくつかのハードウェア関連の要素が私の好奇心をそそりました。
+
+[Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/)（ありがとう [xasmx](https://www.reddit.com/user/xasmx/)！）で見つけた以前の作業に大いに依存して、マシンのソフトウェアとハードウェアについてより深く理解することができました。
+
+## 対応デバイス（Android Jailbreak）
+
+<a href="/ja/projects/fl3xbl0w/decompiling" target="_self">
+  逆コンパイルされたアプリケーション
+</a>
+をいじった後、次のBowflexデバイスに対して、このドキュメントが何らかの形で適用できると自信を持って言えます：
+
+### トレッドミル
+
+- Treadmill 22 / Treadmill 56（同じトレッドミル。56は220V AC入力、22は120V AC入力）
+- Treadmill 10 / Treadmill 25（同じトレッドミル。25は220V AC入力、10は120V AC入力）
+
+### バイク
+
+- VeloCore
+
+### Max Trainer
+
+- Max Total 16
+- Max Trainer M9
+
+私はMax TrainerやVeloCoreを持っていませんが、コードの発見に基づいて、USBポートが利用可能であれば動作するはずです。
+
+次のバージョンのNautilusLauncherで動作が確認されています：
+
+- 5.0.0.350
+- 5.0.0.382
+
+**このジェイルブレイクはすでにNautilusによってパッチが適用されています。**
+
+## ドキュメント
+
+### 一般情報
+
+- <a href="/ja/projects/fl3xbl0w/jailbreak" target="_self">
+    Android Jailbreak
+  </a>
+- <a href="/ja/projects/fl3xbl0w/backup" target="_self">
+    コンソールの内容のバックアップ
+  </a>
+- <a href="/ja/projects/fl3xbl0w/decompiling" target="_self">
+    逆コンパイル
+  </a>
+- <a href="/ja/projects/fl3xbl0w/quirks" target="_self">
+    Bowflexのクセ
+  </a>
+- <a href="/ja/projects/fl3xbl0w/romdump" target="_self">
+    ROMダンプ（2024年更新！）
+  </a>
+
+### 進行中の作業
+
+- <a href="/ja/projects/fl3xbl0w/treadmotor" target="_self">
+    トレッドミルモーターコントローラー
+  </a>
+
+## 最終目標
+
+私のトレッドミルにできるだけ多くの将来のアップデートを可能にすること。
+
+Nautilus, Inc.は電子機器に1年間の保証しか提供しておらず、マシンをオフにするメカニズム（つまり、リアスイッチでAC電源を切ること）が基本的に「Androidタブレットの電源を切る」ことだと知ったとき、私は恐怖を感じました。すべてのLinuxベースのデバイスは、OSの破損を避けるために安全にシャットダウンされるべきであり、このAndroidタブレットも例外ではありません。だから、まだ動作しているうちに、少し楽しんでみようと思いました。
+
+最終的には、トレッドミルのモーターコントローラーに送られる通信を傍受し、理解し、再現することで、タブレットが故障してもデバイスが機能し続けるようにしたいと考えています。

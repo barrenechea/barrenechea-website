@@ -1,0 +1,204 @@
+---
+title: ROMダンプ - fl3xbl0w
+description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）が販売するAndroid搭載のすべてのマシンに一般化されました。
+pubDate: 2022-05-28T10:28:00Z
+link: /ja/projects/fl3xbl0w
+img: ~/assets/images/project-fl3xbl0w.svg
+imgAlt: fl3xbl0wプロジェクトロゴ
+tags:
+  - ReverseEngineering
+  - Hardware
+  - Android
+translatedBy: chatgpt-4o-latest
+checksum: 6eeb99f5f8f4161d24f267ffa82ec06f953c84827901f66354273b90c6363110
+---
+
+import { Image } from 'astro:assets';
+import ConsoleMounted from '~/assets/images/fl3xbl0w/console-mounted.jpg';
+import VantronPCB from '~/assets/images/fl3xbl0w/vantron-pcb.jpg';
+
+### 2024年のアップデート
+
+コミュニティの協力のおかげで、プロジェクトは大きなマイルストーンを達成しました！貢献者の[alphab0ing](https://github.com/alphab0ing)が、Bowflex Vantron RK3399ボード用のカスタムROMを作成する作業を進めています。詳細は[このGitHubのissue](https://github.com/barrenechea/barrenechea-website/issues/20)で確認できます。
+
+私のコンソールがOTA経由でシステムアップデートを受け取ってから1年以上が経過しました。すぐにADB経由で接続し、ファイルをバックアップしようとしました（見つけられれば）。幸運にも成功しました！
+
+アップデートは通常のNautilus作業ディレクトリ`/sdcard/Nautilus/redbend/`に保存されていました。抽出されたファイルは以下の通りです：
+
+```
+1_1_script.rdp
+1_delta.rdp
+1_suffix.rdp
+Credentials.txt
+crc.rdp
+deltas_header.rdp
+dma_config.txt
+dp
+installation_order.txt
+section1.rdp
+suffix_section.rdp
+```
+
+特に`1_delta.rdp`ファイルが大きかったので、これが重要な部分だと推測しました。ファイルを少し調べた結果、以下のようになりました：
+
+```
+1_delta.rdp: Javaアーカイブデータ（JAR）：.zipとして解凍
+	- payload.bin: https://github.com/ssut/payload-dumper-go で抽出
+		- boot.img: Android bootimg、カーネル (0x10008000)、ramdisk (0x11000000)、セカンドステージ (0x10f00000)、ページサイズ: 2048、cmdline (console=ttyFIQ0 androidboot.baseband=N/A androidboot.wificountrycode=US androidboot.veritymode=enforcing androidboot.hardware=r)
+		- dtbo.img: データ
+		- oem.img: Linux rev 1.0 ext2ファイルシステムデータ、UUID=b886e36e-ac40-5948-86dd-27c114bd225e、ボリューム名 "oem"（拡張）(大きなファイル) (巨大ファイル)
+		- system.img: Linux rev 1.0 ext2ファイルシステムデータ、UUID=0a7fc206-6c88-5018-bacd-4ea8a11db7ca（拡張）(大きなファイル) (巨大ファイル)
+		- trust.img: データ
+		- uboot.img: データ
+		- vbmeta.img: データ
+		- vendor.img: Linux rev 1.0 ext2ファイルシステムデータ、UUID=67531afd-7aed-52f3-9196-b1cdad9fd724、ボリューム名 "vendor"（拡張）(大きなファイル) (巨大ファイル)
+```
+
+OTAアップデートファイル（HP-22_T56_EEA Android OS Image 3.10 release-keys）は[Internet Archive](https://archive.org/download/HP-22_T56_EEA)で共有されています。
+
+これらのファイルを使用して、[alphab0ing](https://github.com/alphab0ing)はデバイスの元のDTS（デバイスツリーソース）を取得することができました（[ダウンロード](/HP-22_T56_EEA.dts)）。これはカスタムROMの開発やハードウェアの理解を深めるために非常に重要です。今後の進展が楽しみです！
+
+### Rockchipローダーモード
+
+AndroidハードウェアはRK3399プロセッサで動作しています。Rockchipプロセッサには「ローダーモード」という標準機能があります。
+
+私が使用したツールセットは以下の通りです：
+
+- [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=Rockchip+Driver+Assistant)からのRockchip Driver Assistant v4.5
+- [このXDA投稿](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-9#post-84229591)からのrkDumper 1.09テスト版
+- [ChinaGadgetsReviews](https://chinagadgetsreviews.com/?s=android+tool+release)からのAndroid Tool Release v2.69
+
+_新しいバージョンのドライバがダウンロード可能ですが、rkDumperと互換性がないことが知られています。_
+
+これを試すには、Bowflexコンソールを分解し、プラスチック製の背面カバーを外して「裸の状態」で再組み立てする必要があります。
+**これを試みないでください。ローダーモードでAndroidハードウェアを操作すると、デバイスが永久に壊れる可能性があります。**
+
+<Image src={ConsoleMounted} alt="背面カバーを外した状態で取り付けられたコンソール" format="webp" />
+
+Rockchip関連のAndroidロジックボードの関連部分は以下の通りです：
+
+<Image src={VantronPCB} alt="Vantron PCB" format="webp" />
+
+Android Tool Releaseアプリケーションを常に開いておくと、コンソールがどのモードにあるかを確認するための参考になります。
+
+マシンが「通常モード」で電源が入っていて、コンピュータに接続されている場合、`NFTM-LAR`として認識されます：
+
+```
+NFTM-LAR:
+  製品ID: 0x0001
+  ベンダーID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  バージョン: 3.10
+  速度: 最大480 Mb/s
+  製造元: Vanzo
+  ロケーションID: 0x14120000 / 9
+  現在の利用可能電流 (mA): 500
+  必要な電流 (mA): 500
+  追加の動作電流 (mA): 0
+```
+
+マシンの電源を切り、USB経由でコンピュータに接続し、「リカバリーボタン」を押しながら電源を入れると、「ローダーモード」で起動します。マシンは「ビープ音」を発しますが、画面は静止したままです。_電源を切り、1分待ってから電源を入れると、マシンは通常通り起動します。_
+
+_Androidハードウェアは、マシンの電源を入れた後の「ビープ音」を処理しませんが、他のNautilus PCBを介して処理されます。_
+
+この状態で、コンピュータには`USB download gadget`として報告されます（シリアル番号は非表示）：
+
+```
+USB download gadget:
+  製品ID: 0x330c
+  ベンダーID: 0x2207 (Fuzhou Rockchip Electronics Co., Ltd.)
+  バージョン: 99.99
+  シリアル番号: XXXXXXXXXXXXXXX
+  製造元: Rockchip
+  ロケーションID: 0x14120000
+```
+
+rkDumperをコンソールに対して実行すると、パーティションに関する情報が得られます：
+
+```
+"EFI PART"サインが見つかりました (RKFP FWダンプ)
+
+パーティション "EFI_part" (0x00004000) 保存されました (形式: RockChip RKFPダンプ)
+パーティション "uboot_a" (0x00002000) 保存されました (形式: Rockchip ubootイメージファイル)
+パーティション "uboot_b" (0x00002000) 保存されました (形式: Rockchip ubootイメージファイル)
+パーティション "trust_a" (0x00002000) 保存されました (形式: 不明)
+パーティション "trust_b" (0x00002000) 保存されました (形式: 不明)
+パーティション "misc" (0x00002000) 保存されました (形式: 不明)
+パーティション "resource" (0x00008000) 保存されました (形式: 不明)
+パーティション "kernel" (0x00010000) 保存されました (形式: 不明)
+パーティション "dtb" (0x00002000) 保存されました (形式: 不明)
+パーティション "dtbo_a" (0x00002000) 保存されました (形式: 不明)
+パーティション "dtbo_b" (0x00002000) 保存されました (形式: 不明)
+パーティション "vbmeta_a" (0x00000800) 保存されました (形式: 不明)
+パーティション "vbmeta_b" (0x00000800) 保存されました (形式: 不明)
+パーティション "boot_a" (0x00020000) 保存されました (形式: 不明)
+パーティション "boot_b" (0x00020000) 保存されました (形式: 不明)
+パーティション "backup" (0x00038000) 保存されました (形式: 不明)
+パーティション "security" (0x00002000) 保存されました (形式: 不明)
+パーティション "cache" (0x00100000) 保存されました (形式: 不明)
+パーティション "system_a" (0x00500000) 保存されました (形式: 不明)
+パーティション "system_b" (0x00500000) 保存されました (形式: 不明)
+パーティション "metadata" (0x00008000) 保存されました (形式: 不明)
+パーティション "vendor_a" (0x00100000) 保存されました (形式: 不明)
+パーティション "vendor_b" (0x00100000) 保存されました (形式: 不明)
+パーティション "oem_a" (0x00100000) 保存されました (形式: 不明)
+パーティション "oem_b" (0x00100000) 保存されました (形式: 不明)
+パーティション "frp" (0x00000400) 保存されました (形式: 不明)
+パーティション "sw_release" (0x00ed7000) 保存されました (形式: 不明)
+パーティション "video" (0x0047e000) 保存されました (形式: 不明)
+パーティション "userdata" (0x0169bbdf) 保存されました (形式: 不明)
+```
+
+`uboot_a`と`uboot_b`は正常に抽出されましたが、`(形式: 不明)`とマークされた他のすべてのパーティションは不完全にバックアップされ、`CC`の16進数値のみが抽出されました。
+
+私と同様のケースが[4pda](https://4pda.to/forum/index.php?s=&showtopic=614530&view=findpost&p=102427030)で記録されており、rkDumperの開発者に[質問](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86678625)したところ、[彼は](https://forum.xda-developers.com/t/tool-rkdumper-utility-for-backup-firmware-of-rockchips-devices.2915363/page-11#post-86687085)新しいRockChipローダーが存在する可能性があると述べています。この方法を続けるのは現時点では難しいようです。
+
+### ADB
+
+adbを通じて同様のデータを取得することができますが、root権限がないためバックアップは不可能なようです：
+
+```sh
+> ls -al /dev/block/platform/
+total 0
+drwxr-xr-x 3 root root   60 2022-04-13 19:38 .
+drwxr-xr-x 5 root root 1300 2022-04-13 19:38 ..
+drwxr-xr-x 3 root root  700 2022-04-13 19:38 fe330000.sdhci
+```
+
+```sh
+> ls -al /dev/block/platform/fe330000.sdhci/by-name/
+total 0
+drwxr-xr-x 2 root root 600 2022-04-13 19:38 .
+drwxr-xr-x 3 root root 700 2022-04-13 19:38 ..
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 backup -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_a -> /dev/block/mmcblk0p13
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 boot_b -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 cache -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtb -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 dtbo_a -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 dtbo_b -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 frp -> /dev/block/mmcblk0p25
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 kernel -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 metadata -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 misc -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_a -> /dev/block/mmcblk0p23
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 oem_b -> /dev/block/mmcblk0p24
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 resource -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 security -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 sw_release -> /dev/block/mmcblk0p26
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_a -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 system_b -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 trust_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 2022-04-13 19:38 uboot_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 userdata -> /dev/block/mmcblk0p28
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_a -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vbmeta_b -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_a -> /dev/block/mmcblk0p21
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 vendor_b -> /dev/block/mmcblk0p22
+lrwxrwxrwx 1 root root  21 2022-04-13 19:38 video -> /dev/block/mmcblk0p27
+```
+
+### その他のアイデア
+
+1つの方法として、eMMCチップを取り外して外部で読み取り、すべての内容をバックアップすることが考えられます。これはカスタムROMの作成に役立ちますが、私の唯一のコンソールからチップを取り外すことはしません（予備があればいいのですが）。

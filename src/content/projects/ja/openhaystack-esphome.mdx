@@ -1,0 +1,113 @@
+---
+title: ESPHomeにおけるOpenHaystack
+description: ESPHomeコンポーネントとしてのOpenHaystackの移植。Espressif BLEデバイス全般に対応。
+pubDate: 2022-06-23T10:42:00Z
+link: https://github.com/barrenechea/esphome-config-files/tree/main/components/openhaystack
+img: ~/assets/images/project-openhaystack.png
+imgAlt: OpenHaystackとESPHomeのロゴ
+tags:
+  - Hardware
+  - Embedded
+translatedBy: chatgpt-4o-latest
+checksum: 3d98279a41f3f41bf8b90d213cc20a02d8083438c29b65e9f8ae8d2d96d8a017
+---
+
+[OpenHaystack](https://github.com/seemoo-lab/openhaystack) は、Appleの[探すネットワーク](https://developer.apple.com/jp/find-my/)で追跡できる独自のアクセサリを作成できるアプリケーションです。彼らはAppleのプロトコルをリバースエンジニアリングし、ドキュメント化しました。非常に印象的なプロジェクトです。
+
+私は電動スクーターが盗まれた場合に追跡したいと思っていました。「公式」のアクセサリ作成方法は「許容範囲」でしたが、実際にはさまざまなEspressifボードで互換性の問題が多く、かなり問題がありました。
+
+そこで、すでに私が組み込みデバイスのニーズに使用しているソフトウェアである[ESPHome](https://esphome.io/)のコンポーネントとして移植しました。
+
+## なぜESPHome？「家庭用」ではないの？
+
+私はIoT/組み込みデバイスをできるだけ最新の状態に保つことに _少し_ 執着しています（もちろん、可能であればクラウドを使わないようにしています）。そのため、ESPHomeはArduinoやEspressifフレームワークでデバイスを更新するための魅力的なソリューションです。ESPHomeを通じて、いつでもスクーターを「更新」することができます。
+
+## なぜ公式コンポーネントではないの？
+
+試みました！[OpenHaystackのサポート追加 #3584](https://github.com/esphome/esphome/pull/3584)を開き、その[サポートドキュメント](https://deploy-preview-2146--esphome.netlify.app/components/openhaystack.html)も作成しましたが、理解できることに、彼らはそれをマージしたくなかったようです。
+
+## ESPHomeの例 - ESP32
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+
+esp32:
+  board: wemos_d1_mini32
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# ログを有効化
+logger:
+
+# Home Assistant APIを有効化
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # ここにBase64でエンコードされたOpenHaystackキーを入力
+  # 秘密として扱うことを強くお勧めします
+  key: !secret openhaystack_key
+```
+
+## ESPHomeの例 - ESP32-C3
+
+```yaml
+external_components:
+  - source:
+      type: git
+      url: https://github.com/barrenechea/esphome-config-files
+      ref: main
+    components: [openhaystack]
+
+esphome:
+  name: openhaystack-demo
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: latest
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+      # WPA3サポートを有効化（できるから）
+      CONFIG_WPA_SUITE_B_192: y
+      # Bluetooth使用に特化
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      # 「ペイロードサイズエラー」を修正 - ウォッチドッグタイムアウトを延長
+      CONFIG_ESP_TASK_WDT_TIMEOUT_S: '10'
+
+wifi:
+  ssid: <your-wifi-ssid>
+  password: <your-wifi-password>
+
+# ログを有効化
+logger:
+
+# Home Assistant APIを有効化
+api:
+
+ota:
+  password: !secret ota_password
+
+openhaystack:
+  # ここにBase64でエンコードされたOpenHaystackキーを入力
+  # 秘密として扱うことを強くお勧めします
+  key: !secret openhaystack_key
+```

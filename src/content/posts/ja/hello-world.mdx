@@ -1,0 +1,24 @@
+---
+title: こんにちは、世界！
+description: ウェブサイトを再起動しました。現在はAstroで動作し、エッジで配信されています！
+pubDate: 2022-07-28T12:00:00Z
+img: ~/assets/images/post-astro.png
+imgAlt: Astroロゴ
+translatedBy: chatgpt-4o-latest
+checksum: a61036e479b20fce7a56b7ec975fdc96d0a34e855200ce32a1b5510ea0a35f45
+---
+
+import { Image } from 'astro:assets';
+import OldWebsiteImage from '~/assets/images/old-website.png';
+
+もし以前ここに来たことがあるなら、このウェブサイトには数年間「こんにちは」のメッセージが表示されていたことをご存知かもしれません。しかし、時が経つにつれて多くのことが変わりました！
+
+<Image src={OldWebsiteImage} alt="以前のウェブサイトのスクリーンショット" format="webp" />
+
+2016年当時、このウェブサイトは[DigitalOcean](https://digitalocean.com)のドロップレットでホストされていました。その後、自分のネットワーク内でポートを開放し、[DockerHub](https://hub.docker.com/r/barrenechea/barrenechea-website)を使用して、[Unraid](https://unraid.net)サーバー上でコンテナとしてウェブサイトを実行することにしました。
+
+エッジデプロイメントに切り替える前は、ISPの動的IPの問題を軽減し、ローカルネットワークの「アクセス可能ポイント」を強化するために[Cloudflareトンネル](https://www.cloudflare.com/products/tunnel/)を使用していました。
+
+今読んでいるこのウェブサイトは、[Astro](https://astro.build)で開発された再構築版です。エッジでのデプロイ（現在はCloudflareの[エッジネットワーク](https://www.cloudflare.com/learning/cdn/glossary/edge-server/)を使用しています）は、セキュリティの観点からも、エンドユーザー（あなた！）にとってのパフォーマンスの向上という点でも大きな改善です。
+
+このウェブサイトに選んだフォントは[Work Sans](https://fonts.google.com/specimen/Work+Sans)です。
