@@ -10,7 +10,7 @@ export interface Props {
   author: string;
 }
 
-const { post, author } = Astro.props as Props;
+const { post, author } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);

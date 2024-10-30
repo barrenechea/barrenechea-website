@@ -13,7 +13,9 @@ function localizedPathname(locale: string): string {
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 
-const currentLanguage = languages[lang as LanguageKey] ?? languages[AppConfig.defaultLang];
+const currentLanguage = Object.keys(languages).includes(lang)
+  ? languages[lang as LanguageKey]
+  : languages[AppConfig.defaultLang];
 ---
 
 <language-selector class="flex justify-center">

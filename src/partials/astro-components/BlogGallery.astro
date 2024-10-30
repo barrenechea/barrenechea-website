@@ -7,7 +7,7 @@ export interface Props {
   postsList: CollectionEntry<'posts' | 'projects'>[];
 }
 
-const { postsList } = Astro.props as Props;
+const { postsList } = Astro.props;
 ---
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">

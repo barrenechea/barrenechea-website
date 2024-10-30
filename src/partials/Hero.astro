@@ -10,7 +10,7 @@ import HeroAvatar from '~/partials/astro-components/HeroAvatar.astro';
 import HeroSocial from '~/partials/astro-components/HeroSocial.astro';
 import Section from '~/partials/astro-components/Section.astro';
 
-const avatar = avatars[0]!;
+const avatar = avatars[0];
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);

@@ -86,7 +86,7 @@ async function processMissingFiles(targetLanguage?: string) {
   const missingFiles = targetLanguage
     ? files.filter((file) => file.targetLanguage === targetLanguage)
     : files;
-  console.log(`Missing files: ${missingFiles.length}`);
+  console.log(`Missing files: ${missingFiles.length.toString()}`);
   for (const file of missingFiles) {
     await translateFile(file);
     await cleanUpFile(file);
@@ -98,7 +98,7 @@ async function processOutdatedFiles(targetLanguage?: string) {
   const outdatedFiles = targetLanguage
     ? files.filter((file) => file.targetLanguage === targetLanguage)
     : files;
-  console.log(`Outdated files: ${outdatedFiles.length}`);
+  console.log(`Outdated files: ${outdatedFiles.length.toString()}`);
   for (const file of outdatedFiles) {
     await removeFile(file);
     await translateFile(file);
@@ -118,4 +118,4 @@ async function main() {
   console.log('All done!');
 }
 
-main();
+void main();

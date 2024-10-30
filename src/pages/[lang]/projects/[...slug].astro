@@ -4,7 +4,7 @@ import { type CollectionEntry } from 'astro:content';
 import { projectPages } from '~/content';
 import BaseProject from '~/templates/BaseProject.astro';
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return projectPages.map((project) => {
     const [lang, ...slug] = project.slug.split('/');
 

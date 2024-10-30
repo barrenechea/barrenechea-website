@@ -10,7 +10,7 @@ const astroVersion = dependencies.astro.replace('^', '');
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 
-const copyrightText = `2022-${year} ${t('author.name')}`;
+const copyrightText = `2022-${year.toString()} ${t('author.name')}`;
 ---
 
 <div class="border-t border-gray-600 pt-5">

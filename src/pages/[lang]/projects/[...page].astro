@@ -16,7 +16,7 @@ interface GetStaticPaths {
   paginate: PaginateFunction;
 }
 
-export async function getStaticPaths({ paginate }: GetStaticPaths) {
+export function getStaticPaths({ paginate }: GetStaticPaths) {
   const allProjects = projectPages.filter((item) => item.slug.split('/').length === 2);
   const sortedProjects = allProjects.sort(
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
@@ -38,11 +38,11 @@ interface Props {
   page: Page<CollectionEntry<'projects'>>;
 }
 
-const { page } = Astro.props as Props;
+const { page } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const t = useTranslations(lang);
-const titleBase = `${t('nav.page')} ${page.currentPage} - ${t('nav.projects')}`;
+const titleBase = `${t('nav.page')} ${page.currentPage.toString()} - ${t('nav.projects')}`;
 const title = `${titleBase} - ${AppConfig.siteName}`;
 const description = t('projects.paginationDescription');
 ---

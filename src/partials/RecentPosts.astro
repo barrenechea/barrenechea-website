@@ -11,7 +11,7 @@ export interface Props {
   postsList: CollectionEntry<'posts'>[];
 }
 
-const { postsList } = Astro.props as Props;
+const { postsList } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---

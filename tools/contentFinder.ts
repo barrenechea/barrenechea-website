@@ -58,17 +58,11 @@ export async function findMissingFiles(): Promise<MissingFile[]> {
   const allFiles = await getFilesInDirectory(contentDir);
 
   // Organize files by language
-  const contentFiles: Record<string, string[]> = allFiles.reduce(
-    (acc: Record<string, string[]>, file) => {
-      const langCode = file.split('/')[1];
-      if (!acc[langCode]) {
-        acc[langCode] = [];
-      }
-      acc[langCode].push(file);
-      return acc;
-    },
-    {}
-  );
+  const contentFiles = allFiles.reduce<Record<string, string[] | null>>((acc, file) => {
+    const langCode = file.split('/')[1];
+    (acc[langCode] ??= []).push(file);
+    return acc;
+  }, {});
 
   // Find missing files based on the default language
   const missingFiles: MissingFile[] = [];
@@ -103,10 +97,7 @@ export async function findOutdatedFiles(): Promise<MissingFile[]> {
   const contentFiles: Record<string, string[]> = allFiles.reduce(
     (acc: Record<string, string[]>, file) => {
       const langCode = file.split('/')[1];
-      if (!acc[langCode]) {
-        acc[langCode] = [];
-      }
-      acc[langCode].push(file);
+      (acc[langCode] ??= []).push(file);
       return acc;
     },
     {}

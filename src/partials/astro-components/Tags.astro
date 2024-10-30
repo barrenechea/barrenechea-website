@@ -55,7 +55,7 @@ const colorToClassMap = {
   [colorTags.ROSE]: 'bg-rose-400 text-rose-900',
 };
 
-const { color } = Astro.props as Props;
+const { color } = Astro.props;
 const className = colorToClassMap[color];
 ---
 

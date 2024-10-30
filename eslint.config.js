@@ -22,6 +22,8 @@ export default tseslint.config(
       '**/.vercel',
       '**/.astro',
       '**/.github',
+      '*.cjs',
+      'src/env.d.ts',
     ],
   },
   eslint.configs.recommended,

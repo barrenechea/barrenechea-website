@@ -9,7 +9,7 @@ export interface Props {
   instance: CollectionEntry<'posts' | 'projects'>;
 }
 
-const { key, instance } = Astro.props as Props;
+const { key, instance } = Astro.props;
 const [lang, ...slug] = instance.slug.split('/');
 const formattedDate = formatDate(instance.data.pubDate, lang);
 ---

@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: AppConfig.siteName,
     description: AppConfig.description,
-    site: context.site!,
+    site: context.site ?? '',
     items: allPages.map((page) => ({
       link: `/${page.collection}/${page.slug}`,
       title: page.data.title,

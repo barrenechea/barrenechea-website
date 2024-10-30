@@ -4,7 +4,7 @@ import { type CollectionEntry } from 'astro:content';
 import { postPages } from '~/content';
 import BasePost from '~/templates/BasePost.astro';
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return postPages.map((post) => {
     const [lang, ...slug] = post.slug.split('/');
 

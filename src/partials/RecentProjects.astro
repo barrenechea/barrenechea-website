@@ -35,7 +35,7 @@ const tagColors = {
 
 const defaultTagColor = 'GRAY';
 
-const { projectsList } = Astro.props as Props;
+const { projectsList } = Astro.props;
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
 ---
@@ -59,11 +59,11 @@ const t = useTranslations(lang);
         <Project
           name={project.data.title}
           description={project.data.description}
-          link={`/${lang}/projects/${project.slug.split('/').pop()}/`}
+          link={`/${lang}/projects/${project.slug.split('/').pop() ?? 'ERROR'}/`}
           img={project.data.img}
           imgAlt={project.data.imgAlt}
         >
-          {(project.data.tags || []).map((tag) => (
+          {project.data.tags.map((tag) => (
             <Tags color={tagColors[tag] || defaultTagColor}>
               {t(`tags.${tag}` as keyof Translations) || t('tags.undefined')}
             </Tags>

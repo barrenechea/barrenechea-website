@@ -20,7 +20,7 @@ export interface Props {
 
 const {
   head: { title, description, ogOverride },
-} = Astro.props as Props;
+} = Astro.props;
 
 const { lang = AppConfig.defaultLang } = Astro.params;
 const t = useTranslations(lang);
@@ -57,8 +57,8 @@ const filteredTitle = ogOverride ?? title.replace(' - Barrenechea', '');
       src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE"></script>
     <script type="text/partytown" is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      function gtag(...args) {
+        dataLayer.push(...args);
       }
       gtag('js', new Date());
       gtag('config', 'G-L5QEGL7QZE');
