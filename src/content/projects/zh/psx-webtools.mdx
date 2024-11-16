@@ -1,0 +1,56 @@
+---
+title: PSX Web工具
+description: 一组用于PlayStation 1开发和自制软件的网页工具，使用WebSerial与主机进行交互。
+pubDate: 2024-11-15T23:47:00Z
+link: https://psx.barrenechea.cl
+img: ~/assets/images/project-psx-webtools.png
+imgAlt: PSX Web工具标志
+tags:
+  - React
+  - TypeScript
+  - Hardware
+translatedBy: chatgpt-4o-latest
+checksum: a0a008abab0aacde676f6eb346a1bef8a7a87259ab26c2886a50dd277e29fb01
+---
+
+import FellowKids from '~/assets/images/fellow-kids.gif';
+import { Image } from 'astro:assets';
+
+PlayStation 1，现在几乎可以通过任何现代设备进行模拟，是许多我们童年记忆的一部分。与任天堂64一起，它标志着3D游戏世界的巨大进入。  
+尽管今天我们的硬件能力已经远远超越了那个时代，但开发者和爱好者的社区仍然活跃在[PSX.Dev Discord](https://www.psx.dev)、[PSXDEV Network论坛](https://www.psxdev.net)和其他空间。
+
+最近，主要是为了满足我深入了解那个世界的愿望，我创建了一组用于PlayStation 1开发和自制软件的网页工具，使用WebSerial与主机进行通信。这个想法是能够从浏览器中加载程序、读写内存以及其他功能。
+
+为什么？因为现有的软件不太便携，而既然有了WebSerial，为什么不做呢？
+
+<div align="center">
+  <Image
+    src={FellowKids}
+    alt="史蒂夫·布西密（Steve Buscemi）打扮得很年轻，手持滑板的表情包，标题为'How do you do, fellow kids?'"
+    format="webp"
+  />
+  <p class="italic">PlayStation 1进入WebSerial对话</p>
+</div>
+
+_这是一个持续开发的项目，因此我会尽量保持这篇文章的更新，反映我所做的更改。_
+
+## 记忆卡管理器
+
+这个工具几乎是[MemcardRex](https://github.com/ShendoXT/memcardrex)的网页版本。它允许读取和写入主机的*记忆卡*，以及导出和导入记忆文件。目前，它只处理附加文件或使用[MemCARDuino](https://github.com/ShendoXT/memcarduino)进行读写*记忆卡*。未来，我希望添加编辑记忆内容的选项。
+
+## MemCARDuino 刷写工具
+
+我在AliExpress上购买的MemCARDuino附带了一个旧版本的软件（v0.4，而最新版本是v0.8）。要更新它，你需要安装Arduino IDE并对设备进行编程。这很简单，但对技术不太熟练的用户来说不太友好。在实现了记忆卡管理器的基本功能后，我想：“如果我能让人们更容易更新他们的MemCARDuino呢？”
+
+实现分为两部分：
+
+- Arduino设备：允许使用[stk500-esm](https://github.com/barrenechea/stk500-esm)对MemCARDuino进行编程。目前，它支持STK500v1协议，但我正在努力加入STK500v2的支持。
+- 树莓派Pico：允许下载UF2文件以更新设备。
+
+为了为每个平台编译二进制文件，我创建了[memcarduino-builder](https://github.com/barrenechea/memcarduino-builder)，它使用GitHub Actions自动编译原始项目。未来，我希望添加对Espressif设备的支持。
+
+## NoPS
+
+另一个改编！这次是[NOTPSXSerial](https://github.com/leafy-psx/NOTPSXSerial)的网页版本。它允许将程序加载到主机上并读写内存。目前，它只允许加载程序（而且效果不太好），所以这是一个正在进行中的工作，暂时大部分功能是隐藏的。
+
+## 待续...

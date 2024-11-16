@@ -1,0 +1,56 @@
+---
+title: PSX Vefverkfæri
+description: Safn vefverkfæra fyrir PlayStation 1 þróun og heimagerð sem notar WebSerial til að eiga samskipti við leikjatölvuna.
+pubDate: 2024-11-15T23:47:00Z
+link: https://psx.barrenechea.cl
+img: ~/assets/images/project-psx-webtools.png
+imgAlt: PSX Vefverkfæri Merki
+tags:
+  - React
+  - TypeScript
+  - Hardware
+translatedBy: chatgpt-4o-latest
+checksum: a0a008abab0aacde676f6eb346a1bef8a7a87259ab26c2886a50dd277e29fb01
+---
+
+import FellowKids from '~/assets/images/fellow-kids.gif';
+import { Image } from 'astro:assets';
+
+PlayStation 1, sem nú er hægt að herma eftir á næstum hvaða nútímatæki sem er, var hluti af æsku margra okkar. Ásamt Nintendo 64 markaði hún stórt skref inn í heim 3D tölvuleikja.  
+Þó að við séum í dag ljósárum á undan vélbúnaðargetu þess tíma, er samfélag þróunaraðila og áhugamanna enn virkt á [PSX.Dev Discord](https://www.psx.dev), [PSXDEV Network spjallborðinu](https://www.psxdev.net), og öðrum stöðum.
+
+Nýlega, og aðallega til að fullnægja löngun minni til að kafa inn í þann heim, bjó ég til safn vefverkfæra fyrir PlayStation 1 þróun og heimagerð sem notar WebSerial til að eiga samskipti við leikjatölvuna. Hugmyndin er að geta hlaðið forritum, lesið og skrifað í minni, og aðrar aðgerðir, allt úr vafranum.
+
+Af hverju? Vegna þess að núverandi hugbúnaður er ekki mjög flytjanlegur, og með WebSerial í boði, af hverju ekki að gera það?
+
+<div align="center">
+  <Image
+    src={FellowKids}
+    alt="Meme af Steve Buscemi klæddur unglega og heldur á hjólabretti með textanum 'How do you do, fellow kids?'"
+    format="webp"
+  />
+  <p class="italic">PlayStation 1 að koma inn í WebSerial samtalið</p>
+</div>
+
+_Þetta er verkefni í stöðugri þróun, svo ég mun reyna að halda þessari færslu uppfærðri með þeim breytingum sem ég geri._
+
+## Minni Kort Stjórnandi
+
+Þetta verkfæri er í raun vefútgáfa af [MemcardRex](https://github.com/ShendoXT/memcardrex). Það gerir kleift að lesa og skrifa í _Minni Kort_ leikjatölvunnar, auk þess að flytja út og flytja inn minnisfærslur. Eins og er, þá vinnur það aðeins með tengd skrár eða les og skrifar _Minni Kort_ með [MemCARDuino](https://github.com/ShendoXT/memcarduino). Í framtíðinni vona ég að bæta við möguleikanum á að breyta innihaldi minnisins.
+
+## MemCARDuino Flasher
+
+MemCARDuino sem ég keypti á AliExpress kom með gamla útgáfu af hugbúnaðinum (v0.4 þegar nýjasta var v0.8). Til að uppfæra það þarftu að hafa Arduino IDE uppsett og forrita tækið. Það er auðvelt, en ekki mjög notendavænt fyrir minna tæknilega notendur. Eftir að hafa útfært grunnvirkni Minni Kort Stjórnandans hugsaði ég, "hvað ef ég geri það auðveldara fyrir fólk að uppfæra MemCARDuino sitt?"
+
+Útfærslan er skipt í tvo hluta:
+
+- Arduino Tæki: Leyfir forritun MemCARDuino með [stk500-esm](https://github.com/barrenechea/stk500-esm). Eins og er, styður það STK500v1 samskiptaregluna, en ég er að vinna að því að bæta við STK500v2.
+- Raspberry Pi Pico: Leyfir niðurhal á UF2 skrá til að uppfæra tækið.
+
+Til að þýða keyrsluskrár fyrir hverja vettvang bjó ég til [memcarduino-builder](https://github.com/barrenechea/memcarduino-builder), sem þýðir sjálfkrafa upprunalega verkefnið með GitHub Actions. Í framtíðinni vil ég bæta við stuðningi fyrir Espressif tæki.
+
+## NoPS
+
+Önnur aðlögun! Að þessu sinni af [NOTPSXSerial](https://github.com/leafy-psx/NOTPSXSerial) yfir á vefinn. Það gerir kleift að hlaða forritum á leikjatölvuna og lesa/skrifa í minni. Eins og er, leyfir það aðeins að hlaða forritum (og ekki mjög vel), svo það er í vinnslu og er að mestu leyti falið.
+
+## Framhald fylgir...

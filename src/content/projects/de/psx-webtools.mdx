@@ -1,0 +1,56 @@
+---
+title: PSX WebTools
+description: Eine Sammlung von Web-Tools für die PlayStation 1-Entwicklung und Homebrew, die WebSerial verwendet, um mit der Konsole zu interagieren.
+pubDate: 2024-11-15T23:47:00Z
+link: https://psx.barrenechea.cl
+img: ~/assets/images/project-psx-webtools.png
+imgAlt: PSX WebTools Logo
+tags:
+  - React
+  - TypeScript
+  - Hardware
+translatedBy: chatgpt-4o-latest
+checksum: a0a008abab0aacde676f6eb346a1bef8a7a87259ab26c2886a50dd277e29fb01
+---
+
+import FellowKids from '~/assets/images/fellow-kids.gif';
+import { Image } from 'astro:assets';
+
+Die PlayStation 1, die heute von fast jedem modernen Gerät emuliert werden kann, war ein Teil der Kindheit vieler von uns. Zusammen mit dem Nintendo 64 markierte sie den massiven Einstieg in die Welt des 3D-Gamings.  
+Obwohl wir heute Lichtjahre von den Hardware-Fähigkeiten jener Zeit entfernt sind, bleibt die Gemeinschaft der Entwickler und Enthusiasten auf dem [PSX.Dev Discord](https://www.psx.dev), im [PSXDEV Network Forum](https://www.psxdev.net) und in anderen Räumen aktiv.
+
+Kürzlich habe ich, hauptsächlich um mein Verlangen zu stillen, in diese Welt einzutauchen, eine Sammlung von Web-Tools für die PlayStation 1-Entwicklung und Homebrew erstellt, die WebSerial verwendet, um mit der Konsole zu kommunizieren. Die Idee ist, Programme zu laden, in den Speicher zu lesen und zu schreiben und andere Funktionen, alles direkt aus dem Browser.
+
+Warum? Weil die vorhandene Software nicht sehr portabel ist, und da WebSerial verfügbar ist, warum nicht?
+
+<div align="center">
+  <Image
+    src={FellowKids}
+    alt="Meme von Steve Buscemi, der jugendlich gekleidet ist und ein Skateboard hält, mit der Bildunterschrift 'How do you do, fellow kids?'"
+    format="webp"
+  />
+  <p class="italic">PlayStation 1 tritt in die WebSerial-Konversation ein</p>
+</div>
+
+_Dies ist ein Projekt in ständiger Entwicklung, daher werde ich versuchen, diesen Beitrag mit den von mir vorgenommenen Änderungen auf dem neuesten Stand zu halten._
+
+## Memory Card Manager
+
+Dieses Tool ist praktisch eine Web-Version von [MemcardRex](https://github.com/ShendoXT/memcardrex). Es ermöglicht das Lesen und Schreiben auf die _Memory Cards_ der Konsole sowie den Export und Import von Speicherdateien. Derzeit werden nur angehängte Dateien oder das Lesen und Schreiben von _Memory Cards_ mit [MemCARDuino](https://github.com/ShendoXT/memcarduino) unterstützt. In Zukunft hoffe ich, die Möglichkeit hinzuzufügen, den Speicherinhalt zu bearbeiten.
+
+## MemCARDuino Flasher
+
+Der MemCARDuino, den ich auf AliExpress gekauft habe, kam mit einer alten Version der Software (v0.4, während die neueste v0.8 war). Um ihn zu aktualisieren, muss man die Arduino IDE installiert haben und das Gerät programmieren. Es ist einfach, aber nicht sehr benutzerfreundlich für weniger technische Nutzer. Nachdem ich die Grundfunktionen des Memory Card Managers implementiert hatte, dachte ich: "Warum mache ich es den Leuten nicht einfacher, ihren MemCARDuino zu aktualisieren?"
+
+Die Implementierung ist in zwei Teile unterteilt:
+
+- Arduino-Geräte: Ermöglicht das Programmieren von MemCARDuino mit [stk500-esm](https://github.com/barrenechea/stk500-esm). Derzeit wird das STK500v1-Protokoll unterstützt, aber ich arbeite daran, STK500v2 hinzuzufügen.
+- Raspberry Pi Pico: Ermöglicht das Herunterladen einer UF2-Datei, um das Gerät zu aktualisieren.
+
+Um die Binärdateien für jede Plattform zu kompilieren, habe ich [memcarduino-builder](https://github.com/barrenechea/memcarduino-builder) erstellt, das das ursprüngliche Projekt automatisch mit GitHub Actions kompiliert. In Zukunft möchte ich Unterstützung für Espressif-Geräte hinzufügen.
+
+## NoPS
+
+Eine weitere Anpassung! Diesmal von [NOTPSXSerial](https://github.com/leafy-psx/NOTPSXSerial) ins Web. Es ermöglicht das Laden von Programmen auf die Konsole sowie das Lesen und Schreiben in den Speicher. Derzeit können nur Programme geladen werden (und das nicht sehr gut), daher ist es noch in Arbeit und bleibt größtenteils verborgen.
+
+## Fortsetzung folgt...

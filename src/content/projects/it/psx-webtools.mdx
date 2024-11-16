@@ -1,0 +1,56 @@
+---
+title: PSX WebTools
+description: Una collezione di strumenti web per lo sviluppo e homebrew di PlayStation 1 che utilizza WebSerial per interagire con la console.
+pubDate: 2024-11-15T23:47:00Z
+link: https://psx.barrenechea.cl
+img: ~/assets/images/project-psx-webtools.png
+imgAlt: Logo di PSX WebTools
+tags:
+  - React
+  - TypeScript
+  - Hardware
+translatedBy: chatgpt-4o-latest
+checksum: 3db13f41cbf1bf252e366863c9f02e3eddf4bf310a435f01546c67a923674efc
+---
+
+import FellowKids from '~/assets/images/fellow-kids.gif';
+import { Image } from 'astro:assets';
+
+La PlayStation 1, che oggi può essere emulata da quasi qualsiasi dispositivo moderno, ha fatto parte dell'infanzia di molti di noi. Insieme al Nintendo 64, ha segnato l'ingresso massiccio nel mondo dei giochi 3D.
+Anche se oggi siamo a anni luce dalle capacità dell'hardware di quell'epoca, la comunità di sviluppatori e appassionati è ancora attiva su [Discord di PSX.Dev](https://www.psx.dev), il [forum PSXDEV Network](https://www.psxdev.net) e altri spazi.
+
+Di recente, principalmente per soddisfare la mia voglia di entrare in quel mondo, ho creato una collezione di strumenti web per lo sviluppo e homebrew di PlayStation 1 utilizzando WebSerial per comunicare con la console. L'idea è di poter caricare programmi, leggere e scrivere nella memoria, e altre funzioni, tutto dal browser.
+
+Perché? Perché il software esistente è poco portabile, e avendo WebSerial disponibile, perché non farlo?
+
+<div align="center">
+  <Image
+    src={FellowKids}
+    alt="Meme di Steve Buscemi vestito da giovane e con uno skateboard con la scritta 'How do you do, fellow kids?'"
+    format="webp"
+  />
+  <p class="italic">PlayStation 1 entra nella conversazione di WebSerial</p>
+</div>
+
+_Questo è un progetto in costante sviluppo, quindi cercherò di mantenere aggiornata questa pubblicazione con i cambiamenti che farò._
+
+## Memory Card Manager
+
+Questo strumento è praticamente una versione web di [MemcardRex](https://github.com/ShendoXT/memcardrex). Permette di leggere e scrivere sulle _Memory Cards_ della console, oltre a esportare e importare file di memoria. Per ora gestisce solo file allegati o lettura e scrittura di _Memory Cards_ utilizzando [MemCARDuino](https://github.com/ShendoXT/memcarduino). In futuro spero di aggiungere l'opzione per modificare il contenuto della memoria.
+
+## MemCARDuino Flasher
+
+Il MemCARDuino che ho comprato su AliExpress è arrivato con una versione vecchia del software (v0.4 quando l'ultima era v0.8). Per aggiornarlo, è necessario avere installato l'IDE di Arduino e programmare il dispositivo. È facile, ma non così amichevole per utenti meno tecnici. Dopo aver implementato le funzioni di base del Memory Card Manager, ho pensato "e se rendessi più facile per le persone aggiornare i loro MemCARDuino?"
+
+L'implementazione è divisa in due parti:
+
+- Dispositivi Arduino: Permette di programmare MemCARDuino utilizzando [stk500-esm](https://github.com/barrenechea/stk500-esm). Per ora supporta il protocollo STK500v1, ma sto lavorando per includere STK500v2.
+- Raspberry Pi Pico: Permette di scaricare un file UF2 per aggiornare il dispositivo.
+
+Per compilare i binari per ogni piattaforma ho creato [memcarduino-builder](https://github.com/barrenechea/memcarduino-builder), che compila automaticamente il progetto originale utilizzando GitHub Actions. In futuro mi piacerebbe aggiungere il supporto per dispositivi Espressif.
+
+## NoPS
+
+Un'altra adattazione! Questa volta di [NOTPSXSerial](https://github.com/leafy-psx/NOTPSXSerial) per il web. Permette di caricare programmi sulla console e leggere/scrivere nella memoria. Per ora permette solo di caricare programmi (e non molto bene), quindi è un lavoro in corso e rimane per lo più nascosto.
+
+## Continua...

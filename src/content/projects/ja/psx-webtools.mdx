@@ -1,0 +1,56 @@
+---
+title: PSX Webツール
+description: PlayStation 1の開発とホームブリューのためのWebツールコレクションで、WebSerialを使用してコンソールとやり取りします。
+pubDate: 2024-11-15T23:47:00Z
+link: https://psx.barrenechea.cl
+img: ~/assets/images/project-psx-webtools.png
+imgAlt: PSX Webツールのロゴ
+tags:
+  - React
+  - TypeScript
+  - Hardware
+translatedBy: chatgpt-4o-latest
+checksum: a0a008abab0aacde676f6eb346a1bef8a7a87259ab26c2886a50dd277e29fb01
+---
+
+import FellowKids from '~/assets/images/fellow-kids.gif';
+import { Image } from 'astro:assets';
+
+PlayStation 1は、今ではほぼすべての現代のデバイスでエミュレートできるようになり、多くの人々の子供時代の一部でした。Nintendo 64とともに、3Dゲームの世界への大規模な参入を果たしました。  
+今日では、当時のハードウェア能力を遥かに超えていますが、開発者や愛好家のコミュニティは、[PSX.Dev Discord](https://www.psx.dev)、[PSXDEV Networkフォーラム](https://www.psxdev.net)などのスペースで今も活発に活動しています。
+
+最近、そして主にその世界に飛び込みたいという私の欲求を満たすために、WebSerialを使用してコンソールと通信するPlayStation 1の開発とホームブリューのためのWebツールコレクションを作成しました。ブラウザからプログラムをロードしたり、メモリの読み書きを行ったり、その他の機能を実行できるようにするのが目的です。
+
+なぜ？既存のソフトウェアはあまりポータブルではなく、WebSerialが利用可能なら、やらない理由はないでしょう？
+
+<div align="center">
+  <Image
+    src={FellowKids}
+    alt="スケートボードを持ち、若者風の服装をしたスティーブ・ブシェミのミーム。キャプションは「How do you do, fellow kids?」"
+    format="webp"
+  />
+  <p class="italic">PlayStation 1がWebSerialの会話に参加</p>
+</div>
+
+_このプロジェクトは常に開発中であり、変更があればこの投稿を更新する予定です。_
+
+## メモリーカードマネージャー
+
+このツールは、ほぼ[MemcardRex](https://github.com/ShendoXT/memcardrex)のWeb版です。コンソールの*メモリーカード*の読み書きや、メモリーファイルのエクスポートとインポートが可能です。現在のところ、添付ファイルの処理や、[MemCARDuino](https://github.com/ShendoXT/memcarduino)を使用した*メモリーカード*の読み書きのみ対応しています。将来的には、メモリ内容の編集機能を追加したいと考えています。
+
+## MemCARDuinoフラッシャー
+
+AliExpressで購入したMemCARDuinoには古いバージョンのソフトウェア（v0.4、最新はv0.8）が搭載されていました。これを更新するには、Arduino IDEをインストールしてデバイスをプログラムする必要があります。簡単ですが、技術的な知識が少ないユーザーにはあまり親切ではありません。メモリーカードマネージャーの基本機能を実装した後、「MemCARDuinoの更新をもっと簡単にできないか？」と思いました。
+
+実装は2つの部分に分かれています：
+
+- Arduinoデバイス: [stk500-esm](https://github.com/barrenechea/stk500-esm)を使用してMemCARDuinoをプログラムできます。現在はSTK500v1プロトコルのみ対応していますが、STK500v2のサポートも追加予定です。
+- Raspberry Pi Pico: デバイスを更新するためのUF2ファイルをダウンロードできます。
+
+各プラットフォーム用のバイナリをコンパイルするために、[memcarduino-builder](https://github.com/barrenechea/memcarduino-builder)を作成しました。これはGitHub Actionsを使用してオリジナルプロジェクトを自動的にコンパイルします。将来的にはEspressifデバイスのサポートも追加したいと考えています。
+
+## NoPS
+
+もう一つの適応版！今回は[NOTPSXSerial](https://github.com/leafy-psx/NOTPSXSerial)をWebに移植しました。これにより、コンソールにプログラムをロードしたり、メモリの読み書きが可能になります。現在のところ、プログラムのロードのみ対応しています（しかもあまりうまくいっていません）、そのため進行中の作業であり、ほとんど隠されています。
+
+## 続く...
