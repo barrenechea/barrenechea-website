@@ -62,7 +62,7 @@ Alternatively, launch a ready-to-code dev environment with Gitpod:
 For detecting and translating content automatically:
 
 ```bash
-npm run i18n:generate
+node --run i18n:generate
 ```
 
 Before running the command, set the `OPENAI_API_KEY` environment variable with your OpenAI API key for translation services.
