@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: o1-mini
-checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
+checksum: 5a58d79203d65dd1a8a9c707df3398c99bb97861066b0002c7ac3063f1b92eb8
 ---
 
 import { Image } from 'astro:assets';
@@ -59,7 +59,7 @@ Tenter de connecter un ESP32 ou un pont Serial basé sur CH340 directement aux c
 
 ## Mise à jour 2025
 
-Ces dernières semaines, et environ deux ans après avoir commencé cela, plusieurs personnes m'ont contacté pour demander des avancées à ce sujet, confirmant mon hypothèse initiale que le système du tapis de course est horrible et qu'il était seulement question de temps pour que les machines commencent à tomber en panne. Il m'a semblé être le bon moment pour mettre en service mon analyseur logique, qui jusqu'à présent ne servait qu'à prendre la poussière.
+Ces dernières semaines, et presque trois ans après avoir commencé ce projet, plusieurs personnes m'ont contacté pour demander des avancées à ce sujet, confirmant mon hypothèse initiale que le système du tapis de course est horrible et qu'il était seulement question de temps pour que les machines commencent à tomber en panne. Il m'a semblé être le bon moment pour mettre en service mon analyseur logique, qui jusqu'à présent ne servait qu'à prendre la poussière.
 
 En connectant l'analyseur logique aux lignes TXD et RXD (et GND, bien sûr), j'ai immédiatement pu commencer à intercepter les messages entre les deux parties sans interrompre la communication. Je suppose qu'initialement, je n'ai pas pu avec un ESP32 en raison de problèmes d'impédance. Après quelques minutes d'essais et d'erreurs, j'ai abouti à la configuration Serial suivante:
 

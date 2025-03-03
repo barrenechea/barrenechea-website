@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: o1-mini
-checksum: c18c0dcfb1526f0210709098ca91e330b03d146e571843fc34a705fb31a09e26
+checksum: 4224933e0c3f7a58900d547a22b559792c6423035208e9b738d26ac006a8bc83
 ---
 
 import { Image } from 'astro:assets';
@@ -59,7 +59,7 @@ Der Versuch, eine ESP32- oder eine CH340-basierte Serial-Brücke direkt mit den 
 
 ## Aktualisierung 2025
 
-In den letzten Wochen und etwa zwei Jahre nachdem ich damit begonnen habe, haben mich mehrere Personen kontaktiert, um nach Fortschritten bezüglich dieses Projekts zu fragen. Dies bestätigte meine anfängliche Annahme, dass das Laufbandsystem schrecklich ist und es nur eine Frage der Zeit war, bis die Maschinen ausfielen. Es schien ein guter Zeitpunkt zu sein, meinen Logikanalysator zu verwenden, der bis jetzt nur Staub gesammelt hatte.
+In den letzten Wochen und fast drei Jahren, nachdem ich damit begonnen habe, haben sich mehrere Leute bei mir gemeldet und nach den Fortschritten gefragt. Damit wurde meine anfängliche Annahme bestätigt, dass das Laufbandsystem furchtbar ist und es nur eine Frage der Zeit sei, bis die Geräte den Geist aufgeben würden. Es schien ein guter Zeitpunkt zu sein, meinen Logikanalysator, der bis jetzt nur Staub angesetzt hatte, einzusetzen.
 
 Beim Anschluss des Logikanalysators an die TXD- und RXD-Leitungen (und natürlich GND) konnte ich sofort beginnen, Nachrichten zwischen beiden Parteien abzufangen, ohne die Kommunikation zu unterbrechen. Ich vermute, dass ich anfänglich keinen ESP32 aufgrund von Impedanzproblemen verwenden konnte. Nach ein paar Minuten Trial-and-Error kam ich zu folgender Serial-Konfiguration:
 

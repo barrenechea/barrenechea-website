@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: o1-mini
-checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
+checksum: 5a58d79203d65dd1a8a9c707df3398c99bb97861066b0002c7ac3063f1b92eb8
 ---
 
 import { Image } from 'astro:assets';
@@ -59,7 +59,7 @@ Tentare di collegare un ESP32 o un ponte Serial basato su CH340 direttamente ai 
 
 ## Aggiornamento 2025
 
-Nelle ultime settimane, e circa due anni dopo aver iniziato con questo progetto, diverse persone si sono messe in contatto con me per chiedere aggiornamenti a riguardo, confermando la mia supposizione iniziale che il sistema del tapis roulant è pessimo e che era solo questione di tempo prima che le macchine iniziassero a guastarsi. Mi è sembrato un buon momento per mettere in uso il mio analizzatore logico, che finora era rimasto inutilizzato.
+Nelle ultime settimane, e quasi tre anni dopo aver iniziato con questo progetto, diverse persone si sono messe in contatto con me per chiedere aggiornamenti a riguardo, confermando la mia supposizione iniziale che il sistema del tapis roulant è pessimo e che era solo questione di tempo prima che le macchine iniziassero a guastarsi. Mi è sembrato un buon momento per mettere in uso il mio analizzatore logico, che finora era rimasto inutilizzato.
 
 Collegando l'analizzatore logico alle linee TXD e RXD (e GND, naturalmente), ho immediatamente potuto iniziare a intercettare messaggi tra entrambe le parti senza interrompere la comunicazione. Suppongo che inizialmente non riuscissi con un ESP32 per problemi di impedenza. Dopo alcuni minuti di prova e errore, sono arrivato alla seguente configurazione Serial:
 

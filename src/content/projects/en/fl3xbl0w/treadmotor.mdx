@@ -10,7 +10,7 @@ tags:
   - Hardware
   - Android
 translatedBy: o1-mini
-checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
+checksum: 5a58d79203d65dd1a8a9c707df3398c99bb97861066b0002c7ac3063f1b92eb8
 ---
 
 import { Image } from 'astro:assets';
@@ -59,7 +59,7 @@ Trying to connect an ESP32 or a CH340-based Serial bridge directly to the cables
 
 ## Update 2025
 
-In recent weeks, and approximately two years after I started with this, several people have contacted me to ask about progress regarding this, confirming my initial assumption that the treadmill system is horrible and it was only a matter of time before machines started to fail. It seemed like a good time to put my logic analyzer to use, which until now had only been gathering dust.
+In recent weeks, and almost three years after I started with this, several people have contacted me to ask about progress regarding this, confirming my initial assumption that the treadmill system is horrible and it was only a matter of time before machines started to fail. It seemed like a good time to put my logic analyzer to use, which until now had only been gathering dust.
 
 Connecting the logic analyzer to the TXD and RXD lines (and GND, of course), I was immediately able to start intercepting messages between both parties without interrupting the communication. I suppose I initially couldn't use an ESP32 due to impedance issues. After a few minutes of trial and error, I arrived at the following Serial configuration:
 
