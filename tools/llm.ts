@@ -10,7 +10,7 @@ interface LlmPayload {
   temperature: number;
 }
 
-export const model = process.env.LLM_MODEL ?? 'gpt-4o-2024-11-20';
+export const model = process.env.LLM_MODEL ?? 'o1-mini';
 
 // requires to have OPENAI_API_KEY set in env
 // optionally, OPENAI_BASE_URL can be set to point to a different API endpoint
