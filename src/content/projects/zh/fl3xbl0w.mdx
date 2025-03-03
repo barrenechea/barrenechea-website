@@ -1,36 +1,36 @@
 ---
 title: fl3xbl0w
-description: 逆向工程项目。它始于 Bowflex Treadmill 22，但最终泛化为适用于 Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何带有 Android 的设备。
+description: 逆向工程项目。最初从 Bowflex Treadmill 22 开始，但最终被推广为 Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何配备 Android 的机器。
 pubDate: 2022-05-28T10:28:00Z
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: fl3xbl0w 项目标志
+imgAlt: fl3xbl0w项目标志
 tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: chatgpt-4o-latest
-checksum: 0ff65f68cf2e838ce7f46de75c2c5cc835977da86ecb52ba48aeb4555a6a3562
+translatedBy: o1-mini
+checksum: 7525ffff2162bcaf16c9ffe1c5dd0dacf71734548dc2fbb93d34ee4068ebc79d
 ---
 
 import { Image } from 'astro:assets';
 import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
-<Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
+<Image src={HeaderImage} alt="fl3xbl0w项目标志" format="webp" width={800} />
 
-欢迎来到我的 "Bowflex 控制台" 文档！（Nautilus 称之为 Vantron）。
+欢迎来到我的“Bowflex 控制台”文档！（Nautilus 称之为 Vantron）。
 
-Vantron 是大多数 Nautilus Inc. "智能设备" 的基础。基本上，它是运行专有软件的 Android 平板电脑。此外，还有一些与硬件相关的内容引起了我的好奇心。
+Vantron 是 Nautilus Inc. 大多数“智能设备”的基础。基本上是一款运行专有软件的 Android 平板电脑。此外，还有一些引发我好奇心的硬件相关内容。
 
-我在很大程度上依赖于我在 [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) 上找到的前人工作（感谢 [xasmx](https://www.reddit.com/user/xasmx/)！）来深入了解这台机器的软件和硬件。
+我大量依赖于我在 [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) 上找到的之前的工作（感谢 [xasmx](https://www.reddit.com/user/xasmx/)！），以更深入地了解机器的软件和硬件。
 
 ## 兼容设备（Android 越狱）
 
-在玩弄 <a href="/zh/projects/fl3xbl0w/decompiling" target="_self">反编译的应用程序</a> 后，我可以自信地说，以下文档可以以某种方式推广到以下 Bowflex 设备：
+在使用 <a href="/zh/projects/fl3xbl0w/decompiling" target="_self">反编译的应用程序</a> 后，我可以肯定地说，以下文档可以以某种方式推断到以下 Bowflex 设备：
 
 ### 跑步机
 
-- Treadmill 22 / Treadmill 56（同一款跑步机。56 型号有 220v AC 输入，22 型号有 120v AC 输入）
-- Treadmill 10 / Treadmill 25（同一款跑步机。25 型号有 220v AC 输入，10 型号有 120v AC 输入）
+- Treadmill 22 / Treadmill 56（同一款跑步机。56型号具有220伏交流输入，22型号具有120伏交流输入）
+- Treadmill 10 / Treadmill 25（同一款跑步机。25型号具有220伏交流输入，10型号具有120伏交流输入）
 
 ### 自行车
 
@@ -41,9 +41,9 @@ Vantron 是大多数 Nautilus Inc. "智能设备" 的基础。基本上，它是
 - Max Total 16
 - Max Trainer M9
 
-我没有 Max Trainer 或 VeloCore，但根据代码发现，只要有可用的 USB 端口，它们应该可以工作。
+我没有 Max Trainer 或 VeloCore，但根据代码发现，只要有可用的 USB 端口，它应该可以正常工作。
 
-已确认与以下版本的 NautilusLauncher 兼容：
+已确认与 NautilusLauncher 版本兼容：
 
 - 5.0.0.350
 - 5.0.0.382
@@ -58,28 +58,28 @@ Vantron 是大多数 Nautilus Inc. "智能设备" 的基础。基本上，它是
     Android 越狱
   </a>
 - <a href="/zh/projects/fl3xbl0w/backup" target="_self">
-    备份您的控制台内容
+    备份控制台内容
   </a>
 - <a href="/zh/projects/fl3xbl0w/decompiling" target="_self">
     反编译
   </a>
 - <a href="/zh/projects/fl3xbl0w/quirks" target="_self">
-    Bowflex 特性
+    Bowflex 奇特功能
   </a>
 - <a href="/zh/projects/fl3xbl0w/romdump" target="_self">
-    ROM 转储（2024 年更新！）
+    ROM 转储（更新于2024年！）
   </a>
 
 ### 进行中的工作
 
 - <a href="/zh/projects/fl3xbl0w/treadmotor" target="_self">
-    跑步机电机控制器
+    跑步机电机控制器（2025年更新！）
   </a>
 
 ## 最终目标
 
-尽可能多地为我的跑步机启用未来的更新。
+为我的跑步机启用尽可能多的未来更新。
 
-Nautilus, Inc. 仅对电子产品提供 1 年保修，当我看到关闭机器（因此关闭 Android 平板电脑）的机制基本上是“通过后部开关切断交流电源”时，我感到害怕。每个基于 Linux 的设备都应该安全关闭以避免操作系统损坏，这款 Android 平板电脑也不例外。所以在它还在工作的时候，为什么不多玩一会儿呢？
+Nautilus, Inc. 仅为电子产品提供1年的保修期，当我看到关闭机器（因此也关闭 Android 平板电脑）的机制基本上是“通过后部开关切断交流电源”时，我感到害怕。每个基于 Linux 的设备都应安全关闭，以防止操作系统损坏，这台 Android 平板电脑也不例外。所以在它运行时，为什么不多做些有趣的事情呢？
 
-最终，我想拦截、理解并重现传输到我的跑步机电机控制器的通信，这样即使平板电脑坏了，我仍然有一个可以正常工作的设备。
+最终，我希望拦截、理解并重新创建发送到我跑步机电机控制器的通信，这样即使平板电脑出现故障，我仍然拥有一个功能正常的设备。

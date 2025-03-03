@@ -1,6 +1,6 @@
 ---
 title: Treadmill Motor Controller - fl3xbl0w
-description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+description: Reverse engineering project. It started with the Bowflex Treadmill 22 but ended up being generalized for any Android-powered machine sold by Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /en/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,8 +9,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+translatedBy: o1-mini
+checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
 ---
 
 import { Image } from 'astro:assets';
@@ -18,44 +18,155 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
 _This mainly applies to the Treadmill 22 & Treadmill 56._
 
 The motor control board is manufactured by [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="B017D Motor Control Board Controller" format="webp" />
+<Image src={B017D} alt="Motor Controller Board B017D" format="webp" />
 
 Given the [service manual](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) provided by Nautilus Inc. ([backup on archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={TreadmillElectrical} alt="Treadmill electrical diagram" format="webp" />
+<Image src={TreadmillElectrical} alt="Electrical diagram of the treadmill" format="webp" />
 
-And focusing specifically on this part:
+Focusing specifically on this part:
 
-<Image src={TreadmillComm} alt="Treadmill communication path" format="webp" />
+<Image src={TreadmillComm} alt="Treadmill communication pathway" format="webp" />
 
-We can identify the "communication cable" that connects the motor controller as a 5-pin one. There is only one 5-pin connector.
-I have labeled the wires with their corresponding colors (data & switch are optoisolated):
+We can identify the "communication cable" that connects the motor controller as a 5-pin cable. There is only one 5-pin connector.
+I have labeled the cables with their corresponding colors (data & switch are opto-isolated):
 
-| wire color | label |
-| ---------- | ----- |
-| red        | GND   |
-| white      | RXD   |
-| black      | TXD   |
-| yellow     | +12   |
-| green      | SW    |
+| Cable Color | Label |
+| ----------- | ----- |
+| red         | GND   |
+| white       | RXD   |
+| black       | TXD   |
+| yellow      | +12   |
+| green       | SW    |
 
-The board is not connected directly to the Android console.
+The board is not directly connected to the Android console.
 
-The only 5-pin connector is from the Molex brand. A Google search for "small Molex connectors" led me to an image of what they call `Molex Micro-Fit 3.0 Single Row (5-Pin)`, which is used to connect the motor controller board:
+The only 5-pin connector is from Molex. A Google search for "small Molex connectors" led me to an image of what they call `Molex Micro-Fit 3.0 Single Row (5-Pin)`, which is used to connect the motor controller board:
 
 <Image src={Molex} alt="Molex Micro-Fit 3.0 Connector" format="webp" />
 
-[AliExpress link](https://aliexpress.com/item/32902205579.html)
+[AliExpress Link](https://aliexpress.com/item/32902205579.html)
 
-Taking a look at `NautilusLauncher.apk` through `jadx-gui`, I can see that they communicate with the Android tablet with their "Universal Console" using Serial at 230400 Baud (using `/dev/ttyS4`). That is NOT what we are analyzing here. That refers to the communication between Android and the "Universal Console". We are investigating the comms between the "Universal Console" and the "Motor Control Board".
+By taking a look in `NautilusLauncher.apk` through `jadx-gui`, I can see that they communicate the Android tablet with their "Universal Console" using Serial at 230400 Baud (using `/dev/ttyS4`). THAT is NOT what we are analyzing here. That refers to the communication between Android and the "Universal Console". We are investigating the communication between the "Button Panel Controller" and the "Motor Controller Board", thus eliminating three boards as potential points of failure.
 
-Attempting to connect an ESP32 or a CH340-based serial bridge directly to the wires between the treadmill base and the Bowflex controller board caused the treadmill base not to initialize correctly, so I started to suspect that they are using RS232.
+Trying to connect an ESP32 or a CH340-based Serial bridge directly to the cables between the treadmill base and the Bowflex controller board caused the treadmill base to not initialize correctly, after which I acquired a logic analyzer to investigate further.
 
-Note: By connecting only to GND and RXD, we can "see" some seemingly garbage hexadecimal information at 9600 baud. Connecting to TXD causes the treadmill base not to initialize.
+## Update 2025
 
--- To be continued, I need some time to play with my new logic analyzer --
+In recent weeks, and approximately two years after I started with this, several people have contacted me to ask about progress regarding this, confirming my initial assumption that the treadmill system is horrible and it was only a matter of time before machines started to fail. It seemed like a good time to put my logic analyzer to use, which until now had only been gathering dust.
+
+Connecting the logic analyzer to the TXD and RXD lines (and GND, of course), I was immediately able to start intercepting messages between both parties without interrupting the communication. I suppose I initially couldn't use an ESP32 due to impedance issues. After a few minutes of trial and error, I arrived at the following Serial configuration:
+
+```
+- 2400 Baud
+- 8 Bits per Frame
+- 1 Stop Bit
+- No Parity Bit
+- Least Significant Bit Sent First
+- TXD: Inverted Signal
+- RXD: Non Inverted Signal
+```
+
+With these settings, I could clearly see defined messages.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Intercepting UART messages" format="webp" />
+  <p class="italic">Intercepting UART messages during the booting process</p>
+</div>
+
+Some things I noticed immediately:
+
+- All messages sent by the button panel start with `0x68`
+- All messages sent by the motor controller board start with `0x73`
+- Messages from both parties end with `0x43`
+- Generally, messages from the button panel are sent 100ms after receiving a message from the motor controller board
+  - Except during the booting process, where in one instance there is a 300ms difference
+- The noise on the communication lines is incredible, making message reading difficult
+
+With that as a base, the process of deciphering the messages and understanding what is being communicated between both parties begins, making controlled changes in an exercise routine.
+
+### Intercepting Speed Changes
+
+By making controlled changes to specific speeds, the following values sent to the motor controller board can be observed:
+
+| Speed on Screen              | Message Sent                                        |
+| ---------------------------- | --------------------------------------------------- |
+| 0.0 km/h (waiting or paused) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2.0 km/h                     | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3.0 km/h                     | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5.0 km/h                     | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+It can be observed that byte 5 and byte 9 change. Byte 5 appears to be the speed in hexadecimal, and byte 9 seems to be a checksum.
+
+Converting the values of byte 5 to decimal:
+
+| Speed on Screen              | Hexadecimal | Decimal |
+| ---------------------------- | ----------- | ------- |
+| 0.0 km/h (waiting or paused) | 0x00        | 0       |
+| 2.0 km/h                     | 0x14        | 20      |
+| 3.0 km/h                     | 0x1D        | 29      |
+| 5.0 km/h                     | 0x31        | 49      |
+
+Having decompiled some parts of the Android system years ago, I remembered that when configuring the machine in the metric system, the Bowflex application internally performs the conversion from metric to imperial to communicate with the "UCB". The motor controller board seems to use the metric system, and apparently, there is a loss of precision in the conversion from metric to imperial and then back to metric (which is what the motor controller expects), since everything is handled with 1 decimal of precision. **Was it so difficult to do it right, Nautilus?**
+
+Considering that, and if a scaling factor of 10 is applied, it perfectly matches the values sent to the motor controller board. Therefore, the formula would be:
+
+```
+Decimal value = Speed in km/h × 10
+```
+
+### Intercepting Incline Changes
+
+Following the same process as with speed, the following values sent to the motor controller board can be observed:
+
+| Incline on Screen | Message Sent                                        |
+| ----------------- | --------------------------------------------------- |
+| -5°               | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+In this case, byte 6 appears to be the incline in hexadecimal, and it confirms that byte 9 is a checksum.
+
+Converting the values of byte 6 to decimal:
+
+| Incline on Screen | Hexadecimal | Decimal |
+| ----------------- | ----------- | ------- |
+| -5°               | 0x00        | 0       |
+| 0°                | 0x32        | 50      |
+| 9°                | 0x8C        | 140     |
+
+The formula that perfectly matches the values sent to the motor controller board is:
+
+```
+Decimal value = (Angle + 5) × 10
+```
+
+### Checksum
+
+This appears to be a simple and standard checksum in microcontrollers, adding all the bytes of the message and causing an overflow once it reaches 256. A simple representation would be something like:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+By using `uint8_t` as the return type, the overflow occurs naturally. A `for loop` could be used to sum the values and return `sum % 256`, but it would be slower for microcontrollers without any real benefit.
+
+### Next Steps
+
+- Gain a logical understanding of the booting process, or at least replicate it
+- Capture interactions with the safety key (the red thing that is placed on clothing)
+- Interpret the messages sent by the motor controller board, which should not differ much from the messages sent by the button panel
+
+With that, the functionality of the button panel can be replicated, and with that, the treadmill can be controlled from a microcontroller.
+
+<div align="center">
+  <p class="italic">-- To Be Continued --</p>
+</div>

@@ -1,6 +1,6 @@
 ---
-title: Contrôleur de Moteur du Tapis de Course - fl3xbl0w
-description: Projet d'ingénierie inverse. A commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour tout appareil Android vendu par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: Contrôleur du Moteur du Tapis de Course - fl3xbl0w
+description: Projet d'ingénierie inverse. Il a commencé avec le tapis de course Bowflex Treadmill 22 mais s'est généralisé pour toute machine Android vendue par Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /fr/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,8 +9,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+translatedBy: o1-mini
+checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
 ---
 
 import { Image } from 'astro:assets';
@@ -18,44 +18,155 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
 _Cela s'applique principalement au Treadmill 22 & Treadmill 56._
 
 La carte de contrôle du moteur est fabriquée par [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="Contrôleur de Carte de Contrôle du Moteur B017D" format="webp" />
+<Image src={B017D} alt="Carte contrôleur du Moteur B017D" format="webp" />
 
-Compte tenu du [manuel de service](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fourni par Nautilus Inc. ([sauvegarde sur archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)) :
+D'après le [manuel de service](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fourni par Nautilus Inc. ([sauvegarde sur archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
 <Image src={TreadmillElectrical} alt="Schéma électrique du tapis de course" format="webp" />
 
-Et en se concentrant spécifiquement sur cette partie :
+Et en se concentrant spécifiquement sur cette partie:
 
 <Image src={TreadmillComm} alt="Chemin de communication du tapis de course" format="webp" />
 
-Nous pouvons identifier le "câble de communication" qui connecte le contrôleur du moteur comme étant un connecteur à 5 broches. Il n'y a qu'un seul connecteur à 5 broches.
-J'ai étiqueté les fils avec leurs couleurs correspondantes (les données & l'interrupteur sont opto-isolés) :
+Nous pouvons identifier le "câble de communication" qui relie le contrôleur du moteur comme étant à 5 broches. Il n'y a qu'un seul connecteur à 5 broches.
+J'ai étiqueté les câbles avec leurs couleurs correspondantes (les données & l'interrupteur sont opto-isolés):
 
-| couleur du fil | étiquette |
-| -------------- | --------- |
-| rouge          | GND       |
-| blanc          | RXD       |
-| noir           | TXD       |
-| jaune          | +12       |
-| vert           | SW        |
+| Couleur du câble | Étiquette |
+| ---------------- | --------- |
+| rouge            | GND       |
+| blanc            | RXD       |
+| noir             | TXD       |
+| jaune            | +12       |
+| vert             | SW        |
 
-La carte n'est pas connectée directement à la console Android.
+La carte n'est pas directement connectée à la console Android.
 
-Le seul connecteur à 5 broches est de la marque Molex. Une recherche Google pour "connecteurs Molex petits" m'a mené à une image de ce qu'ils appellent `Molex Micro-Fit 3.0 Single Row (5-Pin)`, qui est utilisé pour connecter la carte de contrôle du moteur :
+Le seul connecteur à 5 broches est de marque Molex. Une recherche Google de "petits connecteurs Molex" m'a conduit à une image de ce qu'ils appellent `Molex Micro-Fit 3.0 Single Row (5-Pin)`, qui est utilisé pour connecter la carte contrôleur du moteur:
 
 <Image src={Molex} alt="Connecteur Molex Micro-Fit 3.0" format="webp" />
 
-[Lien AliExpress](https://aliexpress.com/item/32902205579.html)
+[Liens AliExpress](https://aliexpress.com/item/32902205579.html)
 
-En regardant dans `NautilusLauncher.apk` via `jadx-gui`, je peux voir qu'ils communiquent avec la tablette Android avec leur "Console Universelle" en utilisant Série à 230400 Bauds (en utilisant `/dev/ttyS4`). Ce n'est PAS ce que nous analysons ici. Cela se réfère à la communication entre Android et la "Console Universelle". Nous enquêtons sur les comms entre la "Console Universelle" et la "Carte de Contrôle du Moteur".
+En jetant un œil dans `NautilusLauncher.apk` via `jadx-gui`, je peux voir qu'ils communiquent la tablette Android avec leur "Console Universelle" en utilisant Serial à 230400 Baud (en utilisant `/dev/ttyS4`). CE N'EST PAS ce que nous analysons ici. Cela fait référence à la communication entre Android et la "Console Universelle". Nous examinons la communication entre la "Carte contrôleur du bouton" et la "Carte contrôleur du moteur", excluant ainsi trois cartes comme points de défaillance possibles.
 
-Essayer de connecter un ESP32 ou un pont série basé sur CH340 directement aux fils entre la base du tapis de course et la carte de contrôle Bowflex a fait que la base du tapis de course ne s'initialisait pas correctement, donc j'ai commencé à soupçonner qu'ils utilisent RS232.
+Tenter de connecter un ESP32 ou un pont Serial basé sur CH340 directement aux câbles entre la base du tapis de course et la carte contrôleur Bowflex a fait que la base du tapis de course ne s'initialisait pas correctement, après quoi j'ai acquis un analyseur logique pour investiguer plus en profondeur.
 
-Note : En se connectant seulement à GND et RXD, nous pouvons "voir" des informations hexadécimales apparemment aléatoires à 9600 bauds. Se connecter à TXD empêche la base du tapis de course de s'initialiser.
+## Mise à jour 2025
 
--- À suivre, j'ai besoin de temps pour jouer avec mon nouvel analyseur logique --
+Ces dernières semaines, et environ deux ans après avoir commencé cela, plusieurs personnes m'ont contacté pour demander des avancées à ce sujet, confirmant mon hypothèse initiale que le système du tapis de course est horrible et qu'il était seulement question de temps pour que les machines commencent à tomber en panne. Il m'a semblé être le bon moment pour mettre en service mon analyseur logique, qui jusqu'à présent ne servait qu'à prendre la poussière.
+
+En connectant l'analyseur logique aux lignes TXD et RXD (et GND, bien sûr), j'ai immédiatement pu commencer à intercepter les messages entre les deux parties sans interrompre la communication. Je suppose qu'initialement, je n'ai pas pu avec un ESP32 en raison de problèmes d'impédance. Après quelques minutes d'essais et d'erreurs, j'ai abouti à la configuration Serial suivante:
+
+```
+- 2400 Baud
+- 8 Bits par trame
+- 1 Bit d'arrêt
+- Pas de bit de parité
+- Bit de poids faible envoyé en premier
+- TXD: Signal inversé
+- RXD: Signal non inversé
+```
+
+Avec ces configurations, j'ai pu voir des messages clairement définis.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Interception des messages UART" format="webp" />
+  <p class="italic">Interception des messages UART lors du processus de démarrage</p>
+</div>
+
+Quelques observations immédiates:
+
+- Tous les messages envoyés par le panneau de boutons commencent par `0x68`
+- Tous les messages envoyés par la carte contrôleur du moteur commencent par `0x73`
+- Les messages des deux parties se terminent par `0x43`
+- En général, les messages du panneau de boutons sont envoyés 100ms après avoir reçu un message de la carte contrôleur du moteur
+  - À l'exception du processus de démarrage, où à un instant donné, il y a une différence de 300ms
+- Le bruit sur les lignes de communication est incroyable, rendant la lecture des messages difficile
+
+Avec cela comme base, commence le processus de déchiffrage des messages et de compréhension de ce qui est communiqué entre les deux parties, en effectuant des modifications contrôlées dans une routine d'exercices.
+
+### Interception des changements de vitesse
+
+En effectuant des changements contrôlés à des vitesses spécifiques, on peut observer les valeurs suivantes envoyées à la carte contrôleur du moteur:
+
+| Vitesse à l'écran              | Message envoyé                                      |
+| ------------------------------ | --------------------------------------------------- |
+| 0,0 km/h (en attente ou pause) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2,0 km/h                       | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3,0 km/h                       | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5,0 km/h                       | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+On peut observer que le byte 5 et le byte 9 changent. Le byte 5 semble représenter la vitesse en hexadécimal, et le byte 9 semble être une somme de contrôle.
+
+En convertissant les valeurs du byte 5 en décimal:
+
+| Vitesse à l'écran              | Hexadécimal | Décimal |
+| ------------------------------ | ----------- | ------- |
+| 0,0 km/h (en attente ou pause) | 0x00        | 0       |
+| 2,0 km/h                       | 0x14        | 20      |
+| 3,0 km/h                       | 0x1D        | 29      |
+| 5,0 km/h                       | 0x31        | 49      |
+
+Ayant décompilé certaines parties du système Android des années auparavant, je me suis souvenu que lors de la configuration de la machine en système métrique, l'application de Bowflex effectue en interne la conversion du système métrique à impérial pour communiquer avec l'"UCB". La carte contrôleur du moteur semble utiliser le système métrique, et il semble y avoir une perte de précision dans la conversion du système métrique à impérial et ensuite de retour au métrique (ce que la carte contrôleur du moteur attend), car tout est géré avec une précision d'un décimal. **Était-ce si difficile de bien faire, Nautilus ?**
+
+En tenant compte de cela, et si un facteur d'échelle de 10 est appliqué, cela correspond parfaitement aux valeurs envoyées à la carte contrôleur du moteur, donc la formule serait:
+
+```
+Valeur en décimal = Vitesse en km/h × 10
+```
+
+### Interception des changements d'inclinaison
+
+En suivant le même processus qu'avec la vitesse, on peut observer les valeurs suivantes envoyées à la carte contrôleur du moteur:
+
+| Inclinaison à l'écran | Message envoyé                                      |
+| --------------------- | --------------------------------------------------- |
+| -5°                   | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                    | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                    | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+Dans ce cas, le byte 6 semble représenter l'inclinaison en hexadécimal, et cela confirme que le byte 9 est une somme de contrôle.
+
+En convertissant les valeurs du byte 6 en décimal:
+
+| Inclinaison à l'écran | Hexadécimal | Décimal |
+| --------------------- | ----------- | ------- |
+| -5°                   | 0x00        | 0       |
+| 0°                    | 0x32        | 50      |
+| 9°                    | 0x8C        | 140     |
+
+La formule qui correspond parfaitement aux valeurs envoyées à la carte contrôleur du moteur est:
+
+```
+Valeur en décimal = (Angle + 5) × 10
+```
+
+### Somme de contrôle
+
+Cela semble être une somme de contrôle simple et standard sur les microcontrôleurs, additionnant tous les bytes du message et effectuant un débordement arrivé à 256. Une représentation simple serait quelque chose comme:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+En utilisant `uint8_t` comme type de retour, le débordement se produit naturellement. On pourrait utiliser une boucle `for` pour additionner les valeurs et retourner `sum % 256`, mais ce serait plus lent pour les microcontrôleurs sans aucun bénéfice réel.
+
+### Prochaines étapes
+
+- Comprendre logiquement le processus de démarrage, ou au moins le reproduire
+- Capturer les interactions de la clé de sécurité (la chose rouge qui se place dans les vêtements)
+- Interpréter les messages envoyés par la carte contrôleur du moteur, qui ne devraient pas différer beaucoup des messages envoyés par le panneau de boutons
+
+Avec cela, on peut déjà reproduire le fonctionnement du panneau de boutons, et ainsi contrôler le tapis de course depuis un microcontrôleur.
+
+<div align="center">
+  <p class="italic">-- À suivre --</p>
+</div>

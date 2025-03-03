@@ -1,6 +1,6 @@
 ---
 title: Laufband-Motorsteuerung - fl3xbl0w
-description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde aber verallgemeinert für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-Maschine.
+description: Reverse-Engineering-Projekt. Es begann mit dem Bowflex Laufband 22, wurde jedoch für jede von Nautilus Inc. (Nautilus, Bowflex, Schwinn) verkaufte Android-gesteuerte Maschine verallgemeinert.
 pubDate: 2022-05-28T10:28:00Z
 link: /de/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,8 +9,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+translatedBy: o1-mini
+checksum: c18c0dcfb1526f0210709098ca91e330b03d146e571843fc34a705fb31a09e26
 ---
 
 import { Image } from 'astro:assets';
@@ -18,25 +18,26 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
 _Dies gilt hauptsächlich für das Laufband 22 & Laufband 56._
 
 Die Motorsteuerplatine wird von [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html) hergestellt.
 
-<Image src={B017D} alt="B017D Motorsteuerungsplatine" format="webp" />
+<Image src={B017D} alt="Motorsteuerungsplatine B017D" format="webp" />
 
-Angesichts des [Servicehandbuchs](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) von Nautilus Inc. ([Backup auf archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+Anhand des von Nautilus Inc. bereitgestellten [Servicehandbuchs](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) ([Sicherung auf archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={TreadmillElectrical} alt="Elektrischer Schaltplan des Laufbands" format="webp" />
+<Image src={TreadmillElectrical} alt="Elektrisches Diagramm des Laufbands" format="webp" />
 
-Und speziell auf diesen Teil fokussierend:
+Konzentration speziell auf diesen Teil:
 
 <Image src={TreadmillComm} alt="Kommunikationsweg des Laufbands" format="webp" />
 
-Können wir das "Kommunikationskabel", das den Motorcontroller verbindet, als 5-poliges identifizieren. Es gibt nur einen 5-poligen Anschluss.
-Ich habe die Drähte mit ihren entsprechenden Farben beschriftet (Daten & Schalter sind optoisoliert):
+Wir können das "Kommunikationskabel", das die Motorsteuerung verbindet, als 5-poliges Kabel identifizieren. Es gibt nur einen 5-poligen Anschluss.
+Ich habe die Kabel mit ihren entsprechenden Farben beschriftet (Daten & Schalter sind opto-isoliert):
 
-| Drahtfarbe | Bezeichnung |
+| Kabelfarbe | Bezeichnung |
 | ---------- | ----------- |
 | rot        | GND         |
 | weiß       | RXD         |
@@ -46,16 +47,126 @@ Ich habe die Drähte mit ihren entsprechenden Farben beschriftet (Daten & Schalt
 
 Die Platine ist nicht direkt mit der Android-Konsole verbunden.
 
-Der einzige 5-polige Anschluss stammt von der Marke Molex. Eine Google-Suche nach "kleinen Molex-Anschlüssen" führte mich zu einem Bild von dem, was sie `Molex Micro-Fit 3.0 Einzelreihe (5-polig)` nennen, das verwendet wird, um die Motorsteuerplatine zu verbinden:
+Der einzige 5-polige Anschluss ist von Molex. Eine Google-Suche nach "kleine Molex-Anschlüsse" führte mich zu einem Bild von dem, was sie `Molex Micro-Fit 3.0 Single Row (5-Pin)` nennen, das verwendet wird, um die Motorsteuerplatine zu verbinden:
 
 <Image src={Molex} alt="Molex Micro-Fit 3.0 Anschluss" format="webp" />
 
-[AliExpress-Link](https://aliexpress.com/item/32902205579.html)
+[AliExpress Link](https://aliexpress.com/item/32902205579.html)
 
-Wenn ich mir `NautilusLauncher.apk` durch `jadx-gui` anschaue, kann ich sehen, dass sie mit ihrem "Universal Console" über Serial bei 230400 Baud kommunizieren (unter Verwendung von `/dev/ttyS4`). Das ist NICHT das, was wir hier analysieren. Das bezieht sich auf die Kommunikation zwischen Android und der "Universal Console". Wir untersuchen die Kommunikation zwischen der "Universal Console" und der "Motorsteuerplatine".
+Beim Blick in `NautilusLauncher.apk` mit `jadx-gui` kann ich sehen, dass sie das Android-Tablet mit ihrer "Universal Console" über Serial bei 230400 Baud (unter Verwendung von `/dev/ttyS4`) kommunizieren. DAS ist NICHT das, was wir hier analysieren. Das bezieht sich auf die Kommunikation zwischen Android und der "Universal Console". Wir untersuchen die Kommunikation zwischen dem "Button Panel Controller" und der "Motorsteuerungsplatine", wodurch drei Platinen als mögliche Fehlerquellen ausgeschlossen werden.
 
-Der Versuch, einen ESP32 oder eine CH340-basierte serielle Brücke direkt an die Drähte zwischen dem Laufbandsockel und der Bowflex-Steuerplatine anzuschließen, führte dazu, dass der Laufbandsockel nicht korrekt initialisiert wurde, also begann ich zu vermuten, dass sie RS232 verwenden.
+Der Versuch, eine ESP32- oder eine CH340-basierte Serial-Brücke direkt mit den Kabeln zwischen dem Laufbandrahmen und der Bowflex-Steuerplatine zu verbinden, führte dazu, dass das Laufbandrahmen nicht korrekt initialisiert wurde, woraufhin ich einen Logikanalysator beschafft habe, um weiter zu untersuchen.
 
-Hinweis: Indem wir uns nur mit GND und RXD verbinden, können wir einige scheinbar unsinnige hexadezimale Informationen bei 9600 Baud "sehen". Eine Verbindung zu TXD verursacht, dass der Laufbandsockel nicht initialisiert wird.
+## Aktualisierung 2025
 
--- Fortsetzung folgt, ich brauche etwas Zeit, um mit meinem neuen Logikanalysator zu spielen --
+In den letzten Wochen und etwa zwei Jahre nachdem ich damit begonnen habe, haben mich mehrere Personen kontaktiert, um nach Fortschritten bezüglich dieses Projekts zu fragen. Dies bestätigte meine anfängliche Annahme, dass das Laufbandsystem schrecklich ist und es nur eine Frage der Zeit war, bis die Maschinen ausfielen. Es schien ein guter Zeitpunkt zu sein, meinen Logikanalysator zu verwenden, der bis jetzt nur Staub gesammelt hatte.
+
+Beim Anschluss des Logikanalysators an die TXD- und RXD-Leitungen (und natürlich GND) konnte ich sofort beginnen, Nachrichten zwischen beiden Parteien abzufangen, ohne die Kommunikation zu unterbrechen. Ich vermute, dass ich anfänglich keinen ESP32 aufgrund von Impedanzproblemen verwenden konnte. Nach ein paar Minuten Trial-and-Error kam ich zu folgender Serial-Konfiguration:
+
+```
+- 2400 Baud
+- 8 Bits pro Frame
+- 1 Stoppbit
+- Kein Paritätsbit
+- Least Significant Bit zuerst gesendet
+- TXD: Invertiertes Signal
+- RXD: Nicht invertiertes Signal
+```
+
+Mit diesen Einstellungen konnte ich deutlich definierte Nachrichten sehen.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Abfangen von UART-Nachrichten" format="webp" />
+  <p class="italic">Abfangen von UART-Nachrichten während des Startvorgangs</p>
+</div>
+
+Einige Dinge, die mir sofort aufgefallen sind:
+
+- Alle Nachrichten, die vom Button Panel gesendet werden, beginnen mit `0x68`
+- Alle Nachrichten, die von der Motorsteuerplatine gesendet werden, beginnen mit `0x73`
+- Nachrichten von beiden Parteien enden mit `0x43`
+- Generell werden Nachrichten vom Button Panel 100 ms nach Empfang einer Nachricht von der Motorsteuerplatine gesendet
+  - Außer während des Startvorgangs, wo es in einem Fall eine Differenz von 300 ms gibt
+- Das Rauschen auf den Kommunikationsleitungen ist unglaublich, was das Lesen der Nachrichten erschwert
+
+Mit dieser Grundlage beginnt der Prozess, die Nachrichten zu entschlüsseln und zu verstehen, was zwischen beiden Parteien kommuniziert wird, was kontrollierte Änderungen in einem Trainingsprogramm ermöglicht.
+
+### Abfangen von Geschwindigkeitsänderungen
+
+Durch kontrollierte Änderungen spezifischer Geschwindigkeiten können die folgenden Werte, die an die Motorsteuerplatine gesendet werden, beobachtet werden:
+
+| Geschwindigkeit auf dem Bildschirm | Gesendete Nachricht                                 |
+| ---------------------------------- | --------------------------------------------------- |
+| 0,0 km/h (Wartend oder pausiert)   | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2,0 km/h                           | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3,0 km/h                           | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5,0 km/h                           | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+Es ist zu beobachten, dass Byte 5 und Byte 9 sich ändern. Byte 5 scheint die Geschwindigkeit in Hexadezimal zu sein, und Byte 9 scheint eine Prüfsumme zu sein.
+
+Umrechnung der Werte von Byte 5 in Dezimal:
+
+| Geschwindigkeit auf dem Bildschirm | Hexadezimal | Dezimal |
+| ---------------------------------- | ----------- | ------- |
+| 0,0 km/h (Wartend oder pausiert)   | 0x00        | 0       |
+| 2,0 km/h                           | 0x14        | 20      |
+| 3,0 km/h                           | 0x1D        | 29      |
+| 5,0 km/h                           | 0x31        | 49      |
+
+Nachdem ich vor Jahren einige Teile des Android-Systems dekompiliert hatte, erinnerte ich mich, dass bei der Konfiguration des Geräts im metrischen System die Bowflex-Anwendung intern die Umrechnung von metrisch zu imperial durchführt, um mit der "UCB" zu kommunizieren. Die Motorsteuerplatine scheint das metrische System zu verwenden, und anscheinend gibt es einen Präzisionsverlust bei der Umrechnung von metrisch zu imperial und dann zurück zu metrisch (was die Motorsteuerung erwartet), da alles mit einer Dezimalstelle behandelt wird. **War es so schwer, es richtig zu machen, Nautilus?**
+
+Wenn man das berücksichtigt und einen Skalierungsfaktor von 10 anwendet, passt es perfekt zu den an die Motorsteuerplatine gesendeten Werten. Daher lautet die Formel:
+
+```
+Dezimalwert = Geschwindigkeit in km/h × 10
+```
+
+### Abfangen von Neigungsänderungen
+
+Nach demselben Verfahren wie bei der Geschwindigkeit können die folgenden Werte, die an die Motorsteuerplatine gesendet werden, beobachtet werden:
+
+| Neigung auf dem Bildschirm | Gesendete Nachricht                                 |
+| -------------------------- | --------------------------------------------------- |
+| -5°                        | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                         | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                         | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+In diesem Fall scheint Byte 6 die Neigung in Hexadezimal zu sein, und es bestätigt, dass Byte 9 eine Prüfsumme ist.
+
+Umrechnung der Werte von Byte 6 in Dezimal:
+
+| Neigung auf dem Bildschirm | Hexadezimal | Dezimal |
+| -------------------------- | ----------- | ------- |
+| -5°                        | 0x00        | 0       |
+| 0°                         | 0x32        | 50      |
+| 9°                         | 0x8C        | 140     |
+
+Die Formel, die perfekt zu den an die Motorsteuerplatine gesendeten Werten passt, lautet:
+
+```
+Dezimalwert = (Winkel + 5) × 10
+```
+
+### Prüfsumme
+
+Dies scheint eine einfache und standardmäßige Prüfsumme in Mikrocontrollern zu sein, bei der alle Bytes der Nachricht addiert werden und ein Überlauf auftritt, sobald 256 erreicht ist. Eine einfache Darstellung wäre etwas wie:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+Durch die Verwendung von `uint8_t` als Rückgabetyp tritt der Überlauf natürlich auf. Eine `for-Schleife` könnte verwendet werden, um die Werte zu summieren und `sum % 256` zurückzugeben, aber das wäre für Mikrocontroller langsamer ohne wirklichen Nutzen.
+
+### Nächste Schritte
+
+- Ein logisches Verständnis des Startprozesses erlangen oder ihn zumindest replizieren
+- Interaktionen mit dem Sicherheitsschlüssel erfassen (das rote Teil, das auf der Kleidung platziert wird)
+- Die von der Motorsteuerplatine gesendeten Nachrichten interpretieren, die sich vermutlich nicht stark von den vom Button Panel gesendeten Nachrichten unterscheiden
+
+Damit kann die Funktionalität des Button Panels repliziert werden, und damit kann das Laufband von einem Mikrocontroller aus gesteuert werden.
+
+<div align="center">
+  <p class="italic">-- Fortsetzung folgt --</p>
+</div>

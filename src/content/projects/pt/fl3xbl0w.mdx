@@ -8,24 +8,24 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: chatgpt-4o-latest
-checksum: 0f9d89bb08f15978264b57bc4b63ac5e89bae404d34a1f19c48f9d3673ca12ec
+translatedBy: o1-mini
+checksum: 052293820aff85b620e708bc9251210b09df6bc287339b6df7b8de4470fb8540
 ---
 
 import { Image } from 'astro:assets';
 import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
-<Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
+<Image src={HeaderImage} alt="logo do flexblow" format="webp" width={800} />
 
-Bem-vindos à minha documentação da "Consola Bowflex"! (o que a Nautilus chama de Vantron).
+Bem-vindos à minha documentação do "Consola Bowflex"! (o que a Nautilus chama de Vantron).
 
-Vantron é a base da maioria dos "dispositivos inteligentes" da Nautilus Inc. Basicamente, um tablet Android rodando software proprietário. Além de algumas coisas relacionadas ao hardware que despertaram minha curiosidade.
+Vantron é a base da maioria dos "dispositivos inteligentes" da Nautilus Inc. Basicamente, um tablet Android executando software proprietário. Além de algumas coisas relacionadas ao hardware que me despertaram curiosidade.
 
-Apoiei-me bastante em um trabalho anterior que encontrei no [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (obrigado [xasmx](https://www.reddit.com/user/xasmx/)!) para alcançar uma compreensão mais profunda do software e hardware da máquina.
+Baseei-me bastante em um trabalho prévio que encontrei no [Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/) (obrigado [xasmx](https://www.reddit.com/user/xasmx/)!) para alcançar uma compreensão mais profunda do software e hardware da máquina.
 
-## Dispositivos compatíveis (Jailbreak de Android)
+## Dispositivos compatíveis (Jailbreak do Android)
 
-Depois de brincar com as <a href="/pt/projects/fl3xbl0w/decompiling" target="_self">aplicações decompiladas</a>, posso dizer com certeza que a documentação a seguir pode ser extrapolada de uma forma ou de outra para os seguintes dispositivos Bowflex:
+Depois de brincar com as <a href="/pt/projects/fl3xbl0w/decompiling" target="_self">aplicações decompiladas</a>, posso dizer com certeza que a seguinte documentação poderia ser extrapolada de uma forma ou de outra para os seguintes dispositivos Bowflex:
 
 ### Esteiras
 
@@ -41,9 +41,9 @@ Depois de brincar com as <a href="/pt/projects/fl3xbl0w/decompiling" target="_se
 - Max Total 16
 - Max Trainer M9
 
-Eu não tenho uma Max Trainer nem uma VeloCore, mas deve funcionar desde que você tenha uma porta USB disponível, com base nas descobertas do código.
+Não possuo uma Max Trainer nem uma VeloCore, mas deve funcionar desde que você tenha uma porta USB disponível, com base nas descobertas do código.
 
-Confirmado que funciona com as versões do NautilusLauncher:
+Confirmado que funciona com as versões de NautilusLauncher:
 
 - 5.0.0.350
 - 5.0.0.382
@@ -55,31 +55,31 @@ Confirmado que funciona com as versões do NautilusLauncher:
 ### Informações gerais
 
 - <a href="/pt/projects/fl3xbl0w/jailbreak" target="_self">
-    Jailbreak de Android
+    Jailbreak do Android
   </a>
 - <a href="/pt/projects/fl3xbl0w/backup" target="_self">
-    Backup dos conteúdos da sua Consola
+    Fazer backup do conteúdo do seu Console
   </a>
 - <a href="/pt/projects/fl3xbl0w/decompiling" target="_self">
-    Decompilando
+    Descompilando
   </a>
 - <a href="/pt/projects/fl3xbl0w/quirks" target="_self">
-    Curiosidades da Bowflex
+    Curiosidades do Bowflex
   </a>
 - <a href="/pt/projects/fl3xbl0w/romdump" target="_self">
     Dump da ROM (atualizado 2024!)
   </a>
 
-### Trabalhos em progresso
+### Trabalhos em andamento
 
 - <a href="/pt/projects/fl3xbl0w/treadmotor" target="_self">
-    Controlador do Motor da Esteira
+    Controlador do Motor da Esteira (atualizado 2025!)
   </a>
 
 ## Objetivo final
 
 Habilitar o maior número possível de atualizações futuras para minha esteira.
 
-A Nautilus, Inc. oferece apenas uma garantia de 1 ano na parte eletrônica, e assim que vi que o mecanismo para desligar a máquina (e, portanto, o tablet Android) era basicamente "cortar a energia AC através do interruptor traseiro", isso me assustou. Todo dispositivo baseado em Linux deve ser desligado de maneira segura para evitar a corrupção do sistema operacional, e este tablet Android não é exceção. Então, enquanto estiver funcionando, por que não se divertir um pouco mais com ele?
+A Nautilus, Inc. só oferece uma garantia de 1 ano na parte eletrônica, e assim que vi que o mecanismo para desligar a máquina (e, por conseguinte, o tablet Android) era basicamente "cortar a energia AC através do interruptor traseiro", isso me assustou. Cada dispositivo baseado em Linux deveria ser desligado de forma segura para evitar a corrupção do sistema operacional, e este tablet Android não é uma exceção. Então, enquanto estiver funcionando, por que não se divertir um pouco mais com ele?
 
 No final, quero interceptar, entender e recriar a comunicação que vai para o controlador do motor na minha esteira para que, se o tablet morrer, eu ainda tenha um dispositivo funcionando.

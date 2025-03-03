@@ -1,6 +1,6 @@
 ---
-title: Controllo del Motore del Tapis Roulant - fl3xbl0w
-description: Progetto di ingegneria inversa. È iniziato con il tapis roulant Bowflex Treadmill 22 ma si è poi generalizzato per qualsiasi macchina con Android venduta da Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: Controller del Motore del Tapis Roulant - fl3xbl0w
+description: Progetto di ingegneria inversa. È iniziato con il tapis roulant Bowflex Treadmill 22 ma si è concluso generalizzandosi per qualsiasi macchina con Android venduta da Nautilus Inc. (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /it/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,8 +9,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+translatedBy: o1-mini
+checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
 ---
 
 import { Image } from 'astro:assets';
@@ -18,25 +18,26 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
-_Questo si applica principalmente al Treadmill 22 & Treadmill 56._
+_Esso si applica principalmente al Treadmill 22 & Treadmill 56._
 
 La scheda di controllo del motore è prodotta da [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="Controllore della Scheda di Controllo del Motore B017D" format="webp" />
+<Image src={B017D} alt="Scheda di controllo del Motore B017D" format="webp" />
 
-Dato il [manuale di servizio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornito da Nautilus Inc. ([backup su archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+Dato il [manuale di servizio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornito da Nautilus Inc. ([back up su archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={TreadmillElectrical} alt="Schema elettrico del tapis roulant" format="webp" />
+<Image src={TreadmillElectrical} alt="Diagramma elettrico del tapis roulant" format="webp" />
 
-E focalizzandoci specificamente su questa parte:
+E concentrandoci specificamente su questa parte:
 
 <Image src={TreadmillComm} alt="Percorso di comunicazione del tapis roulant" format="webp" />
 
-Possiamo identificare il "cavo di comunicazione" che collega il controllore del motore come uno a 5 pin. C'è solo un connettore a 5 pin.
+Possiamo identificare il "cavo di comunicazione" che collega il controller del motore come uno a 5 pin. C'è solo un connettore a 5 pin.
 Ho etichettato i cavi con i loro colori corrispondenti (i dati & l'interruttore sono optoisolati):
 
-| colore del cavo | etichetta |
+| Colore del cavo | Etichetta |
 | --------------- | --------- |
 | rosso           | GND       |
 | bianco          | RXD       |
@@ -46,16 +47,126 @@ Ho etichettato i cavi con i loro colori corrispondenti (i dati & l'interruttore 
 
 La scheda non è collegata direttamente alla console Android.
 
-L'unico connettore a 5 pin è di marca Molex. Una ricerca su Google di "connettori Molex piccoli" mi ha portato a un'immagine di quello che chiamano `Molex Micro-Fit 3.0 Single Row (5-Pin)`, che viene utilizzato per collegare la scheda di controllo del motore:
+L'unico connettore a 5 pin è del marchio Molex. Una ricerca su Google di "connettori Molex piccoli" mi ha portato a un'immagine di ciò che chiamano `Molex Micro-Fit 3.0 Single Row (5-Pin)`, che viene utilizzato per collegare la scheda di controllo del motore:
 
 <Image src={Molex} alt="Connettore Molex Micro-Fit 3.0" format="webp" />
 
-[Link di AliExpress](https://aliexpress.com/item/32902205579.html)
+[Link su AliExpress](https://aliexpress.com/item/32902205579.html)
 
-Dando un'occhiata a `NautilusLauncher.apk` attraverso `jadx-gui`, posso vedere che comunicano con il tablet Android con la loro "Console Universale" usando Serie a 230400 Baud (usando `/dev/ttyS4`). Questo NON è ciò che stiamo analizzando qui. Questo si riferisce alla comunicazione tra Android e la "Console Universale". Stiamo indagando le comms tra la "Console Universale" e la "Scheda di Controllo del Motore".
+Esaminando `NautilusLauncher.apk` tramite `jadx-gui`, posso vedere che comunicano il tablet Android con la loro "Console Universale" usando Serial a 230400 Baud (utilizzando `/dev/ttyS4`). Questo NON è ciò che stiamo analizzando qui. Si riferisce alla comunicazione tra Android e la "Console Universale". Indaghiamo la comunicazione tra la "Scheda di controllo dei pulsanti" e la "Scheda di controllo del motore", eliminando così tre schede come possibili punti di guasto.
 
-Provare a collegare un ESP32 o un ponte seriale basato su CH340 direttamente ai cavi tra la base del tapis roulant e la scheda di controllo Bowflex ha fatto sì che la base del tapis roulant non si inizializzasse correttamente, quindi ho iniziato a sospettare che stessero utilizzando RS232.
+Tentare di collegare un ESP32 o un ponte Serial basato su CH340 direttamente ai cavi tra la base del tapis roulant e la scheda di controllo Bowflex ha fatto sì che la base del tapis roulant non si inizializzasse correttamente, dopodiché ho acquisito un analizzatore logico per indagare più a fondo.
 
-Nota: Collegando solo a GND e RXD, possiamo "vedere" alcune informazioni esadecimali apparentemente senza senso a 9600 baud. Collegare a TXD impedisce l'inizializzazione della base del tapis roulant.
+## Aggiornamento 2025
 
--- Continuerà, ho bisogno di un po' di tempo per giocare con il mio nuovo analizzatore logico --
+Nelle ultime settimane, e circa due anni dopo aver iniziato con questo progetto, diverse persone si sono messe in contatto con me per chiedere aggiornamenti a riguardo, confermando la mia supposizione iniziale che il sistema del tapis roulant è pessimo e che era solo questione di tempo prima che le macchine iniziassero a guastarsi. Mi è sembrato un buon momento per mettere in uso il mio analizzatore logico, che finora era rimasto inutilizzato.
+
+Collegando l'analizzatore logico alle linee TXD e RXD (e GND, naturalmente), ho immediatamente potuto iniziare a intercettare messaggi tra entrambe le parti senza interrompere la comunicazione. Suppongo che inizialmente non riuscissi con un ESP32 per problemi di impedenza. Dopo alcuni minuti di prova e errore, sono arrivato alla seguente configurazione Serial:
+
+```
+- 2400 Baud
+- 8 Bit per Frame
+- 1 Stop Bit
+- Nessun Bit di Parità
+- Least Significant Bit Sent First
+- TXD: Segnale Invertito
+- RXD: Segnale Non Invertito
+```
+
+Con queste configurazioni ho potuto vedere messaggi chiaramente definiti.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Intercettando messaggi UART" format="webp" />
+  <p class="italic">Intercettando messaggi UART durante il processo di accensione</p>
+</div>
+
+Alcune cose di cui mi sono subito accorto:
+
+- Tutti i messaggi inviati dai pulsanti iniziano con `0x68`
+- Tutti i messaggi inviati dalla scheda di controllo del motore iniziano con `0x73`
+- I messaggi di entrambe le parti terminano con `0x43`
+- In generale, i messaggi dei pulsanti vengono inviati 100ms dopo aver ricevuto un messaggio dalla scheda di controllo del motore
+  - Ad eccezione del processo di accensione, dove in un'istanza c'è una differenza di 300ms
+- Il rumore presente nelle linee di comunicazione è incredibile, rendendo difficile la lettura dei messaggi
+
+Con questo come base inizia il processo di decifrare i messaggi e comprendere cosa viene comunicato tra entrambe le parti, effettuando cambiamenti controllati in una routine di esercizi.
+
+### Intercettando cambiamenti nella velocità
+
+Effettuando cambiamenti controllati a velocità specifiche, si possono osservare i seguenti valori inviati alla scheda di controllo del motore:
+
+| Velocità sullo schermo       | Messaggio inviato                                   |
+| ---------------------------- | --------------------------------------------------- |
+| 0,0 km/h (in attesa o pausa) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2,0 km/h                     | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3,0 km/h                     | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5,0 km/h                     | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+Si può osservare che cambia il byte 5 e il byte 9. Il byte 5 sembra essere la velocità in esadecimale, e il byte 9 sembra essere un checksum.
+
+Convertendo i valori del byte 5 in decimale:
+
+| Velocità sullo schermo       | Esadecimale | Decimale |
+| ---------------------------- | ----------- | -------- |
+| 0,0 km/h (in attesa o pausa) | 0x00        | 0        |
+| 2,0 km/h                     | 0x14        | 20       |
+| 3,0 km/h                     | 0x1D        | 29       |
+| 5,0 km/h                     | 0x31        | 49       |
+
+Avendo decompilato alcune parti del sistema Android anni fa, ricordavo che configurando la macchina nel sistema metrico, internamente l'applicazione Bowflex effettua la conversione da sistema metrico a imperiale per comunicare con la "UCB". La scheda di controllo del motore sembra utilizzare il sistema metrico, e a quanto pare c'è una perdita di precisione nella conversione da sistema metrico a imperiale e poi di ritorno a metrico (che è ciò che la scheda di controllo del motore si aspetta), dato che tutto viene gestito con una precisione di 1 decimale. **Era così difficile farlo bene, Nautilus?**
+
+Considerando ciò, e applicando un fattore di scala di 10, coincide perfettamente con i valori inviati alla scheda di controllo del motore, quindi la formula sarebbe:
+
+```
+Valore in decimale = Velocità in km/h × 10
+```
+
+### Intercettando cambiamenti nell'inclinazione
+
+Seguendo lo stesso processo utilizzato per la velocità, si possono osservare i seguenti valori inviati alla scheda di controllo del motore:
+
+| Inclinazione sullo schermo | Messaggio inviato                                   |
+| -------------------------- | --------------------------------------------------- |
+| -5°                        | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                         | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                         | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+In questo caso, il byte 6 sembra essere l'inclinazione in esadecimale, e conferma che il byte 9 è un checksum.
+
+Convertendo i valori del byte 6 in decimale:
+
+| Inclinazione sullo schermo | Esadecimale | Decimale |
+| -------------------------- | ----------- | -------- |
+| -5°                        | 0x00        | 0        |
+| 0°                         | 0x32        | 50       |
+| 9°                         | 0x8C        | 140      |
+
+La formula che fa coincidere perfettamente i valori inviati alla scheda di controllo del motore è:
+
+```
+Valore in decimale = (Angolo + 5) × 10
+```
+
+### Checksum
+
+Questo sembra essere un checksum semplice e standard nei microcontrollori, sommando tutti i byte del messaggio e effettuando un overflow arrivato a 256. Una rappresentazione semplice sarebbe qualcosa come:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+Utilizzando `uint8_t` come tipo di ritorno, l'overflow avviene naturalmente. Si potrebbe utilizzare un ciclo `for` sommando i valori e ritornare `sum % 256`, ma sarebbe più lento per i microcontrollori senza alcun beneficio reale.
+
+### Prossimi passi
+
+- Ottenere una comprensione logica del processo di accensione, o almeno replicarlo
+- Catturare le interazioni della chiave di sicurezza (la cosa rossa che si indossa sui vestiti)
+- Interpretare i messaggi inviati dalla scheda di controllo del motore, che non dovrebbero differire molto dai messaggi inviati dalla scheda dei pulsanti
+
+Considerando ciò, si può già replicare il funzionamento della scheda dei pulsanti, e con ciò controllare il tapis roulant da un microcontrollore.
+
+<div align="center">
+  <p class="italic">-- Continuerà --</p>
+</div>

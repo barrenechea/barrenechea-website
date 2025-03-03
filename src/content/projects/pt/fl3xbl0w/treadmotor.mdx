@@ -9,8 +9,8 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: c5945b12e8784aed030e5719f26b1e3caca21bf6e5aa9363893e1c4dc865da9a
+translatedBy: o1-mini
+checksum: eb8803058ab23449fd47146ed4b6bf422179f177688a6c49b0106b1a6a062cdf
 ---
 
 import { Image } from 'astro:assets';
@@ -18,14 +18,15 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
-_Isso se aplica principalmente à Treadmill 22 & Treadmill 56._
+_Esta aplicação se refere principalmente à Treadmill 22 & Treadmill 56._
 
 A placa de controle do motor é fabricada pela [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="Controlador da Placa de Controle do Motor B017D" format="webp" />
+<Image src={B017D} alt="Placa controladora do Motor B017D" format="webp" />
 
-Dado o [manual de serviço](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornecido pela Nautilus Inc. ([backup no archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+Considerando o [manual de serviço](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) fornecido pela Nautilus Inc. ([backup no archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
 <Image src={TreadmillElectrical} alt="Diagrama elétrico da esteira" format="webp" />
 
@@ -34,9 +35,9 @@ E focando especificamente nesta parte:
 <Image src={TreadmillComm} alt="Caminho de comunicação da esteira" format="webp" />
 
 Podemos identificar o "cabo de comunicação" que conecta o controlador do motor como um de 5 pinos. Há apenas um conector de 5 pinos.
-Eu etiquetei os cabos com suas cores correspondentes (os dados & interruptor estão optoacoplados):
+Etiquetei os cabos com suas cores correspondentes (os dados & interruptor estão optoisolados):
 
-| cor do cabo | etiqueta |
+| Cor do cabo | Etiqueta |
 | ----------- | -------- |
 | vermelho    | GND      |
 | branco      | RXD      |
@@ -46,16 +47,126 @@ Eu etiquetei os cabos com suas cores correspondentes (os dados & interruptor est
 
 A placa não está conectada diretamente ao console Android.
 
-O único conector de 5 pinos é da marca Molex. Uma busca no Google por "conectores Molex pequenos" me levou a uma imagem do que chamam de `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que é usado para conectar a placa controladora do motor:
+O único conector de 5 pinos é da marca Molex. Uma busca no Google por "conectores Molex pequenos" me levou a uma imagem do que chamam de `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que é utilizado para conectar a placa controladora do motor:
 
 <Image src={Molex} alt="Conector Molex Micro-Fit 3.0" format="webp" />
 
 [Link do AliExpress](https://aliexpress.com/item/32902205579.html)
 
-Ao dar uma olhada no `NautilusLauncher.apk` através do `jadx-gui`, posso ver que eles se comunicam com o tablet Android com sua "Console Universal" usando Série a 230400 Baud (usando `/dev/ttyS4`). Isso NÃO é o que estamos analisando aqui. Isso se refere à comunicação entre o Android e a "Console Universal". Estamos investigando as comms entre a "Console Universal" e a "Placa de Controle do Motor".
+Ao dar uma olhada no `NautilusLauncher.apk` através do `jadx-gui`, posso ver que eles comunicam o tablet Android com seu "Console Universal" usando Serial a 230400 Bauds (usando `/dev/ttyS4`). ISSO NÃO é o que estamos analisando aqui. Isso se refere à comunicação entre Android e o "Console Universal". Investigamos a comunicação entre a "Placa controladora da botoneira" e a "Placa controladora do motor", eliminando assim três placas como possíveis pontos de falha.
 
-Tentar conectar um ESP32 ou uma ponte serial baseada em CH340 diretamente aos cabos entre a base da esteira e a placa controladora Bowflex fez com que a base da esteira não inicializasse corretamente, então comecei a suspeitar que estão usando RS232.
+Tentar conectar um ESP32 ou uma ponte Serial baseada em CH340 diretamente aos cabos entre a base da esteira e a placa controladora Bowflex fez com que a base da esteira não inicializasse corretamente, após o que adquiri um analisador lógico para investigar mais a fundo.
 
-Nota: Conectando apenas ao GND e RXD, podemos "ver" algumas informações hexadecimais aparentemente sem sentido a 9600 baud. Conectar ao TXD faz com que a base da esteira não inicialize.
+## Atualização 2025
 
--- Continua, preciso de algum tempo para brincar com meu novo analisador lógico --
+Nas últimas semanas, e aproximadamente dois anos depois de ter começado com isso, várias pessoas entraram em contato comigo para perguntar sobre avanços a respeito disso, confirmando minha suposição inicial de que o sistema da esteira é horrível e que apenas era uma questão de tempo para que as máquinas começassem a falhar. Achei que era um bom momento para colocar em uso meu analisador lógico, que até então estava guardando pó.
+
+Conectando o analisador lógico às linhas TXD e RXD (e GND, é claro), pude imediatamente começar a interceptar mensagens entre ambas as partes sem interromper a comunicação. Presumo que inicialmente não consegui com um ESP32 por questões de impedância. Após alguns minutos de tentativa e erro, cheguei à seguinte configuração Serial:
+
+```
+- 2400 Bauds
+- 8 Bits por Quadro
+- 1 Bit de Parada
+- Sem Bit de Paridade
+- Menos Significativo Primeiro
+- TXD: Sinal Invertido
+- RXD: Sinal Não Invertido
+```
+
+Com essas configurações, pude ver mensagens claramente definidas.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Interceptando mensagens UART" format="webp" />
+  <p class="italic">Interceptando mensagens UART no processo de inicialização</p>
+</div>
+
+Algumas coisas que pude perceber imediatamente:
+
+- Todas as mensagens enviadas pela botoneira começam com `0x68`
+- Todas as mensagens enviadas pela placa controladora do motor começam com `0x73`
+- As mensagens de ambas as partes terminam em `0x43`
+- Em geral, as mensagens da botoneira são enviadas 100ms depois de receber uma mensagem da placa controladora do motor
+  - Exceto no processo de inicialização, onde em uma instância há uma diferença de 300ms
+- O ruído nas linhas de comunicação é incrível, dificultando a leitura das mensagens
+
+Com isso como base, já começa o processo de decifrar as mensagens e entender o que está sendo comunicado entre ambas as partes, realizando mudanças controladas em uma rotina de exercícios.
+
+### Interceptando mudanças na velocidade
+
+Realizando mudanças controladas em velocidades específicas, é possível observar os seguintes valores enviados para a placa controladora do motor:
+
+| Velocidade na tela            | Mensagem enviada                                    |
+| ----------------------------- | --------------------------------------------------- |
+| 0,0 km/h (em espera ou pausa) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2,0 km/h                      | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3,0 km/h                      | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5,0 km/h                      | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+Pode-se observar que muda o byte 5 e o byte 9. O byte 5 parece ser a velocidade em hexadecimal, e o byte 9 parece ser um checksum.
+
+Convertendo os valores do byte 5 para decimal:
+
+| Velocidade na tela            | Hexadecimal | Decimal |
+| ----------------------------- | ----------- | ------- |
+| 0,0 km/h (em espera ou pausa) | 0x00        | 0       |
+| 2,0 km/h                      | 0x14        | 20      |
+| 3,0 km/h                      | 0x1D        | 29      |
+| 5,0 km/h                      | 0x31        | 49      |
+
+Tendo decompilado algumas partes do sistema Android anos atrás, lembrei que ao configurar a máquina no sistema métrico, internamente o aplicativo da Bowflex realiza a conversão do sistema métrico para imperial para se comunicar com a "UCB". A placa controladora do motor parece usar o sistema métrico, e aparentemente há perda de precisão na conversão do sistema métrico para imperial e depois de volta para métrico (que é o que a controladora do motor espera), já que tudo é tratado com 1 decimal de precisão. **Foi tão difícil fazer isso direito, Nautilus?**
+
+Tendo isso em consideração, e se for aplicado um fator de escala de 10, coincide perfeitamente com os valores enviados para a placa controladora do motor, portanto a fórmula seria:
+
+```
+Valor em decimal = Velocidade em km/h × 10
+```
+
+### Interceptando mudanças na inclinação
+
+Seguindo o mesmo processo que com a velocidade, é possível observar os seguintes valores enviados para a placa controladora do motor:
+
+| Inclinação na tela | Mensagem enviada                                    |
+| ------------------ | --------------------------------------------------- |
+| -5°                | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                 | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                 | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+Neste caso, o byte 6 parece ser a inclinação em hexadecimal, e confirma que o byte 9 é um checksum.
+
+Convertendo os valores do byte 6 para decimal:
+
+| Inclinação na tela | Hexadecimal | Decimal |
+| ------------------ | ----------- | ------- |
+| -5°                | 0x00        | 0       |
+| 0°                 | 0x32        | 50      |
+| 9°                 | 0x8C        | 140     |
+
+A fórmula que faz coincidir perfeitamente os valores enviados para a placa controladora do motor é:
+
+```
+Valor em decimal = (Ângulo + 5) × 10
+```
+
+### Checksum
+
+Este parece ser um checksum simples e padrão em microcontroladores, somando todos os bytes da mensagem e ocorrendo um overflow ao chegar a 256. Uma representação simples seria algo como:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+Ao utilizar `uint8_t` como tipo de retorno, o overflow ocorre naturalmente. Poderia ser utilizado um `for loop` somando os valores e retornando `sum % 256`, mas seria mais lento para os microcontroladores sem nenhum benefício real.
+
+### Próximos passos
+
+- Obter um entendimento lógico do processo de inicialização, ou pelo menos replicá-lo
+- Capturar interações da chave de segurança (a coisa vermelha que é colocada na roupa)
+- Interpretar as mensagens que a placa controladora do motor envia, que não devem diferir muito das mensagens que a botoneira envia
+
+Tendo isso, já é possível replicar o funcionamento da botoneira, e com isso controlar a esteira a partir de um microcontrolador.
+
+<div align="center">
+  <p class="italic">-- Continua --</p>
+</div>

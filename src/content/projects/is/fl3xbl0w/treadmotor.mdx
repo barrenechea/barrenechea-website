@@ -1,61 +1,174 @@
 ---
-title: Hlaupabretti Mótorstýring - fl3xbl0w
-description: Verkefni í afturvirku verkfræði. Það hófst með Bowflex Treadmill 22 en varð að lokum almenn fyrir hvaða Android vél sem seld er af Nautilus Inc. (Nautilus, Bowflex, Schwinn).
+title: Tæki stjórnunarkerfi bandvélar - fl3xbl0w
+description: Öfugt verkfræðingar verkefni. Það hófst með Bowflex Treadmill 22 en þróaðist síðan almennt fyrir hvaða Android-stýrða tæki sem Nautilus Inc. selur (Nautilus, Bowflex, Schwinn).
 pubDate: 2022-05-28T10:28:00Z
 link: /is/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: fl3xbl0w verkefnismerki
+imgAlt: fl3xbl0w verkefnislogo
 tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+translatedBy: o1-mini
+checksum: c18c0dcfb1526f0210709098ca91e330b03d146e571843fc34a705fb31a09e26
 ---
 
 import { Image } from 'astro:assets';
 import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
-import HlaupabrettiRafmagn from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
-import HlaupabrettiSamskipti from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
-_Þetta á aðallega við um Hlaupabretti 22 & Hlaupabretti 56._
+_Þetta á sér stað aðallega við Treadmill 22 og Treadmill 56._
 
-Rafstýringarborðið er framleitt af [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+Stýritaflan umherjunar er framleidd af [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="B017D Rafstýringarborð Stjórnandi" format="webp" />
+<Image src={B017D} alt="Stýripallar umherjunar B017D" format="webp" />
 
-Með [þjónustuhandbókinni](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) sem Nautilus Inc. veitir ([afrit á archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
+Með [þjónustubóklega handbækinni](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) sem Nautilus Inc. veitir ([afrit á archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
-<Image src={HlaupabrettiRafmagn} alt="Rafmagnsskema hlaupabrettis" format="webp" />
+<Image src={TreadmillElectrical} alt="Rafkerfisáætlun bandvélarinnar" format="webp" />
 
-Og með sérstakri áherslu á þennan hluta:
+Sérstaklega einbeitt mér þessu hluta:
 
-<Image src={HlaupabrettiSamskipti} alt="Samskiptaleið hlaupabrettis" format="webp" />
+<Image src={TreadmillComm} alt="Tengileið bandvélarinnar" format="webp" />
 
-Við getum þekkt "samskiptakapalinn" sem tengir rafstýringuna sem 5-pinnakapal. Það er aðeins einn 5-pinnatengill.
-Ég hef merkt vírana með viðeigandi litum (gögn & rofi eru ljósbogaðskilin):
+Við getum greint "tengingarsvélina" sem tengir stýritafluna sem 5-pinna kavli. Það er aðeins einn 5-pinna tenging.
 
-| víralitur | merki |
-| --------- | ----- |
-| rauður    | GND   |
-| hvítur    | RXD   |
-| svartur   | TXD   |
-| gulur     | +12   |
-| grænn     | SW    |
+Ég hef merkt síðan kvällarnar með viðeigandi litum (gögn & skift eru opto-eiginlaus):
 
-Borðið er ekki tengt beint við Android stjórnborðið.
+| Litur köku | Merking |
+| ---------- | ------- |
+| rauður     | GND     |
+| hvítt      | RXD     |
+| svartur    | TXD     |
+| guli       | +12     |
+| grænn      | SW      |
 
-Eini 5-pinnatengillinn er frá Molex vörumerkinu. Google leit að "smáum Molex tengjum" leiddi mig að mynd af því sem þeir kalla `Molex Micro-Fit 3.0 Single Row (5-Pin)`, sem er notað til að tengja rafstýringarborðið:
+Taflan er ekki bein tengd við Android stýrikerfið.
 
-<Image src={Molex} alt="Molex Micro-Fit 3.0 Tengill" format="webp" />
+Einungis 5-pinna tengingin er frá Molex. Google leit eftir "smáir Molex tengingar" leiddi mig að mynd af því sem þeir kalla `Molex Micro-Fit 3.0 Single Row (5-Pin)`, sem er notað til að tengja stýritafluna:
+
+<Image src={Molex} alt="Molex Micro-Fit 3.0 tenging" format="webp" />
 
 [AliExpress tengill](https://aliexpress.com/item/32902205579.html)
 
-Þegar skoðað er `NautilusLauncher.apk` í gegnum `jadx-gui`, sé ég að þeir eiga samskipti við Android spjaldtölvuna með þeirra "Universal Console" með Serial á 230400 Baud (nota `/dev/ttyS4`). Það er EKKI það sem við erum að greina hér. Það vísar til samskipta milli Android og "Universal Console". Við erum að rannsaka samskiptin milli "Universal Console" og "Rafstýringarborðsins".
+Með því að skoða `NautilusLauncher.apk` í gegnum `jadx-gui`, get ég séð að þeir tengja Android spjaldtölvuna við sína "Universal Console" með seríu við 230400 Baud (með `/dev/ttyS4`). ÞEITTA er EKKI það sem við erum að greina hér. Það vísaði til samskipta milli Android og "Universal Console". Við erum að rannsaka samskipti milli "Button Panel Controller" og "Motor Controller Board", sem útilokar þrjár spjald sem möguleg bilunarpunkt.
 
-Tilraun til að tengja ESP32 eða CH340-baseruð serial brú beint við vírana á milli hlaupabrettisgrunnsins og Bowflex stjórnborðsins olli því að hlaupabrettisgrunnurinn initialíseraðist ekki rétt, svo ég fór að gruna að þeir væru að nota RS232.
+Að reyna að tengja ESP32 eða CH340-byggðan seríubryggju beint við köflurnar milli bandvélgrunnsins og Bowflex stjórntaflunar tækninnar olli því að bandvélin wedstrættist ekki rétt, eftir sem ég fékk logic analyzer til að rannsaka frekar.
 
-Athugið: Með því að tengjast aðeins við GND og RXD, getum við "séð" einhverja rusl heksadesímal upplýsingar á 9600 baud. Tenging við TXD veldur því að hlaupabrettisgrunnurinn initialíserast ekki.
+## Uppfærsla 2025
 
--- Að vera framhald, ég þarf smá tíma til að leika mér með nýja rökfræðigreinirinn minn --
+Á síðustu vikum, og um það bil tví árin eftir að ég hóf þetta, hafa nokkrir tengst mér til að spyrja um framvindu þessa, sem staðfestir upphaflega ráðstock mín að bandvélskerfið væri hrikalegt og það var aðeins mál tíma áður en tæki hefðu byrjað að bilast. Það virtist vera góður tími til að nýta logic analyzer mína, sem þar til nú hafði aðeins verið að safna ryki.
+
+Að tengja logic analyzer við TXD og RXD línurnar (og GND, auðvitað), gat ég tafarlaust byrjað að grípa við skilaboð milli báðum aðilanna án þess að trufla samskiptin. Ég geri ráð fyrir að ég gat upphaflega ekki notað ESP32 vegna mótstöðu vandamála. Eftir nokkurra mínúta af tilraun og mistök kom ég að eftirfarandi seríusstillingu:
+
+```
+- 2400 Baud
+- 8 bita á rampu
+- 1 stoppa bit
+- Engin athafna bit
+- Einstaklingsnæstur bit sendur fyrst
+- TXD: Afgert merki
+- RXD: Ekki afgert merki
+```
+
+Með þessum stillingum gat ég greinilega séð skilgreind skilaboð.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Miðað við UART skilaboð" format="webp" />
+  <p class="italic">Grípa við UART skilaboð meðan á upphafi ferlisins stendur</p>
+</div>
+
+Nokkrir hlutir sem ég tók strax eftir:
+
+- Öll skilaboð send af hnappapöllunni byrja með `0x68`
+- Öll skilaboð send af stýritaflu umherjum hafa upphaf með `0x73`
+- Skilaboð frá bæði aðilum enda með `0x43`
+- Almennt eru skilaboð frá hnappapöllunni send 100ms eftir að hafa fengið skilaboð frá stýritaflu umherjum
+  - Nema á upphafsferlinu, þar sem í einu tilfelli er 300ms munur
+- Ryk á samskiptalínunum er ótrúlegt, sem gerir lesningu skilaboða erfið
+
+Með því sem grunn getur ferlið við að þýða skilaboðin og skilja hvað er verið að miðla milli báðum aðilanna hafist, sem gerir stjórnað breiti í æfingaráætlun.
+
+### Grípa við hraðabreytingar
+
+Með því að gera stjórnaðar breytingar á ákveðnum hraða, má sjá eftirfarandi gildi send til stýritaflu umherjunar:
+
+| Hraði á skjánum            | Skilaboð sem send eru                               |
+| -------------------------- | --------------------------------------------------- |
+| 0.0 km/h (bíða eða stöðva) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2.0 km/h                   | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3.0 km/h                   | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5.0 km/h                   | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+Má sjá að báti 5 og báti 9 breytast. Báti 5 virðist vera hraðinn í sextán tear, og báti 9 virðist vera heilstöðugjókvarði.
+
+Umbreyting gildis báts 5 í tugatekju:
+
+| Hraði á skjánum            | Sextán Reykjavíkur | Tugi |
+| -------------------------- | ------------------ | ---- |
+| 0.0 km/h (bíða eða stöðva) | 0x00               | 0    |
+| 2.0 km/h                   | 0x14               | 20   |
+| 3.0 km/h                   | 0x1D               | 29   |
+| 5.0 km/h                   | 0x31               | 49   |
+
+Eftir því sem ég aflaði nokkurra hluta Android kerfisins á árum síðustu, man ég eftir því þegar stilltum kerfið á mælieiningunni, Bowflex forritið framkvæmir innri umbreytingu frá mælieiningunni til imperíusk til að samskiptast við "UCB". Stýritaflan umherjunar virðist nota mælieininguna og skv. því er tapað nákvæmni í umbreytingunni frá mælieiningunni til imperíusk og síðan aftur til mælieiningunnar (sem það sem stýritaflan umherjunar horfir til), þar sem allt er með 1 decimal nákvæmni. **Var það svo erfitt að gera það rétt, Nautilus?**
+
+Að hugsa slíkt og, ef stækkunarstuðull 10 er beittur, passar það fullkomlega við gildin sem send eru til stýritaflu umherjunar. Þannig að formúlan yrði:
+
+```
+Tugi gildi = Hraði í km/h × 10
+```
+
+### Grípa við breytt halla
+
+Með því að fylgja sömu ferlinu og með hraða má sjá eftirfarandi gildi send til stýritaflu umherjunar:
+
+| Halla á skjánum | Skilaboð sem send eru                               |
+| --------------- | --------------------------------------------------- |
+| -5°             | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°              | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°              | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+Í þessu tilfelli virðist báti 6 vera halla í sextán tear, og það staðfestir að báti 9 er heilstöðugjökvarði.
+
+Umbreyting gildis báts 6 í tugatekju:
+
+| Halla á skjánum | Sextán Reykjavíkur | Tugi |
+| --------------- | ------------------ | ---- |
+| -5°             | 0x00               | 0    |
+| 0°              | 0x32               | 50   |
+| 9°              | 0x8C               | 140  |
+
+Formúlan sem passar fullkomlega við gildin sem send eru til stýritaflu umherjunar er:
+
+```
+Tugi gildi = (Horn + 5) × 10
+```
+
+### Heilstöðugjökvarði
+
+Þetta virðist vera einfaldur og staðlaður heilstöðugjökvarði í örstjórntölvum, þar sem öll bitskilaboð skilgreint og valda yfirbreytingu þegar það nær 256. Einföld framsetning væri eitthvað eins og:
+
+```c
+uint8_t reiknaHeilstodugjokkvardi(uint8_t *skilabo)
+{
+  return skilabo[1] + skilabo[2] + skilabo[3] + skilabo[4] + skilabo[5] + skilabo[6] + skilabo[7];
+}
+```
+
+Með því að nota `uint8_t` sem skilyrði, fer yfirbreytingin af náttúrulegu. `for loop` gæti verið notað til að leggja gildin saman og skila `sum % 256`, en það væri hægara fyrir örstjórntölvur án raunverulegs ávinnings.
+
+### Næstu skref
+
+- Fá röklega skilning á upphafsferlinu, eða að minnsta kosti endurgera það
+- Ná skilyrðum samskipta við öryggilykið (rauða hlutinn sem er staðsettur á fötum)
+- Túlkja skilaboðin sem send eru af stýritaflu umherjunar, sem ættu ekki að vera mikið frábrigði frá skilaboðum sem send eru af hnappapöllunni
+
+Með því getur virkni hnappapöllunnar verið endurtekinn, og með því getur bandvélin verið stjórnað frá örstjórntölvu.
+
+<div align="center">
+  <p class="italic">-- Til að vera áfram --</p>
+</div>

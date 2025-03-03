@@ -1,6 +1,6 @@
 ---
 title: 跑步机电机控制器 - fl3xbl0w
-description: 逆向工程项目。起初是针对Bowflex Treadmill 22，但后来泛化为适用于Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何Android设备。
+description: 逆向工程项目。最初从Bowflex跑步机22开始，但最终推广到Nautilus Inc.（Nautilus、Bowflex、Schwinn）销售的任何安卓驱动设备。
 pubDate: 2022-05-28T10:28:00Z
 link: /zh/projects/fl3xbl0w
 img: ~/assets/images/project-fl3xbl0w.svg
@@ -9,34 +9,35 @@ tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: gpt-4-1106-preview
-checksum: 125dc0e721ef19aa62fa8845e79be4ef5b64f512cce349577c197254e25cf4bd
+translatedBy: o1-mini
+checksum: c18c0dcfb1526f0210709098ca91e330b03d146e571843fc34a705fb31a09e26
 ---
 
 import { Image } from 'astro:assets';
 import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
-import 跑步机电气 from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
-import 跑步机通信 from '~/assets/images/fl3xbl0w/treadmill-comm.png';
+import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
+import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
 _这主要适用于跑步机22和跑步机56。_
 
 电机控制板由[Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html)制造。
 
-<Image src={B017D} alt="B017D电机控制板控制器" format="webp" />
+<Image src={B017D} alt="电机控制板 B017D" format="webp" />
 
-根据Nautilus Inc.提供的[服务手册](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)（[archive.org上的备份](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)）：
+根据Nautilus Inc.提供的[服务手册](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)（[archive.org备份](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)）：
 
-<Image src={跑步机电气} alt="跑步机电气图" format="webp" />
+<Image src={TreadmillElectrical} alt="跑步机的电气图" format="webp" />
 
 特别关注这部分：
 
-<Image src={跑步机通信} alt="跑步机通信路径" format="webp" />
+<Image src={TreadmillComm} alt="跑步机通信路径" format="webp" />
 
-我们可以识别连接电机控制器的“通信电缆”为5针的。只有一个5针连接器。
-我已经用相应的颜色标记了电线（数据和开关是光隔离的）：
+我们可以识别连接电机控制器的“通信电缆”是一个5针电缆。只有一个5针连接器。
+我已经用相应的颜色标记了电缆（数据和开关是光隔离的）：
 
-| 电线颜色 | 标签 |
+| 电缆颜色 | 标签 |
 | -------- | ---- |
 | 红色     | GND  |
 | 白色     | RXD  |
@@ -44,18 +45,128 @@ _这主要适用于跑步机22和跑步机56。_
 | 黄色     | +12  |
 | 绿色     | SW   |
 
-该板不直接连接到安卓控制台。
+该板未直接连接到安卓控制台。
 
-唯一的5针连接器是Molex品牌的。谷歌搜索“小型Molex连接器”让我找到了他们所谓的`Molex Micro-Fit 3.0单排（5针）`的图片，用于连接电机控制板：
+唯一的5针连接器来自Molex。谷歌搜索“小型Molex连接器”让我找到了他们所谓的`Molex Micro-Fit 3.0 单排（5针）`的图片，用于连接电机控制板：
 
-<Image src={Molex} alt="Molex Micro-Fit 3.0连接器" format="webp" />
+<Image src={Molex} alt="Molex Micro-Fit 3.0 连接器" format="webp" />
 
 [AliExpress链接](https://aliexpress.com/item/32902205579.html)
 
-通过`jadx-gui`查看`NautilusLauncher.apk`，我可以看到他们使用230400波特的串行（使用`/dev/ttyS4`）与安卓平板通信，这是他们的“通用控制台”。这不是我们在这里分析的内容。那是指安卓和“通用控制台”之间的通信。我们正在调查的是“通用控制台”和“电机控制板”之间的通信。
+通过`jadx-gui`查看`NautilusLauncher.apk`，我发现他们使用Serial在230400波特率（使用`/dev/ttyS4`）与他们的“通用控制台”通信。这与我们在这里分析的不相关。那指的是安卓与“通用控制台”之间的通信。我们正在调查“按钮面板控制器”与“电机控制板”之间的通信，从而排除了三个可能的故障点。
 
-尝试将ESP32或基于CH340的串行桥直接连接到跑步机底座和Bowflex控制板之间的电线，导致跑步机底座无法正确初始化，所以我开始怀疑他们使用的是RS232。
+尝试将ESP32或基于CH340的串行桥直接连接到跑步机基座与Bowflex控制板之间的电缆，导致跑步机基座初始化不正确，之后我获取了逻辑分析仪以进一步调查。
 
-注意：仅连接GND和RXD，我们可以在9600波特下“看到”一些看似垃圾的十六进制信息。连接TXD会导致跑步机底座无法初始化。
+## 更新 2025
 
--- 待续，我需要一些时间来玩我的新逻辑分析仪 --
+最近几周，大约在我开始这个项目两年后，有几个人联系我询问进展，证实了我最初的假设：跑步机系统糟糕，机器故障只是时间问题。这似乎是时候使用我的逻辑分析仪了，直到现在它还只是积灰。
+
+将逻辑分析仪连接到TXD和RXD线路（当然还有GND），我立即能够在不干扰通信的情况下拦截双方的消息。我猜最初无法使用ESP32是由于阻抗问题。经过几分钟的反复试验，我得出了以下串行配置：
+
+```
+- 2400 波特率
+- 每帧8位
+- 1个停止位
+- 无校验位
+- 先发送最低有效位
+- TXD：信号反转
+- RXD：信号不反转
+```
+
+使用这些设置，我可以清晰地看到定义明确的消息。
+
+<div align="center">
+  <Image src={UARTSniffing} alt="拦截UART消息" format="webp" />
+  <p class="italic">启动过程中的UART消息拦截</p>
+</div>
+
+我立即注意到的一些事情：
+
+- 按钮面板发送的所有消息都以`0x68`开头
+- 电机控制板发送的所有消息都以`0x73`开头
+- 双方的消息都以`0x43`结尾
+- 通常，按钮面板的消息在接收到电机控制板的消息后100毫秒发送
+  - 除了在启动过程中，有一次差异为300毫秒
+- 通信线路上的噪声非常大，使得消息读取变得困难
+
+以此为基础，开始解码消息并理解双方之间的通信，从而在锻炼过程中进行受控的更改。
+
+### 拦截速度变化
+
+通过对特定速度进行受控更改，可以观察到发送到电机控制板的以下值：
+
+| 屏幕上的速度                | 发送的消息                                          |
+| --------------------------- | --------------------------------------------------- |
+| 0.0 公里/小时（等待或暂停） | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2.0 公里/小时               | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3.0 公里/小时               | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5.0 公里/小时               | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+可以观察到，第5字节和第9字节发生了变化。第5字节似乎是以十六进制表示的速度，第9字节似乎是校验和。
+
+将第5字节的值转换为十进制：
+
+| 屏幕上的速度                | 十六进制 | 十进制 |
+| --------------------------- | -------- | ------ |
+| 0.0 公里/小时（等待或暂停） | 0x00     | 0      |
+| 2.0 公里/小时               | 0x14     | 20     |
+| 3.0 公里/小时               | 0x1D     | 29     |
+| 5.0 公里/小时               | 0x31     | 49     |
+
+在多年前反编译安卓系统的一些部分时，我记得在配置设备时，Bowflex应用程序内部执行了从公制到英制的转换，以与“UCB”通信。电机控制板似乎使用公制系统，并且显然，在从公制转换到英制再转换回公制时存在精度损失，因为所有内容都以1位小数的精度处理。**Nautilus，难道这么难做到正确吗？**
+
+考虑到这一点，如果应用缩放因子为10，完全匹配发送到电机控制板的值。因此，公式为：
+
+```
+十进制值 = 速度（公里/小时） × 10
+```
+
+### 拦截坡度变化
+
+按照与速度相同的过程，可以观察到发送到电机控制板的以下值：
+
+| 屏幕上的坡度 | 发送的消息                                          |
+| ------------ | --------------------------------------------------- |
+| -5°          | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°           | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°           | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+在这种情况下，第6字节似乎是以十六进制表示的坡度，并且确认第9字节是校验和。
+
+将第6字节的值转换为十进制：
+
+| 屏幕上的坡度 | 十六进制 | 十进制 |
+| ------------ | -------- | ------ |
+| -5°          | 0x00     | 0      |
+| 0°           | 0x32     | 50     |
+| 9°           | 0x8C     | 140    |
+
+完美匹配发送到电机控制板的值的公式是：
+
+```
+十进制值 = (角度 + 5) × 10
+```
+
+### 校验和
+
+这似乎是微控制器中一种简单且标准的校验和，将消息的所有字节相加，并在达到256时发生溢出。一个简单的表示方式类似于：
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+使用`uint8_t`作为返回类型，溢出自然发生。可以使用`for`循环来求和并返回`sum % 256`，但对于微控制器来说，这在没有任何实际好处的情况下会更慢。
+
+### 下一步
+
+- 获得对启动过程的逻辑理解，或至少复制它
+- 捕捉与安全钥匙的互动（放在衣物上的红色装置）
+- 解释电机控制板发送的消息，这些消息与按钮面板发送的消息应该差别不大
+
+通过这样，可以复制按钮面板的功能，并通过此，使用微控制器控制跑步机。
+
+<div align="center">
+  <p class="italic">-- 待续 --</p>
+</div>

@@ -16,12 +16,13 @@ import B017D from '~/assets/images/fl3xbl0w/b017d.jpg';
 import TreadmillElectrical from '~/assets/images/fl3xbl0w/treadmill-electrical.png';
 import TreadmillComm from '~/assets/images/fl3xbl0w/treadmill-comm.png';
 import Molex from '~/assets/images/fl3xbl0w/molex.jpg';
+import UARTSniffing from '~/assets/images/fl3xbl0w/uart-sniffing.png';
 
 _Esto aplica principalmente a la Treadmill 22 & Treadmill 56._
 
-La tarjeta de control del motor es fabricada por [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
+La placa de control del motor es fabricada por [Electronics Way Industry](https://web.archive.org/web/20231228174313/https://www.ewayindustry.com/ew-dc-b017.html).
 
-<Image src={B017D} alt="Controlador de Tarjeta de Control del Motor B017D" format="webp" />
+<Image src={B017D} alt="Placa controladora del Motor B017D" format="webp" />
 
 Dado el [manual de servicio](https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf) proporcionado por Nautilus Inc. ([respaldo en archive.org](https://web.archive.org/web/20220409140737/https://download.nautilus.com/supportdocs/AM_OM/Bowflex/BFX.T10.T22.T25.T56.SM.EN.pdf)):
 
@@ -34,7 +35,7 @@ Y enfocándonos específicamente en esta parte:
 Podemos identificar el "cable de comunicación" que conecta el controlador del motor como uno de 5 pines. Hay solo un conector de 5 pines.
 He etiquetado los cables con sus colores correspondientes (los datos & interruptor están optoaislados):
 
-| color del cable | etiqueta |
+| Color del cable | Etiqueta |
 | --------------- | -------- |
 | rojo            | GND      |
 | blanco          | RXD      |
@@ -42,18 +43,128 @@ He etiquetado los cables con sus colores correspondientes (los datos & interrupt
 | amarillo        | +12      |
 | verde           | SW       |
 
-La tarjeta no está conectada directamente a la consola Android.
+La placa no está conectada directamente a la consola Android.
 
-El único conector de 5 pines es de la marca Molex. Una búsqueda en Google de "conectores Molex pequeños" me llevó a una imagen de lo que llaman `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que se utiliza para conectar la tarjeta controladora del motor:
+El único conector de 5 pines es de la marca Molex. Una búsqueda en Google de "conectores Molex pequeños" me llevó a una imagen de lo que llaman `Molex Micro-Fit 3.0 Single Row (5-Pin)`, que se utiliza para conectar la placa controladora del motor:
 
 <Image src={Molex} alt="Conector Molex Micro-Fit 3.0" format="webp" />
 
 [Enlace de AliExpress](https://aliexpress.com/item/32902205579.html)
 
-Al echar un vistazo en `NautilusLauncher.apk` a través de `jadx-gui`, puedo ver que se comunican con la tablet Android con su "Consola Universal" usando Serie a 230400 Baudios (usando `/dev/ttyS4`). Eso NO es lo que estamos analizando aquí. Eso se refiere a la comunicación entre Android y la "Consola Universal". Investigamos las comms entre la "Consola Universal" y la "Tarjeta de Control del Motor".
+Al echar un vistazo en `NautilusLauncher.apk` a través de `jadx-gui`, puedo ver que comunican la tablet Android con su "Consola Universal" usando Serial a 230400 Baudios (usando `/dev/ttyS4`). Eso NO es lo que estamos analizando aquí. Eso se refiere a la comunicación entre Android y la "Consola Universal". Investigamos la comunicación entre la "Placa controladora de la botonera" y la "Placa controladora del motor", así quitando tres placas como posibles puntos de falla.
 
-Intentar conectar un ESP32 o un puente serie basado en CH340 directamente a los cables entre la base de la trotadora y la tarjeta controladora Bowflex hizo que la base de la trotadora no se inicializara correctamente, así que empecé a sospechar que están usando RS232.
+Intentar conectar un ESP32 o un puente Serial basado en CH340 directamente a los cables entre la base de la trotadora y la placa controladora Bowflex hizo que la base de la trotadora no se inicializara correctamente, tras lo cual adquirí un analizador lógico para investigar más a fondo.
 
-Nota: Conectando solo a GND y RXD, podemos "ver" algo de información hexadecimal aparentemente basura a 9600 baudios. Conectar a TXD hace que la base de la trotadora no se inicialice.
+## Actualización 2025
 
--- Continuará, necesito algo de tiempo para jugar con mi nuevo analizador lógico --
+En las última semanas, y aproximadamente dos años después de que empecé con esto, varias personas se han comunicado conmigo para preguntar por avances respecto a esto, confirmando mi suposición inicial de que el sistema de la trotadora es horrible y sólo era cosa de tiempo para que máquinas comenzaran a fallar. Me pareció buen momento para poner en uso mi analizador lógico, que hasta ahora sólo estaba guardando polvo.
+
+Conectando el analizador lógico a las líneas TXD y RXD (y GND, por supuesto), inmediatamente pude comenzar a interceptar mensajes entre ambas partes sin interrumpir la comunicación. Supongo que inicialmente no pude con un ESP32 por temas de impedancia. Tras algunos minutos de prueba y error, llegué a la siguiente configuración Serial:
+
+```
+- 2400 Bauds
+- 8 Bits per Frame
+- 1 Stop Bit
+- No Parity Bit
+- Least Significant Bit Sent First
+- TXD: Inverted Signal
+- RXD: Non Inverted Signal
+```
+
+Con esas configuraciones pude ver mensajes claramente definidos.
+
+<div align="center">
+  <Image src={UARTSniffing} alt="Interceptando mensajes UART" format="webp" />
+  <p class="italic">Interceptando mensajes UART en el proceso de encendido</p>
+</div>
+
+Algunas cosas que me pude percatar de inmediato:
+
+- Todos los mensajes que envía la botonera comienzan con `0x68`
+- Todos los mensajes que envía la placa controladora del motor comienzan con `0x73`
+- Los mensajes de ambas partes terminan en `0x43`
+- En general los mensajes de la botonera son enviados 100ms después de haber recibido un mensaje de la placa controladora del motor
+  - A excepción del proceso de encendido, donde en una instancia tiene una diferencia de 300ms
+- El ruido que hay en las líneas de comunicación es increíble, dificultando la lectura de los mensajes
+
+Con eso como base ya comienza el proceso de descifrar los mensajes y entender qué es lo que se está comunicando entre ambas partes, realizando cambios controlados en una rutina de ejercicios.
+
+### Interceptando cambios en la velocidad
+
+Realizando cambios controlados a velocidades específicas, se puede observar los siguientes valores enviados hacia la placa controladora del motor:
+
+| Velocidad en la pantalla     | Mensaje enviado                                     |
+| ---------------------------- | --------------------------------------------------- |
+| 0,0 km/h (en espera o pausa) | `0x68 0x08 0x80 0x50 0x00 0x0A 0x00 0x00 0xE2 0x43` |
+| 2,0 km/h                     | `0x68 0x08 0x80 0x50 0x14 0x0A 0x00 0x00 0xF6 0x43` |
+| 3,0 km/h                     | `0x68 0x08 0x80 0x50 0x1D 0x0A 0x00 0x00 0xFF 0x43` |
+| 5,0 km/h                     | `0x68 0x08 0x80 0x50 0x31 0x0A 0x00 0x00 0x13 0x43` |
+
+Se puede observar que cambia el byte 5 y el byte 9. El byte 5 parece ser la velocidad en hexadecimal, y el byte 9 parece ser un checksum.
+
+Pasando los valores del byte 5 a decimal:
+
+| Velocidad en la pantalla     | Hexadecimal | Decimal |
+| ---------------------------- | ----------- | ------- |
+| 0,0 km/h (en espera o pausa) | 0x00        | 0       |
+| 2,0 km/h                     | 0x14        | 20      |
+| 3,0 km/h                     | 0x1D        | 29      |
+| 5,0 km/h                     | 0x31        | 49      |
+
+Habiendo decompilado algunas partes del sistema Android años atrás, recordé que al configurar la máquina en sistema métrico, internamente la aplicación de Bowflex realiza la conversión de sistema métrico a imperial para comunicarse con la "UCB". La placa controladora de motor parece usar sistema métrico, y al parecer hay pérdida de precisión en la conversión de sistema métrico a imperial y después de vuelta a métrico (que es lo que la controladora del motor espera), ya que todo se maneja con 1 decimal de precisión. **¿Era tan difícil hacerlo bien, Nautilus?**
+
+Teniendo eso en consideración, y si se aplica un factor de escala de 10, coincide perfectamente con los valores enviados a la placa controladora del motor, por lo tanto la fórmula sería:
+
+```
+Valor en decimal = Velocidad en km/h × 10
+```
+
+### Interceptando cambios en la inclinación
+
+Siguiendo el mismo proceso que con la velocidad, se puede observar los siguientes valores enviados hacia la placa controladora del motor:
+
+| Inclinación en la pantalla | Mensaje enviado                                     |
+| -------------------------- | --------------------------------------------------- |
+| -5°                        | `0x68 0x08 0x80 0x50 0x1D 0x00 0x00 0x00 0xF5 0x43` |
+| 0°                         | `0x68 0x08 0x80 0x50 0x1D 0x32 0x00 0x00 0x27 0x43` |
+| 9°                         | `0x68 0x08 0x80 0x50 0x1D 0x8C 0x00 0x00 0x81 0x43` |
+
+En este caso el byte 6 parece ser la inclinación en hexadecimal, y me confirma que el byte 9 es un checksum.
+
+Pasando los valores del byte 6 a decimal:
+
+| Inclinación en la pantalla | Hexadecimal | Decimal |
+| -------------------------- | ----------- | ------- |
+| -5°                        | 0x00        | 0       |
+| 0°                         | 0x32        | 50      |
+| 9°                         | 0x8C        | 140     |
+
+La fórmula que hace coindidir perfectamente los valores enviados a la placa controladora del motor es:
+
+```
+Valor en decimal = (Ángulo + 5) × 10
+```
+
+### Checksum
+
+Este parece ser un checksum simple y estándar en microcontroladores, sumando todos los bytes del mensaje y haciendo un overflow llegado a 256. Una representación sencilla sería algo como:
+
+```c
+uint8_t calculateChecksum(uint8_t *msg) {
+  return msg[1] + msg[2] + msg[3] + msg[4] + msg[5] + msg[6] + msg[7];
+}
+```
+
+Al utilizar `uint8_t` como tipo de retorno, el overflow ocurre naturalmente. Podría utilizarse un `for loop` sumando los valores y retornar `sum % 256`, pero sería más lento para los microcontroladores sin ningún beneficio real.
+
+### Próximos pasos
+
+- Obtener un entendimiento lógico del proceso de encendido, o al menos replicarlo
+- Capturar interacciones de la llave de seguridad (la cosa roja que se coloca en la ropa)
+- Interpretar los mensajes que envía la placa controladora del motor, que no deben diferir mucho de los mensajes que envía la botonera
+
+Teniendo eso ya se puede replicar el funcionamiento de la botonera, y con eso se puede controlar la trotadora desde un microcontrolador.
+
+<div align="center">
+  <p class="italic">-- Continuará --</p>
+</div>

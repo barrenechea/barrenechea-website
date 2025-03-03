@@ -1,39 +1,39 @@
 ---
 title: fl3xbl0w
-description: リバースエンジニアリングプロジェクト。Bowflex Treadmill 22から始まりましたが、最終的にはNautilus Inc.（Nautilus、Bowflex、Schwinn）が販売するAndroid搭載のすべてのマシンに一般化されました。
+description: リバースエンジニアリングプロジェクトです。Bowflex Treadmill 22で始まりましたが、最終的にはNautilus Inc.（Nautilus, Bowflex, Schwinn）から販売されているAndroid搭載のあらゆる機械に一般化されました。
 pubDate: 2022-05-28T10:28:00Z
 img: ~/assets/images/project-fl3xbl0w.svg
-imgAlt: fl3xbl0wプロジェクトロゴ
+imgAlt: fl3xbl0wプロジェクトのロゴ
 tags:
   - ReverseEngineering
   - Hardware
   - Android
-translatedBy: chatgpt-4o-latest
-checksum: 0ff65f68cf2e838ce7f46de75c2c5cc835977da86ecb52ba48aeb4555a6a3562
+translatedBy: o1-mini
+checksum: 7525ffff2162bcaf16c9ffe1c5dd0dacf71734548dc2fbb93d34ee4068ebc79d
 ---
 
 import { Image } from 'astro:assets';
 import HeaderImage from '~/assets/images/project-fl3xbl0w.png';
 
-<Image src={HeaderImage} alt="flexblow logo" format="webp" width={800} />
+<Image src={HeaderImage} alt="fl3xbl0wプロジェクトのロゴ" format="webp" width={800} />
 
-「Bowflexコンソール」（NautilusがVantronと呼ぶもの）のドキュメントへようこそ！
+私の「Bowflex Console」ドキュメンテーションへようこそ！（NautilusがVantronと呼ぶものです）。
 
-Vantronは、Nautilus Inc.の「スマートデバイス」のほとんどのベースとなっています。基本的には、独自のソフトウェアを実行するAndroidタブレットです。さらに、いくつかのハードウェア関連の要素が私の好奇心をそそりました。
+Vantronは、Nautilus Inc. のほとんどの「スマートデバイス」の基盤です。基本的には、独自のソフトウェアを実行するAndroidタブレットです。私の好奇心を刺激したハードウェア関連のいくつかの事柄も含まれています。
 
-[Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/)（ありがとう [xasmx](https://www.reddit.com/user/xasmx/)！）で見つけた以前の作業に大いに依存して、マシンのソフトウェアとハードウェアについてより深く理解することができました。
+マシンのソフトウェアとハードウェアをより深く理解するために、[Reddit](https://www.reddit.com/r/Bowflex/comments/mi8wdo/unlocking_bowflex_velocore/)で見つけた以前の作品（[xasmx](https://www.reddit.com/user/xasmx/)に感謝！）に大いに依存しました。
 
-## 対応デバイス（Android Jailbreak）
+## 互換デバイス（Android ジェイルブレイク）
 
 <a href="/ja/projects/fl3xbl0w/decompiling" target="_self">
   逆コンパイルされたアプリケーション
 </a>
-をいじった後、次のBowflexデバイスに対して、このドキュメントが何らかの形で適用できると自信を持って言えます：
+で試した後、以下のドキュメントは何らかの方法で、以下のBowflexデバイスに適用できると確信しています。
 
 ### トレッドミル
 
-- Treadmill 22 / Treadmill 56（同じトレッドミル。56は220V AC入力、22は120V AC入力）
-- Treadmill 10 / Treadmill 25（同じトレッドミル。25は220V AC入力、10は120V AC入力）
+- Treadmill 22 / Treadmill 56（同じトレッドミルです。56は220V AC入力、22は120V AC入力を持ちます）
+- Treadmill 10 / Treadmill 25（同じトレッドミルです。25は220V AC入力、10は120V AC入力を持ちます）
 
 ### バイク
 
@@ -44,45 +44,45 @@ Vantronは、Nautilus Inc.の「スマートデバイス」のほとんどのベ
 - Max Total 16
 - Max Trainer M9
 
-私はMax TrainerやVeloCoreを持っていませんが、コードの発見に基づいて、USBポートが利用可能であれば動作するはずです。
+Max TrainerやVeloCoreは持っていませんが、コードの解析結果に基づいて利用可能なUSBポートがあれば動作するはずです。
 
-次のバージョンのNautilusLauncherで動作が確認されています：
+### NautilusLauncherのバージョンで動作が確認されています：
 
 - 5.0.0.350
 - 5.0.0.382
 
-**このジェイルブレイクはすでにNautilusによってパッチが適用されています。**
+**ジェイルブレイクは既にNautilusによって修正されています。**
 
 ## ドキュメント
 
 ### 一般情報
 
 - <a href="/ja/projects/fl3xbl0w/jailbreak" target="_self">
-    Android Jailbreak
+    Android ジェイルブレイク
   </a>
 - <a href="/ja/projects/fl3xbl0w/backup" target="_self">
-    コンソールの内容のバックアップ
+    コンソールの内容をバックアップする
   </a>
 - <a href="/ja/projects/fl3xbl0w/decompiling" target="_self">
     逆コンパイル
   </a>
 - <a href="/ja/projects/fl3xbl0w/quirks" target="_self">
-    Bowflexのクセ
+    Bowflexの特性
   </a>
 - <a href="/ja/projects/fl3xbl0w/romdump" target="_self">
-    ROMダンプ（2024年更新！）
+    ROMダンプ（更新予定 2024！）
   </a>
 
 ### 進行中の作業
 
 - <a href="/ja/projects/fl3xbl0w/treadmotor" target="_self">
-    トレッドミルモーターコントローラー
+    トレッドミルモーターコントローラー（更新予定 2025！）
   </a>
 
 ## 最終目標
 
-私のトレッドミルにできるだけ多くの将来のアップデートを可能にすること。
+私のトレッドミルのために、できるだけ多くの将来のアップデートを可能にすること。
 
-Nautilus, Inc.は電子機器に1年間の保証しか提供しておらず、マシンをオフにするメカニズム（つまり、リアスイッチでAC電源を切ること）が基本的に「Androidタブレットの電源を切る」ことだと知ったとき、私は恐怖を感じました。すべてのLinuxベースのデバイスは、OSの破損を避けるために安全にシャットダウンされるべきであり、このAndroidタブレットも例外ではありません。だから、まだ動作しているうちに、少し楽しんでみようと思いました。
+Nautilus, Inc. は電子機器に対して1年の保証のみを提供しており、機械（およびそれに伴うAndroidタブレット）をオフにするメカニズムが基本的に「背面のスイッチでAC電源をカットする」ものであることを知った時、怖くなりました。すべてのLinuxベースのデバイスは、オペレーティングシステムの破損を防ぐために安全にシャットダウンされるべきであり、このAndroidタブレットも例外ではありません。だから、それが動作している間は、もう少し楽しんでみませんか？
 
-最終的には、トレッドミルのモーターコントローラーに送られる通信を傍受し、理解し、再現することで、タブレットが故障してもデバイスが機能し続けるようにしたいと考えています。
+最終的には、トレッドミルのモーターコントローラーに送信される通信を傍受し、理解し、再現することで、タブレットが故障しても動作するデバイスを維持したいと考えています。
