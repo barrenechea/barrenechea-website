@@ -4,7 +4,6 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import prettier from 'eslint-plugin-prettier';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import tailwindcss from 'eslint-plugin-tailwindcss';
 import unusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
 
@@ -42,7 +41,6 @@ export default tseslint.config(
     plugins: {
       '@typescript-eslint': typescriptEslint,
       'unused-imports': unusedImports,
-      tailwindcss: tailwindcss,
       'simple-import-sort': simpleImportSort,
       prettier: prettier,
     },
@@ -65,9 +63,6 @@ export default tseslint.config(
 
   // Astro
   ...eslintPluginAstro.configs.recommended,
-
-  // Tailwind
-  ...tailwindcss.configs['flat/recommended'],
 
   // Remove some safety rules around any for various reasons
   {

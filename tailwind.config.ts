@@ -20,8 +20,5 @@ export default {
       },
     },
   },
-  corePlugins: {
-    aspectRatio: false,
-  },
   plugins: [aspectRatio, typography],
 } satisfies Config;

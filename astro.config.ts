@@ -1,7 +1,7 @@
 import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import robotsTxt from 'astro-robots-txt';
 
@@ -9,6 +9,9 @@ import robotsTxt from 'astro-robots-txt';
 export default defineConfig({
   site: 'https://www.barrenechea.cl/',
   output: 'static',
+  vite: {
+    plugins: [tailwindcss()],
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark-dimmed',
@@ -25,17 +28,6 @@ export default defineConfig({
       },
     }),
     sitemap(),
-    tailwind({ applyBaseStyles: false }),
     robotsTxt(),
   ],
-  // i18n: {
-  //   defaultLocale: "es",
-  //   locales: ["en", "es"],
-  //   routing: {
-  //       prefixDefaultLocale: true
-  //   }
-  // }
-  // experimental: {
-  //   contentCollectionCache: true,
-  // },
 });

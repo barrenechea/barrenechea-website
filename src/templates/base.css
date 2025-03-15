@@ -1,9 +1,9 @@
-@import '@fontsource/work-sans';
-@import 'github-fork-ribbon-css/gh-fork-ribbon.css';
+@import '@fontsource/work-sans' layer(base);
+@import 'github-fork-ribbon-css/gh-fork-ribbon.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../../tailwind.config.ts';
 
 @layer base {
   div[class*='prose'] > * > a,

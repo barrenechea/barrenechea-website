@@ -28,12 +28,12 @@ const { post, translatedBy } = Astro.props;
     }
   </div>
 
-  <div class="prose prose-invert mt-8 prose-img:rounded-lg">
+  <div class="prose prose-invert prose-img:rounded-lg mt-8">
     <slot />
   </div>
   {
     translatedBy && (
-      <div class="mt-12 text-right text-xs font-bold uppercase italic text-zinc-400">
+      <div class="mt-12 text-right text-xs font-bold text-zinc-400 uppercase italic">
         {translatedBy}
       </div>
     )
