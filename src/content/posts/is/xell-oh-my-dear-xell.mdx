@@ -1,0 +1,73 @@
+---
+title: 'XeLL, ó, elsku mína XeLL'
+description: 'Milli risana: Framlag mitt til goðsagnakenndrar Xbox 360-senu með XeLL Theme Customizer.'
+pubDate: 2025-03-19T23:27:00Z
+link: https://xell.barrenechea.cl
+img: ~/assets/images/post-xell.png
+imgAlt: 'Skjármynd af XeLL Reloaded með litabreytingum'
+translatedBy: o3-mini
+checksum: c759422884d7978bd3d8803a1585a8a3a93bb79e9f0f145e777ea6ce01be1fbb
+---
+
+import XeLLReloaded from '~/assets/images/xell-reloaded.jpg';
+import XellCustomizer from '~/assets/images/xell-theme-customizer.png';
+import { Image } from 'astro:assets';
+
+Það er ekki leyndarmál að ég hef sértæka ástríðu fyrir Xbox 360 (þú getur lesið meira um sambandið mitt við hann í [þessari færslu](/is/posts/ades-wii-x360/)).  
+Opnun þessara leikjatækja var í raun fyrsta starf mitt og uppspretta tekna, sem gerði mér kleift að æfa lömmingsfærni mína stöðugt.  
+Að taka kassanum í sundur, fjarlægja skrúfurnar og "gera mitt" gekk náttúrulega. Mér fannst það gaman. Það var mjög mikilvægur hluti af unglingaárunum mínum.
+
+Síðan, af hverju svo, hreyfði ég mig áfram í lífinu. Ég hóf háskólamenntun og snúið að öðrum tekjuuppsprettum sem krafuðu minni tíma og fyrirhafna, svo ég gæti einbeitt mér að námi.
+
+En það er ein mynd frá þeirri tíma sem ég man eftir með mikilli tilfinningu:
+
+<div align="center">
+  <Image src={XeLLReloaded} alt="Mynd af XeLL Reloaded í gangi á Xbox 360" format="webp" />
+  <p class="italic">XeLL Reloaded í gangi á Xbox 360</p>
+</div>
+
+Að sjá þennan skjá merkti nokkur atriði: að leikjatækið var enn virkt, að lömmingssnertingarnar voru fullkomnar (ég var stoltur af því hversu snyrtileg lömmingsvinnan mín var), og, sem mikilvægt að minnsta kosti, að ég var sekúndum frá því að afla nauðsynlegra upplýsinga til að sigra öryggiskerfin sem Microsoft hafði innleitt.
+
+Það að sjá þennan skjá var næstum dagleg rútína, leikjatæki á leikjatæki, viðskiptavinur á viðskiptavini. Það var elixír fullnægju.
+
+Með tímanum urðu nýjungar innan þessa litla heims sífellt sjaldnar. Þó að mikilvæg áfangar áttu sér stað (til dæmis RGH 3 árið 2021 af mikla [15432](https://github.com/15432)), virtist eins og lítið væri eftir að gera. Winchester-leikjatækin voru alltaf óviðráðanleg, en ég var ekki sérstaklega áhugasamur um þau. Að mínu mati réðu Trinity-leikjatækin Microsoft á sinni bestu hlið. Frá Corona-tímanum og áfram tel ég þau vera kostnaðarminnkunaraðgerðir í framleiðsluferlum.
+
+## Og hvað gerðist árið 2025?
+
+Þriðja mars mánuðarins kom Grimdoomer fram með [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate) og náði því sem einu sinni virtist ómögulegt: nýtingu á öllum útgáfum af Xbox 360 (þar með talið Winchester). Það krefst aðeins USB-minnisstikks, án þess að þurfa lömmingu. Hrein gáfa.
+
+Þó að kerfið sé í dag mjög óstöðugt, með tiltölulega lága árangursprósentu (og samfélagið mælir enn með RGH fyrir betri reynslu), var það ámilti sem ekki mátti hunsa.
+
+Og það vakti bylgju af lengi farinri minningu. Með þeirri minningu hófust hugmyndir að koma. Ég sá [þessa færslu](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/) á Reddit með breyttum XeLL sem bar Avenged Sevenfold-merkið, og ég hugsaði: "Ég er tölvunarfræðingur – nú skil ég hluti sem ég skildi ekki áður. Hvernig virkar XeLL í raun og veru?" Eftir að hafa nokkra tíma klúðrað hafði ég mitt eigið breytta XeLL.
+
+<div align="center">
+  <p class="italic">"Hvað ef ég býr til vefforrit svo að hver sem er geti gert þetta?"</p>
+</div>
+
+Og auðvitað hætti ég ekki þar. [XeLL](https://github.com/barrenechea/xell-reloaded) er byggt með [LibXenon](https://github.com/barrenechea/libxenon) sem grunnbókasafni, og það var frekar úrelt hvað varðar innihald þess. Ég er á kthættu um að uppfæra hugbúnað og gat ekki látið þessa tækifæri fram hjá mér fara.
+
+Uppfæra zlib, bzip2, freetype og libpng? Klárað. Uppfæra newlib og binutils og endurnýja nauðsynlegu bætur? Klárað. Uppfæra GCC?
+
+Helvíti, GCC. Ég gat ekki uppfært GCC. Ég gat ekki uppfært GCC því á einhverjum tímapunkti kynnti þeir breytingu sem, jafnvel eftir að hafa uppfært nauðsynlegu bætur, olli því að [XeLL](https://github.com/barrenechea/xell-reloaded) hljóp ekki (það þýddi en keyrði ekki).
+
+Að sjálfsögðu fann ég vandamálið; commit [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) kynnti flag_cunroll_grow_size, og með því að afvirkja þá „hagkvæmni“ fór [XeLL](https://github.com/barrenechea/xell-reloaded) aftur í gang.  
+Þetta kom eftir viku af þreytu, að þýða commit eftir commit þar til ég fann vandamálið. Þegar vandamálið var greint, náði ég að uppfæra GCC í 13.3.0.
+
+Og með því tilbúið, auk þess að samþætta nokkrar betrumbætur frá [15432](https://github.com/15432) til að bæta stuðning við að skrifa á eMMC í leikjatækjum, gat ég hafið þróun vefforritsins fyrir [XeLL](https://github.com/barrenechea/xell-reloaded). Og hér erum við.
+
+## XeLL Þema Sérsniðari
+
+Það er samkomulag margra þátta sem vinna í takt: [LibXenon](https://github.com/barrenechea/libxenon) og allt verkfærasafnið þess til að byggja [XeLL](https://github.com/barrenechea/xell-reloaded), [XeLL Customizer](https://github.com/barrenechea/xell-customizer) sem vefforrit og [XeLL Customizer API](https://github.com/barrenechea/xell-customizer-api) sem gegnir hlutverki milliliðs á milli vefforritsins og GitHub Actions til að ræsa byggingarleiðir miðað við þá stillingar sem notandinn velur.
+
+<div align="center">
+  <Image src={XellCustomizer} alt="Skjármynd af XeLL Þema Sérsniðara" format="webp" />
+</div>
+
+Með ofmetna áhuga mínum á smáatriðum náði ég auðvitað að herma eftir útliti [XeLL](https://github.com/barrenechea/xell-reloaded) hvað varðar jaðrana og nota nákvæmlega sömu leturgerð og [LibXenon](https://github.com/barrenechea/libxenon) hefur boðið upp á í mörg ár (IBM VGA 8x16 fyrir þá sem hafa áhuga).  
+Þegar ég var búinn að klára það ákvað ég að birta það á Reddit í [þessari færslu](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/).
+
+Notendum tók ekki meira en fimm mínútur að byrja að finna villur sem ég hafði ekki búist við. Ég gerði nokkrar tímabundnar lagfæringar, og eftir nóttvakt hafði ég stöðuga útgáfu.
+
+Móttaka samfélagsins var virkilega ótrúleg. Fleiri en 10.000 heimsóknir í minna en 24 klukkustundir og yfir 130 sérsniðnar útgáfur voru búnar til. Samfélagið bauð upp á sannarlega gagnlegar hugmyndir og, helsta af öllu, að vinna með verkefnum sem legendarískir foringjar eins og [Swizzy](https://github.com/Swizzy), [15432](https://github.com/15432), [Octal450](https://github.com/Octal450), [InvoxiPlayGames](https://github.com/InvoxiPlayGames) og fleiri hafa lagt sitt af mörkum, er tilfinning sem ég get ekki sett orð á. Mér finnst ég vera svikinur meðal risanna.
+
+Að hafa lagt mitt "korn af sandi" til Xbox 360-senunnar er eitthvað sem ég hafði aldrei haldið að ég myndi gera. Og hér erum við. Ef þú vilt prófa [XeLL Theme Customizer](https://xell.barrenechea.cl), þá endilega! Ég vona að þér líki það.

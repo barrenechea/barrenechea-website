@@ -1,0 +1,76 @@
+---
+title: XeLL, oh mio caro XeLL
+description: 'Tra giganti: Il mio contributo alla leggendaria scena di Xbox 360 con XeLL Theme Customizer.'
+pubDate: 2025-03-19T23:27:00Z
+link: https://xell.barrenechea.cl
+img: ~/assets/images/post-xell.png
+imgAlt: Schermata di XeLL Reloaded con variazioni di colore
+translatedBy: o3-mini
+checksum: 578ed2b211290d35b536172629d094779910942d65d14de748302f8d0103f700
+---
+
+import XeLLReloaded from '~/assets/images/xell-reloaded.jpg';
+import XellCustomizer from '~/assets/images/xell-theme-customizer.png';
+import { Image } from 'astro:assets';
+
+Non è un segreto che ho un affetto particolare per la Xbox 360 (potete leggere di più sulla mia relazione con essa in [questo post](/it/posts/ades-wii-x360/)).
+Sbloccare queste console è stato sostanzialmente il mio primo lavoro e fonte di reddito, permettendomi di esercitare continuamente le mie abilità con un saldatore.
+Smontare la scocca, togliere le viti e “fare il mio” era qualcosa di naturale. Mi divertivo. È una parte molto importante di ciò che è stata la mia adolescenza.
+
+Poi, naturalmente, ho continuato la mia vita. Ho iniziato a studiare all'università e mi sono spostato verso altre opportunità di guadagno che richiedevano meno tempo e impegno, per potermi concentrare sui miei studi.
+
+Tuttavia, c'è un'immagine di quell'epoca che ricordo con molto affetto:
+
+<div align="center">
+  <Image
+    src={XeLLReloaded}
+    alt="Immagine di XeLL Reloaded in esecuzione su una Xbox 360"
+    format="webp"
+  />
+  <p class="italic">XeLL Reloaded in esecuzione su una Xbox 360</p>
+</div>
+
+Vedere quella schermata significava diverse cose: che la console funzionava ancora, che i punti saldati erano perfetti (ero solito essere orgoglioso di quanto risultasse bella la mia saldatura), e, soprattutto, ero a pochi secondi dall'ottenere informazioni critiche per distruggere completamente i meccanismi di sicurezza che Microsoft aveva implementato.
+
+Vedere quella schermata era una costante praticamente quotidiana, console dopo console, cliente dopo cliente. Un elisir di soddisfazione.
+
+Ebbene, col passare del tempo le innovazioni in questo "mondino" diventavano sempre più rare. Sebbene siano avvenuti grandi traguardi (per esempio, il RGH 3 del 2021 grazie al grande [15432](https://github.com/15432)), apparentemente non c'era molto altro da fare. Le console Winchester sono sempre state intoccabili, ma in particolare non mi interessavano. Le Trinity, a mio avviso, rappresentavano Microsoft al suo apice. Dalla Corona in poi le vedo come riduzioni dei costi nei processi produttivi.
+
+## E cosa è successo nel 2025?
+
+Il 3 marzo, Grimdoomer è apparso con [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate) e ha realizzato ciò che sembrava impossibile: un exploit per **tutte** le revisioni della Xbox 360 (incluso la Winchester). Che richiede solo una chiavetta USB, senza saldature. Genialità nella sua forma più pura.
+
+Anche se il meccanismo è piuttosto instabile al giorno d'oggi, con una percentuale di successo relativamente bassa (e la comunità continua a raccomandare RGH per una buona esperienza), è un traguardo che la comunità non ha ignorato.
+
+E questo ha portato un'ondata di nostalgia. E con la nostalgia, vengono le idee. Ho visto su Reddit [questo post](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/) con un XeLL modificato con il logo degli Avenged Sevenfold, e mi sono detto "Sono un ingegnere informatico, ora capisco cose che prima non comprendevo. Come funziona realmente XeLL?". E dopo non più di due ore di sperimentazione, avevo già il mio XeLL modificato.
+
+<div align="center">
+  <p class="italic">"E se creassi un'applicazione web in modo che chiunque possa farlo?"</p>
+</div>
+
+E naturalmente non mi sono fermato lì. [XeLL](https://github.com/barrenechea/xell-reloaded) viene costruito con [LibXenon](https://github.com/barrenechea/libxenon) come libreria base, e quest'ultima era piuttosto obsoleta per quanto riguardava i componenti che la componevano. Sono ossessionato dall'aggiornamento del software, e non potevo lasciarmi sfuggire l'opportunità di farlo.
+
+Aggiornare zlib, bzip2, freetype e libpng? Fatto. Aggiornare newlib e binutils e rinnovare le patch necessarie? Fatto. Aggiornare GCC?
+
+Dannato GCC. Non riesco ad aggiornare GCC. Non riesco ad aggiornare GCC perché ad un certo punto hanno introdotto una modifica che, nonostante l'aggiornamento delle patch necessarie, causava il mancato avvio di [XeLL](https://github.com/barrenechea/xell-reloaded) (compilava, ma non veniva eseguito).
+Naturalmente ho trovato il problema: il commit [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) ha introdotto flag_cunroll_grow_size e, disattivando tale "ottimizzazione", [XeLL](https://github.com/barrenechea/xell-reloaded) tornava a funzionare.
+Certo, questo dopo una settimana di sofferenza, compilando commit dopo commit fino a trovare l'errore. Una volta identificato il problema, sono riuscito ad aggiornare GCC alla versione 13.3.0.
+
+E con ciò pronto, e dopo aver integrato alcune migliorie da [15432](https://github.com/15432) per includere il supporto di scrittura alle console eMMC, ho potuto iniziare a sviluppare l'applicazione web per [XeLL](https://github.com/barrenechea/xell-reloaded). Ed eccoci qui.
+
+## XeLL Theme Customizer
+
+È un insieme di componenti che funzionano in armonia: [LibXenon](https://github.com/barrenechea/libxenon) e tutta la sua catena di strumenti per poter costruire [XeLL](https://github.com/barrenechea/xell-reloaded), [XeLL Customizer](https://github.com/barrenechea/xell-customizer) come applicazione web, e [XeLL Customizer API](https://github.com/barrenechea/xell-customizer-api) come intermediario tra l'applicazione web e GitHub Actions per avviare pipeline di compilazione basate sui parametri scelti dall'utente.
+
+<div align="center">
+  <Image src={XellCustomizer} alt="Schermata di XeLL Theme Customizer" format="webp" />
+</div>
+
+Con la mia ossessione, naturalmente sono riuscito a emulare la grafica di [XeLL](https://github.com/barrenechea/xell-reloaded) in termini di margini e ad usare esattamente lo stesso font che [LibXenon](https://github.com/barrenechea/libxenon) fornisce da anni (IBM VGA 8x16 per i curiosi).
+Dopo averla ultimata, ho deciso di pubblicarla su Reddit in [questo post](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/).
+
+Non passarono nemmeno 5 minuti e gli utenti iniziarono già a trovare bug che ingenuamente non mi aspettavo. Ho realizzato alcune patch temporanee, e dopo aver passato la notte, avevo una versione stabile.
+
+La ricezione da parte della comunità è stata davvero incredibile. Più di 10 mila visite in meno di 24 ore, e più di 130 compilazioni personalizzate generate. Idee da parte della comunità che sono genuinamente utili, e soprattutto, lavorare con cose a cui hanno contribuito idoli come [Swizzy](https://github.com/Swizzy), [15432](https://github.com/15432), [Octal450](https://github.com/Octal450) e [InvoxiPlayGames](https://github.com/InvoxiPlayGames) è una sensazione che non posso descrivere a parole. Mi sento come un impostore che cammina tra giganti.
+
+Aver dato il mio "grano di sabbia" alla scena della Xbox 360 è qualcosa che non avrei mai pensato di fare. Ed eccoci qui. Se volete provare [XeLL Theme Customizer](https://xell.barrenechea.cl), andate pure! Spero vi piaccia.

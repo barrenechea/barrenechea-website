@@ -1,0 +1,74 @@
+---
+title: XeLL، يا عزيزي XeLL
+description: 'بين العمالقة: مساهمتي في ساحة Xbox 360 الأسطورية مع XeLL Theme Customizer.'
+pubDate: 2025-03-19T23:27:00Z
+link: https://xell.barrenechea.cl
+img: ~/assets/images/post-xell.png
+imgAlt: لقطة شاشة لـ XeLL Reloaded مع اختلافات لونية
+translatedBy: o3-mini
+checksum: c759422884d7978bd3d8803a1585a8a3a93bb79e9f0f145e777ea6ce01be1fbb
+---
+
+import XeLLReloaded from '~/assets/images/xell-reloaded.jpg';
+import XellCustomizer from '~/assets/images/xell-theme-customizer.png';
+import { Image } from 'astro:assets';
+
+ليس سرا أن لدي ولع خاص بـ Xbox 360 (يمكنك قراءة المزيد عن علاقتي به في [هذا المنشور](/ar/posts/ades-wii-x360/)).
+كان فتح هذه الأجهزة عملي الأول ومصدر دخلي، مما أتاح لي صقل مهارات اللحام باستمرار.
+تفكيك الغلاف، إزالة البراغي، والقيام بما أحببت كان أمرًا طبيعيًا بالنسبة لي. لقد استمتعت بذلك، وكان جزءًا مهمًا من سنوات مراهقتي.
+
+ثم، بالطبع، تابعت حياتي. التحقت بالجامعة وتحولت إلى فرص دخل أخرى تتطلب وقتًا وجهدًا أقل، لأتمكن من التركيز على دراستي.
+
+ومع ذلك، هناك صورة من ذلك الزمن أتذكرها بحنين بالغ:
+
+<div align="center">
+  <Image src={XeLLReloaded} alt="صورة لـ XeLL Reloaded يعمل على Xbox 360" format="webp" />
+  <p class="italic">XeLL Reloaded يعمل على Xbox 360</p>
+</div>
+
+كانت رؤية تلك الشاشة تعني أشياء عدة: أن الجهاز ما زال يعمل، وأن وصلات اللحام كانت مثالية (كنت أفخر بمدى أناقة عملي في اللحام)، والأهم من ذلك، أنني كنت على بُعد ثوانٍ من الحصول على معلومات حرجة لتجاوز آليات الحماية التي نفذتها مايكروسوفت.
+
+أصبح رؤية تلك الشاشة طقسًا يوميًا تقريبًا، جهازًا تلو الآخر، وعميلًا تلو الآخر. لقد كانت بمثابة إكسير للرضا.
+
+ومع مرور الوقت، أصبحت الابتكارات في هذا العالم الصغير نادرة للغاية. بينما حدثت إنجازات كبرى (على سبيل المثال، RGH 3 في عام 2021 بواسطة الرائع [15432](https://github.com/15432))، بدا أنه لم يتبقَ الكثير مما يمكن القيام به. كانت أجهزة Winchester دائمًا بعيدة عن المتناول، لكنني لم أكن مهتمًا بها بشكل خاص. في رأيي، كانت أجهزة Trinity تمثل أفضل ما قدمته مايكروسوفت. ابتداءً من Corona فصاعدًا، أراها مجرد وسيلة لتقليص التكاليف في عملية التصنيع.
+
+## وماذا حدث في عام 2025؟
+
+في الثالث من مارس، ظهر Grimdoomer مع [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate) وحقق ما كان يبدو مستحيلاً يومًا: ثغرة لجميع إصدارات Xbox 360 (بما في ذلك Winchester). يتطلب الأمر فقط ذاكرة USB، دون الحاجة إلى أي لحام. عبقرية خالصة.
+
+على الرغم من أن الآلية أصبحت غير مستقرة هذه الأيام، مع معدل نجاح منخفض نسبيًا (ولا تزال التوصيات تدعو لاستخدام RGH للحصول على تجربة أفضل)، إلا أنها كانت مرحلة حاسمة لا يمكن للمجتمع تجاهلها.
+
+وأدى ذلك إلى موجة من الحنين. ومع الحنين، بدأت الأفكار تتدفق. رأيت [هذا المنشور](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/) على Reddit يعرض XeLL معدلًا مع شعار Avenged Sevenfold، وفكرت: "أنا مهندس حاسوب — الآن أفهم أشياءً لم أكن أفهمها من قبل. كيف يعمل XeLL حقًا؟" وبعد ما لا يتجاوز ساعتين من العبث والتجريب، حصلت على نسختي المعدلة الخاصة من XeLL.
+
+<div align="center">
+  <p class="italic">"ماذا لو أنشأت تطبيق ويب يمكن لأي شخص القيام بذلك؟"</p>
+</div>
+
+وبالطبع لم أتوقف عند هذا الحد. يُبنى [XeLL](https://github.com/barrenechea/xell-reloaded) باستخدام [LibXenon](https://github.com/barrenechea/libxenon) كأساس للمكتبة، وكانت الأخيرة قديمة نوعًا ما من حيث مكوناتها. أنا مهووس بتحديث البرامج، ولم أستطع تفويت الفرصة للقيام بذلك.
+
+تحديث zlib و bzip2 و freetype و libpng؟ تم.
+تحديث newlib و binutils وتجديد التصحيحات الضرورية؟ تم.
+تحديث GCC؟
+
+تبا لـ GCC. لم أستطع تحديث GCC، فلم أستطع تحديثه لأنه في مرحلة ما أدخلوا تغييرًا، وحتى بعد تحديث التصحيحات اللازمة تسبب ذلك في أن لا يُقلع [XeLL](https://github.com/barrenechea/xell-reloaded) (رغم تجميعه، لم يعمل).
+وبالطبع وجدت المشكلة؛ فقد أدخل commit [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) الخيار `flag_cunroll_grow_size`، وبإيقاف هذا "التحسين"، عاد [XeLL](https://github.com/barrenechea/xell-reloaded) للعمل مرة أخرى.
+استغرق الأمر أسبوعًا من المعاناة وتجميع commit تلو الآخر حتى وجدت المشكلة. وبمجرد تحديدها، تمكنت من تحديث GCC إلى الإصدار 13.3.0.
+
+ومع ذلك جاهزًا، ومع دمج بعض التحسينات من [15432](https://github.com/15432) لإضافة دعم للكتابة على eMMC في أجهزة التحكم، تمكنت من بدء تطوير تطبيق الويب لـ [XeLL](https://github.com/barrenechea/xell-reloaded). وها نحن ذا.
+
+## مخصص ثيم XeLL
+
+إنها مجموعة من المكونات التي تعمل بتناغم: [LibXenon](https://github.com/barrenechea/libxenon) وسلسلة أدواته الكاملة لبناء [XeLL](https://github.com/barrenechea/xell-reloaded)، و[XeLL Customizer](https://github.com/barrenechea/xell-customizer) كتطبيق ويب، و[XeLL Customizer API](https://github.com/barrenechea/xell-customizer-api) الذي يعمل كوسيط بين تطبيق الويب وإجراءات GitHub لتحفيز خطوط البناء بناءً على المعايير التي يختارها المستخدم.
+
+<div align="center">
+  <Image src={XellCustomizer} alt="لقطة شاشة لمخصص ثيم XeLL" format="webp" />
+</div>
+
+بفضل اهتمامي المهووس بالتفاصيل، بالطبع تمكنت من محاكاة مظهر [XeLL](https://github.com/barrenechea/xell-reloaded) من حيث الهوامش واستخدمت نفس الطباعة التي قدمها [LibXenon](https://github.com/barrenechea/libxenon) لسنوات (IBM VGA 8x16 للفضوليين).
+بمجرد الانتهاء، قررت نشره على Reddit في [هذا المنشور](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/).
+
+استغرق الأمر أقل من خمس دقائق ليبدأ المستخدمون في العثور على أخطاء لم أتوقعها. قمت بإجراء بعض التصحيحات المؤقتة، وبعد جهد استمر طوال الليل، حصلت على نسخة مستقرة.
+
+كان استقبال المجتمع مذهلًا حقًا. أكثر من 10,000 زيارة في أقل من 24 ساعة، وأكثر من 130 بناءً مخصصًا تم توليدها. قدمت المجتمع أفكارًا مفيدة حقًا، وفوق كل شيء، العمل على مشاريع ساهم فيها أساطير مثل [Swizzy](https://github.com/Swizzy)، [15432](https://github.com/15432)، [Octal450](https://github.com/Octal450)، [InvoxiPlayGames](https://github.com/InvoxiPlayGames) وغيرهم هو شعور لا أستطيع التعبير عنه بالكلمات. أشعر وكأنني محتال بين العمالقة.
+
+المساهمة بـ "حبة رمل" في ساحة Xbox 360 هو أمر لم أتخيل يومًا أن أفعله. وها نحن ذا. إذا كنت ترغب في تجربة [XeLL Theme Customizer](https://xell.barrenechea.cl)، تفضل! آمل أن ينال إعجابك.
