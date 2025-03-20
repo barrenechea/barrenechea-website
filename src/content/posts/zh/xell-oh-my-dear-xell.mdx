@@ -1,0 +1,67 @@
+---
+title: XeLL，我亲爱的XeLL
+description: '在巨人之间：我通过 XeLL 主题定制器为传奇 Xbox 360 场景做出的贡献。'
+pubDate: 2025-03-19T23:27:00Z
+link: https://xell.barrenechea.cl
+img: ~/assets/images/post-xell.png
+imgAlt: XeLL Reloaded 截图，展示了不同的颜色变化
+translatedBy: o3-mini
+checksum: c759422884d7978bd3d8803a1585a8a3a93bb79e9f0f145e777ea6ce01be1fbb
+---
+
+import XeLLReloaded from '~/assets/images/xell-reloaded.jpg';
+import XellCustomizer from '~/assets/images/xell-theme-customizer.png';
+import { Image } from 'astro:assets';
+
+众所周知，我对 Xbox 360 怀有特殊的感情（你可以在 [这篇文章](/zh/posts/ades-wii-x360/) 中了解我与它的关系）。
+
+解锁这些游戏机基本上是我的第一份工作和收入来源，使我能够不断磨练焊接技巧。拆解外壳、卸下螺丝，再进行 “我的操作” 都变得自然而然。我很喜欢那段时光，那是我青少年时期非常重要的一部分。
+
+后来，当然，我继续前行了。我上了大学，并转向那些需要较少时间和精力却能赚取收入的工作，这样我就能专注于学业。
+
+然而，有一张来自那个时期的照片让我记忆犹新：
+
+<div align="center">
+  <Image src={XeLLReloaded} alt="XeLL Reloaded 在 Xbox 360 上运行的截图" format="webp" />
+  <p class="italic">XeLL Reloaded 在 Xbox 360 上运行</p>
+</div>
+
+看到那个画面意味着很多事情：这表明游戏机仍然正常运行、焊接接点完美无缺（我曾为自己整洁的焊接工艺感到骄傲），更重要的是，我距离获取能够完全破解微软所实施安全机制的关键信息只差几秒钟。几乎每天，我都会反复看到那个画面——一个又一个游戏机，一个又一个客户。这是一种满足感的灵丹妙药。
+
+随着时间的推移，这个小世界中的创新越来越稀缺。虽然重大突破确实出现过（例如 2021 年由伟大的 [15432](https://github.com/15432) 带来的 RGH 3），但似乎已经没有太多事情可做了。Winchester 系列游戏机始终无法攻克，但我对它们并不特别感兴趣。在我看来，Trinity 系列代表了微软的巅峰之作；而从 Corona 系列开始，我认为它们更多是制造工艺中削减成本的措施。
+
+## 2025 年发生了什么？
+
+3 月 3 日，Grimdoomer 发布了 [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate)，实现了曾被认为不可能的突破：针对 **所有** 版本的 Xbox 360（包括 Winchester）的漏洞利用。它只需要一个 USB 闪存盘，无需焊接。纯粹的天才之作。
+
+尽管如今这一机制相当不稳定，成功率也相对较低（社区仍然建议使用 RGH 以获得更好的体验），但它是一个不容忽视的里程碑。
+
+这唤起了一股怀旧的浪潮。随着怀旧情绪的涌现，灵感开始纷至沓来。我在 Reddit 上看到了一篇展示了一款带有 Avenged Sevenfold 标志的改装 XeLL 的 [帖子](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/)，我心想：“我是个计算机工程师——现在我终于能理解之前不明白的事情了。XeLL 究竟是如何运作的？”在不超过两个小时的折腾之后，我就拥有了自己改装的 XeLL。
+
+<div align="center">
+  <p class="italic">“如果我创建一个网页应用，让每个人都能这么做怎么样？”</p>
+</div>
+
+当然，我并没有就此止步。[XeLL](https://github.com/barrenechea/xell-reloaded) 是基于 [LibXenon](https://github.com/barrenechea/libxenon) 构建的，而后者的组件相当陈旧。我对软件更新几近痴迷，当然不会错过这个机会。
+
+更新 zlib、bzip2、freetype 和 libpng？完成。更新 newlib 和 binutils 并更新必要的补丁？完成。更新 GCC？
+
+该死的 GCC。我无法更新 GCC，因为在某个时刻，他们引入了一个改动，即便应用了必要的补丁，也导致 [XeLL](https://github.com/barrenechea/xell-reloaded) 无法启动（编译成功，但无法运行）。当然，我找到了问题所在；在提交 [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) 中引入了 flag_cunroll_grow_size，通过禁用这个 “优化”，[XeLL](https://github.com/barrenechea/xell-reloaded) 又能正常工作。那是一番历时一周、不断编译提交直至找到问题的痛苦过程之后。一旦确定问题所在，我成功地将 GCC 更新到了 13.3.0。
+
+在这一切准备就绪后，再加上融入了来自 [15432](https://github.com/15432) 的一些改进以支持写入游戏机的 eMMC，我便开始开发 [XeLL](https://github.com/barrenechea/xell-reloaded) 的网页应用。于是我们就来了。
+
+## XeLL 主题定制器
+
+这是一套协同运作的组件：[LibXenon](https://github.com/barrenechea/libxenon) 及其完整工具链用于构建 [XeLL](https://github.com/barrenechea/xell-reloaded)、作为网页应用的 [XeLL 主题定制器](https://github.com/barrenechea/xell-customizer)，以及充当网页应用与 GitHub Actions 之间中介的 [XeLL 主题定制器 API](https://github.com/barrenechea/xell-customizer-api)，以根据用户选择的参数触发构建流水线。
+
+<div align="center">
+  <Image src={XellCustomizer} alt="XeLL 主题定制器的截图" format="webp" />
+</div>
+
+凭借我对细节近乎痴迷的追求，当然我设法在边距上模拟出 [XeLL](https://github.com/barrenechea/xell-reloaded) 的外观，并使用了 [LibXenon](https://github.com/barrenechea/libxenon) 多年来提供的完全相同的字体（出于好奇，它是 IBM VGA 8x16）。完成后，我决定在 Reddit 的 [这篇帖子](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/) 中发布它。
+
+仅用了不到五分钟，用户们就开始发现一些我未曾预料到的漏洞。我进行了些临时修补，经过一夜的努力，终于得到了一个稳定的版本。
+
+社区的反响真是令人难以置信。不足 24 小时内访问量超过 10,000 次，并生成了超过 130 个自定义构建。社区提供了真正有用的建议，最重要的是，与像 [Swizzy](https://github.com/Swizzy)、[15432](https://github.com/15432)、[Octal450](https://github.com/Octal450)、[InvoxiPlayGames](https://github.com/InvoxiPlayGames) 等传奇人物所贡献的项目共事的感觉，难以用言语表达。我仿佛在巨人之间显得格外渺小。
+
+能为 Xbox 360 领域贡献自己的一“份沙粒”，是我从未想过会发生的事。而事实如此。如果你也想试试 [XeLL 主题定制器](https://xell.barrenechea.cl)，尽管试试吧！希望你会喜欢它。
