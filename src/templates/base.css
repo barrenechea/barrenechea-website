@@ -2,15 +2,23 @@
 @import 'github-fork-ribbon-css/gh-fork-ribbon.css' layer(base);
 
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
-@config '../../tailwind.config.ts';
+@theme {
+  --font-sans:
+    'Work Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
 
-@layer base {
-  div[class*='prose'] > * > a,
-  div[class*='prose'] > * > * > a,
-  div[class*='prose'] > * > * > * > a {
-    @apply text-amber-400 no-underline hover:underline;
-  }
+/* Custom @tailwindcss/typography override: Yellow links */
+.prose a {
+  @apply text-amber-400 no-underline hover:underline;
+}
+
+/* Custom @tailwindcss/typography override: Remove code block markers */
+.prose code::before,
+.prose code::after {
+  content: '' !important;
 }
 
 .github-fork-ribbon:before {

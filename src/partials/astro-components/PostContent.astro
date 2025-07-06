@@ -11,7 +11,7 @@ const { post, translatedBy } = Astro.props;
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
-  <div class="aspect-h-2 aspect-w-3 rounded-lg object-cover object-center">
+  <div class="aspect-3/2 rounded-lg object-cover object-center">
     {
       post.data.img.format === 'svg' ? (
         <img src={post.data.img.src} alt={post.data.imgAlt} />
