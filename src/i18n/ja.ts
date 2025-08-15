@@ -18,7 +18,9 @@ export const ja: OptionalTranslations = {
     '私は概念実証、驚くほど高速な新技術、そして機械学習モデルの魅力的な領域を探索しています。',
   'hero.currentEmployment': '現在、私は',
   'hero.currentTeam': 'のDevOpsチームで働いています',
-  'hero.avatar.alt': 'を使用したAI生成アバター',
+  'hero.lookingFor': '現在、新しい仕事の機会を探しています',
+  'hero.noEmployment': '現在、私は就職していません',
+  'hero.avatar.alt': 'AIによって生成されたアバター（使用：',
   'hero.avatar.with': 'と',
 
   'home.recentProjects': '最近の',

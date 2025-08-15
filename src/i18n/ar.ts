@@ -18,6 +18,8 @@ export const ar: OptionalTranslations = {
     'يمكنك أن تجدني ألعب مع الاختبارات التجريبية، التقنيات الجديدة واستكشاف العالم المثير لنماذج التعلم الآلي.',
   'hero.currentEmployment': 'أعمل حاليا في',
   'hero.currentTeam': 'مع فريق DevOps',
+  'hero.lookingFor': 'أبحث حاليا عن فرص عمل جديدة',
+  'hero.noEmployment': 'أنا حاليا غير موظف',
   'hero.avatar.alt': 'صورة رمزية مولدة بواسطة',
   'hero.avatar.with': 'باستخدام',
 

@@ -18,7 +18,9 @@ export const ru: OptionalTranslations = {
     'Вы можете найти меня, играющим с концепциями, новейшими технологиями и изучением увлекательного мира моделей машинного обучения.',
   'hero.currentEmployment': 'В настоящее время я работаю в компании',
   'hero.currentTeam': 'в команде DevOps',
-  'hero.avatar.alt': 'Аватар, созданный с помощью ИИ',
+  'hero.lookingFor': 'В настоящее время я ищу новые рабочие возможности',
+  'hero.noEmployment': 'В настоящее время я не трудоустроен',
+  'hero.avatar.alt': 'Аватар, сгенерированный ИИ с помощью',
   'hero.avatar.with': 'с',
 
   'home.recentProjects': 'Недавние',

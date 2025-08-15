@@ -16,6 +16,8 @@ export const zh: OptionalTranslations = {
   'hero.doing': '你可以找到我在玩概念验证，快速的新技术，以及探索机器学习模型的迷人领域。',
   'hero.currentEmployment': '我目前在',
   'hero.currentTeam': '与 DevOps 团队一起工作',
+  'hero.lookingFor': '我目前正在寻找新的工作机会',
+  'hero.noEmployment': '我目前没有工作',
   'hero.avatar.alt': '使用 AI 生成的头像',
   'hero.avatar.with': '与',
 
