@@ -1,5 +1,6 @@
 // @ts-check
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginAstro from 'eslint-plugin-astro';
 import prettier from 'eslint-plugin-prettier';
@@ -10,7 +11,7 @@ import tseslint from 'typescript-eslint';
 const typescriptEslint = tseslint.plugin;
 const tsParser = tseslint.parser;
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
       '**/node_modules',
