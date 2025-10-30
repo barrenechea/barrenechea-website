@@ -8,17 +8,12 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import unusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
 
-const typescriptEslint = tseslint.plugin;
-const tsParser = tseslint.parser;
-
-export default defineConfig(
+export default defineConfig([
+  // Global ignores
   {
     ignores: [
       '**/node_modules',
       '**/dist',
-      'dist/**/*',
-      '**/node_modules',
-      '**/target',
       '**/.vercel',
       '**/.astro',
       '**/.github',
@@ -26,21 +21,21 @@ export default defineConfig(
       'src/env.d.ts',
     ],
   },
+
+  // Base configs
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  eslintConfigPrettier,
+
+  // TypeScript and general rules
   {
     languageOptions: {
-      parser: tsParser,
       parserOptions: {
-        project: ['./tsconfig.json'],
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
-      '@typescript-eslint': typescriptEslint,
       'unused-imports': unusedImports,
       'simple-import-sort': simpleImportSort,
       prettier: prettier,
@@ -62,16 +57,15 @@ export default defineConfig(
     },
   },
 
-  // Astro
+  // Prettier config (turns off conflicting rules)
+  eslintConfigPrettier,
+
+  // Astro files
   ...eslintPluginAstro.configs.recommended,
 
-  // Remove some safety rules around any for various reasons
+  // Relax type-safety rules for specific files
   {
-    files: [
-      '**/*.astro', // Disabled because eslint-plugin-astro doesn't type Astro.props correctly in some contexts, so a bunch of things ends up being any
-      'api/add/script.js', // Script is in JSDoc and interact with an API, some things are any because I can't be bothered
-      'scripts/**/*.ts', // Interact with untyped APIs a bunch, can't be bothered
-    ],
+    files: ['**/*.astro', 'api/add/script.js', 'scripts/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
@@ -81,15 +75,16 @@ export default defineConfig(
     },
   },
 
-  // Disable typed rules for scripts inside Astro files
+  // Disable type-checking for script tags in Astro files
   // https://github.com/ota-meshi/eslint-plugin-astro/issues/240
   {
     files: ['**/*.astro/*.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: null,
-      },
-    },
     ...tseslint.configs.disableTypeChecked,
-  }
-);
+  },
+
+  // Disable type-checking for config files
+  {
+    files: ['*.config.js', '*.config.mjs', '*.config.cjs'],
+    ...tseslint.configs.disableTypeChecked,
+  },
+]);
