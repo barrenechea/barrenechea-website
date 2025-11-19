@@ -66,7 +66,7 @@ const filteredTitle = ogOverride ?? title.replace(' - Barrenechea', '');
     <ClientRouter />
   </head>
 
-  <body class="bg-zinc-900 font-sans text-gray-100">
+  <body class="bg-background text-foreground font-sans">
     <a
       class=`github-fork-ribbon ${langDirection === 'rtl' ? 'left-top' : ''} hidden lg:block`
       href={AppConfig.repo}

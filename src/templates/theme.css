@@ -1,0 +1,67 @@
+@layer base {
+  :root {
+    --background: var(--color-zinc-900);
+    --foreground: var(--color-gray-100);
+
+    --muted: var(--color-zinc-500);
+    --muted-foreground: var(--color-zinc-400);
+
+    --popover: var(--color-zinc-900);
+    --popover-foreground: var(--color-gray-100);
+
+    --card: var(--color-zinc-900);
+    --card-foreground: var(--color-gray-100);
+
+    --border: var(--color-zinc-800);
+    --input: var(--color-zinc-800);
+
+    --primary: var(--color-gray-100);
+    --primary-foreground: var(--color-zinc-900);
+
+    --secondary: var(--color-zinc-800);
+    --secondary-foreground: var(--color-gray-100);
+
+    --accent: var(--color-zinc-800);
+    --accent-foreground: var(--color-gray-100);
+
+    --destructive: var(--color-red-500);
+    --destructive-foreground: var(--color-white);
+
+    --link: var(--color-amber-400);
+
+    --ring: var(--color-zinc-600);
+  }
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-link: var(--link);
+
+  --color-ring: var(--ring);
+}

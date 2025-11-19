@@ -19,7 +19,7 @@ const { name, description, link, img, imgAlt } = Astro.props;
   target="_self"
 >
   <div
-    class="flex flex-col items-center gap-x-8 rounded-md bg-zinc-800 p-3 md:flex-row md:rounded-l-full md:rounded-br-full"
+    class="bg-secondary flex flex-col items-center gap-x-8 rounded-md p-3 md:flex-row md:rounded-l-full md:rounded-br-full"
   >
     <div class="shrink-0">
       <div class="size-36">
@@ -30,7 +30,7 @@ const { name, description, link, img, imgAlt } = Astro.props;
                 <img
                   src={img.src}
                   alt={imgAlt}
-                  class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+                  class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
                 />
               ) : (
                 <Image
@@ -39,7 +39,7 @@ const { name, description, link, img, imgAlt } = Astro.props;
                   format="webp"
                   width={300}
                   height={300}
-                  class="size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+                  class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
                 />
               )
             }
@@ -57,7 +57,7 @@ const { name, description, link, img, imgAlt } = Astro.props;
         </div>
       </div>
 
-      <p class="mt-3 text-gray-400">{description}</p>
+      <p class="text-muted-foreground mt-3">{description}</p>
     </div>
   </div>
 </a>

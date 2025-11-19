@@ -43,10 +43,14 @@ const t = useTranslations(lang);
         height={400}
         loading="eager"
       />
-      <p class="pt-2 text-center text-xs text-zinc-500 italic">
-        <a class="text-zinc-400 hover:text-zinc-300" href={avatar.tool.url}>{avatar.tool.name}</a>
+      <p class="text-muted pt-2 text-center text-xs italic">
+        <a class="text-muted-foreground hover:text-foreground" href={avatar.tool.url}
+          >{avatar.tool.name}</a
+        >
         {t('hero.avatar.with')}
-        <a class="text-zinc-400 hover:text-zinc-300" href={avatar.model.url}>{avatar.model.name}</a>
+        <a class="text-muted-foreground hover:text-foreground" href={avatar.model.url}
+          >{avatar.model.name}</a
+        >
       </p>
     </Fragment>
     <Fragment slot="socialButtons">

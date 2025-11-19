@@ -2,6 +2,7 @@
 @import 'github-fork-ribbon-css/gh-fork-ribbon.css' layer(base);
 
 @import 'tailwindcss';
+@import './theme.css';
 @plugin '@tailwindcss/typography';
 
 @theme {
@@ -12,7 +13,7 @@
 
 /* Custom @tailwindcss/typography override: Yellow links */
 .prose a {
-  @apply text-amber-400 no-underline hover:underline;
+  @apply text-link no-underline hover:underline;
 }
 
 /* Custom @tailwindcss/typography override: Remove code block markers */
