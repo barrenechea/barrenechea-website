@@ -19,6 +19,8 @@ const formattedDate = `${t('projects.releasedOn')} ${formatDate(project.data.pub
 const translatedBy = project.data.translatedBy
   ? `${t('blog.translatedBy')} ${project.data.translatedBy}`
   : '';
+
+const [_lang, ...slug] = project.slug.split('/');
 ---
 
 <Section>
@@ -28,7 +30,7 @@ const translatedBy = project.data.translatedBy
     <div class="px-6">
       <div class="flex flex-wrap justify-center">
         <div class="flex w-full justify-center">
-          <div class="relative">
+          <div class="relative" transition:name={`image-${slug.join('/')}`}>
             {
               project.data.img.format === 'svg' ? (
                 <img
@@ -52,7 +54,10 @@ const translatedBy = project.data.translatedBy
         <div class="mt-16"></div>
       </div>
       <div class="mt-2 text-center">
-        <h3 class="mb-1 text-2xl leading-normal font-bold text-zinc-200">
+        <h3
+          class="mb-1 text-2xl leading-normal font-bold text-zinc-200"
+          transition:name={`title-${slug.join('/')}`}
+        >
           {project.data.title}
         </h3>
         <div class="mt-0 mb-2 text-xs font-bold text-zinc-400 uppercase">
@@ -62,7 +67,10 @@ const translatedBy = project.data.translatedBy
       <div class="mt-6 border-t border-zinc-200 py-6 text-center">
         <div class="flex flex-wrap justify-center">
           <div class="w-full px-4">
-            <p class="mb-4 leading-relaxed font-light text-zinc-300">
+            <p
+              class="mb-4 leading-relaxed font-light text-zinc-300"
+              transition:name={`description-${slug.join('/')}`}
+            >
               {project.data.description}
             </p>
           </div>

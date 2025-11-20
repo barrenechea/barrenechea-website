@@ -19,9 +19,13 @@ const formattedDate = `${t('posts.by')} ${author} ${t('posts.on')} ${formatDate(
   post.data.pubDate,
   lang
 )}`;
+
+const [_lang, ...slug] = post.slug.split('/');
 ---
 
-<h1 class="text-center text-3xl font-bold">{post.data.title}</h1>
+<h1 class="text-center text-3xl font-bold" transition:name={`title-${slug.join('/')}`}>
+  {post.data.title}
+</h1>
 
 <div class="mt-2 text-center text-sm text-gray-400">
   {formattedDate}

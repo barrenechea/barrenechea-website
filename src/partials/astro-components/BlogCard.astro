@@ -21,7 +21,7 @@ const formattedDate = formatDate(instance.data.pubDate, lang);
   target="_self"
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">
-    <div class="aspect-3/2 bg-zinc-200">
+    <div class="aspect-3/2 bg-zinc-200" transition:name={`image-${slug.join('/')}`}>
       {
         instance.data.img.format === 'svg' ? (
           <img
@@ -43,7 +43,7 @@ const formattedDate = formatDate(instance.data.pubDate, lang);
     </div>
 
     <div class="px-3 pt-4 pb-6 text-center">
-      <h2 class="text-xl font-semibold">
+      <h2 class="text-xl font-semibold" transition:name={`title-${slug.join('/')}`}>
         {instance.data.title}
       </h2>
       <div class="mt-1 text-xs text-gray-400">{formattedDate}</div>
