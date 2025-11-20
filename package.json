@@ -23,7 +23,7 @@
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.5.9",
     "@astrojs/check": "^0.9.5",
-    "@astrojs/mdx": "^4.3.10",
+    "@astrojs/mdx": "^4.3.11",
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",
@@ -33,7 +33,7 @@
     "@iconify-icons/circle-flags": "^1.2.41",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
-    "astro": "^5.15.8",
+    "astro": "^5.15.9",
     "astro-og-canvas": "^0.7.2",
     "astro-robots-txt": "^1.0.0",
     "eslint": "9.39.1",
@@ -44,19 +44,19 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "github-fork-ribbon-css": "^0.2.3",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.6",
-    "openai": "^6.9.0",
+    "lint-staged": "^16.2.7",
+    "openai": "^6.9.1",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.17"
   },
-  "packageManager": "npm@11.6.2",
+  "packageManager": "npm@11.6.3",
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.47.0"
   }
 }
