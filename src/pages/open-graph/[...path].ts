@@ -48,7 +48,7 @@ uniqueLanguages.forEach((lang) => {
   };
 });
 
-export const { getStaticPaths, GET } = OGImageRoute({
+export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'path',
   pages,
   getImageOptions: (_, { data, lang }: (typeof pages)[string]): OGImageOptions => {
