@@ -1,72 +1,68 @@
 ---
 title: XeLL, oh my dear XeLL
-description: 'Among giants: My contribution to the legendary Xbox 360 scene with the XeLL Theme Customizer.'
+description: 'On the shoulders of giants: My contribution to the legendary Xbox 360 scene with XeLL Theme Customizer.'
 pubDate: 2025-03-19T23:27:00Z
 link: https://xell.barrenechea.cl
 img: ~/assets/images/post-xell.png
 imgAlt: Screenshot of XeLL Reloaded with color variations
-translatedBy: o3-mini
-checksum: 578ed2b211290d35b536172629d094779910942d65d14de748302f8d0103f700
+translatedBy: o4-mini
+checksum: 8e99dd36066087ff0375e61aec83ee54e250002077bcad695811e24c09cbd0c7
 ---
 
 import XeLLReloaded from '~/assets/images/xell-reloaded.jpg';
 import XellCustomizer from '~/assets/images/xell-theme-customizer.png';
 import { Image } from 'astro:assets';
 
-It’s no secret that I have a special affection for the Xbox 360 (you can read more about my relationship with it in [this post](/en/posts/ades-wii-x360/)).
-Unlocking these consoles was essentially my first job and source of income, allowing me to continuously hone my soldering skills.
-Taking apart the casing, removing the screws, and "doing my thing" came naturally. I enjoyed it. It was a very important part of my teenage years.
+It's no secret that I have a particular fondness for the Xbox 360 (you can read more about my relationship with it in [this post](/en/posts/ades-wii-x360/)).  
+Unlocking these consoles was essentially my first job and source of income, allowing me to continuously hone my soldering iron skills. Taking apart the case, removing the screws, and “doing my thing” was second nature. I enjoyed it. It was a very important part of my teenage years.
 
-Then, of course, I moved on with my life. I started university, and I shifted to other income opportunities that required less time and effort, so I could focus on my studies.
+Then, of course, I moved on with my life. I started university and shifted to other income opportunities that required less time and effort, so I could focus on my studies.
 
-However, there is one image from that time that I remember with great fondness:
+However, there’s one image from that time I remember with particular affection:
 
 <div align="center">
   <Image src={XeLLReloaded} alt="Image of XeLL Reloaded running on an Xbox 360" format="webp" />
   <p class="italic">XeLL Reloaded running on an Xbox 360</p>
 </div>
 
-Seeing that screen meant several things: that the console was still working, that the soldered joints were perfect (I used to take pride in how neat my soldering looked), and more importantly, that I was seconds away from obtaining critical information to completely defeat the security mechanisms that Microsoft had implemented.
+Seeing that screen meant several things: the console was still working, my solder joints were perfect (I used to take pride in how neat my soldering looked), and—most importantly—I was seconds away from grabbing critical information to completely dismantle the security mechanisms Microsoft had put in place.
 
-Seeing that screen was almost a daily ritual, console after console, client after client. It was an elixir of satisfaction.
+Watching that screen was a near-daily ritual, console after console, customer after customer. A true elixir of satisfaction.
 
-And over time, innovations within this little world became more and more scarce. While major milestones did occur (for instance, RGH 3 in 2021 by the great [15432](https://github.com/15432)), it seemed there wasn’t much left to do. The Winchester consoles were always untouchable, but I wasn’t particularly interested in them. In my opinion, the Trinity consoles represented Microsoft at its best. From the Corona onwards, I see them as cost-cutting measures in manufacturing processes.
+Over time, innovations in this “scene” became more and more scarce. While there have been major milestones (for example, the 2021 RGH 3 by the great [15432](https://github.com/15432)), it seemed there wasn’t much left to do. The Winchester consoles were always untouchable, but frankly they didn’t interest me. The Trinity revisions, in my opinion, were Microsoft at its best. From Corona onward, I saw it as cost-cutting in manufacturing processes.
 
-## And what happened in 2025?
+## What happened in 2025?
 
-On March 3rd, Grimdoomer emerged with [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate) and achieved what once seemed impossible: an exploit for **all** versions of the Xbox 360 (including Winchester). It only requires a USB memory stick, with no soldering needed. Pure genius.
+On March 3, Grimdoomer released [Xbox360BadUpdate](https://github.com/grimdoomer/Xbox360BadUpdate) and achieved what seemed impossible: an exploit for **all** Xbox 360 revisions (including Winchester) that only requires a USB stick—no soldering required. Pure genius.
 
-Although the mechanism is quite unstable nowadays, with a relatively low success rate (and the community still recommends RGH for a better experience), it was a milestone that the community could not ignore.
+While the method is still fairly unstable today, with a relatively low success rate (and the community still recommends RGH for a reliable experience), it’s a milestone no one could ignore.
 
-And that brought on a wave of nostalgia. And with nostalgia, ideas began to flow. I saw [this post](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/) on Reddit featuring a modified XeLL with the Avenged Sevenfold logo, and I thought, "I’m a computer engineer—now I understand things I didn’t before. How does XeLL really work?" After no more than two hours of tinkering, I had my own modified XeLL.
+And that sparked a wave of nostalgia. With nostalgia come ideas. I saw on Reddit [this post](https://www.reddit.com/r/360hacks/comments/1j2tuhq/custom_xell_my_friend_made_for_me/) featuring a modified XeLL with the Avenged Sevenfold logo, and thought, “I’m a computer engineer now—I understand things I didn’t before. How does XeLL really work?” Two hours of tinkering later, I had my own modified XeLL.
 
 <div align="center">
-  <p class="italic">"What if I create a web application so that anyone can do this?"</p>
+  <p class="italic">"What if I create a web application so anyone can do this?"</p>
 </div>
 
-And of course I didn’t stop there. [XeLL](https://github.com/barrenechea/xell-reloaded) is built with [LibXenon](https://github.com/barrenechea/libxenon) as its base library, and the latter was quite outdated in terms of its components. I’m obsessive about updating software, and I couldn’t pass up the opportunity to do so.
+And of course, I didn’t stop there. [XeLL](https://github.com/barrenechea/xell-reloaded) is built on [LibXenon](https://github.com/barrenechea/libxenon) as its base library, and the latter was quite outdated in terms of its components. I’m obsessive about updating software, and I couldn’t pass up the chance.
 
-Update zlib, bzip2, freetype, and libpng? Done. Update newlib and binutils and renew the necessary patches? Done. Update GCC?
+Update zlib, bzip2, freetype, and libpng? Done. Update newlib and binutils and refresh the necessary patches? Done. Update GCC?
 
-Damn GCC. I couldn’t update GCC. I couldn’t update GCC because at some point they introduced a change that, even after updating the necessary patches, caused [XeLL](https://github.com/barrenechea/xell-reloaded) not to launch (it compiled, but didn’t run).
-Of course I found the problem; the commit [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) introduced `flag_cunroll_grow_size`, and by disabling that "optimization," [XeLL](https://github.com/barrenechea/xell-reloaded) worked again.
-That was after a week of suffering, compiling commit after commit until I found the issue. Once the problem was identified, I managed to update GCC to 13.3.0.
+Damn GCC. I couldn’t update GCC. At some point they introduced a change that—even after adjusting the needed patches—caused [XeLL](https://github.com/barrenechea/xell-reloaded) to compile but not run. Of course I tracked down the issue: commit [60bd3f2](https://github.com/gcc-mirror/gcc/commit/60bd3f20baebeeddd60f8a2b85927e7da7c6016e) introduced `flag_cunroll_grow_size`, and by disabling that “optimization,” [XeLL](https://github.com/barrenechea/xell-reloaded) sprang back to life. That was after a week of suffering, compiling commit after commit until I found the culprit. Once identified, I managed to update GCC to 13.3.0.
 
-And with that ready, plus incorporating some improvements from [15432](https://github.com/15432) to add support for writing to consoles' eMMC, I was able to start developing the web application for [XeLL](https://github.com/barrenechea/xell-reloaded). And here we are.
+With that settled, and after pulling in some enhancements from [15432](https://github.com/15432) to add eMMC write support, I was ready to start developing the web app for [XeLL](https://github.com/barrenechea/xell-reloaded). And here we are.
 
 ## XeLL Theme Customizer
 
-It’s a set of pieces working in harmony: [LibXenon](https://github.com/barrenechea/libxenon) and its entire toolchain to build [XeLL](https://github.com/barrenechea/xell-reloaded), [XeLL Customizer](https://github.com/barrenechea/xell-customizer) as a web application, and [XeLL Customizer API](https://github.com/barrenechea/xell-customizer-api) acting as the intermediary between the web application and GitHub Actions to trigger build pipelines based on the parameters selected by the user.
+It’s a symphony of components: [LibXenon](https://github.com/barrenechea/libxenon) and its toolchain to build [XeLL](https://github.com/barrenechea/xell-reloaded), [XeLL Customizer](https://github.com/barrenechea/xell-customizer) as the web app, and [XeLL Customizer API](https://github.com/barrenechea/xell-customizer-api) as the intermediary between the web app and GitHub Actions to trigger build pipelines based on user-selected parameters.
 
 <div align="center">
   <Image src={XellCustomizer} alt="Screenshot of XeLL Theme Customizer" format="webp" />
 </div>
 
-With my obsessive attention to detail, of course I managed to emulate the look of [XeLL](https://github.com/barrenechea/xell-reloaded) in terms of margins and use exactly the same typography that [LibXenon](https://github.com/barrenechea/libxenon) has provided for years (IBM VGA 8x16 for the curious).
-Once finished, I decided to publish it on Reddit in [this post](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/).
+True to form, I emulated XeLL’s exact margins and used the same IBM VGA 8x16 font that [LibXenon](https://github.com/barrenechea/libxenon) has shipped for years. After wrapping it up, I shared it on Reddit in [this post](https://www.reddit.com/r/360hacks/comments/1jek0g9/xell_theme_customizer_make_it_your_own/).
 
-It took less than five minutes for users to start finding bugs I hadn’t anticipated. I made some temporary patches, and after an overnight effort, I had a stable version.
+Within five minutes, users were already finding bugs I hadn’t even anticipated. I shipped a few hotfixes, and by morning had a stable release.
 
-The reception from the community was truly incredible. Over 10,000 visits in less than 24 hours, and more than 130 custom builds generated. The community offered genuinely useful ideas, and above all, working with projects that legends like [Swizzy](https://github.com/Swizzy), [15432](https://github.com/15432), [Octal450](https://github.com/Octal450), [InvoxiPlayGames](https://github.com/InvoxiPlayGames) and others have contributed to is a feeling I cannot put into words. I feel like an imposter among giants.
+The community response was incredible: over 10,000 visits in under 24 hours and more than 130 custom builds generated. The community’s suggestions have been genuinely useful, and above all, working alongside giants like [Swizzy](https://github.com/Swizzy), [15432](https://github.com/15432), [Octal450](https://github.com/Octal450), [InvoxiPlayGames](https://github.com/InvoxiPlayGames), and others is an indescribable feeling. I feel like an impostor walking among giants.
 
-Having contributed my "grain of sand" to the Xbox 360 scene is something I never thought I would do. And here we are. If you want to try out [XeLL Theme Customizer](https://xell.barrenechea.cl), go ahead! I hope you like it.
+Contributing my “tiny grain of sand” to the Xbox 360 scene is something I never imagined I’d do. And here we are. If you want to try [XeLL Theme Customizer](https://xell.barrenechea.cl), go for it! I hope you enjoy it.
