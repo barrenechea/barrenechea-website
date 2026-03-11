@@ -1,14 +1,14 @@
 ---
-import { type CollectionEntry } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 
 import { projectPages } from '~/content';
 import BaseProject from '~/templates/BaseProject.astro';
 
 export function getStaticPaths() {
   return projectPages.map((project) => {
-    const [lang, ...slug] = project.slug.split('/');
+    const [lang, ...id] = project.id.split('/');
 
-    return { params: { lang, slug: slug.join('/') }, props: { project } };
+    return { params: { lang, slug: id.join('/') }, props: { project } };
   });
 }
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { Content } = await project.render();
+const { Content } = await render(project);
 ---
 
 <BaseProject {project}>

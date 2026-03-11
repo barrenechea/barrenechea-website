@@ -17,7 +17,7 @@ interface GetStaticPaths {
 }
 
 export function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allPosts = postPages.filter((item) => item.slug.split('/').length === 2);
+  const allPosts = postPages.filter((item) => item.id.split('/').length === 2);
   const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
   // Return a paginated collection of paths for all posts

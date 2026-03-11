@@ -9,13 +9,13 @@ interface Props {
 
 const { post, translatedBy } = Astro.props;
 
-const [_lang, ...slug] = post.slug.split('/');
+const [_lang, ...id] = post.id.split('/');
 ---
 
 <div class="mx-auto mt-5 max-w-prose">
   <div
     class="aspect-3/2 rounded-lg object-cover object-center"
-    transition:name={`image-${slug.join('/')}`}
+    transition:name={`image-${id.join('/')}`}
   >
     {
       post.data.img.format === 'svg' ? (

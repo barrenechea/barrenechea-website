@@ -11,5 +11,5 @@ const { postsList } = Astro.props;
 ---
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-  {postsList.map((elt) => <BlogCard key={elt.slug} instance={elt} />)}
+  {postsList.map((elt) => <BlogCard key={elt.id} instance={elt} />)}
 </div>

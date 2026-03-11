@@ -1,4 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
+import { defineCollection } from 'astro:content';
 
 const blogBaseSchema = z.object({
   title: z.string(),
@@ -37,11 +39,11 @@ const projectsSchema = blogBaseSchema.extend({
 });
 
 const postsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/posts' }),
   schema: (context) => postsSchema.extend({ img: context.image() }),
 });
 const projectsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/projects' }),
   schema: (context) => projectsSchema.extend({ img: context.image() }),
 });
 

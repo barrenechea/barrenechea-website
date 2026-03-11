@@ -12,7 +12,7 @@ export async function GET(context: APIContext) {
     description: AppConfig.description,
     site: context.site ?? '',
     items: allPages.map((page) => ({
-      link: `/${page.collection}/${page.slug}`,
+      link: `/${page.collection}/${page.id}`,
       title: page.data.title,
       description: page.data.description,
       pubDate: page.data.pubDate,

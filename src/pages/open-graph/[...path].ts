@@ -23,9 +23,9 @@ const descriptions = {
 
 /** An object mapping file paths to file metadata. */
 const pages = Object.fromEntries(
-  allPages.map(({ collection, slug, data }) => {
-    const [lang, ...slugParts] = slug.split('/');
-    return [`${lang}/${collection}/${slugParts.join('/')}`, { data, lang }];
+  allPages.map(({ collection, id, data }) => {
+    const [lang, ...idParts] = id.split('/');
+    return [`${lang}/${collection}/${idParts.join('/')}`, { data, lang }];
   })
 );
 

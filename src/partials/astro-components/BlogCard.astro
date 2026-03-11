@@ -10,18 +10,18 @@ export interface Props {
 }
 
 const { key, instance } = Astro.props;
-const [lang, ...slug] = instance.slug.split('/');
+const [lang, ...id] = instance.id.split('/');
 const formattedDate = formatDate(instance.data.pubDate, lang);
 ---
 
 <a
   id={key}
   class="flex transform-gpu flex-col transition ease-out hover:scale-105 motion-reduce:transition-none motion-reduce:hover:transform-none"
-  href={`/${lang}/${instance.collection}/${slug.join('/')}/`}
+  href={`/${lang}/${instance.collection}/${id.join('/')}/`}
   target="_self"
 >
   <div class="flex-1 overflow-hidden rounded-md bg-zinc-800">
-    <div class="aspect-3/2 bg-zinc-200" transition:name={`image-${slug.join('/')}`}>
+    <div class="aspect-3/2 bg-zinc-200" transition:name={`image-${id.join('/')}`}>
       {
         instance.data.img.format === 'svg' ? (
           <img
@@ -43,7 +43,7 @@ const formattedDate = formatDate(instance.data.pubDate, lang);
     </div>
 
     <div class="px-3 pt-4 pb-6 text-center">
-      <h2 class="text-xl font-semibold" transition:name={`title-${slug.join('/')}`}>
+      <h2 class="text-xl font-semibold" transition:name={`title-${id.join('/')}`}>
         {instance.data.title}
       </h2>
       <div class="mt-1 text-xs text-gray-400">{formattedDate}</div>

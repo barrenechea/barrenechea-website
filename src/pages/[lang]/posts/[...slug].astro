@@ -1,15 +1,15 @@
 ---
-import { type CollectionEntry } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 
 import { postPages } from '~/content';
 import BasePost from '~/templates/BasePost.astro';
 
 export function getStaticPaths() {
   return postPages.map((post) => {
-    const [lang, ...slug] = post.slug.split('/');
+    const [lang, ...id] = post.id.split('/');
 
     return {
-      params: { lang, slug: slug.join('/') },
+      params: { lang, slug: id.join('/') },
       props: { post },
     };
   });
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
 <BasePost {post}>

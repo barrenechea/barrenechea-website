@@ -10,13 +10,13 @@ import Base from '~/templates/Base.astro';
 const { lang = AppConfig.defaultLang } = Astro.params;
 
 const allPosts = postPages.filter(
-  (item) => item.slug.split('/').length === 2 && item.id.startsWith(lang)
+  (item) => item.id.split('/').length === 2 && item.id.startsWith(lang)
 );
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const lastThreePosts = sortedPosts.slice(0, 3);
 
 const allProjects = projectPages.filter(
-  (item) => item.slug.split('/').length === 2 && item.id.startsWith(lang)
+  (item) => item.id.split('/').length === 2 && item.id.startsWith(lang)
 );
 const sortedProjects = allProjects.sort(
   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()

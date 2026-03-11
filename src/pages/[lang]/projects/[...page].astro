@@ -17,7 +17,7 @@ interface GetStaticPaths {
 }
 
 export function getStaticPaths({ paginate }: GetStaticPaths) {
-  const allProjects = projectPages.filter((item) => item.slug.split('/').length === 2);
+  const allProjects = projectPages.filter((item) => item.id.split('/').length === 2);
   const sortedProjects = allProjects.sort(
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
   );

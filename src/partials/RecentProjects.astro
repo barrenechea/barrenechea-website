@@ -59,7 +59,7 @@ const t = useTranslations(lang);
         <Project
           name={project.data.title}
           description={project.data.description}
-          link={`/${lang}/projects/${project.slug.split('/').pop() ?? 'ERROR'}/`}
+          link={`/${lang}/projects/${project.id.split('/').pop() ?? 'ERROR'}/`}
           img={project.data.img}
           imgAlt={project.data.imgAlt}
         >

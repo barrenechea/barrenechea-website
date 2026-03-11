@@ -10,8 +10,6 @@ export default defineConfig({
   site: 'https://www.barrenechea.cl/',
   output: 'static',
   vite: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     plugins: [tailwindcss()],
   },
   markdown: {
