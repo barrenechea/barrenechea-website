@@ -16,9 +16,10 @@ export const es = {
   'hero.doing':
     'Puedes encontrarme jugando con pruebas de concepto, nuevas tecnologías y explorando el fascinante mundo de los modelos de Machine Learning.',
   'hero.currentEmployment': 'Actualmente trabajo en',
-  'hero.currentTeam': 'con el equipo de DevOps',
+  'hero.currentTeam': 'como Technical Manager ',
   'hero.lookingFor': 'Actualmente estoy buscando nuevas oportunidades laborales',
   'hero.noEmployment': 'Actualmente no estoy empleado',
+  'hero.sentenceEnd': '.',
   'hero.avatar.alt': 'Avatar generado por IA usando',
   'hero.avatar.with': 'con',
 

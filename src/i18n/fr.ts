@@ -15,7 +15,7 @@ export const fr: OptionalTranslations = {
   'hero.doing':
     'Vous pouvez me trouver en train de jouer avec des preuves de concept, de nouvelles technologies et d’explorer le monde fascinant des modèles de Machine Learning.',
   'hero.currentEmployment': 'Je travaille actuellement chez',
-  'hero.currentTeam': "avec l'équipe DevOps",
+  'hero.currentTeam': 'en tant que Technical Manager ',
   'hero.lookingFor': 'Je cherche actuellement de nouvelles opportunités de travail',
   'hero.noEmployment': 'Je ne suis actuellement pas employé',
   'hero.avatar.alt': 'Avatar généré par IA en utilisant',
