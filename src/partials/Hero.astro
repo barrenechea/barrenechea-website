@@ -28,30 +28,32 @@ const { employment } = AppConfig;
       <p class="text-xl">
         {t('hero.doing')}
       </p>
-      <p class="text-xl">
-        {
-          employment.status === 'employed' ? (
-            <>
-              {t('hero.currentEmployment')}
-              <a class="text-amber-400 hover:underline" href={employment.companyUrl}>
-                {employment.companyName}
-              </a>
-              {t('hero.currentTeam')}
-              {t('hero.sentenceEnd')}
-            </>
-          ) : employment.status === 'looking' ? (
-            <>
-              {t('hero.lookingFor')}
-              {t('hero.sentenceEnd')}
-            </>
-          ) : (
-            <>
-              {t('hero.noEmployment')}
-              {t('hero.sentenceEnd')}
-            </>
-          )
-        }
-      </p>
+      {
+        !employment.hidden && (
+          <p class="text-xl">
+            {employment.status === 'employed' ? (
+              <>
+                {t('hero.currentEmployment')}
+                <a class="text-amber-400 hover:underline" href={employment.companyUrl}>
+                  {employment.companyName}
+                </a>
+                {t('hero.currentTeam')}
+                {t('hero.sentenceEnd')}
+              </>
+            ) : employment.status === 'looking' ? (
+              <>
+                {t('hero.lookingFor')}
+                {t('hero.sentenceEnd')}
+              </>
+            ) : (
+              <>
+                {t('hero.noEmployment')}
+                {t('hero.sentenceEnd')}
+              </>
+            )}
+          </p>
+        )
+      }
     </Fragment>
     <Fragment slot="avatar">
       <Image
