@@ -1,7 +1,7 @@
 import { OGImageRoute } from 'astro-og-canvas';
 
 import { allPages } from '~/content';
-import { type LanguageKey, useTranslations } from '~/i18n/translations';
+import { useTranslations } from '~/i18n/translations';
 
 type OGImageOptions = Awaited<ReturnType<Parameters<typeof OGImageRoute>[0]['getImageOptions']>>;
 
@@ -52,7 +52,7 @@ export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'path',
   pages,
   getImageOptions: (_, { data, lang }: (typeof pages)[string]): OGImageOptions => {
-    const dir = useTranslations(lang as LanguageKey)('language.direction') as 'ltr' | 'rtl';
+    const dir = useTranslations(lang)('language.direction') as 'ltr' | 'rtl';
 
     return {
       title: data.title,

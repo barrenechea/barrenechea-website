@@ -63,4 +63,4 @@ export const ja: OptionalTranslations = {
 // Default to English translations if a key is missing
 export const jaWithFallback: { [Key in keyof typeof en]: string } = new Proxy(ja, {
   get: (target, name: keyof typeof en) => target[name] ?? en[name],
-}) as { [Key in keyof typeof en]: string };
+});
