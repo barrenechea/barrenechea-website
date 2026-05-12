@@ -27,16 +27,16 @@
     "@astrojs/partytown": "^2.1.7",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@commitlint/cli": "^20.5.2",
-    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
     "@fontsource/work-sans": "^5.2.8",
     "@iconify-icons/circle-flags": "^1.2.41",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.4",
-    "astro": "^6.1.10",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.1",
     "astro-og-canvas": "^0.11.1",
     "astro-robots-txt": "^1.0.0",
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.7.0",
     "eslint-plugin-prettier": "^5.5.5",
@@ -44,23 +44,23 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "github-fork-ribbon-css": "^0.2.3",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
-    "openai": "^6.35.0",
+    "lint-staged": "^17.0.4",
+    "openai": "^6.37.0",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.3.0"
   },
-  "packageManager": "npm@11.13.0",
+  "packageManager": "npm@11.14.1",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
-    "typescript-eslint": "^8.59.1"
+    "typescript-eslint": "^8.59.3"
   },
   "overrides": {
-    "eslint": "^10.2.1",
+    "eslint": "^10.3.0",
     "@eslint/js": "^10.0.1",
     "vite": "^7.3.2"
   }
