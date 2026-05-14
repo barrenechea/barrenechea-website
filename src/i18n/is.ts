@@ -15,7 +15,7 @@ export const is: OptionalTranslations = {
   'hero.doing':
     'Þú getur fundið mig að leika mér með hugtakaprófanir, nýjar tækni og könnun á heillandi heimi vélrænnar námslíkana.',
   'hero.currentEmployment': 'Ég starfa núna hjá',
-  'hero.currentTeam': 'sem Technical Manager ',
+  'hero.currentTeam': 'sem {role}',
   'hero.lookingFor': 'Ég er núna að leita að nýjum starfstækifærum',
   'hero.noEmployment': 'Ég er ekki í starfi núna',
   'hero.avatar.alt': 'Gervigreindarbúinn avatar notaður',

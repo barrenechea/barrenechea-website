@@ -96,8 +96,16 @@ const langData = {
   ja: jaWithFallback,
 } as const;
 
-export function useTranslations(lang = 'es'): (key: keyof Translations) => string {
-  return function t(key: keyof Translations): string {
-    return langData[lang as LanguageKey][key] ?? es[key];
+export function useTranslations(
+  lang = 'es'
+): (key: keyof Translations, params?: Record<string, string>) => string {
+  return function t(key: keyof Translations, params?: Record<string, string>): string {
+    let result = langData[lang as LanguageKey][key] ?? es[key];
+    if (params) {
+      for (const [paramKey, paramValue] of Object.entries(params)) {
+        result = result.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), paramValue);
+      }
+    }
+    return result;
   };
 }

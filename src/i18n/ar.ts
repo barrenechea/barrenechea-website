@@ -17,7 +17,7 @@ export const ar: OptionalTranslations = {
   'hero.doing':
     'يمكنك أن تجدني ألعب مع الاختبارات التجريبية، التقنيات الجديدة واستكشاف العالم المثير لنماذج التعلم الآلي.',
   'hero.currentEmployment': 'أعمل حاليا في',
-  'hero.currentTeam': 'بصفتي Technical Manager ',
+  'hero.currentTeam': 'بصفتي {role}',
   'hero.lookingFor': 'أبحث حاليا عن فرص عمل جديدة',
   'hero.noEmployment': 'أنا حاليا غير موظف',
   'hero.sentenceEnd': '\u200F.',

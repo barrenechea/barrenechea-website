@@ -5,6 +5,7 @@ interface Employment {
   status: EmploymentStatus;
   companyName: string;
   companyUrl: string;
+  role: string;
 }
 
 export const AppConfig = {
@@ -15,9 +16,10 @@ export const AppConfig = {
   repo: 'https://github.com/barrenechea/barrenechea-website',
   defaultLang: 'es',
   employment: {
-    hidden: true as boolean,
+    hidden: false as boolean,
     status: 'employed' as EmploymentStatus,
-    companyName: 'Accenture',
-    companyUrl: 'https://www.accenture.com',
+    companyName: 'Karedo',
+    companyUrl: 'https://www.karedo.io',
+    role: 'Senior Software Engineer',
   } satisfies Employment,
 } as const;

@@ -37,7 +37,7 @@ const { employment } = AppConfig;
                 <a class="text-amber-400 hover:underline" href={employment.companyUrl}>
                   {employment.companyName}
                 </a>
-                {t('hero.currentTeam')}
+                {t('hero.currentTeam', { role: employment.role })}
                 {t('hero.sentenceEnd')}
               </>
             ) : employment.status === 'looking' ? (
