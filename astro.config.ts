@@ -9,6 +9,7 @@ import robotsTxt from 'astro-robots-txt';
 export default defineConfig({
   site: 'https://www.barrenechea.cl/',
   output: 'static',
+  compressHTML: true,
   vite: {
     plugins: [tailwindcss()],
   },

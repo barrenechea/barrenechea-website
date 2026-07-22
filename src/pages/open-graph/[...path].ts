@@ -49,7 +49,6 @@ uniqueLanguages.forEach((lang) => {
 });
 
 export const { getStaticPaths, GET } = await OGImageRoute({
-  param: 'path',
   pages,
   getImageOptions: (_, { data, lang }: (typeof pages)[string]): OGImageOptions => {
     const dir = useTranslations(lang)('language.direction') as 'ltr' | 'rtl';
