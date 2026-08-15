@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <img src='src/assets/og-image.png' alt='Barrenechea Logo' width='200' />
 </p>
@@ -49,7 +51,7 @@ To start the local development server:
 npm start
 ```
 
-Visit `http://localhost:3000` in your browser to view the site.
+Visit `http://localhost:4321` in your browser to view the site.
 
 ### Gitpod Development
 
