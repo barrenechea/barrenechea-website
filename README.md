@@ -24,7 +24,7 @@ To contribute to the development of the website or set up a local version, follo
 
 ### Prerequisites
 
-Ensure you have [Node.js](https://nodejs.org/) >=20 installed on your machine.
+Ensure you have [Node.js](https://nodejs.org/) >=26 installed on your machine.
 
 ### Installation
 
@@ -49,7 +49,7 @@ To start the local development server:
 npm start
 ```
 
-Visit `http://localhost:3000` in your browser to view the site.
+Visit `http://localhost:4321` in your browser to view the site.
 
 ### Gitpod Development
 

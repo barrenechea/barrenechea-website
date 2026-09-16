@@ -1,14 +1,14 @@
-import brIcon from '@iconify-icons/circle-flags/br.js';
-import clIcon from '@iconify-icons/circle-flags/cl.js';
-import deIcon from '@iconify-icons/circle-flags/de.js';
-import frIcon from '@iconify-icons/circle-flags/fr.js';
-import isIcon from '@iconify-icons/circle-flags/is.js';
-import itIcon from '@iconify-icons/circle-flags/it.js';
-import jpIcon from '@iconify-icons/circle-flags/jp.js';
-import ruIcon from '@iconify-icons/circle-flags/ru.js';
-import saIcon from '@iconify-icons/circle-flags/sa.js';
-import usIcon from '@iconify-icons/circle-flags/us.js';
-import zhIcon from '@iconify-icons/circle-flags/zh.js';
+import brIcon from '@iconify-icons/circle-flags/br';
+import clIcon from '@iconify-icons/circle-flags/cl';
+import deIcon from '@iconify-icons/circle-flags/de';
+import frIcon from '@iconify-icons/circle-flags/fr';
+import isIcon from '@iconify-icons/circle-flags/is';
+import itIcon from '@iconify-icons/circle-flags/it';
+import jpIcon from '@iconify-icons/circle-flags/jp';
+import ruIcon from '@iconify-icons/circle-flags/ru';
+import saIcon from '@iconify-icons/circle-flags/sa';
+import usIcon from '@iconify-icons/circle-flags/us';
+import zhIcon from '@iconify-icons/circle-flags/zh';
 
 import { arWithFallback } from './ar.ts';
 import { deWithFallback } from './de.ts';

@@ -53,22 +53,16 @@ const t = useTranslations(lang);
     </div>
   </div>
   <div class="flex flex-col gap-6">
-    {
-      projectsList.map((project) => (
-        <Project
-          name={project.data.title}
-          description={project.data.description}
-          link={`/${lang}/projects/${project.id.split('/').pop() ?? 'ERROR'}/`}
-          img={project.data.img}
-          imgAlt={project.data.imgAlt}
-        >
-          {project.data.tags.map((tag) => (
-            <Tags color={tagColors[tag] || defaultTagColor}>
-              {t(`tags.${tag}`) || t('tags.undefined')}
-            </Tags>
-          ))}
-        </Project>
-      ))
-    }
+    {projectsList.map((project) => <Project
+      name={project.data.title}
+      description={project.data.description}
+      link={`/${lang}/projects/${project.id.split('/').pop() ?? 'ERROR'}/`}
+      img={project.data.img}
+      imgAlt={project.data.imgAlt}
+    >
+      {project.data.tags.map((tag) => <Tags color={tagColors[tag] || defaultTagColor}>
+        {t(`tags.${tag}`) || t('tags.undefined')}
+      </Tags>)}
+    </Project>)}
   </div>
 </Section>

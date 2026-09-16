@@ -37,27 +37,23 @@ const currentLanguage = Object.keys(languages).includes(lang)
     id="language-dropdown-menu"
   >
     <ul class="py-2 font-medium" role="none">
-      {
-        Object.keys(languages).map((language) => (
-          <li>
-            <a
-              href={localizedPathname(language)}
-              class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-white"
-              role="menuitem"
-            >
-              <div class="inline-flex items-center">
-                <svg
-                  aria-hidden="true"
-                  class="me-2 size-3.5 rounded-full"
-                  viewBox="0 0 512 512"
-                  set:html={languages[language as LanguageKey].icon.body}
-                />
-                {languages[language as LanguageKey].label}
-              </div>
-            </a>
-          </li>
-        ))
-      }
+      {Object.keys(languages).map((language) => <li>
+        <a
+          href={localizedPathname(language)}
+          class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-white"
+          role="menuitem"
+        >
+          <div class="inline-flex items-center">
+            <svg
+              aria-hidden="true"
+              class="me-2 size-3.5 rounded-full"
+              viewBox="0 0 512 512"
+              set:html={languages[language as LanguageKey].icon.body}
+            />
+            {languages[language as LanguageKey].label}
+          </div>
+        </a>
+      </li>)}
     </ul>
   </div>
 </language-selector>

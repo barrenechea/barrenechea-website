@@ -65,7 +65,7 @@ export default defineConfig([
 
   // Relax type-safety rules for specific files
   {
-    files: ['**/*.astro', 'api/add/script.js', 'scripts/**/*.ts'],
+    files: ['**/*.astro'],
     rules: {
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',

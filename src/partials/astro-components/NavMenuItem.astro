@@ -13,18 +13,16 @@ const isCurrentUrl = isProjectOrPostPage
 ---
 
 <li>
-  {
-    isCurrentUrl ? (
-      <a href={href} class="text-link block rounded-sm px-3 py-2 md:p-0" aria-current="page">
-        <slot />
-      </a>
-    ) : (
-      <a
-        href={href}
-        class="border-border text-foreground hover:bg-accent md:hover:text-link block rounded-sm px-3 py-2 md:p-0 md:hover:bg-transparent"
-      >
-        <slot />
-      </a>
-    )
-  }
+  {isCurrentUrl ? (
+    <a href={href} class="text-link block rounded-sm px-3 py-2 md:p-0" aria-current="page">
+      <slot />
+    </a>
+  ) : (
+    <a
+      href={href}
+      class="border-border text-foreground hover:bg-accent md:hover:text-link block rounded-sm px-3 py-2 md:p-0 md:hover:bg-transparent"
+    >
+      <slot />
+    </a>
+  )}
 </li>

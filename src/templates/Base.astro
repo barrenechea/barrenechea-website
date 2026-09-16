@@ -54,7 +54,8 @@ const filteredTitle = ogOverride ?? title.replace(' - Barrenechea', '');
     <script
       type="text/partytown"
       is:inline
-      src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE"></script>
+      src="https://www.googletagmanager.com/gtag/js?id=G-L5QEGL7QZE"
+    ></script>
     <script type="text/partytown" is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(...args) {
@@ -71,7 +72,8 @@ const filteredTitle = ogOverride ?? title.replace(' - Barrenechea', '');
       class=`github-fork-ribbon ${langDirection === 'rtl' ? 'left-top' : ''} hidden lg:block`
       href={AppConfig.repo}
       data-ribbon={t('nav.fork')}
-      title={t('nav.fork')}>{t('nav.fork')}</a
+      title={t('nav.fork')}
+      >{t('nav.fork')}</a
     >
 
     <Navbar />

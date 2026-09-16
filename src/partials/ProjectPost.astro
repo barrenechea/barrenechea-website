@@ -31,24 +31,22 @@ const [_lang, ...id] = project.id.split('/');
       <div class="flex flex-wrap justify-center">
         <div class="flex w-full justify-center">
           <div class="relative" transition:name={`image-${id.join('/')}`}>
-            {
-              project.data.img.format === 'svg' ? (
-                <img
-                  src={project.data.img.src}
-                  alt={project.data.imgAlt}
-                  class="-mt-16 size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
-                />
-              ) : (
-                <Image
-                  src={project.data.img}
-                  alt={project.data.imgAlt}
-                  class="-mt-16 size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
-                  format="webp"
-                  width={300}
-                  height={300}
-                />
-              )
-            }
+            {project.data.img.format === 'svg' ? (
+              <img
+                src={project.data.img.src}
+                alt={project.data.imgAlt}
+                class="-mt-16 size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+              />
+            ) : (
+              <Image
+                src={project.data.img}
+                alt={project.data.imgAlt}
+                class="-mt-16 size-36 rounded-full bg-zinc-200 object-scale-down p-3 ring-2 ring-gray-500"
+                format="webp"
+                width={300}
+                height={300}
+              />
+            )}
           </div>
         </div>
         <div class="mt-16"></div>
@@ -76,19 +74,15 @@ const [_lang, ...id] = project.id.split('/');
           </div>
         </div>
       </div>
-      {
-        project.data.link && (
-          <div class="flex translate-y-4 justify-center space-x-2">
-            <a
-              href={project.data.link}
-              target={project.data.link.startsWith('http') ? '_blank' : '_self'}
-              class="inline-block rounded-sm bg-amber-400 px-6 py-2.5 text-xs leading-tight font-medium text-white uppercase shadow-md transition duration-150 ease-in-out hover:bg-amber-500 hover:shadow-lg focus:bg-amber-700 focus:shadow-lg focus:ring-0 focus:outline-hidden active:bg-amber-800 active:shadow-lg"
-            >
-              {t('projects.go')}
-            </a>
-          </div>
-        )
-      }
+      {project.data.link && <div class="flex translate-y-4 justify-center space-x-2">
+        <a
+          href={project.data.link}
+          target={project.data.link.startsWith('http') ? '_blank' : '_self'}
+          class="inline-block rounded-sm bg-amber-400 px-6 py-2.5 text-xs leading-tight font-medium text-white uppercase shadow-md transition duration-150 ease-in-out hover:bg-amber-500 hover:shadow-lg focus:bg-amber-700 focus:shadow-lg focus:ring-0 focus:outline-hidden active:bg-amber-800 active:shadow-lg"
+        >
+          {t('projects.go')}
+        </a>
+      </div>}
     </div>
   </div>
 
@@ -96,12 +90,8 @@ const [_lang, ...id] = project.id.split('/');
     <div class="prose prose-invert prose-img:rounded-lg mt-8">
       <slot />
     </div>
-    {
-      translatedBy && (
-        <div class="mt-12 text-right text-xs font-bold text-zinc-400 uppercase italic">
-          {translatedBy}
-        </div>
-      )
-    }
+    {translatedBy && <div class="mt-12 text-right text-xs font-bold text-zinc-400 uppercase italic">
+      {translatedBy}
+    </div>}
   </div>
 </Section>

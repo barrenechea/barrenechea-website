@@ -17,30 +17,24 @@ const [_lang, ...id] = post.id.split('/');
     class="aspect-3/2 rounded-lg object-cover object-center"
     transition:name={`image-${id.join('/')}`}
   >
-    {
-      post.data.img.format === 'svg' ? (
-        <img src={post.data.img.src} alt={post.data.imgAlt} />
-      ) : (
-        <Image
-          class="size-full object-cover object-center"
-          src={post.data.img}
-          alt={post.data.imgAlt}
-          format="webp"
-          width={800}
-          height={533}
-        />
-      )
-    }
+    {post.data.img.format === 'svg' ? (
+      <img src={post.data.img.src} alt={post.data.imgAlt} />
+    ) : (
+      <Image
+        class="size-full object-cover object-center"
+        src={post.data.img}
+        alt={post.data.imgAlt}
+        format="webp"
+        width={800}
+        height={533}
+      />
+    )}
   </div>
 
   <div class="prose prose-invert prose-img:rounded-lg mt-8">
     <slot />
   </div>
-  {
-    translatedBy && (
-      <div class="mt-12 text-right text-xs font-bold text-zinc-400 uppercase italic">
-        {translatedBy}
-      </div>
-    )
-  }
+  {translatedBy && <div class="mt-12 text-right text-xs font-bold text-zinc-400 uppercase italic">
+    {translatedBy}
+  </div>}
 </div>

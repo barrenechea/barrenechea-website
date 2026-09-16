@@ -26,24 +26,22 @@ const transitionName = link.split('/').filter(Boolean).pop() ?? '';
       <div class="size-36">
         <div class="flex w-full justify-center">
           <div class="relative" transition:name={`image-${transitionName}`}>
-            {
-              img.format === 'svg' ? (
-                <img
-                  src={img.src}
-                  alt={imgAlt}
-                  class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
-                />
-              ) : (
-                <Image
-                  src={img}
-                  alt={imgAlt}
-                  format="webp"
-                  width={300}
-                  height={300}
-                  class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
-                />
-              )
-            }
+            {img.format === 'svg' ? (
+              <img
+                src={img.src}
+                alt={imgAlt}
+                class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
+              />
+            ) : (
+              <Image
+                src={img}
+                alt={imgAlt}
+                format="webp"
+                width={300}
+                height={300}
+                class="bg-primary ring-muted size-36 rounded-full object-scale-down p-3 ring-2"
+              />
+            )}
           </div>
         </div>
       </div>

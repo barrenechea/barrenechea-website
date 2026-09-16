@@ -6,6 +6,7 @@ module.exports = {
   trailingComma: 'es5',
   useTabs: false,
   plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
+  astroCompressHTML: 'html',
   overrides: [
     {
       files: '*.astro',
